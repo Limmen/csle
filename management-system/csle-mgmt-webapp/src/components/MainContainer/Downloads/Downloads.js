@@ -970,7 +970,7 @@ const Downloads = (props) => {
         if (props.loading) {
             return (
                 <Spinner animation="border" role="status">
-                    <span className="visually-hidden"></span>
+                    <span className="visually-hidden"/>
                 </Spinner>)
         } else {
             if (props.statisticsDatasets === null || props.statisticsDatasets === undefined || props.statisticsDatasets.length === 0) {
@@ -988,7 +988,7 @@ const Downloads = (props) => {
                                 <th>Counts</th>
                                 <th>Size (GB)</th>
                                 <th>Date added</th>
-                                <th></th>
+                                <th/>
                             </tr>
                             </thead>
                             <tbody>

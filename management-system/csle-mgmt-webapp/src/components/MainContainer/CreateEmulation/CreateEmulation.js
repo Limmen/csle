@@ -241,8 +241,7 @@ const CreateEmulation = (props) => {
         })
     }
 
-    const handleContainerIdsEnabledChange = (event) => {
-        const idsValue = event.target.value === 'true'
+    const handleContainerIdsEnabledChange = (idsValue) => {
         setIdsEnabled(idsValue)
     }
 
@@ -316,8 +315,8 @@ const CreateEmulation = (props) => {
           emulationNetworkId: networkIdValue,
           emulationLevel: levelValue,
           emulationVersion: versionValue,
-          emulationTimeStepLengh: timeStepLengthValue,
-          emulatioIdsEnabled: idsEnabled,
+          emulationTimeStepLength: timeStepLengthValue,
+          emulationIdsEnabled: idsEnabled,
           emulationDescription: description,
           emulationContainer: containers,
       };
@@ -1610,7 +1609,7 @@ const CreateEmulation = (props) => {
                           >
                               <h5 className="semiTitle">
                                   General information about the emulation
-                                  <i className="fa fa-file-text headerIcon" aria-hidden="true"></i>
+                                  <i className="fa fa-file-text headerIcon" aria-hidden="true"/>
                               </h5>
                           </Button>
                       </Card.Header>
@@ -1646,7 +1645,7 @@ const CreateEmulation = (props) => {
                           >
                               <h5 className="semiTitle">
                                   Containers
-                                  <i className="fa fa-cubes headerIcon" aria-hidden="true"></i>
+                                  <i className="fa fa-cubes headerIcon" aria-hidden="true"/>
                               </h5>
                           </Button>
                       </Card.Header>
@@ -1706,7 +1705,7 @@ const CreateEmulation = (props) => {
                                                 >
                                                     <h5 className="semiTitle">
                                                         {containers[index].name}
-                                                        <i className="fa fa-cube headerIcon" aria-hidden="true"></i>
+                                                        <i className="fa fa-cube headerIcon" aria-hidden="true"/>
                                                     </h5>
                                                 </Button>
                                             </Card.Header>

@@ -1,12 +1,29 @@
-import React from 'react';
-import Button from 'react-bootstrap/Button'
+import React, {useState} from 'react';
+import FormControl from 'react-bootstrap/FormControl';
 import Table from 'react-bootstrap/Table'
+import Select from 'react-select'
 import './AddEmulationGeneral.css';
 
 /**
  * Component representing the AddServices part of the create emulation page
  */
 const AddEmulationGeneral = (props) => {
+  const idsEnabledOptions = [
+    {
+      value: true,
+      label: "True"
+    },
+    {
+      value: false,
+      label: "False"
+    }
+  ]
+  const [selectedIdsEnabled, setSelectedIdsEnabled] = useState(idsEnabledOptions[0]);
+
+  const updatedIdsEnabled = (idsEnabledOption) => {
+    setSelectedIdsEnabled(idsEnabledOption)
+    props.handleContainerIdsEnabledChange(idsEnabledOption.value)
+  }
 
   return (
     <div>
@@ -22,74 +39,88 @@ const AddEmulationGeneral = (props) => {
           <tr>
             <td>Name</td>
             <td>
-              <input
-                type="text"
-                value={props.nameValue}
-                onChange={props.handleNameChange}
+              <FormControl
+                  value={props.nameValue}
+                  onChange={props.handleNameChange}
+                  size="sm"
+                  className="createEmulationInput"
+                  placeholder="Name"
               />
             </td>
           </tr>
           <tr>
             <td>Network ID</td>
             <td>
-              <input
-                type="text"
-                value={props.networkIdValue}
-                onChange={props.handleNetworkIdChange}
+              <FormControl
+                  value={props.networkIdValue}
+                  onChange={props.handleNetworkIdChange}
+                  size="sm"
+                  className="createEmulationInput"
+                  placeholder="Network ID"
               />
             </td>
           </tr>
           <tr>
             <td>Level</td>
             <td>
-              <input
-                type="text"
-                value={props.levelValue}
-                onChange={props.handleLevelChange}
+              <FormControl
+                  value={props.levelValue}
+                  onChange={props.handleLevelChange}
+                  size="sm"
+                  className="createEmulationInput"
+                  placeholder="Level"
               />
             </td>
           </tr>
           <tr>
             <td>Version</td>
             <td>
-              <input
-                type="text"
-                value={props.versionValue}
-                onChange={props.handleVersionChange}
+              <FormControl
+                  value={props.versionValue}
+                  onChange={props.handleVersionChange}
+                  size="sm"
+                  className="createEmulationInput"
+                  placeholder="Version"
               />
             </td>
           </tr>
           <tr>
             <td>Time step length in Seconds</td>
             <td>
-              <input
-                type="text"
-                value={props.timeStepLengthValue}
-                onChange={props.handleTimeStepLengthChange}
+              <FormControl
+                  value={props.timeStepLengthValue}
+                  onChange={props.handleTimeStepLengthChange}
+                  size="sm"
+                  className="createEmulationInput"
+                  placeholder="Time step length"
               />
             </td>
           </tr>
           <tr>
             <td>IDS enabled</td>
             <td>
-              <select value={props.idsEnabled}
-                      onChange={(e) => props.handleContainerIdsEnabledChange(e)}>
-                <option value="True">True</option>
-                <option value="False">False</option>
-
-              </select>
+              <Select
+                  style={{display: 'inline-block'}}
+                  value={selectedIdsEnabled}
+                  defaultValue={selectedIdsEnabled}
+                  options={idsEnabledOptions}
+                  onChange={updatedIdsEnabled}
+                  placeholder="IDS enabled"
+              />
             </td>
           </tr>
           <tr>
             <td>Description</td>
             <td>
-                          <textarea
-                            id="description"
-                            value={props.description.textareaValue}
-                            onChange={props.handleDescriptionChange}
-                            rows="4"
-                            style={{ width: '100%', boxSizing: 'border-box' }}
-                          />
+              <FormControl
+                  value={props.description.textareaValue}
+                  onChange={props.handleDescriptionChange}
+                  as="textarea"
+                  size="sm"
+                  className="createEmulationInput"
+                  placeholder="Description"
+                  rows={3}
+              />
             </td>
           </tr>
           </tbody>

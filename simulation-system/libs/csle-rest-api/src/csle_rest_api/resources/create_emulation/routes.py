@@ -87,13 +87,10 @@ def convert_json_data_to_emulation_config(emulation_data: json) -> EmulationEnvC
     :return: the emulation environment configuration
     """
 
-    name = emulation_data["emulationName"]
-    network_id = emulation_data["emulationNetworkId"]
-    level = emulation_data["emulationLevel"]
-    version = emulation_data["emulationVersion"]
-    time_step_len_seconds = emulation_data["emulationTimeStepLengh"]
-    descr = emulation_data["emulationDescription"]
-
+    name = emulation_data[api_constants.CREATE_EMULATION_PAGE.EMULATION_NAME]
+    level = emulation_data[api_constants.CREATE_EMULATION_PAGE.EMULATION_LEVEL]
+    version = emulation_data[api_constants.CREATE_EMULATION_PAGE.EMULATION_VERSION]
+    descr = emulation_data[api_constants.CREATE_EMULATION_PAGE.EMULATION_DESCRIPTION]
     containers_cfg = convert_json_data_to_containers_config(emulation_data=emulation_data)
     flags_cfg = convert_json_data_to_flags_config(emulation_data=emulation_data)
     resources_cfg = convert_json_data_to_resource_constraints_config(emulation_data=emulation_data)
@@ -140,23 +137,23 @@ def convert_json_data_to_containers_config(emulation_data: json) -> ContainersCo
     networks = []
     agent_ip = ""
     router_ip = ""
-    emulation_ids_enabled = emulation_data["emulatioIdsEnabled"]
-    emulation_containers = emulation_data["emulationContainer"]
+    emulation_ids_enabled = emulation_data[api_constants.CREATE_EMULATION_PAGE.EMULATION_IDS_ENABLED]
+    emulation_containers = emulation_data[api_constants.CREATE_EMULATION_PAGE.EMULATION_CONTAINER]
     for container in emulation_containers:
-        container_name = container["name"]
-        container_os = container["os"]
-        container_version = container["version"]
-        containers_level = container["level"]
-        container_restart_policy = container["restartPolicy"]
-        container_interfaces = container["interfaces"]
+        container_name = container[api_constants.CREATE_EMULATION_PAGE.NAME]
+        container_os = container[api_constants.CREATE_EMULATION_PAGE.OS]
+        container_version = container[api_constants.CREATE_EMULATION_PAGE.VERSION]
+        containers_level = container[api_constants.CREATE_EMULATION_PAGE.LEVEL]
+        container_restart_policy = container[api_constants.CREATE_EMULATION_PAGE.RESTART_POLICY]
+        container_interfaces = container[api_constants.CREATE_EMULATION_PAGE.INTERFACES]
         ips_and_networks = []
         for interfaces in container_interfaces:
-            interface_name = interfaces["name"]
-            interface_ip = interfaces["ip"]
-            interface_subnet_mask = interfaces["subnetMask"]
-            interface_subnet_prefix = interfaces["subnetPrefix"]
-            interface_physical_interface = interfaces["physicalInterface"]
-            interface_bit_mask = interfaces["bitmask"]
+            interface_name = interfaces[api_constants.CREATE_EMULATION_PAGE.NAME]
+            interface_ip = interfaces[api_constants.CREATE_EMULATION_PAGE.IP]
+            interface_subnet_mask = interfaces[api_constants.CREATE_EMULATION_PAGE.SUBNET_MASK]
+            interface_subnet_prefix = interfaces[api_constants.CREATE_EMULATION_PAGE.SUBNET_PREFIX]
+            interface_physical_interface = interfaces[api_constants.CREATE_EMULATION_PAGE.PHYSICAL_INTERFACE]
+            interface_bit_mask = interfaces[api_constants.CREATE_EMULATION_PAGE.BITMASK]
             ips_and_networks.append((interface_ip,
                                      ContainerNetwork(
                                          name=interface_name,
@@ -165,13 +162,14 @@ def convert_json_data_to_containers_config(emulation_data: json) -> ContainersCo
                                          interface=interface_physical_interface,
                                          bitmask=interface_bit_mask
                                      )))
-            if ("hacker" in container_name):
+            if (api_constants.CREATE_EMULATION_PAGE.HACKER in container_name):
                 agent_ip = interface_ip
-            if ("router" in container_name):
+            if (api_constants.CREATE_EMULATION_PAGE.ROUTER in container_name):
                 router_ip = interface_ip
-        container_vulns = container["vulns"]
+        container_vulns = container[api_constants.CREATE_EMULATION_PAGE.VULNS]
         for vuln in container_vulns:
-            vuln_service_ip = vuln["vulnService"]["serviceIp"]
+            vuln_service_ip = vuln[api_constants.CREATE_EMULATION_PAGE.VULN_SERVICE][
+                api_constants.CREATE_EMULATION_PAGE.SERVICE_IP]
             vulnerable_nodes.append(vuln_service_ip)
 
         node = NodeContainerConfig(
@@ -195,18 +193,19 @@ def convert_json_data_to_flags_config(emulation_data: json) -> FlagsConfig:
     :return: The flags confguration
     """
     flags = []
-    emulation_containers = emulation_data["emulationContainer"]
+    emulation_containers = emulation_data[api_constants.CREATE_EMULATION_PAGE.EMULATION_CONTAINER]
     for containers in emulation_containers:
-        container_falg_id = containers["flagId"]
-        container_flag_score = containers["flagScore"]
-        container_flag_permission = containers["flagPermission"]
-        container_interfaces = containers["interfaces"]
+        container_falg_id = containers[api_constants.CREATE_EMULATION_PAGE.FLAG_ID]
+        container_flag_score = containers[api_constants.CREATE_EMULATION_PAGE.FLAG_SCORE]
+        container_flag_permission = containers[api_constants.CREATE_EMULATION_PAGE.FLAG_PERMISSION]
+        container_interfaces = containers[api_constants.CREATE_EMULATION_PAGE.INTERFACES]
         for interfaces in container_interfaces:
-            interface_ip = interfaces["ip"]
+            interface_ip = interfaces[api_constants.CREATE_EMULATION_PAGE.IP]
         NodeFlagsConfig(ip=interface_ip,
                         flags=[Flag(
                             name=f"{constants.COMMON.FLAG_FILENAME_PREFIX}{container_falg_id}",
-                            path=f"/{constants.COMMANDS.TMP_DIR}/{constants.COMMON.FLAG_FILENAME_PREFIX}{container_falg_id}"
+                            path=f"/{constants.COMMANDS.TMP_DIR}/{constants.COMMON.FLAG_FILENAME_PREFIX}"
+                                 f"{container_falg_id}"
                                  f"{constants.FILE_PATTERNS.TXT_FILE_SUFFIX}",
                             dir=f"/{constants.COMMANDS.TMP_DIR}/",
                             id=container_falg_id, requires_root=container_flag_permission, score=container_flag_score
@@ -252,8 +251,8 @@ def convert_json_data_to_host_manager_config(emulation_data: json) -> HostManage
     :param emulation_data: the emulation data in JSON format received from front-end
     :return: the host manager configuration
     """
-    version = emulation_data["emulationVersion"]
-    time_step_len_seconds = emulation_data["emulationTimeStepLengh"]
+    version = emulation_data[api_constants.CREATE_EMULATION_PAGE.EMULATION_VERSION]
+    time_step_len_seconds = emulation_data[api_constants.CREATE_EMULATION_PAGE.EMULATION_TIME_STEP_LENGTH]
     config = HostManagerConfig(version=version, time_step_len_seconds=time_step_len_seconds,
                                host_manager_port=collector_constants.MANAGER_PORTS.HOST_MANAGER_DEFAULT_PORT,
                                host_manager_log_file=collector_constants.LOG_FILES.HOST_MANAGER_LOG_FILE,
@@ -270,8 +269,8 @@ def convert_json_data_to_snort_ids_manager_config(emulation_data: json) -> Snort
     :return: the Snort IDS manager configuration
     """
 
-    version = emulation_data["emulationVersion"]
-    time_step_len_seconds = emulation_data["emulationTimeStepLengh"]
+    version = emulation_data[api_constants.CREATE_EMULATION_PAGE.EMULATION_VERSION]
+    time_step_len_seconds = emulation_data[api_constants.CREATE_EMULATION_PAGE.EMULATION_TIME_STEP_LENGTH]
 
     config = SnortIDSManagerConfig(
         version=version, time_step_len_seconds=time_step_len_seconds,
@@ -289,10 +288,8 @@ def convert_json_data_to_ossec_ids_manager_config(emulation_data: json) -> OSSEC
     :param emulation_data: the emulation data in JSON format received from front-end
     :return: the OSSEC IDS manager configuration
     """
-
-    version = emulation_data["emulationVersion"]
-    time_step_len_seconds = emulation_data["emulationTimeStepLengh"]
-
+    version = emulation_data[api_constants.CREATE_EMULATION_PAGE.EMULATION_VERSION]
+    time_step_len_seconds = emulation_data[api_constants.CREATE_EMULATION_PAGE.EMULATION_TIME_STEP_LENGTH]
     config = OSSECIDSManagerConfig(
         version=version, time_step_len_seconds=time_step_len_seconds,
         ossec_ids_manager_port=collector_constants.MANAGER_PORTS.OSSEC_IDS_MANAGER_DEFAULT_PORT,
@@ -309,10 +306,8 @@ def convert_json_data_to_docker_stats_manager_config(emulation_data: json) -> Do
     :param emulation_data: the emulation data in JSON format received from front-end
     :return: the docker stats manager configuration
     """
-
-    version = emulation_data["emulationVersion"]
-    time_step_len_seconds = emulation_data["emulationTimeStepLengh"]
-
+    version = emulation_data[api_constants.CREATE_EMULATION_PAGE.EMULATION_VERSION]
+    time_step_len_seconds = emulation_data[api_constants.CREATE_EMULATION_PAGE.EMULATION_TIME_STEP_LENGTH]
     config = DockerStatsManagerConfig(
         version=version, time_step_len_seconds=time_step_len_seconds,
         docker_stats_manager_port=collector_constants.MANAGER_PORTS.DOCKER_STATS_MANAGER_DEFAULT_PORT,
@@ -332,11 +327,10 @@ def convert_json_data_to_elk_config(emulation_data: json) -> ElkConfig:
 
     # *** This function I am not sure if we have already collected all the paramters needed.
 
-    network_id = emulation_data["emulationNetworkId"]
-    level = emulation_data["emulationLevel"]
-    version = emulation_data["emulationVersion"]
-    time_step_len_seconds = emulation_data["emulationTimeStepLengh"]
-
+    network_id = emulation_data[api_constants.CREATE_EMULATION_PAGE.EMULATION_NETWORK_ID]
+    level = emulation_data[api_constants.CREATE_EMULATION_PAGE.EMULATION_LEVEL]
+    version = emulation_data[api_constants.CREATE_EMULATION_PAGE.EMULATION_VERSION]
+    time_step_len_seconds = emulation_data[api_constants.CREATE_EMULATION_PAGE.EMULATION_TIME_STEP_LENGTH]
     container = NodeContainerConfig(
         name=f"{constants.CONTAINER_IMAGES.ELK_1}",
         os=constants.CONTAINER_OS.ELK_1_OS,
@@ -416,15 +410,13 @@ def convert_json_data_to_beats_config(emulation_data: json) -> BeatsConfig:
     """
     # *** This file I am not very sure if all the parameters are set correctly
     # *** Compared to other files this one seems incomplete.
-
-    network_id = emulation_data["emulationNetworkId"]
-
+    network_id = emulation_data[api_constants.CREATE_EMULATION_PAGE.EMULATION_NETWORK_ID]
     node_beats_configs = []
-    emulation_containers = emulation_data["emulationContainer"]
+    emulation_containers = emulation_data[api_constants.CREATE_EMULATION_PAGE.EMULATION_CONTAINER]
     for containers in emulation_containers:
-        container_interfaces = containers["interfaces"]
+        container_interfaces = containers[api_constants.CREATE_EMULATION_PAGE.INTERFACES]
         for interfaces in container_interfaces:
-            interface_ip = interfaces["ip"]
+            interface_ip = interfaces[api_constants.CREATE_EMULATION_PAGE.IP]
         node_beats = NodeBeatsConfig(ip=interface_ip,
                                      log_files_paths=collector_constants.LOG_FILES.DEFAULT_LOG_FILE_PATHS,
                                      filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
@@ -455,10 +447,10 @@ def convert_json_data_to_kafka_config(emulation_data: json) -> KafkaConfig:
     :return: the kafka configuration
     """
 
-    network_id = emulation_data["emulationNetworkId"]
-    level = emulation_data["emulationLevel"]
-    version = emulation_data["emulationVersion"]
-    time_step_len_seconds = emulation_data["emulationTimeStepLengh"]
+    network_id = emulation_data[api_constants.CREATE_EMULATION_PAGE.EMULATION_NETWORK_ID]
+    level = emulation_data[api_constants.CREATE_EMULATION_PAGE.EMULATION_LEVEL]
+    version = emulation_data[api_constants.CREATE_EMULATION_PAGE.EMULATION_VERSION]
+    time_step_len_seconds = emulation_data[api_constants.CREATE_EMULATION_PAGE.EMULATION_TIME_STEP_LENGTH]
 
     container = NodeContainerConfig(
         name=f"{constants.CONTAINER_IMAGES.KAFKA_1}",
@@ -645,36 +637,44 @@ def convert_json_data_to_resource_constraints_config(emulation_data: json) -> Re
     :return: generates the ResourcesConfig
     """
     node_resources_configurations = []
-    emulation_containers = emulation_data["emulationContainer"]
+    emulation_containers = emulation_data[api_constants.CREATE_EMULATION_PAGE.EMULATION_CONTAINER]
     for containers in emulation_containers:
-        container_name = containers["name"]
-        container_cpu = containers["cpu"]
-        container_memory = containers["mem"]
-        container_interfaces = containers["interfaces"]
+        container_name = containers[api_constants.CREATE_EMULATION_PAGE.NAME]
+        container_cpu = containers[api_constants.CREATE_EMULATION_PAGE.CPU]
+        container_memory = containers[api_constants.CREATE_EMULATION_PAGE.MEM]
+        container_interfaces = containers[api_constants.CREATE_EMULATION_PAGE.INTERFACES]
         ips_and_network_configs = []
         for interfaces in container_interfaces:
-            interface_ip = interfaces["ip"]
-            interface_physical_interface = interfaces["physicalInterface"]
-            interface_limit_packet_queue = interfaces["limitPacketsQueue"]
-            interface_packet_delay_ms = interfaces["packetDelayMs"]
-            interface_packet_delay_jitter_ms = interfaces["packetDelayJitterMs"]
-            interface_packet_delay_correlation_percentage = interfaces["packetDelayCorrelationPercentage"]
-            interfaces_packet_delay_distribution = interfaces["packetDelayDistribution"]
-            interface_packet_loss_type = interfaces["packetLossType"]
-            interface_loss_gmodel_p = interfaces["lossGemodelp"]
-            interface_loss_gmodel_r = interfaces["lossGemodelr"]
-            interface_loss_gmodel_k = interfaces["lossGemodelk"]
-            interface_loss_gmodel_h = interfaces["lossGemodelh"]
-            interface_packet_corruption_percentage = interfaces["packetCorruptPercentage"]
-            interface_packet_corruption_correlation_percentage = interfaces["packetCorruptCorrelationPercentage"]
-            interface_packet_duplication_percentage = interfaces["packetDuplicatePercentage"]
-            interface_packet_duplicate_correlation_percentage = interfaces["packetDuplicateCorrelationPercentage"]
-            interface_packet_reorder_percentage = interfaces["packetReorderPercentage"]
-            interface_packet_reorder_correlation_percentage = interfaces["packetReorderCorrelationPercentage"]
-            interface_packet_reorder_gap = interfaces["packetReorderGap"]
-            interface_rate_limit_m_bit = interfaces["rateLimitMbit"]
-            interface_packet_overhead_bytes = interfaces["packetOverheadBytes"]
-            interface_cell_overhead_bytes = interfaces["cellOverheadBytes"]
+            interface_ip = interfaces[api_constants.CREATE_EMULATION_PAGE.IP]
+            interface_physical_interface = interfaces[api_constants.CREATE_EMULATION_PAGE.PHYSICAL_INTERFACE]
+            interface_limit_packet_queue = interfaces[api_constants.CREATE_EMULATION_PAGE.LIMIT_PACKETS_QUEUE]
+            interface_packet_delay_ms = interfaces[api_constants.CREATE_EMULATION_PAGE.PACKET_DELAY_MS]
+            interface_packet_delay_jitter_ms = interfaces[api_constants.CREATE_EMULATION_PAGE.PACKET_DELAY_JITTER_MS]
+            interface_packet_delay_correlation_percentage = interfaces[
+                api_constants.CREATE_EMULATION_PAGE.PACKET_DELAY_CORRELATION_PERCENTAGE]
+            interfaces_packet_delay_distribution = interfaces[
+                api_constants.CREATE_EMULATION_PAGE.PACKET_DELAY_DISTRIBUTION]
+            interface_packet_loss_type = interfaces[api_constants.CREATE_EMULATION_PAGE.PACKET_LOSS_TYPE]
+            interface_loss_gmodel_p = interfaces[api_constants.CREATE_EMULATION_PAGE.LOSS_GE_MODEL_P]
+            interface_loss_gmodel_r = interfaces[api_constants.CREATE_EMULATION_PAGE.LOSS_GE_MODEL_R]
+            interface_loss_gmodel_k = interfaces[api_constants.CREATE_EMULATION_PAGE.LOSS_GE_MODEL_K]
+            interface_loss_gmodel_h = interfaces[api_constants.CREATE_EMULATION_PAGE.LOSS_GE_MODEL_H]
+            interface_packet_corruption_percentage = interfaces[
+                api_constants.CREATE_EMULATION_PAGE.PACKET_CORRUPT_PERCENTAGE]
+            interface_packet_corruption_correlation_percentage = interfaces[
+                api_constants.CREATE_EMULATION_PAGE.PACKET_CORRUPT_CORRELATION_PERCENTAGE]
+            interface_packet_duplication_percentage = interfaces[
+                api_constants.CREATE_EMULATION_PAGE.PACKET_DUPLICATE_PERCENTAGE]
+            interface_packet_duplicate_correlation_percentage = interfaces[
+                api_constants.CREATE_EMULATION_PAGE.PACKET_DUPLICATE_CORRELATION_PERCENTAGE]
+            interface_packet_reorder_percentage = interfaces[
+                api_constants.CREATE_EMULATION_PAGE.PACKET_REORDER_PERCENTAGE]
+            interface_packet_reorder_correlation_percentage = interfaces[
+                api_constants.CREATE_EMULATION_PAGE.PACKET_REORDER_CORRELATION_PERCENTAGE]
+            interface_packet_reorder_gap = interfaces[api_constants.CREATE_EMULATION_PAGE.PACKET_REORDER_GAP]
+            interface_rate_limit_m_bit = interfaces[api_constants.CREATE_EMULATION_PAGE.RATE_LIMIT_MBIT]
+            interface_packet_overhead_bytes = interfaces[api_constants.CREATE_EMULATION_PAGE.PACKET_OVERHEAD_BYTES]
+            interface_cell_overhead_bytes = interfaces[api_constants.CREATE_EMULATION_PAGE.CELL_OVERHEAD_BYTES]
             ips_and_network_configs.append(
                 (interface_ip, NodeNetworkConfig(
                     interface=interface_physical_interface,
@@ -717,22 +717,22 @@ def convert_json_data_to_topology_config(emulation_data: json) -> TopologyConfig
     :return: the Topology configuration
     """
     node_configs = []
-    emulation_containers = emulation_data["emulationContainer"]
+    emulation_containers = emulation_data[api_constants.CREATE_EMULATION_PAGE.EMULATION_CONTAINER]
     for containers in emulation_containers:
         subnetwork_masks = []
-        container_name = containers["name"]
+        container_name = containers[api_constants.CREATE_EMULATION_PAGE.NAME]
         ips_gw_default_policy_networks = []
-        container_interfaces = containers["interfaces"]
+        container_interfaces = containers[api_constants.CREATE_EMULATION_PAGE.INTERFACES]
         for interfaces in container_interfaces:
-            interface_default_gateway = interfaces["defaultGateway"]
-            interface_default_input = interfaces["defaultInput"]
-            interface_default_output = interfaces["defaultOutput"]
-            interface_default_forward = interfaces["defaultForward"]
-            interface_ip = interfaces["ip"]
-            interface_name = interfaces["name"]
-            interface_subnet_mask = interfaces["subnetMask"]
-            interface_subnet_prefix = interfaces["subnetPrefix"]
-            interface_bit_mask = interfaces["bitmask"]
+            interface_default_gateway = interfaces[api_constants.CREATE_EMULATION_PAGE.DEFAULT_GATEWAY]
+            interface_default_input = interfaces[api_constants.CREATE_EMULATION_PAGE.DEFAULT_INPUT]
+            interface_default_output = interfaces[api_constants.CREATE_EMULATION_PAGE.DEFAULT_OUTPUT]
+            interface_default_forward = interfaces[api_constants.CREATE_EMULATION_PAGE.DEFAULT_FORWARD]
+            interface_ip = interfaces[api_constants.CREATE_EMULATION_PAGE.IP]
+            interface_name = interfaces[api_constants.CREATE_EMULATION_PAGE.NAME]
+            interface_subnet_mask = interfaces[api_constants.CREATE_EMULATION_PAGE.SUBNET_MASK]
+            interface_subnet_prefix = interfaces[api_constants.CREATE_EMULATION_PAGE.SUBNET_PREFIX]
+            interface_bit_mask = interfaces[api_constants.CREATE_EMULATION_PAGE.BITMASK]
             subnetwork_masks.append(interface_subnet_mask)
             default_network_firewall_config = DefaultNetworkFirewallConfig(
                 ip=interface_ip,
@@ -769,38 +769,37 @@ def convert_json_data_to_traffic_config(emulation_data: json) -> TrafficConfig:
     :return: the traffic configuration
     """
     traffic_generators = []
-    emulation_containers = emulation_data["emulationContainer"]
-    emulation_time_step_length = emulation_data["emulationTimeStepLengh"]
+    emulation_containers = emulation_data[api_constants.CREATE_EMULATION_PAGE.EMULATION_CONTAINER]
+    emulation_time_step_length = emulation_data[api_constants.CREATE_EMULATION_PAGE.EMULATION_TIME_STEP_LENGTH]
     client_ip = ""
     client_name = ""
     client_subnet_mask = ""
     client_subnet_prefix = ""
     client_bit_mask = ""
     for containers in emulation_containers:
-        container_name = containers["name"]
-        container_interfaces = containers["interfaces"]
+        container_name = containers[api_constants.CREATE_EMULATION_PAGE.NAME]
+        container_interfaces = containers[api_constants.CREATE_EMULATION_PAGE.INTERFACES]
         interface_ip = ""
         interface_name = ""
         interface_subnet_mask = ""
         interface_subnet_prefix = ""
         interface_bit_mask = ""
         for interfaces in container_interfaces:
-            interface_ip = interfaces["ip"]
-            interface_name = interfaces["name"]
-            interface_subnet_prefix = interfaces["subnetPrefix"]
-            interface_subnet_mask = interfaces["subnetMask"]
-            interface_bit_mask = interfaces["bitmask"]
+            interface_ip = interfaces[api_constants.CREATE_EMULATION_PAGE.IP]
+            interface_name = interfaces[api_constants.CREATE_EMULATION_PAGE.NAME]
+            interface_subnet_prefix = interfaces[api_constants.CREATE_EMULATION_PAGE.SUBNET_PREFIX]
+            interface_subnet_mask = interfaces[api_constants.CREATE_EMULATION_PAGE.SUBNET_MASK]
+            interface_bit_mask = interfaces[api_constants.CREATE_EMULATION_PAGE.BITMASK]
 
-        traffic_generators.append(NodeTrafficConfig(ip=interface_ip,
-                                                    commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
-                                                                  container_name]
-                                                              + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
-                                                                  constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                                                    traffic_manager_port=collector_constants.MANAGER_PORTS.TRAFFIC_MANAGER_DEFAULT_PORT,
-                                                    traffic_manager_log_file=collector_constants.LOG_FILES.TRAFFIC_MANAGER_LOG_FILE,
-                                                    traffic_manager_log_dir=collector_constants.LOG_FILES.TRAFFIC_MANAGER_LOG_DIR,
-                                                    traffic_manager_max_workers=collector_constants.GRPC_WORKERS.DEFAULT_MAX_NUM_WORKERS))
-        if ("client" in container_name):
+        traffic_generators.append(NodeTrafficConfig(
+            ip=interface_ip, commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[container_name]
+                                       + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                           constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
+            traffic_manager_port=collector_constants.MANAGER_PORTS.TRAFFIC_MANAGER_DEFAULT_PORT,
+            traffic_manager_log_file=collector_constants.LOG_FILES.TRAFFIC_MANAGER_LOG_FILE,
+            traffic_manager_log_dir=collector_constants.LOG_FILES.TRAFFIC_MANAGER_LOG_DIR,
+            traffic_manager_max_workers=collector_constants.GRPC_WORKERS.DEFAULT_MAX_NUM_WORKERS))
+        if (api_constants.CREATE_EMULATION_PAGE.CLIENT in container_name):
             client_ip = interface_ip
             client_name = interface_name
             client_subnet_mask = interface_subnet_mask
@@ -855,19 +854,19 @@ def convert_json_data_to_users_config(emulation_data: json) -> UsersConfig:
     :param emulation_data: the emulation data in JSON format received from front-end
     :return: generates the UsersConfig
     """
-    emulation_containers = emulation_data["emulationContainer"]
+    emulation_containers = emulation_data[api_constants.CREATE_EMULATION_PAGE.EMULATION_CONTAINER]
     users = []
     for containers in emulation_containers:
-        container_users = containers["users"]
-        container_interfaces = containers["interfaces"]
+        container_users = containers[api_constants.CREATE_EMULATION_PAGE.USERS]
+        container_interfaces = containers[api_constants.CREATE_EMULATION_PAGE.INTERFACES]
         for interfaces in container_interfaces:
-            interface_name = interfaces["name"]
-            interface_ip = interfaces["ip"]
+            interface_name = interfaces[api_constants.CREATE_EMULATION_PAGE.NAME]
+            interface_ip = interfaces[api_constants.CREATE_EMULATION_PAGE.IP]
         all_users = []
         for user in container_users:
-            user_name = user["userName"]
-            user_pw = user["pw"]
-            user_access = user["root"]
+            user_name = user[api_constants.CREATE_EMULATION_PAGE.USER_NAME]
+            user_pw = user[api_constants.CREATE_EMULATION_PAGE.PW]
+            user_access = user[api_constants.CREATE_EMULATION_PAGE.ROOT]
             all_users.append(User(username=user_name, pw=user_pw, root=user_access))
         users.append(NodeUsersConfig(ip=interface_ip,
                                      users=all_users))
@@ -883,26 +882,33 @@ def convert_json_data_to_vulns_config(emulation_data: json) -> VulnerabilitiesCo
     :param emulation_data: the emulation data in JSON format received from front-end
     :return: the vulnerability config
     """
-    emulation_containers = emulation_data["emulationContainer"]
+    emulation_containers = emulation_data[api_constants.CREATE_EMULATION_PAGE.EMULATION_CONTAINER]
     vulns = []
     for containers in emulation_containers:
-        container_vulns = containers["vulns"]
+        container_vulns = containers[api_constants.CREATE_EMULATION_PAGE.VULNS]
         for vuln in container_vulns:
-            vuln_name = vuln["vulnName"]
-            vuln_type = vuln["vulnType"]
-            vuln_service_name = vuln["vulnService"]["name"]
-            vuln_service_protocol = vuln["vulnService"]["protocol"]
+            vuln_name = vuln[api_constants.CREATE_EMULATION_PAGE.VULN_NAME]
+            vuln_type = vuln[api_constants.CREATE_EMULATION_PAGE.VULN_TYPE]
+            vuln_service_name = vuln[api_constants.CREATE_EMULATION_PAGE.VULN_SERVICE][
+                api_constants.CREATE_EMULATION_PAGE.NAME]
+            vuln_service_protocol = vuln[api_constants.CREATE_EMULATION_PAGE.VULN_SERVICE][
+                api_constants.CREATE_EMULATION_PAGE.PROTOCOL]
             vuln_service_protocol = TransportProtocol(int(vuln_service_protocol))
-            vuln_service_port = vuln["vulnService"]["port"]
-            vuln_service_ip = vuln["vulnService"]["serviceIp"]
-            vuln_root_access = vuln["vulnRoot"]
-            vuln_credentials = vuln["vulnCredentials"]
+            vuln_service_port = vuln[api_constants.CREATE_EMULATION_PAGE.VULN_SERVICE][
+                api_constants.CREATE_EMULATION_PAGE.PORT]
+            vuln_service_ip = vuln[api_constants.CREATE_EMULATION_PAGE.VULN_SERVICE][
+                api_constants.CREATE_EMULATION_PAGE.SERVICE_IP]
+            vuln_root_access = vuln[api_constants.CREATE_EMULATION_PAGE.VULN_ROOT]
+            vuln_credentials = vuln[api_constants.CREATE_EMULATION_PAGE.VULN_CREDENTIALS]
             cred = []
             for credentials in vuln_credentials:
-                print(credentials["vulnCredUsername"], credentials["vulnCredPw"], credentials["vulnCredRoot"],
+                print(credentials[api_constants.CREATE_EMULATION_PAGE.VULN_CRED_USERNAME],
+                      credentials[api_constants.CREATE_EMULATION_PAGE.VULN_CRED_PW],
+                      credentials[api_constants.CREATE_EMULATION_PAGE.VULN_CRED_ROOT],
                       vuln_service_protocol)
-                cred.append(Credential(username=credentials["vulnCredUsername"], pw=credentials["vulnCredPw"],
-                                       root=credentials["vulnCredRoot"],
+                cred.append(Credential(username=credentials[api_constants.CREATE_EMULATION_PAGE.VULN_CRED_USERNAME],
+                                       pw=credentials[api_constants.CREATE_EMULATION_PAGE.VULN_CRED_PW],
+                                       root=credentials[api_constants.CREATE_EMULATION_PAGE.VULN_CRED_ROOT],
                                        service=vuln_service_name,
                                        protocol=vuln_service_protocol,
                                        port=vuln_service_port))
@@ -930,16 +936,16 @@ def convert_json_data_to_services_config(emulation_data: json) -> ServicesConfig
     :param emulation_data: the emulation data in JSON format received from front-end
     :return: The services configuration
     """
-    emulation_containers = emulation_data["emulationContainer"]
+    emulation_containers = emulation_data[api_constants.CREATE_EMULATION_PAGE.EMULATION_CONTAINER]
     services_configs = []
     for containers in emulation_containers:
-        container_services = containers["services"]
+        container_services = containers[api_constants.CREATE_EMULATION_PAGE.SERVICES]
         services = []
         for service in container_services:
-            service_name = service["name"]
-            service_protocol = service["protocol"]
-            service_port = service["port"]
-            service_ip = service["serviceIp"]
+            service_name = service[api_constants.CREATE_EMULATION_PAGE.NAME]
+            service_protocol = service[api_constants.CREATE_EMULATION_PAGE.PROTOCOL]
+            service_port = service[api_constants.CREATE_EMULATION_PAGE.PORT]
+            service_ip = service[api_constants.CREATE_EMULATION_PAGE.SERVICE_IP]
             services.append(NetworkService(protocol=service_protocol, port=service_port,
                                            name=service_name, credentials=[]))
     # *** for NodeServicesConfig the ip can be also the interface ip. I think it should be the same unless the node

@@ -17,3 +17,6 @@
 .custom-td {
     border-bottom: 2px solid lightgrey; /* Example: Change the color and width as needed */
 }
+.createEmulationInput {
+    font-size:12px
+}
