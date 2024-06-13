@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from 'react-bootstrap/Button'
 import Table from 'react-bootstrap/Table'
+import FormControl from 'react-bootstrap/FormControl';
 import './AddServices.css';
 
 /**
@@ -33,21 +34,22 @@ const AddServices = (props) => {
                             key={'form-service-' + containerService.protocol + '-' + serviceIndex + '-' + props.containerIndex}>
                             <tr
                                 key={'service-name-' + containerService.name + '-' + serviceIndex + '-' + props.containerIndex}>
-                                <td> Service name</td>
+                                <td> <Button type="button" onClick={() =>
+                                    props.handleDeleteService(props.containerIndex, serviceIndex)}
+                                             variant="danger" size="sm"
+                                             style={{marginRight: '5px'}}>
+                                    <i className="fa fa-trash startStopIcon"
+                                       aria-hidden="true"/>
+                                </Button> Service name</td>
                                 <td>
-                                    <input
+                                    <FormControl
                                         ref={props.inputServiceNameRef}
-                                        type="text"
                                         value={containerService.name}
                                         onChange={(event) => props.handleServiceNameChange(event, props.containerIndex, serviceIndex)}
+                                        size="sm"
+                                        className="createEmulationInput"
+                                        placeholder="Name"
                                     />
-                                    <Button type="button" onClick={() =>
-                                        props.handleDeleteService(props.containerIndex, serviceIndex)}
-                                            variant="danger" size="sm"
-                                            style={{marginLeft: '5px'}}>
-                                        <i className="fa fa-trash startStopIcon"
-                                           aria-hidden="true"/>
-                                    </Button>
                                 </td>
                             </tr>
                             <tr key={'service-protocol' + containerService.protocol + '-' + serviceIndex + '-' + props.containerIndex}>
@@ -64,11 +66,13 @@ const AddServices = (props) => {
                             <tr key={'service-port' + containerService.port + '-' + serviceIndex + '-' + props.containerIndex}>
                                 <td> Service port</td>
                                 <td>
-                                    <input
+                                    <FormControl
                                         ref={props.inputServicePortRef}
-                                        type="text"
                                         value={containerService.port}
                                         onChange={(event) => props.handleServicePortChange(event, props.containerIndex, serviceIndex)}
+                                        size="sm"
+                                        className="createEmulationInput"
+                                        placeholder="Service port"
                                     />
                                 </td>
                             </tr>

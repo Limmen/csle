@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from 'react-bootstrap/Button'
 import Table from 'react-bootstrap/Table'
+import FormControl from 'react-bootstrap/FormControl';
 import './AddVulns.css';
 
 /**
@@ -33,21 +34,22 @@ const AddVulns = (props) => {
               key={'form-vul-' + containerVuln.protocol + '-' + vulnIndex + '-' + props.containerIndex}>
               <tr
                 key={'vul-name-' + containerVuln.name + '-' + vulnIndex + '-' + props.containerIndex}>
-                <td> Vulnerability name</td>
-                <td>
-                  <input
-                    ref={props.inputVulnNameRef}
-                    type="text"
-                    value={containerVuln.vulnName}
-                    onChange={(event) => props.handleVulnNameChange(event, props.containerIndex, vulnIndex)}
-                  />
-                  <Button type="button" onClick={() =>
+                <td> <Button type="button" onClick={() =>
                     props.handleDeleteVuln(props.containerIndex, vulnIndex)}
-                          variant="danger" size="sm"
-                          style={{ marginLeft: '5px' }}>
-                    <i className="fa fa-trash startStopIcon"
-                       aria-hidden="true" />
-                  </Button>
+                             variant="danger" size="sm"
+                             style={{ marginRight: '5px' }}>
+                  <i className="fa fa-trash startStopIcon"
+                     aria-hidden="true" />
+                </Button> Vulnerability name</td>
+                <td>
+                  <FormControl
+                      ref={props.inputVulnNameRef}
+                      value={containerVuln.vulnName}
+                      onChange={(event) => props.handleVulnNameChange(event, props.containerIndex, vulnIndex)}
+                      size="sm"
+                      className="createEmulationInput"
+                      placeholder="Vulnerability name"
+                  />
                 </td>
               </tr>
               <tr>
@@ -94,19 +96,23 @@ const AddVulns = (props) => {
                   <td>Vulnerability Credential {credIndex + 1}</td>
                   <td>
                     <div>
-                      <input
-                        ref={props.inputVulnCredUsernameForChangeRef}
-                        type="text"
-                        value={credential.vulnCredUsername}
-                        onChange={(e) => props.handleVulnCredentialChange(e, props.containerIndex, vulnIndex, credIndex, 'vulnCredUsername')}
+                      <FormControl
+                          ref={props.inputVulnCredUsernameForChangeRef}
+                          value={credential.vulnCredUsername}
+                          onChange={(e) => props.handleVulnCredentialChange(e, props.containerIndex, vulnIndex, credIndex, 'vulnCredUsername')}
+                          size="sm"
+                          className="createEmulationInput"
+                          placeholder="Credential username"
                       />
                     </div>
                     <div style={{ marginTop: '5px' }}>
-                      <input
-                        ref={props.inputVulnCredPwForChangeRef}
-                        type="text"
-                        value={credential.vulnCredPw}
-                        onChange={(e) => props.handleVulnCredentialChange(e, props.containerIndex, vulnIndex, credIndex, 'vulnCredPw')}
+                      <FormControl
+                          ref={props.inputVulnCredPwForChangeRef}
+                          value={credential.vulnCredPw}
+                          onChange={(e) => props.handleVulnCredentialChange(e, props.containerIndex, vulnIndex, credIndex, 'vulnCredPw')}
+                          size="sm"
+                          className="createEmulationInput"
+                          placeholder="Credential password"
                       />
                     </div>
                     <div style={{ marginTop: '5px' }}>
@@ -132,34 +138,6 @@ const AddVulns = (props) => {
               <tr className="custom-td">
                 <td>Add vulnerability credentials</td>
                 <td>
-                  <div>
-                    <input
-                      ref={props.inputVulnCredUsernameRef}
-                      type="text"
-                      name="vulnCredUsername"
-                      value={props.newVulnCredentials.vulnCredUsername}
-                      onChange={props.handleNewCredentialChange}
-                    />
-                  </div>
-                  <div style={{ marginTop: '5px' }}>
-                    <input
-                      ref={props.inputVulnCredPwRef}
-                      type="text"
-                      name="vulnCredPw"
-                      value={props.newVulnCredentials.vulnCredPw}
-                      onChange={props.handleNewCredentialChange}
-                    />
-                  </div>
-                  <div style={{ marginTop: '5px' }}>
-                    <label style={{fontSize: '12px', marginRight: '5px'}}>Credentials access level</label>
-                    <select
-                      name="vulnCredRoot"
-                      value={props.newVulnCredentials.vulnCredRoot}
-                      onChange={props.handleNewCredentialChange}>
-                      <option value="True">True</option>
-                      <option value="False">False</option>
-                    </select>
-                  </div>
                   <div style={{ marginTop: '5px' }}>
                     <Button
                       onClick={() => {

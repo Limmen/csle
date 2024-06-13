@@ -233,8 +233,7 @@ const CreateEmulation = (props) => {
         })
     }
 
-    const handleContainerFlagPermissionChange = (event, index) => {
-        const permissionValue = event.target.value === 'true'
+    const handleContainerFlagPermissionChange = (permissionValue, index) => {
         setContainers(prevContainers => {
             const updatedContainers = [...prevContainers]
             updatedContainers[index] = {
@@ -249,8 +248,7 @@ const CreateEmulation = (props) => {
         setIdsEnabled(idsValue)
     }
 
-    const handleContainerReachableByAgentChange = (event, index) => {
-        const reachableValue = event.target.value === 'true'
+    const handleContainerReachableByAgentChange = (reachableValue, index) => {
         setContainers(prevContainers => {
             const updatedContainers = [...prevContainers]
             updatedContainers[index] = {
@@ -445,8 +443,7 @@ const CreateEmulation = (props) => {
         setShouldFocusPw(true)
     }
 
-    const handleContainerUserAccessChange = (event, containerIndex, userIndex) => {
-        const userAccessValue = event.target.value
+    const handleContainerUserAccessChange = (userAccessValue, containerIndex, userIndex) => {
         setContainers(prevContainers => {
             const updatedContainers = [...prevContainers]
             const containerToUpdate = {...updatedContainers[containerIndex]}
@@ -1638,7 +1635,7 @@ const CreateEmulation = (props) => {
                       </Collapse>
                   </Card>
               </Accordion>
-              <Accordion defaultActiveKey="1">
+              <Accordion defaultActiveKey="1" className="containersAccord">
                   <Card className="subCard">
                       <Card.Header>
                           <Button
@@ -1653,7 +1650,7 @@ const CreateEmulation = (props) => {
                               </h5>
                           </Button>
                       </Card.Header>
-                      <Collapse in={containerOpen}>
+                      <Collapse in={containerOpen} className="containersCollapse">
                           <div id="container" className="cardBodyHidden">
                               <div>
                                   Add a new container &nbsp;&nbsp;
@@ -1676,6 +1673,7 @@ const CreateEmulation = (props) => {
                                                           onChange={handleContainerSelectChange}
                                                           placeholder="Container Operating System"
                                                           menuPlacement="bottom"
+                                                          className="containerImageDropdown"
                                                       />
                                                   </div>
                                                   <div className="conditionalDist inline-block">
@@ -1847,7 +1845,7 @@ const CreateEmulation = (props) => {
               </Accordion>
           </div>
 
-          <div>
+          <div className="saveEm">
 
               <h5><br/><br/>Save the emulation</h5>
               <Button onClick={createEmulationRequest}

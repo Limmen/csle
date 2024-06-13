@@ -1,6 +1,8 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Button from 'react-bootstrap/Button'
 import Table from 'react-bootstrap/Table'
+import FormControl from 'react-bootstrap/FormControl';
+import Select from 'react-select'
 import './AddInterfaces.css';
 
 const AddInterfaces = (props) => {
@@ -29,31 +31,34 @@ const AddInterfaces = (props) => {
               key={'form-' + containerInterfaces.name + '-' + interfaceIndex + '-' + props.containerIndex}>
               <tr
                 key={'interface-' + containerInterfaces.name + '-' + interfaceIndex + '-' + props.containerIndex}>
-                <td> Name</td>
-                <td>
-                  <input
-                    ref={props.inputNameRef}
-                    type="text"
-                    value={containerInterfaces.name}
-                    onChange={(event) => props.handleInterfaceNameChange(event, props.containerIndex, interfaceIndex)}
-                  />
-                  <Button type="button" onClick={() =>
+                <td><Button type="button" onClick={() =>
                     props.deleteInterfaceHandler(props.containerIndex, interfaceIndex)}
-                          variant="danger" size="sm"
-                          style={{ marginLeft: '5px' }}>
-                    <i className="fa fa-trash startStopIcon"
-                       aria-hidden="true" />
-                  </Button>
+                            variant="danger" size="sm"
+                            style={{ marginRight: '5px' }}>
+                  <i className="fa fa-trash startStopIcon"
+                     aria-hidden="true" />
+                </Button> Name</td>
+                <td>
+                  <FormControl
+                      ref={props.inputNameRef}
+                      value={containerInterfaces.name}
+                      onChange={(event) => props.handleInterfaceNameChange(event, props.containerIndex, interfaceIndex)}
+                      size="sm"
+                      className="createEmulationInput"
+                      placeholder="Name"
+                  />
                 </td>
               </tr>
               <tr key={'ip-' + containerInterfaces.ip + '-' + interfaceIndex + '-' + props.containerIndex}>
                 <td> IP </td>
                 <td>
-                  <input
-                    ref={props.inputIPRef}
-                    type="text"
-                    value={containerInterfaces.ip}
-                    onChange={(event) => props.handleIPChange(event, props.containerIndex, interfaceIndex)}
+                  <FormControl
+                      ref={props.inputIPRef}
+                      value={containerInterfaces.ip}
+                      onChange={(event) => props.handleIPChange(event, props.containerIndex, interfaceIndex)}
+                      size="sm"
+                      className="createEmulationInput"
+                      placeholder="IP"
                   />
                 </td>
               </tr>
@@ -61,12 +66,13 @@ const AddInterfaces = (props) => {
                 key={'subnet-' + containerInterfaces.subnetMask + '-' + interfaceIndex + '-' + props.containerIndex}>
                 <td> Subnet mask</td>
                 <td>
-                  <input
-                    ref={props.inputSubnetMaskRef}
-                    type="text"
-                    value={containerInterfaces.subnetMask}
-                    onChange={(event) =>
-                      props.handleSubnetMaskChange(event, props.containerIndex, interfaceIndex)}
+                  <FormControl
+                      ref={props.inputSubnetMaskRef}
+                      value={containerInterfaces.subnetMask}
+                      onChange={(event) => props.handleSubnetMaskChange(event, props.containerIndex, interfaceIndex)}
+                      size="sm"
+                      className="createEmulationInput"
+                      placeholder="Subnet mask"
                   />
                 </td>
               </tr>
@@ -98,13 +104,15 @@ const AddInterfaces = (props) => {
                   interfaceIndex + '-' + props.containerIndex}>
                 <td> Limit packets queue</td>
                 <td>
-                  <input
-                    ref={props.inputLimitPacketsQueueRef}
-                    type="text"
-                    value={containerInterfaces.limitPacketsQueue}
-                    onChange={(event) =>
-                      props.handleLimitPacketsQueueChange(event, props.containerIndex,
-                        interfaceIndex)}
+                  <FormControl
+                      ref={props.inputLimitPacketsQueueRef}
+                      value={containerInterfaces.limitPacketsQueue}
+                      onChange={(event) =>
+                          props.handleLimitPacketsQueueChange(event, props.containerIndex,
+                              interfaceIndex)}
+                      size="sm"
+                      className="createEmulationInput"
+                      placeholder="Limits packets queue"
                   />
                 </td>
               </tr>
@@ -112,13 +120,13 @@ const AddInterfaces = (props) => {
                 key={'packet-delay-' + containerInterfaces.packetDelayMs + '-' + interfaceIndex + '-' + props.containerIndex}>
                 <td> Packet delay (ms)</td>
                 <td>
-                  <input
-                    ref={props.inputPacketDelayMsRef}
-                    type="text"
-                    value={containerInterfaces.packetDelayMs}
-                    onChange={(event) =>
-                      props.handlePacketDelayMs(event, props.containerIndex,
-                        interfaceIndex)}
+                  <FormControl
+                      ref={props.inputPacketDelayMsRef}
+                      value={containerInterfaces.packetDelayMs}
+                      onChange={(event) => props.handlePacketDelayMs(event, props.containerIndex, interfaceIndex)}
+                      size="sm"
+                      className="createEmulationInput"
+                      placeholder="Packet delay (ms)"
                   />
                 </td>
               </tr>
@@ -126,13 +134,15 @@ const AddInterfaces = (props) => {
                 key={'packet-jitter-' + containerInterfaces.packetDelayJitterMs + '-' + interfaceIndex + '-' + props.containerIndex}>
                 <td> Packet delay jitter (ms)</td>
                 <td>
-                  <input
-                    ref={props.inputPacketDelayJitterMsRef}
-                    type="text"
-                    value={containerInterfaces.packetDelayJitterMs}
-                    onChange={(event) =>
-                      props.handlePacketDelayJitterMs(event, props.containerIndex,
-                        interfaceIndex)}
+                  <FormControl
+                      ref={props.inputPacketDelayJitterMsRef}
+                      value={containerInterfaces.packetDelayJitterMs}
+                      onChange={(event) =>
+                          props.handlePacketDelayJitterMs(event, props.containerIndex,
+                              interfaceIndex)}
+                      size="sm"
+                      className="createEmulationInput"
+                      placeholder="Packet delay jitter (ms)"
                   />
                 </td>
               </tr>
@@ -142,13 +152,15 @@ const AddInterfaces = (props) => {
                 <td> Packet delay correlation percentage
                 </td>
                 <td>
-                  <input
-                    ref={props.inputPacketDelayCorrelationPercentageRef}
-                    type="text"
-                    value={containerInterfaces.packetDelayCorrelationPercentage}
-                    onChange={(event) =>
-                      props.handlePacketDelayCorrelationPercentage(event, props.containerIndex,
-                        interfaceIndex)}
+                  <FormControl
+                      ref={props.inputPacketDelayCorrelationPercentageRef}
+                      value={containerInterfaces.packetDelayCorrelationPercentage}
+                      onChange={(event) =>
+                          props.handlePacketDelayCorrelationPercentage(event, props.containerIndex,
+                              interfaceIndex)}
+                      size="sm"
+                      className="createEmulationInput"
+                      placeholder="Packet delay correlation percentage"
                   />
                 </td>
               </tr>
@@ -187,13 +199,15 @@ const AddInterfaces = (props) => {
                   + interfaceIndex + '-' + props.containerIndex}>
                 <td> Loss Gemodel P</td>
                 <td>
-                  <input
-                    ref={props.inputLossGemodelpRef}
-                    type="text"
-                    value={containerInterfaces.lossGemodelp}
-                    onChange={(event) =>
-                      props.handleLossGemodelp(event, props.containerIndex,
-                        interfaceIndex)}
+                  <FormControl
+                      ref={props.inputLossGemodelpRef}
+                      value={containerInterfaces.lossGemodelp}
+                      onChange={(event) =>
+                          props.handleLossGemodelp(event, props.containerIndex,
+                              interfaceIndex)}
+                      size="sm"
+                      className="createEmulationInput"
+                      placeholder="Loss GeModel P"
                   />
                 </td>
               </tr>
@@ -202,13 +216,15 @@ const AddInterfaces = (props) => {
                   + interfaceIndex + '-' + props.containerIndex}>
                 <td> Loss Gemodel R</td>
                 <td>
-                  <input
-                    ref={props.inputLossGemodelrRef}
-                    type="text"
-                    value={containerInterfaces.lossGemodelr}
-                    onChange={(event) =>
-                      props.handleLossGemodelr(event, props.containerIndex,
-                        interfaceIndex)}
+                  <FormControl
+                      ref={props.inputLossGemodelrRef}
+                      value={containerInterfaces.lossGemodelr}
+                      onChange={(event) =>
+                          props.handleLossGemodelr(event, props.containerIndex,
+                              interfaceIndex)}
+                      size="sm"
+                      className="createEmulationInput"
+                      placeholder="Loss GeModel R"
                   />
                 </td>
               </tr>
@@ -217,13 +233,15 @@ const AddInterfaces = (props) => {
                   + interfaceIndex + '-' + props.containerIndex}>
                 <td> Loss Gemodel K</td>
                 <td>
-                  <input
-                    ref={props.inputLossGemodelkRef}
-                    type="text"
-                    value={containerInterfaces.lossGemodelk}
-                    onChange={(event) =>
-                      props.handleLossGemodelk(event, props.containerIndex,
-                        interfaceIndex)}
+                  <FormControl
+                      ref={props.inputLossGemodelkRef}
+                      value={containerInterfaces.lossGemodelk}
+                      onChange={(event) =>
+                          props.handleLossGemodelk(event, props.containerIndex,
+                              interfaceIndex)}
+                      size="sm"
+                      className="createEmulationInput"
+                      placeholder="Loss GeModel K"
                   />
                 </td>
               </tr>
@@ -232,13 +250,15 @@ const AddInterfaces = (props) => {
                   + interfaceIndex + '-' + props.containerIndex}>
                 <td> Loss Gemodel H</td>
                 <td>
-                  <input
-                    ref={props.inputLossGemodelhRef}
-                    type="text"
-                    value={containerInterfaces.lossGemodelh}
-                    onChange={(event) =>
-                      props.handleLossGemodelh(event, props.containerIndex,
-                        interfaceIndex)}
+                  <FormControl
+                      ref={props.inputLossGemodelhRef}
+                      value={containerInterfaces.lossGemodelh}
+                      onChange={(event) =>
+                          props.handleLossGemodelh(event, props.containerIndex,
+                              interfaceIndex)}
+                      size="sm"
+                      className="createEmulationInput"
+                      placeholder="Loss GeModel H"
                   />
                 </td>
               </tr>
@@ -247,13 +267,15 @@ const AddInterfaces = (props) => {
                   + interfaceIndex + '-' + props.containerIndex}>
                 <td> Packet corruption percentage</td>
                 <td>
-                  <input
-                    ref={props.inputPacketCorruptPercentageRef}
-                    type="text"
-                    value={containerInterfaces.packetCorruptPercentage}
-                    onChange={(event) =>
-                      props.handlePacketCorruptPercentage(event, props.containerIndex,
-                        interfaceIndex)}
+                  <FormControl
+                      ref={props.inputPacketCorruptPercentageRef}
+                      value={containerInterfaces.packetCorruptPercentage}
+                      onChange={(event) =>
+                          props.handlePacketCorruptPercentage(event, props.containerIndex,
+                              interfaceIndex)}
+                      size="sm"
+                      className="createEmulationInput"
+                      placeholder="Packet corruption percentage"
                   />
                 </td>
               </tr>
@@ -265,13 +287,15 @@ const AddInterfaces = (props) => {
                   percentage
                 </td>
                 <td>
-                  <input
-                    ref={props.inputPacketCorruptCorrelationPercentageRef}
-                    type="text"
-                    value={containerInterfaces.packetCorruptCorrelationPercentage}
-                    onChange={(event) =>
-                      props.handlePacketCorruptCorrelationPercentage(event, props.containerIndex,
-                        interfaceIndex)}
+                  <FormControl
+                      ref={props.inputPacketCorruptCorrelationPercentageRef}
+                      value={containerInterfaces.packetCorruptCorrelationPercentage}
+                      onChange={(event) =>
+                          props.handlePacketCorruptCorrelationPercentage(event, props.containerIndex,
+                              interfaceIndex)}
+                      size="sm"
+                      className="createEmulationInput"
+                      placeholder="Packet corruption correlation percentage"
                   />
                 </td>
               </tr>
@@ -281,13 +305,15 @@ const AddInterfaces = (props) => {
                   + interfaceIndex + '-' + props.containerIndex}>
                 <td> Packet duplicate percentage</td>
                 <td>
-                  <input
-                    ref={props.inputPacketDuplicatePercentageRef}
-                    type="text"
-                    value={containerInterfaces.packetDuplicatePercentage}
-                    onChange={(event) =>
-                      props.handlePacketDuplicatePercentage(event, props.containerIndex,
-                        interfaceIndex)}
+                  <FormControl
+                      ref={props.inputPacketDuplicatePercentageRef}
+                      value={containerInterfaces.packetDuplicatePercentage}
+                      onChange={(event) =>
+                          props.handlePacketDuplicatePercentage(event, props.containerIndex,
+                              interfaceIndex)}
+                      size="sm"
+                      className="createEmulationInput"
+                      placeholder="Packet duplicate percentage"
                   />
                 </td>
               </tr>
@@ -299,13 +325,15 @@ const AddInterfaces = (props) => {
                   percentage
                 </td>
                 <td>
-                  <input
-                    ref={props.inputPacketDuplicateCorrelationPercentageRef}
-                    type="text"
-                    value={containerInterfaces.packetDuplicateCorrelationPercentage}
-                    onChange={(event) =>
-                      props.handlePacketDuplicateCorrelationPercentage(event,
-                        props.containerIndex, interfaceIndex)}
+                  <FormControl
+                      ref={props.inputPacketDuplicateCorrelationPercentageRef}
+                      value={containerInterfaces.packetDuplicateCorrelationPercentage}
+                      onChange={(event) =>
+                          props.handlePacketDuplicateCorrelationPercentage(event,
+                              props.containerIndex, interfaceIndex)}
+                      size="sm"
+                      className="createEmulationInput"
+                      placeholder="Packet duplicate correlation percentage"
                   />
                 </td>
               </tr>
@@ -315,13 +343,15 @@ const AddInterfaces = (props) => {
                   + interfaceIndex + '-' + props.containerIndex}>
                 <td> Packet reorder percentage</td>
                 <td>
-                  <input
-                    ref={props.inputPacketReorderPercentageRef}
-                    type="text"
-                    value={containerInterfaces.packetReorderPercentage}
-                    onChange={(event) =>
-                      props.handlePacketReorderPercentage(event,
-                        props.containerIndex, interfaceIndex)}
+                  <FormControl
+                      ref={props.inputPacketReorderPercentageRef}
+                      value={containerInterfaces.packetReorderPercentage}
+                      onChange={(event) =>
+                          props.handlePacketReorderPercentage(event,
+                              props.containerIndex, interfaceIndex)}
+                      size="sm"
+                      className="createEmulationInput"
+                      placeholder="Packet reorder percentage"
                   />
                 </td>
               </tr>
@@ -332,13 +362,15 @@ const AddInterfaces = (props) => {
                 <td> Packet reorder correlation percentage
                 </td>
                 <td>
-                  <input
-                    ref={props.inputPacketReorderCorrelationPercentageRef}
-                    type="text"
-                    value={containerInterfaces.packetReorderCorrelationPercentage}
-                    onChange={(event) =>
-                      props.handlePacketReorderCorrelationPercentage(event,
-                        props.containerIndex, interfaceIndex)}
+                  <FormControl
+                      ref={props.inputPacketReorderCorrelationPercentageRef}
+                      value={containerInterfaces.packetReorderCorrelationPercentage}
+                      onChange={(event) =>
+                          props.handlePacketReorderCorrelationPercentage(event,
+                              props.containerIndex, interfaceIndex)}
+                      size="sm"
+                      className="createEmulationInput"
+                      placeholder="Packet reorder correlation percentage"
                   />
                 </td>
               </tr>
@@ -348,13 +380,15 @@ const AddInterfaces = (props) => {
                   + interfaceIndex + '-' + props.containerIndex}>
                 <td> Packet reorder gap</td>
                 <td>
-                  <input
-                    ref={props.inputPacketReorderGapRef}
-                    type="text"
-                    value={containerInterfaces.packetReorderGap}
-                    onChange={(event) =>
-                      props.handlePacketReorderGap(event,
-                        props.containerIndex, interfaceIndex)}
+                  <FormControl
+                      ref={props.inputPacketReorderGapRef}
+                      value={containerInterfaces.packetReorderGap}
+                      onChange={(event) =>
+                          props.handlePacketReorderGap(event,
+                              props.containerIndex, interfaceIndex)}
+                      size="sm"
+                      className="createEmulationInput"
+                      placeholder="Packet reorder gap"
                   />
                 </td>
               </tr>
@@ -364,13 +398,15 @@ const AddInterfaces = (props) => {
                   + interfaceIndex + '-' + props.containerIndex}>
                 <td> Rate limit M bit</td>
                 <td>
-                  <input
-                    ref={props.inputRateLimitMbitRef}
-                    type="text"
-                    value={containerInterfaces.rateLimitMbit}
-                    onChange={(event) =>
-                      props.handleRateLimitMbit(event,
-                        props.containerIndex, interfaceIndex)}
+                  <FormControl
+                      ref={props.inputRateLimitMbitRef}
+                      value={containerInterfaces.rateLimitMbit}
+                      onChange={(event) =>
+                          props.handleRateLimitMbit(event,
+                              props.containerIndex, interfaceIndex)}
+                      size="sm"
+                      className="createEmulationInput"
+                      placeholder="Rate limit M bit"
                   />
                 </td>
               </tr>
@@ -380,13 +416,15 @@ const AddInterfaces = (props) => {
                   + interfaceIndex + '-' + props.containerIndex}>
                 <td> Packet overhead bytes</td>
                 <td>
-                  <input
-                    ref={props.inputPacketOverheadBytesRef}
-                    type="text"
-                    value={containerInterfaces.packetOverheadBytes}
-                    onChange={(event) =>
-                      props.handlePacketOverheadBytes(event,
-                        props.containerIndex, interfaceIndex)}
+                  <FormControl
+                      ref={props.inputPacketOverheadBytesRef}
+                      value={containerInterfaces.packetOverheadBytes}
+                      onChange={(event) =>
+                          props.handlePacketOverheadBytes(event,
+                              props.containerIndex, interfaceIndex)}
+                      size="sm"
+                      className="createEmulationInput"
+                      placeholder="Packet overhead bytes"
                   />
                 </td>
               </tr>
@@ -396,13 +434,15 @@ const AddInterfaces = (props) => {
                   + interfaceIndex + '-' + props.containerIndex}>
                 <td> Cell overhead bytes</td>
                 <td>
-                  <input
-                    ref={props.inputCellOverheadBytesRef}
-                    type="text"
-                    value={containerInterfaces.cellOverheadBytes}
-                    onChange={(event) =>
-                      props.handleCellOverheadBytes(event,
-                        props.containerIndex, interfaceIndex)}
+                  <FormControl
+                      ref={props.inputCellOverheadBytesRef}
+                      value={containerInterfaces.cellOverheadBytes}
+                      onChange={(event) =>
+                          props.handleCellOverheadBytes(event,
+                              props.containerIndex, interfaceIndex)}
+                      size="sm"
+                      className="createEmulationInput"
+                      placeholder="Cell overhead bytes"
                   />
                 </td>
               </tr>
@@ -412,13 +452,15 @@ const AddInterfaces = (props) => {
                   + interfaceIndex + '-' + props.containerIndex}>
                 <td> Default gateway</td>
                 <td>
-                  <input
-                    ref={props.inputDefaultGatewayRef}
-                    type="text"
-                    value={containerInterfaces.defaultGateway}
-                    onChange={(event) =>
-                      props.handleDefaultGateway(event,
-                        props.containerIndex, interfaceIndex)}
+                  <FormControl
+                      ref={props.inputDefaultGatewayRef}
+                      value={containerInterfaces.defaultGateway}
+                      onChange={(event) =>
+                          props.handleDefaultGateway(event,
+                              props.containerIndex, interfaceIndex)}
+                      size="sm"
+                      className="createEmulationInput"
+                      placeholder="Default Gateway"
                   />
                 </td>
               </tr>
@@ -466,13 +508,15 @@ const AddInterfaces = (props) => {
                   + interfaceIndex + "-" + props.containerIndex}>
                 <td> Traffic manager port</td>
                 <td>
-                  <input
-                    ref={props.inputTrafficManagerPortRef}
-                    type="text"
-                    value={containerInterfaces.trafficManagerPort}
-                    onChange={(event) =>
-                      props.handleTrafficManagerPort(event,
-                        props.containerIndex, interfaceIndex)}
+                  <FormControl
+                      ref={props.inputTrafficManagerPortRef}
+                      value={containerInterfaces.trafficManagerPort}
+                      onChange={(event) =>
+                          props.handleTrafficManagerPort(event,
+                              props.containerIndex, interfaceIndex)}
+                      size="sm"
+                      className="createEmulationInput"
+                      placeholder="Traffic manager port"
                   />
                 </td>
               </tr>
@@ -481,13 +525,15 @@ const AddInterfaces = (props) => {
                   + interfaceIndex + '-' + props.containerIndex}>
                 <td> Traffic manager log file</td>
                 <td>
-                  <input
-                    ref={props.inputTrafficManagerLogFileRef}
-                    type="text"
-                    value={containerInterfaces.trafficManagerLogFile}
-                    onChange={(event) =>
-                      props.handleTrafficManagerLogFile(event,
-                        props.containerIndex, interfaceIndex)}
+                  <FormControl
+                      ref={props.inputTrafficManagerLogFileRef}
+                      value={containerInterfaces.trafficManagerLogFile}
+                      onChange={(event) =>
+                          props.handleTrafficManagerLogFile(event,
+                              props.containerIndex, interfaceIndex)}
+                      size="sm"
+                      className="createEmulationInput"
+                      placeholder="Traffic manager log file"
                   />
                 </td>
               </tr>
@@ -497,13 +543,15 @@ const AddInterfaces = (props) => {
                   + interfaceIndex + '-' + props.containerIndex}>
                 <td> Traffic manager log directory</td>
                 <td>
-                  <input
-                    ref={props.inputTrafficManagerLogDirRef}
-                    type="text"
-                    value={containerInterfaces.trafficManagerLogDir}
-                    onChange={(event) =>
-                      props.handleTrafficManagerLogDir(event,
-                        props.containerIndex, interfaceIndex)}
+                  <FormControl
+                      ref={props.inputTrafficManagerLogDirRef}
+                      value={containerInterfaces.trafficManagerLogDir}
+                      onChange={(event) =>
+                          props.handleTrafficManagerLogDir(event,
+                              props.containerIndex, interfaceIndex)}
+                      size="sm"
+                      className="createEmulationInput"
+                      placeholder="Traffic manager log directory"
                   />
                 </td>
               </tr>
@@ -513,13 +561,15 @@ const AddInterfaces = (props) => {
                     + interfaceIndex + '-' + props.containerIndex}>
                 <td> Traffic manager maximum workers</td>
                 <td>
-                  <input
-                    ref={props.inputTrafficManagerMaxWorkersRef}
-                    type="text"
-                    value={containerInterfaces.trafficManagerMaxWorkers}
-                    onChange={(event) =>
-                      props.handleTrafficManagerMaxWorkers(event,
-                        props.containerIndex, interfaceIndex)}
+                  <FormControl
+                      ref={props.inputTrafficManagerMaxWorkersRef}
+                      value={containerInterfaces.trafficManagerMaxWorkers}
+                      onChange={(event) =>
+                          props.handleTrafficManagerMaxWorkers(event,
+                              props.containerIndex, interfaceIndex)}
+                      size="sm"
+                      className="createEmulationInput"
+                      placeholder="Traffic manager maximum workers"
                   />
                 </td>
               </tr>

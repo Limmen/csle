@@ -1,12 +1,32 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Button from 'react-bootstrap/Button'
 import Table from 'react-bootstrap/Table'
+import FormControl from 'react-bootstrap/FormControl';
+import Select from 'react-select'
 import './AddUsers.css';
 
 /**
- * Component representing the AddServices part of the create emulation page
+ * Component representing the AddUsers part of the create emulation page
  */
 const AddUsers = (props) => {
+
+  const rootAccessOptions = [
+    {
+      value: true,
+      label: "True"
+    },
+    {
+      value: false,
+      label: "False"
+    }
+  ]
+
+  const [selectedRootAccess, setSelectedRootAccess] = useState(rootAccessOptions[0]);
+
+  const updatedRootAccess = (rootAccessOption) => {
+    setSelectedRootAccess(rootAccessOption)
+    props.handleContainerUserAccessChange(rootAccessOption.value, props.containerIndex)
+  }
 
   return (
     <div>
@@ -32,43 +52,50 @@ const AddUsers = (props) => {
               key={'form-user-' + containerUsers.userName + '-' + userIndex + '-' + props.containerIndex}>
               <tr
                 key={'user-name-' + containerUsers.userName + '-' + userIndex + '-' + props.containerIndex}>
-                <td> Username</td>
-                <td>
-                  <input
-                    ref={props.inputUserNameRef}
-                    type="text"
-                    value={containerUsers.userName}
-                    onChange={(event) => props.handleContainerUserNameChange(event, props.containerIndex, userIndex)}
-                  />
-                  <Button type="button" onClick={() =>
+                <td> <Button type="button" onClick={() =>
                     props.handleDeleteContainerUser(props.containerIndex, userIndex)}
-                          variant="danger" size="sm"
-                          style={{ marginLeft: '5px' }}>
-                    <i className="fa fa-trash startStopIcon"
-                       aria-hidden="true" />
-                  </Button>
+                             variant="danger" size="sm"
+                             style={{ marginRight: '5px' }}>
+                  <i className="fa fa-trash startStopIcon"
+                     aria-hidden="true" />
+                </Button> Username</td>
+                <td>
+                  <FormControl
+                      ref={props.inputUserNameRef}
+                      value={containerUsers.userName}
+                      onChange={(event) => props.handleContainerUserNameChange(event, props.containerIndex, userIndex)}
+                      size="sm"
+                      className="createEmulationInput"
+                      placeholder="Username"
+                  />
                 </td>
               </tr>
               <tr key={'pw-' + containerUsers.pw + '-' + userIndex + '-' + props.containerIndex}>
                 <td> Password</td>
                 <td>
-                  <input
-                    ref={props.inputPwRef}
-                    type="text"
-                    value={containerUsers.pw}
-                    onChange={(event) => props.handleContainerUserPwChange(event, props.containerIndex, userIndex)}
+                  <FormControl
+                      ref={props.inputPwRef}
+                      value={containerUsers.pw}
+                      onChange={(event) => props.handleContainerUserPwChange(event, props.containerIndex, userIndex)}
+                      size="sm"
+                      className="createEmulationInput"
+                      placeholder="Password"
                   />
                 </td>
               </tr>
               <tr className="custom-td">
                 <td> Root Access</td>
                 <td>
-                  <select value={containerUsers.root}
-                          onChange={(e) => props.handleContainerUserAccessChange(e, props.containerIndex,
-                            userIndex)}>
-                    <option value="True">True</option>
-                    <option value="False">false</option>
-                  </select>
+                  <Select
+                      style={{display: 'inline-block'}}
+                      value={selectedRootAccess}
+                      defaultValue={selectedRootAccess}
+                      options={rootAccessOptions}
+                      onChange={updatedRootAccess}
+                      placeholder="Root access"
+                      className="createEmulationInput"
+                      size="sm"
+                  />
                 </td>
               </tr>
             </React.Fragment>
