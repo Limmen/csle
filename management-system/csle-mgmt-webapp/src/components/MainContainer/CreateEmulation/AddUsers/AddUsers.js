@@ -11,8 +11,7 @@ const AddUsers = (props) => {
   return (
     <div>
       <div>
-        Add a user to the
-        container {props.container.name} &nbsp;&nbsp;
+        Add a user to the container {props.container.name} &nbsp;&nbsp;
         <Button type="button"
                 onClick={() => props.handleAddUser(props.containerIndex)}
                 variant="success" size="sm">

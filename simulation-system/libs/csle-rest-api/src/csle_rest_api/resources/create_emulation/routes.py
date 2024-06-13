@@ -1,14 +1,11 @@
 """
 Routes and sub-resources for the /create-emulation resource
 """
-from typing import Tuple
+from typing import Dict, List, Union, Tuple
 from flask import Blueprint, jsonify, request, Response
+import json
 import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
-
-import json
-
-from typing import Dict, List, Union
 import csle_common.constants.constants as constants
 import csle_collector.constants.constants as collector_constants
 from csle_collector.client_manager.dao.constant_arrival_config import ConstantArrivalConfig
@@ -55,9 +52,36 @@ from csle_common.dao.emulation_config.beats_config import BeatsConfig
 from csle_common.dao.emulation_config.node_beats_config import NodeBeatsConfig
 from csle_common.dao.emulation_config.credential import Credential
 
-def default_config(emulation_data:json) -> EmulationEnvConfig:
+# Creates a blueprint "sub application" of the main REST app
+create_emulation_bp = Blueprint(
+    api_constants.MGMT_WEBAPP.CREATE_EMULATION_RESOURCE, __name__,
+    url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.CREATE_EMULATION_RESOURCE}")
+
+
+@create_emulation_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+def create_emulation() -> Tuple[Response, int]:
     """
-    Returns the default configuration of the emulation environment
+    The /create-emulation resource.
+
+    :return: The given policy or deletes the policy
+    """
+    requires_admin = True
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    if authorized is not None:
+        return authorized
+
+    emulation_data = json.loads(request.data)
+    config = convert_json_data_to_emulation_config(emulation_data)
+    config.to_json_file("/home/shahab/config.json")
+
+    response = jsonify({"TEST": "TEST"})
+    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    return response, constants.HTTPS.OK_STATUS_CODE
+
+
+def convert_json_data_to_emulation_config(emulation_data: json) -> EmulationEnvConfig:
+    """
+    Converts the json emulation data to an emulation environment configuration object.
 
     :param emulation_data: the emulation data in JSON format received from front-end
     :return: the emulation environment configuration
@@ -70,24 +94,24 @@ def default_config(emulation_data:json) -> EmulationEnvConfig:
     time_step_len_seconds = emulation_data["emulationTimeStepLengh"]
     descr = emulation_data["emulationDescription"]
 
-    containers_cfg = default_containers_config(emulation_data=emulation_data)
-    flags_cfg = default_flags_config(emulation_data=emulation_data)
-    resources_cfg = default_resource_constraints_config(emulation_data=emulation_data)
-    topology_cfg = default_topology_config(emulation_data=emulation_data)
-    traffic_cfg = default_traffic_config(emulation_data=emulation_data)
-    users_cfg = default_users_config(emulation_data=emulation_data)
-    vuln_cfg = default_vulns_config(emulation_data=emulation_data)
-    services_cfg = default_services_config(emulation_data=emulation_data)
-    kafka_cfg = default_kafka_config(emulation_data=emulation_data)
-    static_attackers_cfg = default_static_attacker_sequences(topology_cfg.subnetwork_masks)
-    ovs_cfg = default_ovs_config(emulation_data=emulation_data)
-    sdn_controller_cfg = default_sdn_controller_config(emulation_data=emulation_data)
-    host_manager_cfg = default_host_manager_config(emulation_data=emulation_data)
-    snort_ids_manager_cfg = default_snort_ids_manager_config(emulation_data=emulation_data)
-    ossec_ids_manager_cfg = default_ossec_ids_manager_config(emulation_data=emulation_data)
-    docker_stats_manager_cfg = default_docker_stats_manager_config(emulation_data=emulation_data)
-    elk_cfg = default_elk_config(emulation_data=emulation_data)
-    beats_cfg = default_beats_config(emulation_data=emulation_data)
+    containers_cfg = convert_json_data_to_containers_config(emulation_data=emulation_data)
+    flags_cfg = convert_json_data_to_flags_config(emulation_data=emulation_data)
+    resources_cfg = convert_json_data_to_resource_constraints_config(emulation_data=emulation_data)
+    topology_cfg = convert_json_data_to_topology_config(emulation_data=emulation_data)
+    traffic_cfg = convert_json_data_to_traffic_config(emulation_data=emulation_data)
+    users_cfg = convert_json_data_to_users_config(emulation_data=emulation_data)
+    vuln_cfg = convert_json_data_to_vulns_config(emulation_data=emulation_data)
+    services_cfg = convert_json_data_to_services_config(emulation_data=emulation_data)
+    kafka_cfg = convert_json_data_to_kafka_config(emulation_data=emulation_data)
+    static_attackers_cfg = convert_json_data_to_static_attacker_sequences(topology_cfg.subnetwork_masks)
+    ovs_cfg = convert_json_data_to_ovs_config(emulation_data=emulation_data)
+    sdn_controller_cfg = convert_json_data_to_sdn_controller_config(emulation_data=emulation_data)
+    host_manager_cfg = convert_json_data_to_host_manager_config(emulation_data=emulation_data)
+    snort_ids_manager_cfg = convert_json_data_to_snort_ids_manager_config(emulation_data=emulation_data)
+    ossec_ids_manager_cfg = convert_json_data_to_ossec_ids_manager_config(emulation_data=emulation_data)
+    docker_stats_manager_cfg = convert_json_data_to_docker_stats_manager_config(emulation_data=emulation_data)
+    elk_cfg = convert_json_data_to_elk_config(emulation_data=emulation_data)
+    beats_cfg = convert_json_data_to_beats_config(emulation_data=emulation_data)
     emulation_env_cfg = EmulationEnvConfig(
         name=name, containers_config=containers_cfg, users_config=users_cfg, flags_config=flags_cfg,
         vuln_config=vuln_cfg, topology_config=topology_cfg, traffic_config=traffic_cfg, resources_config=resources_cfg,
@@ -100,9 +124,10 @@ def default_config(emulation_data:json) -> EmulationEnvConfig:
     )
     return emulation_env_cfg
 
-def default_containers_config(emulation_data:json) -> ContainersConfig:
+
+def convert_json_data_to_containers_config(emulation_data: json) -> ContainersConfig:
     """
-    Generates default containers config
+    Converts the json emulation data to a containers configuration object,.
 
     :param emulation_data: the emulation data in JSON format received from front-end
     :return: the ContainersConfig of the emulation
@@ -112,7 +137,7 @@ def default_containers_config(emulation_data:json) -> ContainersConfig:
     # *** We need to define the agent reachable nodes
     agent_reachable_nodes = []
     # *** We need to check with Kim what is networks? Which interfaces are considered here?
-    networks=[]
+    networks = []
     agent_ip = ""
     router_ip = ""
     emulation_ids_enabled = emulation_data["emulatioIdsEnabled"]
@@ -133,13 +158,13 @@ def default_containers_config(emulation_data:json) -> ContainersConfig:
             interface_physical_interface = interfaces["physicalInterface"]
             interface_bit_mask = interfaces["bitmask"]
             ips_and_networks.append((interface_ip,
-             ContainerNetwork(
-                 name=interface_name,
-                 subnet_mask=interface_subnet_mask,
-                 subnet_prefix=interface_subnet_prefix,
-                 interface=interface_physical_interface,
-                 bitmask=interface_bit_mask
-             )))
+                                     ContainerNetwork(
+                                         name=interface_name,
+                                         subnet_mask=interface_subnet_mask,
+                                         subnet_prefix=interface_subnet_prefix,
+                                         interface=interface_physical_interface,
+                                         bitmask=interface_bit_mask
+                                     )))
             if ("hacker" in container_name):
                 agent_ip = interface_ip
             if ("router" in container_name):
@@ -155,15 +180,16 @@ def default_containers_config(emulation_data:json) -> ContainersConfig:
             ips_and_networks=ips_and_networks,
             version=container_version, level=containers_level, restart_policy=container_restart_policy, suffix="_1")
         containers.append(node)
-    containers_cfg = ContainersConfig(containers=containers,agent_ip=agent_ip, router_ip=router_ip,
+    containers_cfg = ContainersConfig(containers=containers, agent_ip=agent_ip, router_ip=router_ip,
                                       ids_enabled=emulation_ids_enabled, vulnerable_nodes=vulnerable_nodes,
                                       agent_reachable_nodes=agent_reachable_nodes, networks=networks)
 
     return containers_cfg
 
-def default_flags_config(emulation_data:json) -> FlagsConfig:
+
+def convert_json_data_to_flags_config(emulation_data: json) -> FlagsConfig:
     """
-    Generates default flags config
+    Converts the json emulation data to a flags configuration object.
 
     :param emulation_data: the emulation data in JSON format received from front-end
     :return: The flags confguration
@@ -188,9 +214,10 @@ def default_flags_config(emulation_data:json) -> FlagsConfig:
     flags_config = FlagsConfig(node_flag_configs=flags)
     return flags_config
 
-def default_static_attacker_sequences(subnet_masks: List[str]) -> Dict[str, List[EmulationAttackerAction]]:
+
+def convert_json_data_to_static_attacker_sequences(subnet_masks: List[str]) -> Dict[str, List[EmulationAttackerAction]]:
     """
-    Generates default attacker sequences config
+    Generates Converts the json emulation data to the attacker sequences config
 
     :param subnetmasks: list of subnet masks for the emulation
     :return: the default static attacker sequences configuration
@@ -198,9 +225,9 @@ def default_static_attacker_sequences(subnet_masks: List[str]) -> Dict[str, List
     return {}
 
 
-def default_ovs_config(emulation_data: json) -> OVSConfig:
+def convert_json_data_to_ovs_config(emulation_data: json) -> OVSConfig:
     """
-    Generates default OVS config
+    Converts the json emulation data to the OVS config
 
     :param emulation_data: the emulation data in JSON format received from front-end
     """
@@ -209,20 +236,18 @@ def default_ovs_config(emulation_data: json) -> OVSConfig:
     return ovs_config
 
 
-def default_sdn_controller_config(emulation_data: json) \
-        -> Union[None, SDNControllerConfig]:
+def convert_json_data_to_sdn_controller_config(emulation_data: json) -> Union[None, SDNControllerConfig]:
     """
-    Generates the default SDN controller config
+    Generates the Converts the json emulation data to the SDN controller config
 
     :param emulation_data: the emulation data in JSON format received from front-end
     """
     return None
 
 
-def default_host_manager_config(emulation_data: json) \
-        -> HostManagerConfig:
+def convert_json_data_to_host_manager_config(emulation_data: json) -> HostManagerConfig:
     """
-    Generates the default host manager configuration
+    Converts the json emulation data to the host manager configuration
 
     :param emulation_data: the emulation data in JSON format received from front-end
     :return: the host manager configuration
@@ -237,10 +262,9 @@ def default_host_manager_config(emulation_data: json) \
     return config
 
 
-def default_snort_ids_manager_config(emulation_data: json) \
-        -> SnortIDSManagerConfig:
+def convert_json_data_to_snort_ids_manager_config(emulation_data: json) -> SnortIDSManagerConfig:
     """
-    Generates the default Snort IDS manager configuration
+    Converts the json emulation data to the Snort IDS manager configuration
 
     :param emulation_data: the emulation data in JSON format received from front-end
     :return: the Snort IDS manager configuration
@@ -258,10 +282,9 @@ def default_snort_ids_manager_config(emulation_data: json) \
     return config
 
 
-def default_ossec_ids_manager_config(emulation_data: json) \
-        -> OSSECIDSManagerConfig:
+def convert_json_data_to_ossec_ids_manager_config(emulation_data: json) -> OSSECIDSManagerConfig:
     """
-    Generates the default OSSEC IDS manager configuration
+    Converts the json emulation data to the OSSEC IDS manager configuration
 
     :param emulation_data: the emulation data in JSON format received from front-end
     :return: the OSSEC IDS manager configuration
@@ -279,10 +302,9 @@ def default_ossec_ids_manager_config(emulation_data: json) \
     return config
 
 
-def default_docker_stats_manager_config(emulation_data: json) \
-        -> DockerStatsManagerConfig:
+def convert_json_data_to_docker_stats_manager_config(emulation_data: json) -> DockerStatsManagerConfig:
     """
-    Generates the default docker stats manager configuration
+    Converts the json emulation data to the docker stats manager configuration
 
     :param emulation_data: the emulation data in JSON format received from front-end
     :return: the docker stats manager configuration
@@ -300,9 +322,9 @@ def default_docker_stats_manager_config(emulation_data: json) \
     return config
 
 
-def default_elk_config(emulation_data: json) -> ElkConfig:
+def convert_json_data_to_elk_config(emulation_data: json) -> ElkConfig:
     """
-    Generates the default ELK configuration
+    Converts the json emulation data to the default ELK configuration
 
     :param emulation_data: the emulation data in JSON format received from front-end
     :return: the ELK configuration
@@ -384,9 +406,10 @@ def default_elk_config(emulation_data: json) -> ElkConfig:
                        elk_manager_max_workers=collector_constants.GRPC_WORKERS.DEFAULT_MAX_NUM_WORKERS)
     return config
 
-def default_beats_config(emulation_data: json) -> BeatsConfig:
+
+def convert_json_data_to_beats_config(emulation_data: json) -> BeatsConfig:
     """
-    Generates default beats config
+    Converts the json emulation data to the beats config
 
     :param emulation_data: the emulation data in JSON format received from front-end
     :return: the beats configuration
@@ -403,29 +426,30 @@ def default_beats_config(emulation_data: json) -> BeatsConfig:
         for interfaces in container_interfaces:
             interface_ip = interfaces["ip"]
         node_beats = NodeBeatsConfig(ip=interface_ip,
-                        log_files_paths=collector_constants.LOG_FILES.DEFAULT_LOG_FILE_PATHS,
-                        filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
-                        kafka_input=False, start_filebeat_automatically=False,
-                        start_packetbeat_automatically=False,
-                        metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
-                                            collector_constants.METRICBEAT.LINUX_MODULE],
-                        start_metricbeat_automatically=False,
-                        start_heartbeat_automatically=False,
-                        heartbeat_hosts_to_monitor=[
-                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
-                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
-                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
-                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
-                        ])
+                                     log_files_paths=collector_constants.LOG_FILES.DEFAULT_LOG_FILE_PATHS,
+                                     filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
+                                     kafka_input=False, start_filebeat_automatically=False,
+                                     start_packetbeat_automatically=False,
+                                     metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
+                                                         collector_constants.METRICBEAT.LINUX_MODULE],
+                                     start_metricbeat_automatically=False,
+                                     start_heartbeat_automatically=False,
+                                     heartbeat_hosts_to_monitor=[
+                                         f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                                         f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                                         f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
+                                         f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                                         f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                                         f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
+                                     ])
         node_beats_configs.append(node_beats)
     beats_conf = BeatsConfig(node_beats_configs=node_beats_configs, num_elastic_shards=1, reload_enabled=False)
     return beats_conf
 
-def default_kafka_config(emulation_data: json) -> KafkaConfig:
+
+def convert_json_data_to_kafka_config(emulation_data: json) -> KafkaConfig:
     """
-    Generates the default kafka configuration
+    Converts the json emulation data to the kafka configuration
 
     :param emulation_data: the emulation data in JSON format received from front-end
     :return: the kafka configuration
@@ -612,9 +636,10 @@ def default_kafka_config(emulation_data: json) -> KafkaConfig:
                          kafka_manager_max_workers=collector_constants.GRPC_WORKERS.DEFAULT_MAX_NUM_WORKERS)
     return config
 
-def default_resource_constraints_config(emulation_data: json) -> ResourcesConfig:
+
+def convert_json_data_to_resource_constraints_config(emulation_data: json) -> ResourcesConfig:
     """
-    Generates default resource constraints config
+    Converts the json emulation data to the resource constraints config
 
     :param emulation_data: the emulation data in JSON format received from front-end
     :return: generates the ResourcesConfig
@@ -672,7 +697,7 @@ def default_resource_constraints_config(emulation_data: json) -> ResourcesConfig
                     rate_limit_mbit=interface_rate_limit_m_bit,
                     packet_overhead_bytes=interface_packet_overhead_bytes,
                     cell_overhead_bytes=interface_cell_overhead_bytes
-                 ))
+                ))
             )
 
         node_resource_config = NodeResourcesConfig(
@@ -683,9 +708,10 @@ def default_resource_constraints_config(emulation_data: json) -> ResourcesConfig
     resources_config = ResourcesConfig(node_resources_configurations=node_resources_configurations)
     return resources_config
 
-def default_topology_config(emulation_data: json) -> TopologyConfig:
+
+def convert_json_data_to_topology_config(emulation_data: json) -> TopologyConfig:
     """
-    Generates default topology config
+    Converts the json emulation data to the topology config
 
     :param emulation_data: the emulation data in JSON format received from front-end
     :return: the Topology configuration
@@ -693,9 +719,9 @@ def default_topology_config(emulation_data: json) -> TopologyConfig:
     node_configs = []
     emulation_containers = emulation_data["emulationContainer"]
     for containers in emulation_containers:
-        subnetwork_masks=[]
+        subnetwork_masks = []
         container_name = containers["name"]
-        ips_gw_default_policy_networks=[]
+        ips_gw_default_policy_networks = []
         container_interfaces = containers["interfaces"]
         for interfaces in container_interfaces:
             interface_default_gateway = interfaces["defaultGateway"]
@@ -735,9 +761,9 @@ def default_topology_config(emulation_data: json) -> TopologyConfig:
         return topology
 
 
-def default_traffic_config(emulation_data: json) -> TrafficConfig:
+def convert_json_data_to_traffic_config(emulation_data: json) -> TrafficConfig:
     """
-    Generates default traffic config
+    Converts the json emulation data to the traffic config
 
     :param emulation_data: the emulation data in JSON format received from front-end
     :return: the traffic configuration
@@ -766,13 +792,14 @@ def default_traffic_config(emulation_data: json) -> TrafficConfig:
             interface_bit_mask = interfaces["bitmask"]
 
         traffic_generators.append(NodeTrafficConfig(ip=interface_ip,
-                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[container_name]
-                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
-                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=collector_constants.MANAGER_PORTS.TRAFFIC_MANAGER_DEFAULT_PORT,
-                          traffic_manager_log_file=collector_constants.LOG_FILES.TRAFFIC_MANAGER_LOG_FILE,
-                          traffic_manager_log_dir=collector_constants.LOG_FILES.TRAFFIC_MANAGER_LOG_DIR,
-                          traffic_manager_max_workers=collector_constants.GRPC_WORKERS.DEFAULT_MAX_NUM_WORKERS))
+                                                    commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                                                  container_name]
+                                                              + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                                                  constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
+                                                    traffic_manager_port=collector_constants.MANAGER_PORTS.TRAFFIC_MANAGER_DEFAULT_PORT,
+                                                    traffic_manager_log_file=collector_constants.LOG_FILES.TRAFFIC_MANAGER_LOG_FILE,
+                                                    traffic_manager_log_dir=collector_constants.LOG_FILES.TRAFFIC_MANAGER_LOG_DIR,
+                                                    traffic_manager_max_workers=collector_constants.GRPC_WORKERS.DEFAULT_MAX_NUM_WORKERS))
         if ("client" in container_name):
             client_ip = interface_ip
             client_name = interface_name
@@ -820,9 +847,10 @@ def default_traffic_config(emulation_data: json) -> TrafficConfig:
                                  client_population_config=client_population_config)
     return traffic_conf
 
-def default_users_config(emulation_data: json) -> UsersConfig:
+
+def convert_json_data_to_users_config(emulation_data: json) -> UsersConfig:
     """
-    Generates default users config
+    Converts the json emulation data to the users config
 
     :param emulation_data: the emulation data in JSON format received from front-end
     :return: generates the UsersConfig
@@ -842,20 +870,21 @@ def default_users_config(emulation_data: json) -> UsersConfig:
             user_access = user["root"]
             all_users.append(User(username=user_name, pw=user_pw, root=user_access))
         users.append(NodeUsersConfig(ip=interface_ip,
-                        users=all_users))
+                                     users=all_users))
 
     users_conf = UsersConfig(users_configs=users)
     return users_conf
 
-def default_vulns_config(emulation_data: json) -> VulnerabilitiesConfig:
+
+def convert_json_data_to_vulns_config(emulation_data: json) -> VulnerabilitiesConfig:
     """
-    Generates default vulnerabilities config
+    Converts the json emulation data to the vulnerabilities config
 
     :param emulation_data: the emulation data in JSON format received from front-end
     :return: the vulnerability config
     """
     emulation_containers = emulation_data["emulationContainer"]
-    vulns=[]
+    vulns = []
     for containers in emulation_containers:
         container_vulns = containers["vulns"]
         for vuln in container_vulns:
@@ -870,7 +899,8 @@ def default_vulns_config(emulation_data: json) -> VulnerabilitiesConfig:
             vuln_credentials = vuln["vulnCredentials"]
             cred = []
             for credentials in vuln_credentials:
-                print(credentials["vulnCredUsername"], credentials["vulnCredPw"], credentials["vulnCredRoot"], vuln_service_protocol)
+                print(credentials["vulnCredUsername"], credentials["vulnCredPw"], credentials["vulnCredRoot"],
+                      vuln_service_protocol)
                 cred.append(Credential(username=credentials["vulnCredUsername"], pw=credentials["vulnCredPw"],
                                        root=credentials["vulnCredRoot"],
                                        service=vuln_service_name,
@@ -878,23 +908,24 @@ def default_vulns_config(emulation_data: json) -> VulnerabilitiesConfig:
                                        port=vuln_service_port))
 
             vulns.append(NodeVulnerabilityConfig(
-                    name=vuln_name,
-                    # *** I think we can also use service ip instead of interface ip, it will be the same. If it is not true we can use interface ip
-                    ip=vuln_service_ip,
-                    vuln_type=vuln_type,
-                    # *** We should define credentials in the front end
-                    credentials=cred,
-                    # *** We should define cvss in the front end
-                    cvss=constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS,
-                    cve=None,
-                    root=vuln_root_access, port=vuln_service_port,
-                    protocol=vuln_service_protocol, service=vuln_service_name))
+                name=vuln_name,
+                # *** I think we can also use service ip instead of interface ip, it will be the same. If it is not true we can use interface ip
+                ip=vuln_service_ip,
+                vuln_type=vuln_type,
+                # *** We should define credentials in the front end
+                credentials=cred,
+                # *** We should define cvss in the front end
+                cvss=constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS,
+                cve=None,
+                root=vuln_root_access, port=vuln_service_port,
+                protocol=vuln_service_protocol, service=vuln_service_name))
     vulns_config = VulnerabilitiesConfig(node_vulnerability_configs=vulns)
     return vulns_config
 
-def default_services_config(emulation_data: json) -> ServicesConfig:
+
+def convert_json_data_to_services_config(emulation_data: json) -> ServicesConfig:
     """
-    Generates default services config
+    Converts the json emulation data to the services config
 
     :param emulation_data: the emulation data in JSON format received from front-end
     :return: The services configuration
@@ -910,49 +941,18 @@ def default_services_config(emulation_data: json) -> ServicesConfig:
             service_port = service["port"]
             service_ip = service["serviceIp"]
             services.append(NetworkService(protocol=service_protocol, port=service_port,
-                               name=service_name, credentials=[]))
+                                           name=service_name, credentials=[]))
     # *** for NodeServicesConfig the ip can be also the interface ip. I think it should be the same unless the node
     # has two or more interfaces
     services_configs.append(NodeServicesConfig(
-            ip=service_ip,
-            services=[
-                NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
-                               name=constants.SSH.SERVICE_NAME, credentials=[])
-            ]
-        ))
+        ip=service_ip,
+        services=[
+            NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
+                           name=constants.SSH.SERVICE_NAME, credentials=[])
+        ]
+    ))
 
     service_cfg = ServicesConfig(
         services_configs=services_configs
     )
     return service_cfg
-
-
-# Creates a blueprint "sub application" of the main REST app
-create_emulation_bp = Blueprint(
-    api_constants.MGMT_WEBAPP.CREATE_EMULATION_RESOURCE, __name__,
-    url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.CREATE_EMULATION_RESOURCE}")
-
-
-@create_emulation_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def create_emulation() -> Tuple[Response, int]:
-    """
-    The /create-emulation resource.
-
-    :return: The given policy or deletes the policy
-    """
-    print("Create emulation")
-    requires_admin = True
-    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
-    if authorized is not None:
-        return authorized
-
-    # print(request.data)
-    emulation_data = json.loads(request.data)
-    config = default_config(emulation_data)
-    config.to_json_file("/home/shahab/config.json")
-    # *** Here we call the funcion default_config with the emulation_data as input
-    print("Emulation configuration is saved...")
-
-    response = jsonify({"TEST": "TEST"})
-    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response, constants.HTTPS.OK_STATUS_CODE

@@ -1,5 +1,4 @@
 import React from 'react';
-import Button from 'react-bootstrap/Button'
 import Table from 'react-bootstrap/Table'
 import './AddContainerGeneral.css';
 
@@ -23,7 +22,6 @@ const AddContainerGeneral = (props) => {
             <td>Name</td>
             <td>
               {props.container.name}
-              {/*<SpinnerOrTable images={filteredImages} loading={loading} index={index} />*/}
             </td>
           </tr>
           <tr>

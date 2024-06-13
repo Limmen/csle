@@ -2,7 +2,6 @@ import React from 'react';
 import Button from 'react-bootstrap/Button'
 import Table from 'react-bootstrap/Table'
 import './AddInterfaces.css';
-import AddServices from '../AddServices/AddServices'
 
 const AddInterfaces = (props) => {
   return (

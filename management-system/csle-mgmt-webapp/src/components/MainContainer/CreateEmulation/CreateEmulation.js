@@ -2,9 +2,6 @@ import React, {useState, useEffect, useCallback, useRef} from 'react'
 import './CreateEmulation.css'
 import Card from 'react-bootstrap/Card'
 import Button from 'react-bootstrap/Button'
-import Table from 'react-bootstrap/Table'
-import fileDownload from 'react-file-download'
-import Spinner from 'react-bootstrap/Spinner'
 import Accordion from 'react-bootstrap/Accordion'
 import Collapse from 'react-bootstrap/Collapse'
 import {
@@ -17,18 +14,8 @@ import {
 } from '../../Common/constants'
 import serverIp from "../../Common/serverIp"
 import serverPort from "../../Common/serverPort"
-import formatBytes from "../../Common/formatBytes"
 import {useNavigate} from "react-router-dom"
 import {useAlert} from "react-alert"
-
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import Tooltip from 'react-bootstrap/Tooltip'
-import Modal from 'react-bootstrap/Modal'
-import InputGroup from 'react-bootstrap/InputGroup'
-import FormControl from 'react-bootstrap/FormControl'
-import Form from 'react-bootstrap/Form'
-import {useDebouncedCallback} from 'use-debounce'
-import getIps from '../../Common/getIps'
 import AddServices from "./AddServices/AddServices";
 import AddInterfaces from "./AddInterfaces/AddInterfaces"
 import AddUsers from './AddUsers/AddUsers'
@@ -172,14 +159,12 @@ const CreateEmulation = (props) => {
     }
     const handleNameChange = (event) => {
         setNameValue(event.target.value)
-        console.log("Name value:", nameValue)
     }
 
     const handleNetworkIdChange = (event) => {
         const networkValue = event.target.value
         if (/^-?\d*$/.test(networkValue)) {
             setNetworkIdValue(event.target.value)
-            console.log("Network ID value:", networkIdValue)
         }
     }
 
@@ -187,20 +172,17 @@ const CreateEmulation = (props) => {
         const leveValue = event.target.value
         if (/^-?\d*$/.test(leveValue)) {
             setLevelValue(event.target.value)
-            console.log("Level value:", levelValue)
         }
     }
 
     const handleVersionChange = (event) => {
         setVersionValue(event.target.value)
-        console.log("Versioin value:", versionValue)
     }
 
     const handleTimeStepLengthChange = (event) => {
         const timeStepValue = event.target.value
         if (/^-?\d*$/.test(timeStepValue)) {
             setTimeStepLengthValue(event.target.value)
-            console.log("Time step length value:", timeStepLengthValue)
         }
     }
 
@@ -255,7 +237,6 @@ const CreateEmulation = (props) => {
                 ...updatedContainers[index],
                 flagPermission: permissionValue
             }
-            console.log("container" + index + " flag permission is " + permissionValue)
             return updatedContainers
         })
     }
@@ -263,7 +244,6 @@ const CreateEmulation = (props) => {
     const handleContainerIdsEnabledChange = (event) => {
         const idsValue = event.target.value === 'true'
         setIdsEnabled(idsValue)
-        console.log("Emulation IDS enabled is: " + idsValue)
     }
 
     const handleContainerReachableByAgentChange = (event, index) => {
@@ -274,7 +254,6 @@ const CreateEmulation = (props) => {
                 ...updatedContainers[index],
                 reachableByAgent: reachableValue
             }
-            console.log("container" + index + " reachable by agebt is " + reachableValue)
             return updatedContainers
         })
     }
@@ -331,8 +310,6 @@ const CreateEmulation = (props) => {
        *
        * @type {(function(): void)|*}
        */
-
-      console.log("Name: " + nameValue)
       const requestData = {
           // Include state values here
           emulationName: nameValue,
@@ -344,10 +321,6 @@ const CreateEmulation = (props) => {
           emulationDescription: description,
           emulationContainer: containers,
       };
-
-
-      console.log("FETCHING create emulation");
-      console.log("Request Data: ", JSON.stringify(requestData));
 
       fetch(
         `${HTTP_PREFIX}${ip}:${port}/${CREATE_EMULATION_RESOURCE}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
@@ -371,7 +344,6 @@ const CreateEmulation = (props) => {
           return res.json()
         })
         .then(response => {
-            console.log("REQUEST REPLY")
           if(response === null) {
             return
           }
@@ -398,7 +370,6 @@ const CreateEmulation = (props) => {
         })
         deFocus()
         setShouldFocusUserName(true)
-        console.log("The value username is: " + containers[containerIndex].users[userIndex].userName)
     }
 
     const handleContainerVulnNameChange = (event, containerIndex, vulnIndex) => {
@@ -417,7 +388,6 @@ const CreateEmulation = (props) => {
         })
         deFocus()
         setShouldFocusVulnName(true)
-        console.log("The value vulns is: " + containers[containerIndex].vulns[vulnIndex].vulnName)
     }
 
     const handleContainerVulnAccessChange = (event, containerIndex, vulnIndex) => {
@@ -435,7 +405,6 @@ const CreateEmulation = (props) => {
             return updatedContainers
         })
         deFocus()
-        console.log("The Access value for vulns is: " + containers[containerIndex].vulns[vulnIndex].vulnRoot)
     }
     const handleContainerVulnTypeChange = (event, containerIndex, vulnIndex) => {
         const vulnTypeValue = event.target.value
@@ -452,7 +421,6 @@ const CreateEmulation = (props) => {
             return updatedContainers
         })
         deFocus()
-        console.log("The type value for vulns is: " + containers[containerIndex].vulns[vulnIndex].vulnType)
     }
 
 
@@ -472,7 +440,6 @@ const CreateEmulation = (props) => {
         })
         deFocus()
         setShouldFocusPw(true)
-        console.log("The value pw is: " + containers[containerIndex].users[userIndex].pw)
     }
 
     const handleContainerUserAccessChange = (event, containerIndex, userIndex) => {
@@ -491,7 +458,6 @@ const CreateEmulation = (props) => {
         })
         deFocus()
         setShouldFocusUserName(true)
-        console.log("The value access is: " + containers[containerIndex].users[userIndex].root)
     }
 
     const handleContainerServiceProtocolChange = (event, containerIndex, serviceIndex) => {
@@ -550,12 +516,7 @@ const CreateEmulation = (props) => {
 
     const handleContainerVulnServiceChange = (event, containerIndex, vulnIndex) => {
         const newVulnServiceIndex = parseInt(event.target.value, 10); // Parse the value to an integer
-        console.log("Service number: " + newVulnServiceIndex);
-        console.log("Vuln index is: " + vulnIndex);
-
         const newVulnService = containers[containerIndex].services[newVulnServiceIndex]
-        console.log("Name of the chosen service is: " + newVulnService.name);
-        console.log("IP of the chosen service is: " + newVulnService.serviceIp);
 
         setContainers(prevContainers => {
             const updatedContainers = prevContainers.map((container, index) => {
@@ -576,7 +537,6 @@ const CreateEmulation = (props) => {
                 }
                 return container;
             });
-            console.log("Updated Containers:", updatedContainers);
             return updatedContainers;
         });
         deFocus()
@@ -609,7 +569,6 @@ const CreateEmulation = (props) => {
                     ...updatedContainers[index],
                     cpu: cpuValue
                 }
-                console.log("container" + index + " cpu is " + cpuValue)
                 return updatedContainers
             })
         }
@@ -627,7 +586,6 @@ const CreateEmulation = (props) => {
                     ...updatedContainers[index],
                     mem: memValue
                 }
-                console.log("container" + index + " memory is " + memValue)
                 return updatedContainers
             })
         }
@@ -645,7 +603,6 @@ const CreateEmulation = (props) => {
                     ...updatedContainers[index],
                     flagId: flagIdValue
                 }
-                console.log("container" + index + " flag ID is " + flagIdValue)
                 return updatedContainers
             })
         }
@@ -663,7 +620,6 @@ const CreateEmulation = (props) => {
                     ...updatedContainers[index],
                     flagScore: flagScoreValue
                 }
-                console.log("container" + index + " flag score is " + flagScoreValue)
                 return updatedContainers
             })
         }
@@ -705,7 +661,6 @@ const CreateEmulation = (props) => {
         })
         deFocus()
         setShouldFocusIP(true)
-        console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].ip)
     }
 
     const handleContainerInterfaceSubnetMaskChange = (event, containerIndex, interfaceIndex) => {
@@ -724,7 +679,6 @@ const CreateEmulation = (props) => {
         })
         deFocus()
         setShouldFocusSubnetMask(true)
-        console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].subnetMask)
     }
 
     const handleContainerInterfaceLimitPacketsQueueChange = (event, containerIndex, interfaceIndex) => {
@@ -743,7 +697,6 @@ const CreateEmulation = (props) => {
         })
         deFocus()
         setShouldFocusLimitPacketsQueue(true)
-        console.log("The value limit packet Q is: " + containers[containerIndex].interfaces[interfaceIndex].limitPacketsQueue)
     }
 
     const handleContainerInterfacePacketDelayMs = (event, containerIndex, interfaceIndex) => {
@@ -762,7 +715,6 @@ const CreateEmulation = (props) => {
         })
         deFocus()
         setShouldFocusPacketDelayMs(true)
-        console.log("The value Packet Delay MS is: " + containers[containerIndex].interfaces[interfaceIndex].packetDelayMs)
     }
 
     const handleContainerInterfacePacketDelayJitterMs = (event, containerIndex, interfaceIndex) => {
@@ -781,7 +733,6 @@ const CreateEmulation = (props) => {
         })
         deFocus()
         setShouldFocusPacketDelayJitterMs(true)
-        console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].packetDelayJitterMs)
     }
 
     const handleContainerInterfacePacketDelayCorrelationPercentage = (event, containerIndex, interfaceIndex) => {
@@ -801,7 +752,6 @@ const CreateEmulation = (props) => {
         })
         deFocus()
         setShouldFocusPacketDelayCorrelationPercentage(true)
-        console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].packetDelayCorrelationPercentage)
     }
 
     const handleContainerInterfaceLossGemodelp = (event, containerIndex, interfaceIndex) => {
@@ -821,7 +771,6 @@ const CreateEmulation = (props) => {
         })
         deFocus()
         setShouldFocusLossGemodelp(true)
-        console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelp)
     }
 
     const handleContainerInterfaceLossGemodelr = (event, containerIndex, interfaceIndex) => {
@@ -841,7 +790,6 @@ const CreateEmulation = (props) => {
         })
         deFocus()
         setShouldFocusLossGemodelr(true)
-        console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelr)
     }
 
     const handleContainerInterfaceLossGemodelk = (event, containerIndex, interfaceIndex) => {
@@ -861,7 +809,6 @@ const CreateEmulation = (props) => {
         })
         deFocus()
         setShouldFocusLossGemodelk(true)
-        console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelk)
     }
     const handleContainerInterfaceLossGemodelh = (event, containerIndex, interfaceIndex) => {
         const newLossGemodelh = event.target.value
@@ -880,7 +827,6 @@ const CreateEmulation = (props) => {
         })
         deFocus()
         setShouldFocusLossGemodelh(true)
-        console.log("The value is: " + containers[containerIndex].interfaces[interfaceIndex].lossGemodelp)
     }
 
     const handleContainerInterfacePacketCorruptPercentage = (event, containerIndex, interfaceIndex) => {
@@ -1378,7 +1324,6 @@ const CreateEmulation = (props) => {
             }
             return updatedContainers
         })
-        console.log("Length of users is:" + containers[containerIndex].users.length)
     }
 
     const handleAddContainerService = (containerIndex) => {
@@ -1448,9 +1393,6 @@ const CreateEmulation = (props) => {
             // If the credential index is invalid, return the previous state
             return prevContainers;
         });
-        console.log("The field of " + fieldName + "in container " + containerIndex +
-          " vuln of " + vulnIndex + " and credential of " + credIndex + " is changed to " +
-          containers[containerIndex].vulns[vulnIndex].vulnCredentials[credIndex].vulnCredUsername)
     };
 
 
@@ -1481,11 +1423,9 @@ const CreateEmulation = (props) => {
         } else if (name === 'vulnCredUsername') {
             setShouldFocusVulnCredUsername(true)
         }
-        console.log("The new credential " + name + "value is " + value)
     };
 
     const handleAddContainerVulns = (containerIndex) => {
-        console.log("New vuln is called.")
         const vulnsToAdd = {
             vulnName: 'Vulnerability name',
             vulnType: '',
@@ -1621,7 +1561,6 @@ const CreateEmulation = (props) => {
             }
             return updatedContainers
         })
-        console.log("Length of interface is:" + containers[containerIndex].interfaces.length)
         deFocus()
     }
 
@@ -1651,8 +1590,6 @@ const CreateEmulation = (props) => {
             }
             containerToUpdate.interfaces = updatedInterfaces
             updatedContainers[containerIndex] = containerToUpdate
-            console.log("The network interface is " +
-              updatedContainers[containerIndex].interfaces[interfaceIndex].physicalInterface)
             return updatedContainers
         })
     }
