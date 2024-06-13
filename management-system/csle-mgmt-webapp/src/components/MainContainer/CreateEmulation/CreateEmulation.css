@@ -20,3 +20,16 @@
 .createEmulationInput {
     font-size:12px
 }
+
+
+.ContainerImageSelection {
+    margin-bottom: 300px;
+    margin-left:550px;
+    margin-right:550px;
+    justify-content: center;
+    align-items: center;
+}
+
+.confirmContainer{
+    margin-left: 20px;
+}

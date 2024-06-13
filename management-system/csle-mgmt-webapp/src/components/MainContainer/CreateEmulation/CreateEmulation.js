@@ -4,6 +4,7 @@ import Card from 'react-bootstrap/Card'
 import Button from 'react-bootstrap/Button'
 import Accordion from 'react-bootstrap/Accordion'
 import Collapse from 'react-bootstrap/Collapse'
+import Select from 'react-select'
 import {
     HTTP_PREFIX,
     CREATE_EMULATION_RESOURCE,
@@ -43,7 +44,6 @@ const CreateEmulation = (props) => {
     const [selectedImage, setSelectedImage] = useState('')
     const [containers, setContainers] = useState([])
     const [showPopup, setShowPopup] = useState(false)
-    const [newContainer, setNewContainer] = useState({name: '', os: ''})
     const [newUser, setNewUser] = useState({userName: '', pw: '', root: "false"})
     const [newVulnCredentials, setNewVulnCredentials] = useState({vulnCredUsername: 'username', vulnCredPw: 'password',
         vulnCredRoot: "false"})
@@ -148,8 +148,11 @@ const CreateEmulation = (props) => {
     const [shouldFocusPacketLossType, setShouldFocusPacketLossType] = useState(false)
     const containerAndOs = Object.keys(CONTAINERS_OS).map(key => ({
         name: key,
-        os: CONTAINERS_OS[key][0].os
+        os: CONTAINERS_OS[key][0].os,
+        label: `${key} (${CONTAINERS_OS[key][0].os})`,
+        value: key
     }))
+    const [newContainer, setNewContainer] = useState(containerAndOs[0])
 
 
     const handleDescriptionChange = (event) => {
@@ -205,9 +208,10 @@ const CreateEmulation = (props) => {
         handleClosePopup()
     }
 
-    const handleContainerSelectChange = (e) => {
-        const selectedOption = JSON.parse(e.target.value)
-        setNewContainer({name: selectedOption.name, os: selectedOption.os})
+    const handleContainerSelectChange = (selectedContainer) => {
+        // const selectedOption = JSON.parse(e.target.value)
+        // setNewContainer({name: selectedOption.name, os: selectedOption.os})
+        setNewContainer(selectedContainer)
     }
 
     const deleteContainer = (index) => {
@@ -1657,41 +1661,34 @@ const CreateEmulation = (props) => {
                                           variant="success" size="sm">
                                       <i className="fa fa-plus" aria-hidden="true" />
                                   </Button>
-                                  <div style={{ margin: '20px' }}>
+                                  <div style={{ margin: '20px'}} className="row">
                                       {showPopup && (
-                                        <div className="popup">
-                                            <div>
-                                                <h5>Enter Container Name:</h5>
-                                            </div>
-                                            <div className="popup-content" style={{
-                                                display: 'flex', justifyContent: 'center',
-                                                alignItems: 'center'
-                                            }}>
-
-                                                <select value={JSON.stringify(newContainer)}
-                                                        onChange={(e) => handleContainerSelectChange(e)}>
-                                                    <option value="">--Please choose an option--</option>
-                                                    {containerAndOs.map((option, index) => (
-                                                      <option key={index} value={JSON.stringify(option)}>
-                                                          {`${option.name} (${option.os})`}
-                                                      </option>
-                                                    ))}
-
-                                                </select>
-
-                                                <Button onClick={handleConfirmAdd}
-                                                        variant="primary" size="sm" style={{ marginLeft: '5px' }}>
-                                                    <i className="fa fa-check" aria-hidden="true" />
-                                                </Button>
-                                                <Button onClick={handleClosePopup}
-                                                        variant="danger" size="sm" style={{ marginLeft: '2px' }}>
-                                                    <i className="fa fa-times" aria-hidden="true" />
-                                                </Button>
-                                            </div>
-                                        </div>
-                                      )}
+                                          <div className="ContainerImageSelection">
+                                              <div className="traceTypeSelection inline-block">
+                                                  <div className="conditionalDist inline-block conditionalLabel">
+                                                      Container image:
+                                                  </div>
+                                                  <div className="conditionalDist inline-block" style={{width: "500px"}}>
+                                                      <Select
+                                                          value={newContainer}
+                                                          defaultValue={newContainer}
+                                                          options={containerAndOs}
+                                                          onChange={handleContainerSelectChange}
+                                                          placeholder="Container Operating System"
+                                                          menuPlacement="bottom"
+                                                      />
+                                                  </div>
+                                                  <div className="conditionalDist inline-block">
+                                                      <Button onClick={handleConfirmAdd}  variant="primary" size="sm" className="confirmContainer inline-block">
+                                                          <i className="fa fa-check" aria-hidden="true" />
+                                                      </Button>
+                                                      <Button onClick={handleClosePopup} variant="danger" size="sm" className="removeContainer inline-block">
+                                                          <i className="fa fa-times" aria-hidden="true" />
+                                                      </Button>
+                                                  </div>
+                                              </div>
+                                          </div>)}
                                   </div>
-
 
                                   {containers.map((container, index) => (
                                     <Accordion defaultActiveKey={index}>
