@@ -6,6 +6,159 @@ import Select from 'react-select'
 import './AddInterfaces.css';
 
 const AddInterfaces = (props) => {
+
+  const physicalInterfaceOptions = [
+    {
+      value: "eth0",
+      label: "eth0"
+    },
+    {
+      value: "eth1",
+      label: "eth1"
+    },
+    {
+      value: "eth2",
+      label: "eth2"
+    },
+    {
+      value: "eth3",
+      label: "eth3"
+    },
+    {
+      value: "eth4",
+      label: "eth4"
+    },
+    {
+      value: "eth5",
+      label: "eth5"
+    },
+    {
+      value: "eth6",
+      label: "eth6"
+    },
+    {
+      value: "eth7",
+      label: "eth7"
+    },
+    {
+      value: "eth8",
+      label: "eth8"
+    },
+    {
+      value: "eth9",
+      label: "eth9"
+    },
+    {
+      value: "eth10",
+      label: "eth10"
+    }
+  ]
+
+  const packetDelayDistributionOptions = [
+    {
+      value: "Uniform",
+      label: "Uniform"
+    },
+    {
+      value: "Normal",
+      label: "Normal"
+    },
+    {
+      value: "Pareto",
+      label: "Pareto"
+    },
+    {
+      value: "Pareto Normal",
+      label: "Pareto Normal"
+    }
+  ]
+
+  const packetLossTypeOptions = [
+    {
+      value: "Random",
+      label: "Random"
+    },
+    {
+      value: "State",
+      label: "State"
+    },
+    {
+      value: "Gemodel",
+      label: "Gemodel"
+    }
+  ]
+
+  const firewallDefaultInputOptions = [
+    {
+      value: "Accept",
+      label: "Accept"
+    },
+    {
+      value: "Drop",
+      label: "Drop"
+    }
+  ]
+
+  const firewallDefaultOutputOptions = [
+    {
+      value: "Accept",
+      label: "Accept"
+    },
+    {
+      value: "Drop",
+      label: "Drop"
+    }
+  ]
+
+  const firewallDefaultForwardOptions = [
+    {
+      value: "Accept",
+      label: "Accept"
+    },
+    {
+      value: "Drop",
+      label: "Drop"
+    }
+  ]
+
+  const [selectedPhysicalInterface, setSelectedPhysicalInterface] = useState(physicalInterfaceOptions[0]);
+  const [selectedPacketDelayDistribution, setSelectedPacketDelayDistribution] = useState(packetDelayDistributionOptions[0]);
+  const [selectedPacketLossType, setSelectedPacketLossType] = useState(packetLossTypeOptions[0]);
+  const [selectedFirewallDefaultInput, setSelectedFirewallDefaultInput] = useState(firewallDefaultInputOptions[0]);
+  const [selectedFirewallDefaultOutput, setSelectedFirewallDefaultOutput] = useState(firewallDefaultOutputOptions[0]);
+  const [selectedFirewallDefaultForward, setSelectedFirewallDefaultForward] = useState(firewallDefaultForwardOptions[0]);
+
+  const updatedPhysicalInterface = (physicalInterfaceOption) => {
+    setSelectedPhysicalInterface(physicalInterfaceOption)
+    props.handleNetworkPhysicalInterface(physicalInterfaceOption.value, props.containerIndex)
+  }
+
+  const updatedPacketDelayDistribution = (packetDelayDistributionOption) => {
+    setSelectedPacketDelayDistribution(packetDelayDistributionOption)
+    props.handlePacketDelayDistribution(packetDelayDistributionOption.value, props.containerIndex)
+  }
+
+  const updatedPacketLossType = (packetLossTypeOption) => {
+    setSelectedPacketLossType(packetLossTypeOption)
+    props.handlePacketLossType(packetLossTypeOption.value, props.containerIndex)
+  }
+
+  const updatedFirewallInput = (firewallInputOption) => {
+    setSelectedFirewallDefaultInput(firewallInputOption)
+    props.handleDefaultInput(firewallInputOption.value, props.containerIndex)
+  }
+
+  const updatedFirewallOutput = (firewallOutputOption) => {
+    setSelectedFirewallDefaultOutput(firewallOutputOption)
+    props.handleDefaultOutput(firewallOutputOption.value, props.containerIndex)
+  }
+
+  const updatedFirewallForward = (firewallForwardOption) => {
+    setSelectedFirewallDefaultForward(firewallForwardOption)
+    props.handleDefaultForward(firewallForwardOption.value, props.containerIndex)
+  }
+
+
   return (
     <div>
       <div>
@@ -81,22 +234,16 @@ const AddInterfaces = (props) => {
                   interfaceIndex + '-' + props.containerIndex}>
                 <td>Physical interface</td>
                 <td>
-                  <select
-                    value={containerInterfaces.physicalInterface}
-                    onChange={(e) => props.handleNetworkPhysicalInterface(e, props.containerIndex, interfaceIndex)}>
-                    <option value="eth0">eth0</option>
-                    <option value="eth1">eth1</option>
-                    <option value="eth2">eth2</option>
-                    <option value="eth3">eth3</option>
-                    <option value="eth4">eth4</option>
-                    <option value="eth5">eth5</option>
-                    <option value="eth6">eth6</option>
-                    <option value="eth7">eth7</option>
-                    <option value="eth8">eth8</option>
-                    <option value="eth9">eth9</option>
-                    <option value="eth10">eth10</option>
-
-                  </select>
+                  <Select
+                      style={{display: 'inline-block'}}
+                      value={selectedPhysicalInterface}
+                      defaultValue={selectedPhysicalInterface}
+                      options={physicalInterfaceOptions}
+                      onChange={updatedPhysicalInterface}
+                      placeholder="Physical network interface"
+                      className="createEmulationInput"
+                      size="sm"
+                  />
                 </td>
               </tr>
               <tr
@@ -167,31 +314,31 @@ const AddInterfaces = (props) => {
               <tr>
                 <td> Packet delay distribution</td>
                 <td>
-                  <select
-                    value={containerInterfaces.packetDelayDistribution}
-                    onChange={(e) => props.handlePacketDelayDistribution(e, props.containerIndex,
-                      interfaceIndex)}
-                    ref={props.inputPacketDelayDistributionRef}>
-                    <option value="0">Uniform</option>
-                    <option value="1">Normal</option>
-                    <option value="2">Pareto</option>
-                    <option value="3">Pareto normal
-                    </option>
-                  </select>
+                  <Select
+                      style={{display: 'inline-block'}}
+                      value={selectedPacketDelayDistribution}
+                      defaultValue={selectedPacketDelayDistribution}
+                      options={packetDelayDistributionOptions}
+                      onChange={updatedPacketDelayDistribution}
+                      placeholder="Packet Delay Distribution"
+                      className="createEmulationInput"
+                      size="sm"
+                  />
                 </td>
               </tr>
               <tr>
                 <td> Packet loss type</td>
                 <td>
-                  <select
-                    value={containerInterfaces.packetLossType}
-                    onChange={(e) => props.handlePacketLossType(e, props.containerIndex,
-                      interfaceIndex)}
-                    ref={props.inputPacketLossTypeRef}>
-                    <option value="0">Random</option>
-                    <option value="1">State</option>
-                    <option value="2">Gemodel</option>
-                  </select>
+                  <Select
+                      style={{display: 'inline-block'}}
+                      value={selectedPacketLossType}
+                      defaultValue={selectedPacketLossType}
+                      options={packetLossTypeOptions}
+                      onChange={updatedPacketLossType}
+                      placeholder="Packet Loss Type"
+                      className="createEmulationInput"
+                      size="sm"
+                  />
                 </td>
               </tr>
               <tr
@@ -467,40 +614,46 @@ const AddInterfaces = (props) => {
               <tr>
                 <td> Firewall rule: default input</td>
                 <td>
-                  <select
-                    value={containerInterfaces.defaultInput}
-                    onChange={(e) => props.handleDefaultInput(e, props.containerIndex,
-                      interfaceIndex)}>
-                    <option value="accept">Accept
-                    </option>
-                    <option value="drop">Drop</option>
-                  </select>
+                  <Select
+                      style={{display: 'inline-block'}}
+                      value={selectedFirewallDefaultInput}
+                      defaultValue={selectedFirewallDefaultInput}
+                      options={firewallDefaultInputOptions}
+                      onChange={updatedFirewallInput}
+                      placeholder="Firewall default input rule"
+                      className="createEmulationInput"
+                      size="sm"
+                  />
                 </td>
               </tr>
               <tr>
                 <td> Firewall rule: default output</td>
                 <td>
-                  <select
-                    value={containerInterfaces.defaultOutput}
-                    onChange={(e) => props.handleDefaultOutput(e, props.containerIndex,
-                      interfaceIndex)}>
-                    <option value="accept">Accept
-                    </option>
-                    <option value="drop">Drop</option>
-                  </select>
+                  <Select
+                      style={{display: 'inline-block'}}
+                      value={selectedFirewallDefaultOutput}
+                      defaultValue={selectedFirewallDefaultOutput}
+                      options={firewallDefaultOutputOptions}
+                      onChange={updatedFirewallOutput}
+                      placeholder="Firewall default output rule"
+                      className="createEmulationInput"
+                      size="sm"
+                  />
                 </td>
               </tr>
               <tr>
                 <td> Firewall rule: default forward</td>
                 <td>
-                  <select
-                    value={containerInterfaces.defaultForward}
-                    onChange={(e) => props.handleDefaultForward(e, props.containerIndex,
-                      interfaceIndex)}>
-                    <option value="accept">Accept
-                    </option>
-                    <option value="drop">Drop</option>
-                  </select>
+                  <Select
+                      style={{display: 'inline-block'}}
+                      value={selectedFirewallDefaultForward}
+                      defaultValue={selectedFirewallDefaultForward}
+                      options={firewallDefaultForwardOptions}
+                      onChange={updatedFirewallForward}
+                      placeholder="Firewall default forward rule"
+                      className="createEmulationInput"
+                      size="sm"
+                  />
                 </td>
               </tr>
               <tr

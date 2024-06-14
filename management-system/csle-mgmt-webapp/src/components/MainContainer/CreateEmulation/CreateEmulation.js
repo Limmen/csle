@@ -104,6 +104,7 @@ const CreateEmulation = (props) => {
     const inputPacketDelayDistributionRef = useRef(null)
     const inputPacketLossTypeRef = useRef(null)
     const inputVulnNameRef = useRef(null)
+    const inputVulnServiceNameRef = useRef(null)
     const inputVulnCredUsernameRef = useRef(null)
     const inputVulnCredPwRef = useRef(null)
     const [shouldFocusVulnName, setShouldFocusVulnName] = useState(false)
@@ -391,8 +392,7 @@ const CreateEmulation = (props) => {
         setShouldFocusVulnName(true)
     }
 
-    const handleContainerVulnAccessChange = (event, containerIndex, vulnIndex) => {
-        const vulnAccessValue = event.target.value
+    const handleContainerVulnAccessChange = (vulnAccessValue, containerIndex, vulnIndex) => {
         setContainers(prevContainers => {
             const updatedContainers = [...prevContainers]
             const containerToUpdate = {...updatedContainers[containerIndex]}
@@ -407,8 +407,7 @@ const CreateEmulation = (props) => {
         })
         deFocus()
     }
-    const handleContainerVulnTypeChange = (event, containerIndex, vulnIndex) => {
-        const vulnTypeValue = event.target.value
+    const handleContainerVulnTypeChange = (vulnTypeValue, containerIndex, vulnIndex) => {
         setContainers(prevContainers => {
             const updatedContainers = [...prevContainers]
             const containerToUpdate = {...updatedContainers[containerIndex]}
@@ -460,8 +459,7 @@ const CreateEmulation = (props) => {
         setShouldFocusUserName(true)
     }
 
-    const handleContainerServiceProtocolChange = (event, containerIndex, serviceIndex) => {
-        const newProtocol = event.target.value
+    const handleContainerServiceProtocolChange = (newProtocol, containerIndex, serviceIndex) => {
         setContainers(prevContainers => {
             const updatedContainers = [...prevContainers]
             const containerToUpdate = {...updatedContainers[containerIndex]}
@@ -1196,6 +1194,8 @@ const CreateEmulation = (props) => {
             inputServiceNameRef.current.focus()
         } else if (inputVulnNameRef.current && shouldFocusVulnName) {
             inputVulnNameRef.current.focus()
+        } else if (inputVulnServiceNameRef.current && shouldFocusVulnName) {
+            inputVulnServiceNameRef.current.focus()
         } else if (inputVulnCredUsernameRef.current && shouldFocusVulnCredUsername) {
             inputVulnCredUsernameRef.current.focus()
         } else if (inputVulnCredPwRef.current && shouldFocusVulnCredPw) {
@@ -1221,8 +1221,7 @@ const CreateEmulation = (props) => {
         shouldFocusServiceProtocol, shouldFocusServiceName, shouldFocusVulnName, shouldFocusVulnCredUsername,
         shouldFocusVulnCredPw, shouldFocusVulnCredPwForChange, shouldFocusVulnCredUsernameForChange])
 
-    const handleContainerInterfacePacketDelayDistribution = (event, containerIndex, interfaceIndex) => {
-        const packetDelayDistributionValue = event.target.value
+    const handleContainerInterfacePacketDelayDistribution = (packetDelayDistributionValue, containerIndex, interfaceIndex) => {
         setContainers(prevContainers => {
             const updatedContainers = [...prevContainers]
             const containerToUpdate = {...updatedContainers[containerIndex]}
@@ -1239,8 +1238,7 @@ const CreateEmulation = (props) => {
         setShouldFocusPacketDelayDistribution(true)
     }
 
-    const handleContainerInterfacePacketLossType = (event, containerIndex, interfaceIndex) => {
-        const packetLossTypeValue = event.target.value
+    const handleContainerInterfacePacketLossType = (packetLossTypeValue, containerIndex, interfaceIndex) => {
         setContainers(prevContainers => {
             const updatedContainers = [...prevContainers]
             const containerToUpdate = {...updatedContainers[containerIndex]}
@@ -1257,8 +1255,7 @@ const CreateEmulation = (props) => {
         setShouldFocusPacketLossType(true)
     }
 
-    const handleContainerInterfaceDefaultInput = (event, containerIndex, interfaceIndex) => {
-        const defaultInputValue = event.target.value
+    const handleContainerInterfaceDefaultInput = (defaultInputValue, containerIndex, interfaceIndex) => {
         setContainers(prevContainers => {
             const updatedContainers = [...prevContainers]
             const containerToUpdate = {...updatedContainers[containerIndex]}
@@ -1273,8 +1270,7 @@ const CreateEmulation = (props) => {
         })
     }
 
-    const handleContainerInterfaceDefaultOutput = (event, containerIndex, interfaceIndex) => {
-        const defaultOutputValue = event.target.value
+    const handleContainerInterfaceDefaultOutput = (defaultOutputValue, containerIndex, interfaceIndex) => {
         setContainers(prevContainers => {
             const updatedContainers = [...prevContainers]
             const containerToUpdate = {...updatedContainers[containerIndex]}
@@ -1289,8 +1285,7 @@ const CreateEmulation = (props) => {
         })
     }
 
-    const handleContainerInterfaceDefaultForward = (event, containerIndex, interfaceIndex) => {
-        const defaultForwardValue = event.target.value
+    const handleContainerInterfaceDefaultForward = (defaultForwardValue, containerIndex, interfaceIndex) => {
         setContainers(prevContainers => {
             const updatedContainers = [...prevContainers]
             const containerToUpdate = {...updatedContainers[containerIndex]}
@@ -1578,8 +1573,7 @@ const CreateEmulation = (props) => {
         })
     }
 
-    const handleContainerNetworkPhysicalInterface = (event, containerIndex, interfaceIndex) => {
-        const physicalInterfaceValue = event.target.value
+    const handleContainerNetworkPhysicalInterface = (physicalInterfaceValue, containerIndex, interfaceIndex) => {
         setContainers(prevContainers => {
             const updatedContainers = [...prevContainers]
             const containerToUpdate = {...updatedContainers[containerIndex]}
@@ -1811,11 +1805,13 @@ const CreateEmulation = (props) => {
                                                                      handleServiceIpChange={handleContainerServiceIpChange}
                                                                      inputServiceNameRef={inputServiceNameRef}
                                                                      inputServicePortRef={inputServicePortRef}
+                                                                     inputServiceIpRef={inputServiceIpRef}
                                                         />
 
                                                         <AddVulns container={containers[index]}
                                                                   containerIndex={index}
                                                                   inputVulnNameRef={inputVulnNameRef}
+                                                                  inputVulnServiceNameRef={inputVulnServiceNameRef}
                                                                   newVulnCredentials={newVulnCredentials}
                                                                   inputVulnCredUsernameRef={inputVulnCredUsernameRef}
                                                                   inputVulnCredPwRef={inputVulnCredPwRef}

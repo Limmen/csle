@@ -1,13 +1,55 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Button from 'react-bootstrap/Button'
 import Table from 'react-bootstrap/Table'
 import FormControl from 'react-bootstrap/FormControl';
+import Select from 'react-select'
 import './AddVulns.css';
 
 /**
  * Component representing the AddServices part of the create emulation page
  */
 const AddVulns = (props) => {
+
+  const vulnerabilityRootOptions = [
+    {
+      value: true,
+      label: "true"
+    },
+    {
+      value: false,
+      label: "false"
+    }
+  ]
+  const vulnerabilityTypeOptions = [
+    {
+      value: 0,
+      label: "Weak password"
+    },
+    {
+      value: 1,
+      label: "Remote code execution"
+    },
+    {
+      value: 2,
+      label: "SQL injection"
+    },
+    {
+      value: 3,
+      label: "Privilege escalation"
+    }
+  ]
+  const [selectedVulnerabilityRoot, setSelectedVulnerabilityRoot] = useState(vulnerabilityRootOptions[0]);
+  const [selectedVulnerabilityType, setSelectedVulnerabilityType] = useState(vulnerabilityTypeOptions[0]);
+
+  const updatedSelectedVulnerabilityRoot = (selectedVulnerabilityRootOption, vulnIndex) => {
+    setSelectedVulnerabilityRoot(selectedVulnerabilityRootOption)
+    props.handleVulnAccessChange(selectedVulnerabilityRootOption.value, props.containerIndex, vulnIndex)
+  }
+
+  const updatedSelectedVulnerabilityType = (selectedVulnerabilityTypeOption, vulnIndex) => {
+    setSelectedVulnerabilityType(selectedVulnerabilityTypeOption)
+    props.handleVulnTypeChange(selectedVulnerabilityTypeOption.value, props.containerIndex, vulnIndex)
+  }
 
   return (
     <div>
@@ -55,40 +97,44 @@ const AddVulns = (props) => {
               <tr>
                 <td>Vulnerability service</td>
                 <td>
-                  <select
-                    value={props.container.vulns[vulnIndex].name}
-                    onChange={(e) => props.handleVulnServiceChange(e, props.containerIndex, vulnIndex)}>
-                    <option value="">Select Service</option>
-                    {props.container.services.map((serviceToUse, indexToUse) => (
-                      <option
-                        key={'vuln-service-name' + indexToUse}
-                        value={indexToUse}>{serviceToUse.name}</option>
-                    ))}
-                  </select>
+                  <FormControl
+                      ref={props.inputVulnServiceNameRef}
+                      value={props.container.vulns[vulnIndex].name}
+                      onChange={(e) => props.handleVulnServiceChange(e, props.containerIndex, vulnIndex)}
+                      size="sm"
+                      className="createEmulationInput"
+                      placeholder="Vulnerability service"
+                  />
                 </td>
               </tr>
               <tr>
                 <td>Vulnerability needed Root access</td>
                 <td>
-                  <select
-                    value={props.container.vulns[vulnIndex].vulnRoot}
-                    onChange={(e) => props.handleVulnAccessChange(e, props.containerIndex, vulnIndex)}>
-                    <option value="True">True</option>
-                    <option value="False">False</option>
-                  </select>
+                  <Select
+                      style={{display: 'inline-block'}}
+                      value={selectedVulnerabilityRoot}
+                      defaultValue={selectedVulnerabilityRoot}
+                      options={vulnerabilityRootOptions}
+                      onChange={(e) => updatedSelectedVulnerabilityRoot(e, props.containerIndex, vulnIndex)}
+                      placeholder="Boolean flag whether vulnerability gives root access or not"
+                      className="createEmulationInput"
+                      size="sm"
+                  />
                 </td>
               </tr>
               <tr>
                 <td>Vulnerability type</td>
                 <td>
-                  <select
-                    value={props.container.vulns[vulnIndex].vulnType}
-                    onChange={(e) => props.handleVulnTypeChange(e, props.containerIndex, vulnIndex)}>
-                    <option value="0">Weak password</option>
-                    <option value="1">Remote code execution</option>
-                    <option value="2">SQL injection</option>
-                    <option value="3">Privilage escalation</option>
-                  </select>
+                  <Select
+                      style={{display: 'inline-block'}}
+                      value={selectedVulnerabilityType}
+                      defaultValue={selectedVulnerabilityType}
+                      options={vulnerabilityTypeOptions}
+                      onChange={(e) => updatedSelectedVulnerabilityType(e, props.containerIndex, vulnIndex)}
+                      placeholder="Vulnerability type"
+                      className="createEmulationInput"
+                      size="sm"
+                  />
                 </td>
               </tr>
               {props.container.vulns[vulnIndex].vulnCredentials.map((credential, credIndex) => (

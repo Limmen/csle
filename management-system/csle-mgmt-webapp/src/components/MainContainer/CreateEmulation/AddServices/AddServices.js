@@ -1,13 +1,31 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Button from 'react-bootstrap/Button'
 import Table from 'react-bootstrap/Table'
 import FormControl from 'react-bootstrap/FormControl';
+import Select from 'react-select'
 import './AddServices.css';
 
 /**
  * Component representing the AddServices part of the create emulation page
  */
 const AddServices = (props) => {
+
+    const serviceProtocolOptions = [
+        {
+            value: 0,
+            label: "TCP"
+        },
+        {
+            value: 1,
+            label: "UDP"
+        }
+    ]
+    const [selectedServiceProtocol, setSelectedServiceProtocol] = useState(serviceProtocolOptions[0]);
+
+    const updatedServiceProtocol = (selectedServiceProtocolOption, serviceIndex) => {
+        setSelectedServiceProtocol(selectedServiceProtocolOption)
+        props.handleProtocolChange(selectedServiceProtocolOption.value, props.containerIndex, serviceIndex)
+    }
 
     return (
         <div>
@@ -55,12 +73,16 @@ const AddServices = (props) => {
                             <tr key={'service-protocol' + containerService.protocol + '-' + serviceIndex + '-' + props.containerIndex}>
                                 <td> Service protocol</td>
                                 <td>
-                                    <select
-                                        value={containerService.protocol}
-                                        onChange={(e) => props.handleProtocolChange(e, props.containerIndex, serviceIndex)}>
-                                        <option value="0">TCP</option>
-                                        <option value="1">UDP</option>
-                                    </select>
+                                    <Select
+                                        style={{display: 'inline-block'}}
+                                        value={selectedServiceProtocol}
+                                        defaultValue={selectedServiceProtocol}
+                                        options={serviceProtocolOptions}
+                                        onChange={(value) => updatedServiceProtocol(value, props.containerIndex, serviceIndex)}
+                                        placeholder="Transport protocol for the service"
+                                        className="createEmulationInput"
+                                        size="sm"
+                                    />
                                 </td>
                             </tr>
                             <tr key={'service-port' + containerService.port + '-' + serviceIndex + '-' + props.containerIndex}>
@@ -79,16 +101,14 @@ const AddServices = (props) => {
                             <tr className="custom-td">
                                 <td> Service IP</td>
                                 <td>
-                                    <select
+                                    <FormControl
+                                        ref={props.inputServiceIpRef}
                                         value={containerService.serviceIp}
-                                        onChange={(e) => props.handleServiceIpChange(e, props.containerIndex, serviceIndex)}>
-                                        <option value="">Select IP</option>
-                                        {props.container.interfaces.map((interfaceToUse, indexToUse) => (
-                                            <option
-                                                key={"service-ip" + indexToUse}
-                                                value={interfaceToUse.ip}>{interfaceToUse.ip}</option>
-                                        ))}
-                                    </select>
+                                        onChange={(e) => props.handleServiceIpChange(e, props.containerIndex, serviceIndex)}
+                                        size="sm"
+                                        className="createEmulationInput"
+                                        placeholder="Service IP"
+                                    />
                                 </td>
                             </tr>
                         </React.Fragment>
