@@ -513,8 +513,7 @@ const CreateEmulation = (props) => {
     }
 
     const handleContainerVulnServiceChange = (event, containerIndex, vulnIndex) => {
-        const newVulnServiceIndex = parseInt(event.target.value, 10); // Parse the value to an integer
-        const newVulnService = containers[containerIndex].services[newVulnServiceIndex]
+        const newVulnService = event.target.value
 
         setContainers(prevContainers => {
             const updatedContainers = prevContainers.map((container, index) => {
@@ -1369,8 +1368,7 @@ const CreateEmulation = (props) => {
         deFocus()
     };
 
-    const handleVulnCredentialChange = (event, containerIndex, vulnIndex, credIndex, fieldName) => {
-        const { value } = event.target;
+    const handleVulnCredentialChange = (value, containerIndex, vulnIndex, credIndex, fieldName) => {
 
         setContainers(prevContainers => {
             const updatedContainers = [...prevContainers];
@@ -1424,7 +1422,7 @@ const CreateEmulation = (props) => {
         const vulnsToAdd = {
             vulnName: 'Vulnerability name',
             vulnType: '',
-            vulnService: { name: '', protocol: '', port: '', serviceIp: '' },
+            vulnService: '',
             vulnRoot: '',
             vulnCredentials: []
         };

@@ -281,7 +281,6 @@ def create_app(static_folder: str):
     app.register_blueprint(logs_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.LOGS_RESOURCE}")
-    print("REGISTER CREATE EMU")
     app.register_blueprint(create_emulation_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.CREATE_EMULATION_RESOURCE}")

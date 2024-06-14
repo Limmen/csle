@@ -1,7 +1,7 @@
 """
 Routes and sub-resources for the /create-emulation resource
 """
-from typing import Dict, List, Union, Tuple
+from typing import Dict, List, Union, Tuple, Any
 from flask import Blueprint, jsonify, request, Response
 import json
 import csle_rest_api.constants.constants as api_constants
@@ -69,17 +69,14 @@ def create_emulation() -> Tuple[Response, int]:
     authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
     if authorized is not None:
         return authorized
-
     emulation_data = json.loads(request.data)
     config = convert_json_data_to_emulation_config(emulation_data)
-    config.to_json_file("/home/shahab/config.json")
-
-    response = jsonify({"TEST": "TEST"})
+    response = jsonify(config.to_dict())
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response, constants.HTTPS.OK_STATUS_CODE
 
 
-def convert_json_data_to_emulation_config(emulation_data: json) -> EmulationEnvConfig:
+def convert_json_data_to_emulation_config(emulation_data: Dict[str, Any]) -> EmulationEnvConfig:
     """
     Converts the json emulation data to an emulation environment configuration object.
 
@@ -97,8 +94,8 @@ def convert_json_data_to_emulation_config(emulation_data: json) -> EmulationEnvC
     topology_cfg = convert_json_data_to_topology_config(emulation_data=emulation_data)
     traffic_cfg = convert_json_data_to_traffic_config(emulation_data=emulation_data)
     users_cfg = convert_json_data_to_users_config(emulation_data=emulation_data)
-    vuln_cfg = convert_json_data_to_vulns_config(emulation_data=emulation_data)
     services_cfg = convert_json_data_to_services_config(emulation_data=emulation_data)
+    vuln_cfg = convert_json_data_to_vulns_config(emulation_data=emulation_data)
     kafka_cfg = convert_json_data_to_kafka_config(emulation_data=emulation_data)
     static_attackers_cfg = convert_json_data_to_static_attacker_sequences(topology_cfg.subnetwork_masks)
     ovs_cfg = convert_json_data_to_ovs_config(emulation_data=emulation_data)
@@ -122,19 +119,19 @@ def convert_json_data_to_emulation_config(emulation_data: json) -> EmulationEnvC
     return emulation_env_cfg
 
 
-def convert_json_data_to_containers_config(emulation_data: json) -> ContainersConfig:
+def convert_json_data_to_containers_config(emulation_data: Dict[str, Any]) -> ContainersConfig:
     """
-    Converts the json emulation data to a containers configuration object,.
+    Converts the json emulation data to a containers configuration object.
 
     :param emulation_data: the emulation data in JSON format received from front-end
     :return: the ContainersConfig of the emulation
     """
     containers = []
-    vulnerable_nodes = []
+    vulnerable_nodes: List[str] = []
     # *** We need to define the agent reachable nodes
-    agent_reachable_nodes = []
+    agent_reachable_nodes: List[str] = []
     # *** We need to check with Kim what is networks? Which interfaces are considered here?
-    networks = []
+    networks: List[Tuple[str, ContainerNetwork]] = []
     agent_ip = ""
     router_ip = ""
     emulation_ids_enabled = emulation_data[api_constants.CREATE_EMULATION_PAGE.EMULATION_IDS_ENABLED]
@@ -166,11 +163,12 @@ def convert_json_data_to_containers_config(emulation_data: json) -> ContainersCo
                 agent_ip = interface_ip
             if (api_constants.CREATE_EMULATION_PAGE.ROUTER in container_name):
                 router_ip = interface_ip
-        container_vulns = container[api_constants.CREATE_EMULATION_PAGE.VULNS]
-        for vuln in container_vulns:
-            vuln_service_ip = vuln[api_constants.CREATE_EMULATION_PAGE.VULN_SERVICE][
-                api_constants.CREATE_EMULATION_PAGE.SERVICE_IP]
-            vulnerable_nodes.append(vuln_service_ip)
+        # container_vulns = container[api_constants.CREATE_EMULATION_PAGE.VULNS]
+        # for vuln in container_vulns:
+        #     vuln_service = vuln[api_constants.CREATE_EMULATION_PAGE.VULN_SERVICE]
+        #     vuln_service_ip = vuln[api_constants.CREATE_EMULATION_PAGE.VULN_SERVICE][
+        #         api_constants.CREATE_EMULATION_PAGE.SERVICE_IP]
+        #     vulnerable_nodes.append(vuln_service_ip)
 
         node = NodeContainerConfig(
             name=container_name,
@@ -185,14 +183,15 @@ def convert_json_data_to_containers_config(emulation_data: json) -> ContainersCo
     return containers_cfg
 
 
-def convert_json_data_to_flags_config(emulation_data: json) -> FlagsConfig:
+def convert_json_data_to_flags_config(emulation_data: Dict[str, Any]) -> FlagsConfig:
     """
     Converts the json emulation data to a flags configuration object.
 
     :param emulation_data: the emulation data in JSON format received from front-end
     :return: The flags confguration
     """
-    flags = []
+    flags: List[NodeFlagsConfig] = []
+    interface_ip = "0.0.0.0"
     emulation_containers = emulation_data[api_constants.CREATE_EMULATION_PAGE.EMULATION_CONTAINER]
     for containers in emulation_containers:
         container_falg_id = containers[api_constants.CREATE_EMULATION_PAGE.FLAG_ID]
@@ -201,15 +200,17 @@ def convert_json_data_to_flags_config(emulation_data: json) -> FlagsConfig:
         container_interfaces = containers[api_constants.CREATE_EMULATION_PAGE.INTERFACES]
         for interfaces in container_interfaces:
             interface_ip = interfaces[api_constants.CREATE_EMULATION_PAGE.IP]
-        NodeFlagsConfig(ip=interface_ip,
-                        flags=[Flag(
-                            name=f"{constants.COMMON.FLAG_FILENAME_PREFIX}{container_falg_id}",
-                            path=f"/{constants.COMMANDS.TMP_DIR}/{constants.COMMON.FLAG_FILENAME_PREFIX}"
-                                 f"{container_falg_id}"
-                                 f"{constants.FILE_PATTERNS.TXT_FILE_SUFFIX}",
-                            dir=f"/{constants.COMMANDS.TMP_DIR}/",
-                            id=container_falg_id, requires_root=container_flag_permission, score=container_flag_score
-                        )])
+        flags_config = NodeFlagsConfig(ip=interface_ip,
+                                       flags=[Flag(
+                                           name=f"{constants.COMMON.FLAG_FILENAME_PREFIX}{container_falg_id}",
+                                           path=f"/{constants.COMMANDS.TMP_DIR}/{constants.COMMON.FLAG_FILENAME_PREFIX}"
+                                                f"{container_falg_id}"
+                                                f"{constants.FILE_PATTERNS.TXT_FILE_SUFFIX}",
+                                           dir=f"/{constants.COMMANDS.TMP_DIR}/",
+                                           id=container_falg_id, requires_root=container_flag_permission,
+                                           score=container_flag_score
+                                       )])
+        flags.append(flags_config)
     flags_config = FlagsConfig(node_flag_configs=flags)
     return flags_config
 
@@ -224,7 +225,7 @@ def convert_json_data_to_static_attacker_sequences(subnet_masks: List[str]) -> D
     return {}
 
 
-def convert_json_data_to_ovs_config(emulation_data: json) -> OVSConfig:
+def convert_json_data_to_ovs_config(emulation_data: Dict[str, Any]) -> OVSConfig:
     """
     Converts the json emulation data to the OVS config
 
@@ -235,7 +236,7 @@ def convert_json_data_to_ovs_config(emulation_data: json) -> OVSConfig:
     return ovs_config
 
 
-def convert_json_data_to_sdn_controller_config(emulation_data: json) -> Union[None, SDNControllerConfig]:
+def convert_json_data_to_sdn_controller_config(emulation_data: Dict[str, Any]) -> Union[None, SDNControllerConfig]:
     """
     Generates the Converts the json emulation data to the SDN controller config
 
@@ -244,7 +245,7 @@ def convert_json_data_to_sdn_controller_config(emulation_data: json) -> Union[No
     return None
 
 
-def convert_json_data_to_host_manager_config(emulation_data: json) -> HostManagerConfig:
+def convert_json_data_to_host_manager_config(emulation_data: Dict[str, Any]) -> HostManagerConfig:
     """
     Converts the json emulation data to the host manager configuration
 
@@ -261,7 +262,7 @@ def convert_json_data_to_host_manager_config(emulation_data: json) -> HostManage
     return config
 
 
-def convert_json_data_to_snort_ids_manager_config(emulation_data: json) -> SnortIDSManagerConfig:
+def convert_json_data_to_snort_ids_manager_config(emulation_data: Dict[str, Any]) -> SnortIDSManagerConfig:
     """
     Converts the json emulation data to the Snort IDS manager configuration
 
@@ -281,7 +282,7 @@ def convert_json_data_to_snort_ids_manager_config(emulation_data: json) -> Snort
     return config
 
 
-def convert_json_data_to_ossec_ids_manager_config(emulation_data: json) -> OSSECIDSManagerConfig:
+def convert_json_data_to_ossec_ids_manager_config(emulation_data: Dict[str, Any]) -> OSSECIDSManagerConfig:
     """
     Converts the json emulation data to the OSSEC IDS manager configuration
 
@@ -299,7 +300,7 @@ def convert_json_data_to_ossec_ids_manager_config(emulation_data: json) -> OSSEC
     return config
 
 
-def convert_json_data_to_docker_stats_manager_config(emulation_data: json) -> DockerStatsManagerConfig:
+def convert_json_data_to_docker_stats_manager_config(emulation_data: Dict[str, Any]) -> DockerStatsManagerConfig:
     """
     Converts the json emulation data to the docker stats manager configuration
 
@@ -317,7 +318,7 @@ def convert_json_data_to_docker_stats_manager_config(emulation_data: json) -> Do
     return config
 
 
-def convert_json_data_to_elk_config(emulation_data: json) -> ElkConfig:
+def convert_json_data_to_elk_config(emulation_data: Dict[str, Any]) -> ElkConfig:
     """
     Converts the json emulation data to the default ELK configuration
 
@@ -401,7 +402,7 @@ def convert_json_data_to_elk_config(emulation_data: json) -> ElkConfig:
     return config
 
 
-def convert_json_data_to_beats_config(emulation_data: json) -> BeatsConfig:
+def convert_json_data_to_beats_config(emulation_data: Dict[str, Any]) -> BeatsConfig:
     """
     Converts the json emulation data to the beats config
 
@@ -439,7 +440,7 @@ def convert_json_data_to_beats_config(emulation_data: json) -> BeatsConfig:
     return beats_conf
 
 
-def convert_json_data_to_kafka_config(emulation_data: json) -> KafkaConfig:
+def convert_json_data_to_kafka_config(emulation_data: Dict[str, Any]) -> KafkaConfig:
     """
     Converts the json emulation data to the kafka configuration
 
@@ -629,7 +630,7 @@ def convert_json_data_to_kafka_config(emulation_data: json) -> KafkaConfig:
     return config
 
 
-def convert_json_data_to_resource_constraints_config(emulation_data: json) -> ResourcesConfig:
+def convert_json_data_to_resource_constraints_config(emulation_data: Dict[str, Any]) -> ResourcesConfig:
     """
     Converts the json emulation data to the resource constraints config
 
@@ -709,7 +710,7 @@ def convert_json_data_to_resource_constraints_config(emulation_data: json) -> Re
     return resources_config
 
 
-def convert_json_data_to_topology_config(emulation_data: json) -> TopologyConfig:
+def convert_json_data_to_topology_config(emulation_data: Dict[str, Any]) -> TopologyConfig:
     """
     Converts the json emulation data to the topology config
 
@@ -761,7 +762,7 @@ def convert_json_data_to_topology_config(emulation_data: json) -> TopologyConfig
         return topology
 
 
-def convert_json_data_to_traffic_config(emulation_data: json) -> TrafficConfig:
+def convert_json_data_to_traffic_config(emulation_data: Dict[str, Any]) -> TrafficConfig:
     """
     Converts the json emulation data to the traffic config
 
@@ -847,7 +848,7 @@ def convert_json_data_to_traffic_config(emulation_data: json) -> TrafficConfig:
     return traffic_conf
 
 
-def convert_json_data_to_users_config(emulation_data: json) -> UsersConfig:
+def convert_json_data_to_users_config(emulation_data: Dict[str, Any]) -> UsersConfig:
     """
     Converts the json emulation data to the users config
 
@@ -856,11 +857,12 @@ def convert_json_data_to_users_config(emulation_data: json) -> UsersConfig:
     """
     emulation_containers = emulation_data[api_constants.CREATE_EMULATION_PAGE.EMULATION_CONTAINER]
     users = []
+    interface_ip = "0.0.0.0"
     for containers in emulation_containers:
         container_users = containers[api_constants.CREATE_EMULATION_PAGE.USERS]
         container_interfaces = containers[api_constants.CREATE_EMULATION_PAGE.INTERFACES]
         for interfaces in container_interfaces:
-            interface_name = interfaces[api_constants.CREATE_EMULATION_PAGE.NAME]
+            # interface_name = interfaces[api_constants.CREATE_EMULATION_PAGE.NAME]
             interface_ip = interfaces[api_constants.CREATE_EMULATION_PAGE.IP]
         all_users = []
         for user in container_users:
@@ -868,14 +870,13 @@ def convert_json_data_to_users_config(emulation_data: json) -> UsersConfig:
             user_pw = user[api_constants.CREATE_EMULATION_PAGE.PW]
             user_access = user[api_constants.CREATE_EMULATION_PAGE.ROOT]
             all_users.append(User(username=user_name, pw=user_pw, root=user_access))
-        users.append(NodeUsersConfig(ip=interface_ip,
-                                     users=all_users))
+        users.append(NodeUsersConfig(ip=interface_ip, users=all_users))
 
     users_conf = UsersConfig(users_configs=users)
     return users_conf
 
 
-def convert_json_data_to_vulns_config(emulation_data: json) -> VulnerabilitiesConfig:
+def convert_json_data_to_vulns_config(emulation_data: Dict[str, Any]) -> VulnerabilitiesConfig:
     """
     Converts the json emulation data to the vulnerabilities config
 
@@ -889,47 +890,43 @@ def convert_json_data_to_vulns_config(emulation_data: json) -> VulnerabilitiesCo
         for vuln in container_vulns:
             vuln_name = vuln[api_constants.CREATE_EMULATION_PAGE.VULN_NAME]
             vuln_type = vuln[api_constants.CREATE_EMULATION_PAGE.VULN_TYPE]
-            vuln_service_name = vuln[api_constants.CREATE_EMULATION_PAGE.VULN_SERVICE][
-                api_constants.CREATE_EMULATION_PAGE.NAME]
-            vuln_service_protocol = vuln[api_constants.CREATE_EMULATION_PAGE.VULN_SERVICE][
-                api_constants.CREATE_EMULATION_PAGE.PROTOCOL]
-            vuln_service_protocol = TransportProtocol(int(vuln_service_protocol))
-            vuln_service_port = vuln[api_constants.CREATE_EMULATION_PAGE.VULN_SERVICE][
-                api_constants.CREATE_EMULATION_PAGE.PORT]
-            vuln_service_ip = vuln[api_constants.CREATE_EMULATION_PAGE.VULN_SERVICE][
-                api_constants.CREATE_EMULATION_PAGE.SERVICE_IP]
+            vuln_service_name = vuln[api_constants.CREATE_EMULATION_PAGE.VULN_SERVICE]
+            # vuln_service_protocol = vuln[api_constants.CREATE_EMULATION_PAGE.VULN_SERVICE][
+            #     api_constants.CREATE_EMULATION_PAGE.PROTOCOL]
+            # vuln_service_protocol = TransportProtocol(int(vuln_service_protocol))
+            # vuln_service_port = vuln[api_constants.CREATE_EMULATION_PAGE.VULN_SERVICE][
+            #     api_constants.CREATE_EMULATION_PAGE.PORT]
+            # vuln_service_ip = vuln[api_constants.CREATE_EMULATION_PAGE.VULN_SERVICE][
+            #     api_constants.CREATE_EMULATION_PAGE.SERVICE_IP]
             vuln_root_access = vuln[api_constants.CREATE_EMULATION_PAGE.VULN_ROOT]
             vuln_credentials = vuln[api_constants.CREATE_EMULATION_PAGE.VULN_CREDENTIALS]
             cred = []
             for credentials in vuln_credentials:
-                print(credentials[api_constants.CREATE_EMULATION_PAGE.VULN_CRED_USERNAME],
-                      credentials[api_constants.CREATE_EMULATION_PAGE.VULN_CRED_PW],
-                      credentials[api_constants.CREATE_EMULATION_PAGE.VULN_CRED_ROOT],
-                      vuln_service_protocol)
                 cred.append(Credential(username=credentials[api_constants.CREATE_EMULATION_PAGE.VULN_CRED_USERNAME],
                                        pw=credentials[api_constants.CREATE_EMULATION_PAGE.VULN_CRED_PW],
                                        root=credentials[api_constants.CREATE_EMULATION_PAGE.VULN_CRED_ROOT],
                                        service=vuln_service_name,
-                                       protocol=vuln_service_protocol,
-                                       port=vuln_service_port))
+                                       protocol=TransportProtocol.TCP,
+                                       port=80))
 
             vulns.append(NodeVulnerabilityConfig(
                 name=vuln_name,
-                # *** I think we can also use service ip instead of interface ip, it will be the same. If it is not true we can use interface ip
-                ip=vuln_service_ip,
+                # *** I think we can also use service ip instead of interface ip, it will be the same.
+                # If it is not true we can use interface ip
+                ip="0.0.0.0",
                 vuln_type=vuln_type,
                 # *** We should define credentials in the front end
                 credentials=cred,
                 # *** We should define cvss in the front end
                 cvss=constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS,
                 cve=None,
-                root=vuln_root_access, port=vuln_service_port,
-                protocol=vuln_service_protocol, service=vuln_service_name))
+                root=vuln_root_access, port=80,
+                protocol=TransportProtocol.TCP, service=vuln_service_name))
     vulns_config = VulnerabilitiesConfig(node_vulnerability_configs=vulns)
     return vulns_config
 
 
-def convert_json_data_to_services_config(emulation_data: json) -> ServicesConfig:
+def convert_json_data_to_services_config(emulation_data: Dict[str, Any]) -> ServicesConfig:
     """
     Converts the json emulation data to the services config
 
@@ -938,6 +935,7 @@ def convert_json_data_to_services_config(emulation_data: json) -> ServicesConfig
     """
     emulation_containers = emulation_data[api_constants.CREATE_EMULATION_PAGE.EMULATION_CONTAINER]
     services_configs = []
+    service_ip = "0.0.0.0"
     for containers in emulation_containers:
         container_services = containers[api_constants.CREATE_EMULATION_PAGE.SERVICES]
         services = []

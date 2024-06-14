@@ -38,8 +38,20 @@ const AddVulns = (props) => {
       label: "Privilege escalation"
     }
   ]
+  const credentialAccessOptions = [
+    {
+      value: true,
+      label: "true"
+    },
+    {
+      value: false,
+      label: "false"
+    }
+  ]
+
   const [selectedVulnerabilityRoot, setSelectedVulnerabilityRoot] = useState(vulnerabilityRootOptions[0]);
   const [selectedVulnerabilityType, setSelectedVulnerabilityType] = useState(vulnerabilityTypeOptions[0]);
+  const [selectedCredentialAccess, setSelectedCredentialAccess] = useState(credentialAccessOptions[0]);
 
   const updatedSelectedVulnerabilityRoot = (selectedVulnerabilityRootOption, vulnIndex) => {
     setSelectedVulnerabilityRoot(selectedVulnerabilityRootOption)
@@ -49,6 +61,11 @@ const AddVulns = (props) => {
   const updatedSelectedVulnerabilityType = (selectedVulnerabilityTypeOption, vulnIndex) => {
     setSelectedVulnerabilityType(selectedVulnerabilityTypeOption)
     props.handleVulnTypeChange(selectedVulnerabilityTypeOption.value, props.containerIndex, vulnIndex)
+  }
+
+  const updatedCredentialAccess = (selectedCredentialAccessOption, vulnIndex, credIndex, credType) => {
+    setSelectedCredentialAccess(selectedCredentialAccessOption)
+    props.handleVulnCredentialChange(selectedCredentialAccessOption.value, props.containerIndex, vulnIndex, credIndex, credType)
   }
 
   return (
@@ -162,13 +179,17 @@ const AddVulns = (props) => {
                       />
                     </div>
                     <div style={{ marginTop: '5px' }}>
-                      <label style={{fontSize: '12px', marginRight: '5px'}}>Credentials access level</label>
-                      <select
-                        value={credential.vulnCredRoot}
-                        onChange={(e) => props.handleVulnCredentialChange(e, props.containerIndex, vulnIndex, credIndex, 'vulnCredRoot')}>
-                        <option value="True">True</option>
-                        <option value="False">False</option>
-                      </select>
+                      <label style={{fontSize: '12px', marginRight: '5px'}}>Credential root</label>
+                      <Select
+                          style={{display: 'inline-block'}}
+                          value={selectedCredentialAccess}
+                          defaultValue={selectedCredentialAccess}
+                          options={credentialAccessOptions}
+                          onChange={(e) => updatedCredentialAccess(e, props.containerIndex, vulnIndex, credIndex, 'vulnCredRoot')}
+                          placeholder="Boolean flag whether the vulnerability gives root access or not"
+                          className="createEmulationInput"
+                          size="sm"
+                      />
                     </div>
                     <div style={{ marginTop: '5px' }}>
                       <Button
