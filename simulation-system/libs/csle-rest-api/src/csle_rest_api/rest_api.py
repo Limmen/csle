@@ -25,6 +25,7 @@ from csle_rest_api.pages.container_terminal.routes import get_container_terminal
 from csle_rest_api.pages.system_admin.routes import get_system_admin_page_bp
 from csle_rest_api.pages.logs_admin.routes import get_logs_admin_page_bp
 from csle_rest_api.pages.server_cluster.routes import get_server_cluster_page_bp
+from csle_rest_api.pages.create_emulation.routes import get_new_emulation_page_bp
 from csle_rest_api.resources.node_exporter.routes import node_exporter_bp
 from csle_rest_api.resources.prometheus.routes import prometheus_bp
 from csle_rest_api.resources.cadvisor.routes import cadvisor_bp
@@ -70,6 +71,7 @@ from csle_rest_api.resources.config.routes import config_bp
 from csle_rest_api.resources.server_cluster.routes import server_cluster_bp
 from csle_rest_api.resources.version.routes import version_bp
 from csle_rest_api.resources.logs.routes import logs_bp
+from csle_rest_api.resources.create_emulation.routes import create_emulation_bp
 from csle_rest_api.web_sockets.container_terminal.container_terminal import get_container_terminal_bp
 import csle_rest_api.constants.constants as api_constants
 
@@ -113,6 +115,9 @@ def create_app(static_folder: str):
     app.register_blueprint(get_server_cluster_page_bp(static_folder=f"../../{static_folder}"),
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.SERVER_CLUSTER_PAGE_RESOURCE}")
+    app.register_blueprint(get_new_emulation_page_bp(static_folder=f"../../{static_folder}"),
+                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
+                                      f"{api_constants.MGMT_WEBAPP.CREATE_EMULATION_PAGE_RESOURCE}")
     app.register_blueprint(cadvisor_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.CADVISOR_RESOURCE}")
     app.register_blueprint(pgadmin_bp,
@@ -276,6 +281,9 @@ def create_app(static_folder: str):
     app.register_blueprint(logs_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.LOGS_RESOURCE}")
+    app.register_blueprint(create_emulation_bp,
+                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
+                                      f"{api_constants.MGMT_WEBAPP.CREATE_EMULATION_RESOURCE}")
     web_sockets_container_terminal_bp = get_container_terminal_bp(app)
     app.register_blueprint(web_sockets_container_terminal_bp)
 
