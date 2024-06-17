@@ -133,7 +133,7 @@ class TestAptGameEnvSuite:
         self.env.trace.attacker_observations = ["obs1", "obs2"]
         self.env.trace.defender_observations = ["obs1", "obs2"]
         initial_trace_count = len(self.env.traces)
-        AptGameState.reset = lambda self: None
+        AptGameState.reset = lambda self: None # type: ignore
         initial_obs, info = self.env.reset(seed=10, soft=False, options=None)
         assert len(self.env.traces) == initial_trace_count + 1
         assert isinstance(self.env.trace, SimulationTrace)

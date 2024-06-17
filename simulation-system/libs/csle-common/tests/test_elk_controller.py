@@ -504,7 +504,7 @@ class TestElkControllerSuite:
         emulation_env_config.elk_config = elk_config
         emulation_env_config.elk_config.container.docker_gw_bridge_ip = "172.17.0.1"
         emulation_env_config.elk_config.elk_manager_port = 5601
-        emulation_env_config.execution_id = "test_execution_id"
+        emulation_env_config.execution_id = 1
         emulation_env_config.name = "test_emulation"
         logger = MagicMock(spec=logging.Logger)
         active_ips = ["172.17.0.1"]
@@ -520,5 +520,5 @@ class TestElkControllerSuite:
         )
         assert result.ips == ["172.17.0.1"]
         assert result.ports == [5601]
-        assert result.execution_id == "test_execution_id"
+        assert result.execution_id == 1
         assert result.emulation_name == "test_emulation"
