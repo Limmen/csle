@@ -10,7 +10,7 @@ class StoppingGameState(JSONSerializable):
     Represents the state of the optimal stopping game
     """
 
-    def __init__(self, b1: npt.NDArray[np.float_], L: int) -> None:
+    def __init__(self, b1: npt.NDArray[np.float64], L: int) -> None:
         """
         Intializes the state
 

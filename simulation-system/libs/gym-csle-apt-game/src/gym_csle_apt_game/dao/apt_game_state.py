@@ -10,7 +10,7 @@ class AptGameState(JSONSerializable):
     Represents the state of the optimal APT game
     """
 
-    def __init__(self, b1: npt.NDArray[np.float_]) -> None:
+    def __init__(self, b1: npt.NDArray[np.float64]) -> None:
         """
         Intializes the state
 

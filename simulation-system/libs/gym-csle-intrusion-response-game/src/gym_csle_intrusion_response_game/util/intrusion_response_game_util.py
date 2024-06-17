@@ -140,7 +140,7 @@ class IntrusionResponseGameUtil:
         raise ValueError("Initial state not recognized")
 
     @staticmethod
-    def local_initial_state_distribution(initial_state_idx, S: npt.NDArray[Any]) -> npt.NDArray[np.float_]:
+    def local_initial_state_distribution(initial_state_idx, S: npt.NDArray[Any]) -> npt.NDArray[np.float64]:
         """
         Gets the initial state distribution
 
@@ -153,7 +153,7 @@ class IntrusionResponseGameUtil:
         return rho
 
     @staticmethod
-    def local_initial_defender_belief(S_A: npt.NDArray[Any]) -> npt.NDArray[np.float_]:
+    def local_initial_defender_belief(S_A: npt.NDArray[Any]) -> npt.NDArray[np.float64]:
         """
         Gets the initial defender belief for a local version of the game
 
@@ -165,7 +165,7 @@ class IntrusionResponseGameUtil:
         return d_b1
 
     @staticmethod
-    def local_initial_attacker_belief(S_D: npt.NDArray[Any], initial_zone) -> npt.NDArray[np.float_]:
+    def local_initial_attacker_belief(S_D: npt.NDArray[Any], initial_zone) -> npt.NDArray[np.float64]:
         """
         Gets the initial attacker belief for a local version of the game
 
@@ -270,7 +270,7 @@ class IntrusionResponseGameUtil:
         return beta * impact * int(not IntrusionResponseGameUtil.is_local_state_shutdown_or_redirect(s=s))
 
     @staticmethod
-    def constant_defender_action_costs(A1: npt.NDArray[np.int_], constant_cost: float) -> npt.NDArray[np.float_]:
+    def constant_defender_action_costs(A1: npt.NDArray[np.int_], constant_cost: float) -> npt.NDArray[np.float64]:
         """
         Returns a vector with the local defender action costs where each action has the same constant cost
 
@@ -297,7 +297,7 @@ class IntrusionResponseGameUtil:
         return np.array(list(range(1, num_zones + 1)))
 
     @staticmethod
-    def constant_zone_utilities(zones: npt.NDArray[np.int_], constant_utility: float) -> npt.NDArray[np.float_]:
+    def constant_zone_utilities(zones: npt.NDArray[np.int_], constant_utility: float) -> npt.NDArray[np.float64]:
         """
         Returns a vector with the zone utilities where each zone has the same constant utility
 
@@ -312,7 +312,7 @@ class IntrusionResponseGameUtil:
 
     @staticmethod
     def constant_zone_detection_probabilities(zones: npt.NDArray[np.int_], constant_detection_prob: float) \
-            -> npt.NDArray[np.float_]:
+            -> npt.NDArray[np.float64]:
         """
         Returns a vector with the zone detection probabilities where each zone as the same uniform detection
         probability
