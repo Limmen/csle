@@ -468,7 +468,7 @@ class ManagementSystemController:
         :return: True if grafana was started, otherwise False
         """
         if ManagementSystemController.is_grafana_running():
-            logger.info("Grafana is already runnign")
+            logger.info("Grafana is already running")
             return False
         client_1 = docker.from_env()
         containers = client_1.containers.list(all=True)
