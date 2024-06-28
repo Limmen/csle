@@ -2,9 +2,7 @@ import pytest
 import logging
 from unittest.mock import patch, MagicMock
 import csle_common.constants.constants as constants
-from csle_common.controllers.ovs_controller import (
-    OVSController,
-)
+from csle_common.controllers.ovs_controller import OVSController
 from csle_common.dao.emulation_config.containers_config import ContainersConfig
 
 
@@ -14,7 +12,7 @@ class TestOVSControllerSuite:
     """
 
     @pytest.fixture
-    def mock_containers_config(self):
+    def mock_containers_config(self) -> None:
         """
         Test method that sets up OVS switches on containers
 
@@ -42,10 +40,10 @@ class TestOVSControllerSuite:
     @patch("subprocess.Popen")
     @patch("time.sleep")
     def test_create_virtual_switches_on_container(
-        self, mock_sleep, mock_popen, mock_containers_config
+            self, mock_sleep, mock_popen, mock_containers_config
     ) -> None:
         """
-        Test method that aplies the OVS configuration on the OVS switches
+        Test method that creates the OVS switches
 
         :param mock_sleep: mock_sleep
         :param mock_popen: mock_popen
@@ -63,6 +61,13 @@ class TestOVSControllerSuite:
     @patch("csle_common.util.emulation_util.EmulationUtil.connect_admin")
     @patch("csle_common.util.emulation_util.EmulationUtil.execute_ssh_cmd")
     def test_apply_ovs_config(self, mock_execute_ssh_cmd, mock_connect_admin) -> None:
+        """
+        Test method that applies the OVS configuration
+
+        :param mock_execute_ssh_cmd: mock_execute_ssh_cmd
+        :param mock_connect_admin: mock_connect_admin
+        :return:
+        """
         emulation_env_config = MagicMock()
         ovs_switch_config = MagicMock()
         ovs_switch_config.container_name = "ovs_container_1"
