@@ -17,8 +17,7 @@
         <img src="https://img.shields.io/badge/Youtube-red.svg?logo=Youtube" /></a>
     <a href="https://arxiv.org/abs/2309.03292">
         <img src="https://img.shields.io/badge/arxiv-2309.03292-silver" alt="Paper">
-    </a>
-    <img src="https://badges.toozhao.com/badges/01HCESS7WXTT0T5ANET1CG9GDY/blue.svg" alt="Count">
+    </a> 
     <a href="https://github.com/limmen/csle">
      <img src="https://img.shields.io/badge/-github-teal?logo=github" alt="github">
     </a>
@@ -33,6 +32,9 @@
         <img src="https://codecov.io/gh/Limmen/csle/graph/badge.svg?token=YOV2SEDZWF"/> 
     </a>
 </p>
+<!---
+img src="https://badges.toozhao.com/badges/01HCESS7WXTT0T5ANET1CG9GDY/blue.svg" alt="Count">
+-->
 
 # The Cyber Security Learning Environment (CSLE)
 
