@@ -3,9 +3,7 @@ import logging
 import csle_common.constants.constants as constants
 from unittest.mock import patch, MagicMock
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
-from csle_common.controllers.ossec_ids_controller import (
-    OSSECIDSController,
-)
+from csle_common.controllers.ossec_ids_controller import OSSECIDSController
 
 
 class TestOssecIdsSuite:
@@ -192,9 +190,7 @@ class TestOssecIdsSuite:
 
     @patch("csle_common.util.emulation_util.EmulationUtil.connect_admin")
     @patch("csle_common.util.emulation_util.EmulationUtil.execute_ssh_cmd")
-    def test_start_ossec_ids_manager(
-            self, mock_execute_ssh_cmd, mock_connect_admin
-    ) -> None:
+    def test_start_ossec_ids_manager(self, mock_execute_ssh_cmd, mock_connect_admin) -> None:
         """
         Test method for starting the OSSEC IDS manager on a specific container
 
@@ -205,6 +201,7 @@ class TestOssecIdsSuite:
         """
         ip = "192.168.1.10"
         mock_execute_ssh_cmd.return_value = ("ossec_ids_manager running", "", 0)
+        constants.COMMANDS.SEARCH_OSSEC_IDS_MANAGER = "ossec_ids_manager running"
         OSSECIDSController.start_ossec_ids_manager(
             emulation_env_config=self.emulation_env_config, ip=ip
         )
@@ -252,14 +249,24 @@ class TestOssecIdsSuite:
         mock_execute_ssh_cmd.assert_called()
         mock_connect_admin.assert_called()
 
-    """@patch("csle_common.controllers.ossec_ids_controller.OSSECIDSController.start_ossec_ids_monitor_thread")
-    def test_start_ossec_idses_monitor_threads(self, mock_start_monitor) -> None:
-        constants.CONTAINER_IMAGES = MagicMock()
+    @patch("csle_common.controllers.ossec_ids_controller.OSSECIDSController.start_ossec_idses_managers")
+    @patch("csle_common.controllers.ossec_ids_controller.OSSECIDSController.start_ossec_ids_monitor_thread")
+    def test_start_ossec_idses_monitor_threads(self, mock_start_monitor, mock_start_managers) -> None:
+        """
+        Unit test for the start_ossec_ids_monnitor_threads method of the OSSEC IDS controller
+
+        :param mock_start_monitor: mock of the start_monitor method
+        :param mock_start_managers: mock of the start_managers method
+        :return:
+        """
         constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES = ["container-1", "container-2"]
         physical_server_ip = "192.168.1.10"
         OSSECIDSController.start_ossec_idses_monitor_threads(emulation_env_config=self.emulation_env_config,
-        physical_server_ip=physical_server_ip,logger=self.logger)
-        assert mock_start_monitor.call_count == 2"""
+                                                             physical_server_ip=physical_server_ip,
+                                                             logger=self.logger)
+        mock_start_managers.assert_called_once_with(emulation_env_config=self.emulation_env_config,
+                                                    physical_server_ip=physical_server_ip)
+        assert mock_start_monitor.call_count == 2
 
     @patch(
         "csle_common.controllers.ossec_ids_controller.OSSECIDSController.start_ossec_ids_manager"
@@ -303,7 +310,7 @@ class TestOssecIdsSuite:
         an IDS to stop the monitor threads
 
         :param mock_stop_monitor: _description_
-        :type mock_stop_monitor: _type_
+        :return: None
         """
         constants.CONTAINER_IMAGES = MagicMock()  # type: ignore
         constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES = ["container-1", "container-2"]
@@ -317,16 +324,21 @@ class TestOssecIdsSuite:
     @patch(
         "csle_common.controllers.ossec_ids_controller.OSSECIDSController.start_ossec_ids_manager"
     )
-    def test_stop_ossec_ids_monitor_thread(self, mock_start_manager) -> None:
+    @patch("grpc.insecure_channel")
+    def test_stop_ossec_ids_monitor_thread(
+            self, mock_insecure_channel, mock_start_manager
+    ) -> None:
         """
         Test a method that sends a request to the OSSECIDSManager for a specific IP to stop the monitor thread
 
         :param mock_start_manager: mock start_manager
-
+        :param mock_insecure_channel: mock of the channel
         :return: None
         """
+        mock_channel = MagicMock()
+        mock_insecure_channel.return_value.__enter__.return_value = mock_channel
         ip = "192.168.1.10"
-        OSSECIDSController.start_ossec_ids_monitor_thread(
+        OSSECIDSController.stop_ossec_ids_monitor_thread(
             emulation_env_config=self.emulation_env_config, ip=ip
         )
         mock_start_manager.assert_called_once_with(
@@ -336,17 +348,18 @@ class TestOssecIdsSuite:
     @patch(
         "csle_common.controllers.ossec_ids_controller.OSSECIDSController.start_ossec_idses_managers"
     )
-    def test_get_ossec_idses_monitor_threads_statuses(
-            self, mock_start_managers
-    ) -> None:
+    @patch("grpc.insecure_channel")
+    def test_get_ossec_idses_monitor_threads_statuses(self, mock_insecure_channel, mock_start_managers) -> None:
         """
         Test a method that sends a request to the OSSECIDSManager on every container to get the status of the
         IDS monitor thread
 
         :param mock_start_manager: mock start_manager
-
+        :param mock_insecure_channel: mock of the channel
         :return: None
         """
+        mock_channel = MagicMock()
+        mock_insecure_channel.return_value.__enter__.return_value = mock_channel
         physical_server_ip = "192.168.1.10"
         constants.CONTAINER_IMAGES = MagicMock()  # type: ignore
         constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES = ["container-1", "container-2"]
