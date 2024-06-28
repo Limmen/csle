@@ -14,7 +14,7 @@ class TestOVSControllerSuite:
     """
 
     @pytest.fixture
-    def mock_containers_config(self) -> None:
+    def mock_containers_config(self):
         """
         Test method that sets up OVS switches on containers
 
