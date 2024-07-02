@@ -11,7 +11,7 @@ class TestVulnControllerSuite:
 
     @patch("csle_common.util.emulation_util.EmulationUtil.connect_admin")
     @patch("csle_common.util.emulation_util.EmulationUtil.execute_ssh_cmd")
-    def test_create_users(self, mock_execute_ssh_cmd, mock_connect_admin) -> None:
+    def test_create_vulns(self, mock_execute_ssh_cmd, mock_connect_admin) -> None:
         """
         Test method that creates vulnerabilities in an emulation environment
 
