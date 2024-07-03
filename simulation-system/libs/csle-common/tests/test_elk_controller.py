@@ -16,9 +16,7 @@ class TestElkControllerSuite:
 
     @patch("csle_common.util.emulation_util.EmulationUtil.connect_admin")
     @patch("csle_common.util.emulation_util.EmulationUtil.execute_ssh_cmd")
-    def test_start_stop_elk_manager(
-        self, mock_execute_ssh_cmd, mock_connect_admin
-    ) -> None:
+    def test_start_stop_elk_manager(self, mock_execute_ssh_cmd, mock_connect_admin) -> None:
         """
         Test case for starting or stopping the ELK manager
 
@@ -35,23 +33,16 @@ class TestElkControllerSuite:
         emulation_env_config.elk_config.get_connection.return_value = MagicMock()
         logger = MagicMock(spec=logging.Logger)
         ELKController.start_elk_manager(emulation_env_config, logger)
-        mock_connect_admin.assert_called_once_with(
-            emulation_env_config=emulation_env_config,
-            ip="172.17.0.1",
-            create_producer=False,
-        )
+        mock_connect_admin.assert_called_once_with(emulation_env_config=emulation_env_config, ip="172.17.0.1",
+                                                   create_producer=False)
         mock_execute_ssh_cmd.assert_called()
         ELKController.stop_elk_manager(emulation_env_config, logger)
         assert 2 == mock_connect_admin.call_count
         assert 4 == mock_execute_ssh_cmd.call_count
 
     @patch("csle_common.controllers.elk_controller.ELKController.start_elk_manager")
-    @patch(
-        "csle_common.controllers.elk_controller.ELKController.get_elk_status_by_port_and_ip"
-    )
-    def test_get_elk_status(
-        self, mock_get_elk_status_by_port_and_ip, mock_start_elk_manager
-    ) -> None:
+    @patch("csle_common.controllers.elk_controller.ELKController.get_elk_status_by_port_and_ip")
+    def test_get_elk_status(self, mock_get_elk_status_by_port_and_ip, mock_start_elk_manager) -> None:
         """
         Test case for querying the ELKManager about the status of the ELK stack
 
@@ -59,9 +50,7 @@ class TestElkControllerSuite:
         :param mock_start_elk_manager: mocked start_elk_manager method
         """
         mock_start_elk_manager.return_value = None
-        expected_elk_dto = MagicMock(
-            spec=csle_collector.elk_manager.elk_manager_pb2.ElkDTO
-        )
+        expected_elk_dto = MagicMock(spec=csle_collector.elk_manager.elk_manager_pb2.ElkDTO)
         mock_get_elk_status_by_port_and_ip.return_value = expected_elk_dto
         emulation_env_config = MagicMock(spec=EmulationEnvConfig)
         elk_config = MagicMock()
@@ -70,20 +59,15 @@ class TestElkControllerSuite:
         emulation_env_config.elk_config.elk_manager_port = 5601
         logger = MagicMock(spec=logging.Logger)
         result = ELKController.get_elk_status(emulation_env_config, logger)
-        mock_start_elk_manager.assert_called_once_with(
-            emulation_env_config=emulation_env_config, logger=logger
-        )
-        mock_get_elk_status_by_port_and_ip.assert_called_once_with(
-            ip="172.17.0.1", port=5601
-        )
+        mock_start_elk_manager.assert_called_once_with(emulation_env_config=emulation_env_config, logger=logger)
+        mock_get_elk_status_by_port_and_ip.assert_called_once_with(ip="172.17.0.1", port=5601)
         assert result == expected_elk_dto
 
     @patch("csle_collector.elk_manager.query_elk_manager.get_elk_status")
     @patch("csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub")
     @patch("grpc.insecure_channel")
-    def test_get_elk_status_by_port_and_ip(
-        self, mock_insecure_channel, mock_ElkManagerStub, mock_get_elk_status
-    ) -> None:
+    def test_get_elk_status_by_port_and_ip(self, mock_insecure_channel, mock_ElkManagerStub, mock_get_elk_status) \
+            -> None:
         """
         Test case for querying the ElkManager about the status of the ELK stack
 
@@ -95,16 +79,12 @@ class TestElkControllerSuite:
         mock_insecure_channel.return_value.__enter__.return_value = mock_channel
         mock_stub = MagicMock()
         mock_ElkManagerStub.return_value = mock_stub
-        expected_elk_dto = MagicMock(
-            spec=csle_collector.elk_manager.elk_manager_pb2.ElkDTO
-        )
+        expected_elk_dto = MagicMock(spec=csle_collector.elk_manager.elk_manager_pb2.ElkDTO)
         mock_get_elk_status.return_value = expected_elk_dto
         ip = "172.17.0.1"
         port = 5601
         result = ELKController.get_elk_status_by_port_and_ip(ip, port)
-        mock_insecure_channel.assert_called_once_with(
-            f"{ip}:{port}", options=constants.GRPC_SERVERS.GRPC_OPTIONS
-        )
+        mock_insecure_channel.assert_called_once_with(f"{ip}:{port}", options=constants.GRPC_SERVERS.GRPC_OPTIONS)
         mock_ElkManagerStub.assert_called_once_with(mock_channel)
         mock_get_elk_status.assert_called_once_with(mock_stub)
         assert result == expected_elk_dto
@@ -113,13 +93,8 @@ class TestElkControllerSuite:
     @patch("csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub")
     @patch("grpc.insecure_channel")
     @patch("csle_common.controllers.elk_controller.ELKController.start_elk_manager")
-    def test_stop_elk_stack(
-        self,
-        mock_start_elk_manager,
-        mock_insecure_channel,
-        mock_ElkManagerStub,
-        mock_stop_elk,
-    ) -> None:
+    def test_stop_elk_stack(self, mock_start_elk_manager, mock_insecure_channel, mock_ElkManagerStub, mock_stop_elk) \
+            -> None:
         """
         Test case for requesting the ELKManager to stop the ELK server
 
@@ -133,9 +108,7 @@ class TestElkControllerSuite:
         mock_insecure_channel.return_value.__enter__.return_value = mock_channel
         mock_stub = MagicMock()
         mock_ElkManagerStub.return_value = mock_stub
-        expected_elk_dto = MagicMock(
-            spec=csle_collector.elk_manager.elk_manager_pb2.ElkDTO
-        )
+        expected_elk_dto = MagicMock(spec=csle_collector.elk_manager.elk_manager_pb2.ElkDTO)
         mock_stop_elk.return_value = expected_elk_dto
         emulation_env_config = MagicMock(spec=EmulationEnvConfig)
         elk_config = MagicMock()
@@ -144,9 +117,7 @@ class TestElkControllerSuite:
         emulation_env_config.elk_config.elk_manager_port = 5601
         logger = MagicMock(spec=logging.Logger)
         result = ELKController.stop_elk_stack(emulation_env_config, logger)
-        mock_insecure_channel.assert_called_once_with(
-            "172.17.0.1:5601", options=constants.GRPC_SERVERS.GRPC_OPTIONS
-        )
+        mock_insecure_channel.assert_called_once_with("172.17.0.1:5601", options=constants.GRPC_SERVERS.GRPC_OPTIONS)
         mock_ElkManagerStub.assert_called_once_with(mock_channel)
         mock_stop_elk.asert_called_once_with(mock_stub)
         assert result == expected_elk_dto
@@ -155,13 +126,8 @@ class TestElkControllerSuite:
     @patch("csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub")
     @patch("grpc.insecure_channel")
     @patch("csle_common.controllers.elk_controller.ELKController.start_elk_manager")
-    def test_start_elk_stack(
-        self,
-        mock_start_elk_manager,
-        mock_insecure_channel,
-        mock_ElkManagerStub,
-        mock_start_elk,
-    ) -> None:
+    def test_start_elk_stack(self, mock_start_elk_manager, mock_insecure_channel, mock_ElkManagerStub,
+                             mock_start_elk) -> None:
         """
         Test case for requesting the ELKManager to start the ELK server
 
@@ -175,9 +141,7 @@ class TestElkControllerSuite:
         mock_insecure_channel.return_value.__enter__.return_value = mock_channel
         mock_stub = MagicMock()
         mock_ElkManagerStub.return_value = mock_stub
-        expected_elk_dto = MagicMock(
-            spec=csle_collector.elk_manager.elk_manager_pb2.ElkDTO
-        )
+        expected_elk_dto = MagicMock(spec=csle_collector.elk_manager.elk_manager_pb2.ElkDTO)
         mock_start_elk.return_value = expected_elk_dto
         emulation_env_config = MagicMock(spec=EmulationEnvConfig)
         elk_config = MagicMock()
@@ -187,12 +151,8 @@ class TestElkControllerSuite:
         emulation_env_config.elk_config.elk_manager_port = 5601
         logger = MagicMock(spec=logging.Logger)
         physical_server_ip = "192.168.0.1"
-        result = ELKController.start_elk_stack(
-            emulation_env_config, physical_server_ip, logger
-        )
-        mock_insecure_channel.assert_called_once_with(
-            "172.17.0.1:5601", options=constants.GRPC_SERVERS.GRPC_OPTIONS
-        )
+        result = ELKController.start_elk_stack(emulation_env_config, physical_server_ip, logger)
+        mock_insecure_channel.assert_called_once_with("172.17.0.1:5601", options=constants.GRPC_SERVERS.GRPC_OPTIONS)
         mock_ElkManagerStub.assert_called_once_with(mock_channel)
         mock_start_elk.asert_called_once_with(mock_stub)
         assert result == expected_elk_dto
@@ -201,13 +161,8 @@ class TestElkControllerSuite:
     @patch("csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub")
     @patch("grpc.insecure_channel")
     @patch("csle_common.controllers.elk_controller.ELKController.start_elk_manager")
-    def test_start_elastic(
-        self,
-        mock_start_elk_manager,
-        mock_insecure_channel,
-        mock_ElkManagerStub,
-        mock_start_elastic,
-    ) -> None:
+    def test_start_elastic(self, mock_start_elk_manager, mock_insecure_channel, mock_ElkManagerStub,
+                           mock_start_elastic) -> None:
         """
         Test case for requesting the ELKManager to start elasticsearch
 
@@ -221,9 +176,7 @@ class TestElkControllerSuite:
         mock_insecure_channel.return_value.__enter__.return_value = mock_channel
         mock_stub = MagicMock()
         mock_ElkManagerStub.return_value = mock_stub
-        expected_elk_dto = MagicMock(
-            spec=csle_collector.elk_manager.elk_manager_pb2.ElkDTO
-        )
+        expected_elk_dto = MagicMock(spec=csle_collector.elk_manager.elk_manager_pb2.ElkDTO)
         mock_start_elastic.return_value = expected_elk_dto
         emulation_env_config = MagicMock(spec=EmulationEnvConfig)
         elk_config = MagicMock()
@@ -232,9 +185,7 @@ class TestElkControllerSuite:
         emulation_env_config.elk_config.elk_manager_port = 5601
         logger = MagicMock(spec=logging.Logger)
         result = ELKController.start_elastic(emulation_env_config, logger)
-        mock_insecure_channel.assert_called_once_with(
-            "172.17.0.1:5601", options=constants.GRPC_SERVERS.GRPC_OPTIONS
-        )
+        mock_insecure_channel.assert_called_once_with("172.17.0.1:5601", options=constants.GRPC_SERVERS.GRPC_OPTIONS)
         mock_ElkManagerStub.assert_called_once_with(mock_channel)
         mock_start_elastic.asert_called_once_with(mock_stub)
         assert result == expected_elk_dto
@@ -243,13 +194,8 @@ class TestElkControllerSuite:
     @patch("csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub")
     @patch("grpc.insecure_channel")
     @patch("csle_common.controllers.elk_controller.ELKController.start_elk_manager")
-    def test_start_kibana(
-        self,
-        mock_start_elk_manager,
-        mock_insecure_channel,
-        mock_ElkManagerStub,
-        mock_start_kibana,
-    ) -> None:
+    def test_start_kibana(self, mock_start_elk_manager, mock_insecure_channel, mock_ElkManagerStub,
+                          mock_start_kibana) -> None:
         """
         Test case for requesting the ELKManager to start kibana
 
@@ -263,9 +209,7 @@ class TestElkControllerSuite:
         mock_insecure_channel.return_value.__enter__.return_value = mock_channel
         mock_stub = MagicMock()
         mock_ElkManagerStub.return_value = mock_stub
-        expected_elk_dto = MagicMock(
-            spec=csle_collector.elk_manager.elk_manager_pb2.ElkDTO
-        )
+        expected_elk_dto = MagicMock(spec=csle_collector.elk_manager.elk_manager_pb2.ElkDTO)
         mock_start_kibana.return_value = expected_elk_dto
         emulation_env_config = MagicMock(spec=EmulationEnvConfig)
         elk_config = MagicMock()
@@ -274,9 +218,7 @@ class TestElkControllerSuite:
         emulation_env_config.elk_config.elk_manager_port = 5601
         logger = MagicMock(spec=logging.Logger)
         result = ELKController.start_kibana(emulation_env_config, logger)
-        mock_insecure_channel.assert_called_once_with(
-            "172.17.0.1:5601", options=constants.GRPC_SERVERS.GRPC_OPTIONS
-        )
+        mock_insecure_channel.assert_called_once_with("172.17.0.1:5601", options=constants.GRPC_SERVERS.GRPC_OPTIONS)
         mock_ElkManagerStub.assert_called_once_with(mock_channel)
         mock_start_kibana.asert_called_once_with(mock_stub)
         assert result == expected_elk_dto
@@ -285,13 +227,8 @@ class TestElkControllerSuite:
     @patch("csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub")
     @patch("grpc.insecure_channel")
     @patch("csle_common.controllers.elk_controller.ELKController.start_elk_manager")
-    def test_start_logstash(
-        self,
-        mock_start_elk_manager,
-        mock_insecure_channel,
-        mock_ElkManagerStub,
-        mock_start_logstash,
-    ) -> None:
+    def test_start_logstash(self, mock_start_elk_manager, mock_insecure_channel, mock_ElkManagerStub,
+                            mock_start_logstash) -> None:
         """
         Test case for requesting the ELKManager to start logstash
 
@@ -305,9 +242,7 @@ class TestElkControllerSuite:
         mock_insecure_channel.return_value.__enter__.return_value = mock_channel
         mock_stub = MagicMock()
         mock_ElkManagerStub.return_value = mock_stub
-        expected_elk_dto = MagicMock(
-            spec=csle_collector.elk_manager.elk_manager_pb2.ElkDTO
-        )
+        expected_elk_dto = MagicMock(spec=csle_collector.elk_manager.elk_manager_pb2.ElkDTO)
         mock_start_logstash.return_value = expected_elk_dto
         emulation_env_config = MagicMock(spec=EmulationEnvConfig)
         elk_config = MagicMock()
@@ -316,9 +251,7 @@ class TestElkControllerSuite:
         emulation_env_config.elk_config.elk_manager_port = 5601
         logger = MagicMock(spec=logging.Logger)
         result = ELKController.start_logstash(emulation_env_config, logger)
-        mock_insecure_channel.assert_called_once_with(
-            "172.17.0.1:5601", options=constants.GRPC_SERVERS.GRPC_OPTIONS
-        )
+        mock_insecure_channel.assert_called_once_with("172.17.0.1:5601", options=constants.GRPC_SERVERS.GRPC_OPTIONS)
         mock_ElkManagerStub.assert_called_once_with(mock_channel)
         mock_start_logstash.asert_called_once_with(mock_stub)
         assert result == expected_elk_dto
@@ -327,13 +260,8 @@ class TestElkControllerSuite:
     @patch("csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub")
     @patch("grpc.insecure_channel")
     @patch("csle_common.controllers.elk_controller.ELKController.start_elk_manager")
-    def test_stop_elastic(
-        self,
-        mock_start_elk_manager,
-        mock_insecure_channel,
-        mock_ElkManagerStub,
-        mock_stop_elastic,
-    ) -> None:
+    def test_stop_elastic(self, mock_start_elk_manager, mock_insecure_channel, mock_ElkManagerStub,
+                          mock_stop_elastic) -> None:
         """
         Test case for requesting the ELKManager to stop elasticsearch
 
@@ -347,9 +275,7 @@ class TestElkControllerSuite:
         mock_insecure_channel.return_value.__enter__.return_value = mock_channel
         mock_stub = MagicMock()
         mock_ElkManagerStub.return_value = mock_stub
-        expected_elk_dto = MagicMock(
-            spec=csle_collector.elk_manager.elk_manager_pb2.ElkDTO
-        )
+        expected_elk_dto = MagicMock(spec=csle_collector.elk_manager.elk_manager_pb2.ElkDTO)
         mock_stop_elastic.return_value = expected_elk_dto
         emulation_env_config = MagicMock(spec=EmulationEnvConfig)
         elk_config = MagicMock()
@@ -358,9 +284,7 @@ class TestElkControllerSuite:
         emulation_env_config.elk_config.elk_manager_port = 5601
         logger = MagicMock(spec=logging.Logger)
         result = ELKController.stop_elastic(emulation_env_config, logger)
-        mock_insecure_channel.assert_called_once_with(
-            "172.17.0.1:5601", options=constants.GRPC_SERVERS.GRPC_OPTIONS
-        )
+        mock_insecure_channel.assert_called_once_with("172.17.0.1:5601", options=constants.GRPC_SERVERS.GRPC_OPTIONS)
         mock_ElkManagerStub.assert_called_once_with(mock_channel)
         mock_stop_elastic.asert_called_once_with(mock_stub)
         assert result == expected_elk_dto
@@ -369,13 +293,8 @@ class TestElkControllerSuite:
     @patch("csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub")
     @patch("grpc.insecure_channel")
     @patch("csle_common.controllers.elk_controller.ELKController.start_elk_manager")
-    def test_stop_kibana(
-        self,
-        mock_start_elk_manager,
-        mock_insecure_channel,
-        mock_ElkManagerStub,
-        mock_stop_kibana,
-    ) -> None:
+    def test_stop_kibana(self, mock_start_elk_manager, mock_insecure_channel, mock_ElkManagerStub,
+                         mock_stop_kibana) -> None:
         """
         Test case for requesting the ELKManager to stop kibana
 
@@ -389,9 +308,7 @@ class TestElkControllerSuite:
         mock_insecure_channel.return_value.__enter__.return_value = mock_channel
         mock_stub = MagicMock()
         mock_ElkManagerStub.return_value = mock_stub
-        expected_elk_dto = MagicMock(
-            spec=csle_collector.elk_manager.elk_manager_pb2.ElkDTO
-        )
+        expected_elk_dto = MagicMock(spec=csle_collector.elk_manager.elk_manager_pb2.ElkDTO)
         mock_stop_kibana.return_value = expected_elk_dto
         emulation_env_config = MagicMock(spec=EmulationEnvConfig)
         elk_config = MagicMock()
@@ -400,9 +317,7 @@ class TestElkControllerSuite:
         emulation_env_config.elk_config.elk_manager_port = 5601
         logger = MagicMock(spec=logging.Logger)
         result = ELKController.stop_kibana(emulation_env_config, logger)
-        mock_insecure_channel.assert_called_once_with(
-            "172.17.0.1:5601", options=constants.GRPC_SERVERS.GRPC_OPTIONS
-        )
+        mock_insecure_channel.assert_called_once_with("172.17.0.1:5601", options=constants.GRPC_SERVERS.GRPC_OPTIONS)
         mock_ElkManagerStub.assert_called_once_with(mock_channel)
         mock_stop_kibana.asert_called_once_with(mock_stub)
         assert result == expected_elk_dto
@@ -411,13 +326,8 @@ class TestElkControllerSuite:
     @patch("csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub")
     @patch("grpc.insecure_channel")
     @patch("csle_common.controllers.elk_controller.ELKController.start_elk_manager")
-    def test_stop_logstash(
-        self,
-        mock_start_elk_manager,
-        mock_insecure_channel,
-        mock_ElkManagerStub,
-        mock_stop_logstash,
-    ) -> None:
+    def test_stop_logstash(self, mock_start_elk_manager, mock_insecure_channel, mock_ElkManagerStub,
+                           mock_stop_logstash) -> None:
         """
         Test case for requesting the ELKManager to stop logstash
 
@@ -431,9 +341,7 @@ class TestElkControllerSuite:
         mock_insecure_channel.return_value.__enter__.return_value = mock_channel
         mock_stub = MagicMock()
         mock_ElkManagerStub.return_value = mock_stub
-        expected_elk_dto = MagicMock(
-            spec=csle_collector.elk_manager.elk_manager_pb2.ElkDTO
-        )
+        expected_elk_dto = MagicMock(spec=csle_collector.elk_manager.elk_manager_pb2.ElkDTO)
         mock_stop_logstash.return_value = expected_elk_dto
         emulation_env_config = MagicMock(spec=EmulationEnvConfig)
         elk_config = MagicMock()
@@ -442,9 +350,7 @@ class TestElkControllerSuite:
         emulation_env_config.elk_config.elk_manager_port = 5601
         logger = MagicMock(spec=logging.Logger)
         result = ELKController.stop_logstash(emulation_env_config, logger)
-        mock_insecure_channel.assert_called_once_with(
-            "172.17.0.1:5601", options=constants.GRPC_SERVERS.GRPC_OPTIONS
-        )
+        mock_insecure_channel.assert_called_once_with("172.17.0.1:5601", options=constants.GRPC_SERVERS.GRPC_OPTIONS)
         mock_ElkManagerStub.assert_called_once_with(mock_channel)
         mock_stop_logstash.asert_called_once_with(mock_stub)
         assert result == expected_elk_dto
@@ -472,20 +378,11 @@ class TestElkControllerSuite:
         assert result == [5601]
 
     @patch("csle_common.controllers.elk_controller.ELKController.get_elk_managers_ips")
-    @patch(
-        "csle_common.controllers.elk_controller.ELKController.get_elk_managers_ports"
-    )
-    @patch(
-        "csle_common.controllers.elk_controller.ELKController.get_elk_status_by_port_and_ip"
-    )
+    @patch("csle_common.controllers.elk_controller.ELKController.get_elk_managers_ports")
+    @patch("csle_common.controllers.elk_controller.ELKController.get_elk_status_by_port_and_ip")
     @patch("csle_collector.elk_manager.elk_manager_util.ElkManagerUtil.elk_dto_empty")
-    def test_get_elk_managers_infos(
-        self,
-        mock_elk_dto_empty,
-        mock_get_elk_status_by_port_and_ip,
-        mock_get_elk_managers_ports,
-        mock_get_elk_managers_ips,
-    ) -> None:
+    def test_get_elk_managers_infos(self, mock_elk_dto_empty, mock_get_elk_status_by_port_and_ip,
+                                    mock_get_elk_managers_ports, mock_get_elk_managers_ips) -> None:
         """
         Test case for extracting the infomation of the ELK managers for a given emulation
 
@@ -509,15 +406,9 @@ class TestElkControllerSuite:
         logger = MagicMock(spec=logging.Logger)
         active_ips = ["172.17.0.1"]
         physical_host_ip = "192.168.0.1"
-        result = ELKController.get_elk_managers_info(
-            emulation_env_config, active_ips, logger, physical_host_ip
-        )
-        mock_get_elk_managers_ips.assert_called_once_with(
-            emulation_env_config=emulation_env_config
-        )
-        mock_get_elk_managers_ports.assert_called_once_with(
-            emulation_env_config=emulation_env_config
-        )
+        result = ELKController.get_elk_managers_info(emulation_env_config, active_ips, logger, physical_host_ip)
+        mock_get_elk_managers_ips.assert_called_once_with(emulation_env_config=emulation_env_config)
+        mock_get_elk_managers_ports.assert_called_once_with(emulation_env_config=emulation_env_config)
         assert result.ips == ["172.17.0.1"]
         assert result.ports == [5601]
         assert result.execution_id == 1

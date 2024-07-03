@@ -14,9 +14,7 @@ class TestFlagsControllerSuite:
     @patch("csle_common.util.emulation_util.EmulationUtil.connect_admin")
     @patch("csle_common.util.emulation_util.EmulationUtil.execute_ssh_cmd")
     @patch("csle_common.util.emulation_util.EmulationUtil.disconnect_admin")
-    def test_create_flags(
-        self, mock_disconnect_admin, mock_execute_ssh_cmd, mock_connect_admin
-    ) -> None:
+    def test_create_flags(self, mock_disconnect_admin, mock_execute_ssh_cmd, mock_connect_admin) -> None:
         """
         Test case for creating flags using the FlagsController
 
@@ -41,10 +39,6 @@ class TestFlagsControllerSuite:
         logger = MagicMock(spec=logging.Logger)
         physical_server_ip = "192.168.0.1"
         FlagsController.create_flags(emulation_env_config, physical_server_ip, logger)
-        mock_connect_admin.assert_called_once_with(
-            emulation_env_config=emulation_env_config, ip="172.17.0.1"
-        )
-        mock_disconnect_admin.assert_called_once_with(
-            emulation_env_config=emulation_env_config
-        )
+        mock_connect_admin.assert_called_once_with(emulation_env_config=emulation_env_config, ip="172.17.0.1")
+        mock_disconnect_admin.assert_called_once_with(emulation_env_config=emulation_env_config)
         mock_execute_ssh_cmd.assert_called()

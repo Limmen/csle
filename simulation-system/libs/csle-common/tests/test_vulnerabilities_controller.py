@@ -23,28 +23,17 @@ class TestVulnControllerSuite:
         logger = MagicMock()
         credential = MagicMock(username="testuser")
         vuln = MagicMock(
-            physical_host_ip="192.168.1.1",
-            docker_gw_bridge_ip="192.168.1.2",
-            vuln_type=VulnType.PRIVILEGE_ESCALATION,
-            cve=constants.EXPLOIT_VULNERABILITES.CVE_2010_0426,
-            credentials=[credential],
-        )
+            physical_host_ip="192.168.1.1", docker_gw_bridge_ip="192.168.1.2", vuln_type=VulnType.PRIVILEGE_ESCALATION,
+            cve=constants.EXPLOIT_VULNERABILITES.CVE_2010_0426, credentials=[credential])
         emulation_env_config = MagicMock()
         emulation_env_config.vuln_config.node_vulnerability_configs = [vuln]
         emulation_env_config.connections = {"192.168.1.2": MagicMock()}
-
         physical_server_ip = "192.168.1.1"
-
         mock_execute_ssh_cmd.side_effect = [
             ("", "", 0),  # output of cp /etc/sudoers.bak /etc/sudoers
             ("", "", 0),  # output of adding CVE entry to sudoers
             ("", "", 0),  # output of chmod 440 /etc/sudoers
         ]
-
-        VulnerabilitiesController.create_vulns(
-            emulation_env_config, physical_server_ip, logger
-        )
-        mock_connect_admin.assert_any_call(
-            emulation_env_config=emulation_env_config, ip="192.168.1.2"
-        )
+        VulnerabilitiesController.create_vulns(emulation_env_config, physical_server_ip, logger)
+        mock_connect_admin.assert_any_call(emulation_env_config=emulation_env_config, ip="192.168.1.2")
         mock_execute_ssh_cmd.assert_called()

@@ -772,11 +772,9 @@ class TestContainerControllerSuite:
                                                       physical_server_ip='123.456.78.99',
                                                       logger=logging.Logger("test"))
 
-    def test_stop_docker_stats_thread(self, mocker: pytest_mock.MockFixture,
-                                      example_emulation_execution: EmulationExecution,
-                                      true_stop_fixture, false_running_stats_manager,
-                                      true_running_stats_manager,
-                                      false_stop_fixture, stop_fixture):
+    def test_stop_docker_stats_thread(
+            self, mocker: pytest_mock.MockFixture, example_emulation_execution: EmulationExecution, true_stop_fixture,
+            false_running_stats_manager, true_running_stats_manager, false_stop_fixture, stop_fixture) -> None:
         """
         Testing the stop_docker_stats_thread
 
@@ -814,9 +812,9 @@ class TestContainerControllerSuite:
                                                                logging.getLogger("test"))
         assert stopper is None
 
-    def test_get_docker_stats_manager_status(self, mocker: pytest_mock.MockFixture, host_ip,
-                                             example_docker_stats_manager_config: DockerStatsManagerConfig,
-                                             dsm_status, stub):
+    def test_get_docker_stats_manager_status(
+            self, mocker: pytest_mock.MockFixture, host_ip,
+            example_docker_stats_manager_config: DockerStatsManagerConfig, dsm_status, stub) -> None:
         """
         Testing the get_docker_stats_manager_status method in the ContainerController
 
@@ -837,8 +835,8 @@ class TestContainerControllerSuite:
         assert dsm_dto.emulations == ["JDoeEmulation"]
         assert dsm_dto.emulation_executions == [10]
 
-    def test_get_docker_stats_manager_status_by_ip_and_port(self, mocker: pytest_mock.MockFixture,
-                                                            host_ip, dsm_status, stub):
+    def test_get_docker_stats_manager_status_by_ip_and_port(
+            self, mocker: pytest_mock.MockFixture, host_ip, dsm_status, stub) -> None:
         """
         Testing the get_docker_stats_manager_status_by_ip_and_port method in the ContainerController
 
@@ -891,8 +889,8 @@ class TestContainerControllerSuite:
         mocker.patch('docker.from_env', side_effect=client_1)
         mocker.patch('docker.types.IPAMPool', side_effect=ipam_pool)
         mocker.patch('docker.types.IPAMConfig', side_effect=ipam_config)
-        creator = ContainerController.create_network(name="JDoeCreator",
-                                                     subnetmask="null", logger=logging.Logger("test"))
+        creator = ContainerController.create_network(name="JDoeCreator", subnetmask="null",
+                                                     logger=logging.Logger("test"))
         assert creator is None
 
     def test_remove_network(self, mocker: pytest_mock.MockFixture, client_1) -> None:
@@ -950,7 +948,7 @@ class TestContainerControllerSuite:
         remover = ContainerController.rm_network("JDoe", logging.getLogger())
         assert remover is False
 
-    def test_run_command(self, mocker: pytest_mock.MockFixture, client_1, client_2):
+    def test_run_command(self, mocker: pytest_mock.MockFixture, client_1, client_2) -> None:
         """
         Testing the run_command method in the ContainerController
         
@@ -964,8 +962,9 @@ class TestContainerControllerSuite:
         runner = ContainerController.run_command(cmd=constants.MANAGEMENT.LIST_STOPPED)
         assert runner is None
 
-    def test_get_docker_stats_managers_ips(self, mocker: pytest_mock.MockFixture, socket_fix,
-                                           example_emulation_env_config: EmulationEnvConfig):
+    def test_get_docker_stats_managers_ips(
+            self, mocker: pytest_mock.MockFixture, socket_fix, example_emulation_env_config: EmulationEnvConfig) \
+            -> None:
         """
         Testing the get_docker_stats_managers_ips
         
@@ -978,7 +977,7 @@ class TestContainerControllerSuite:
         ip = ContainerController.get_docker_stats_managers_ips(example_emulation_env_config)
         assert ip == ["123.456.78.99"]
 
-    def test_get_docker_stats_managers_ports(self, example_emulation_env_config: EmulationEnvConfig):
+    def test_get_docker_stats_managers_ports(self, example_emulation_env_config: EmulationEnvConfig) -> None:
         """
         Testing the get_docker_stats_managers_ports in the ContainerController
 
@@ -989,10 +988,9 @@ class TestContainerControllerSuite:
         test_list = ContainerController.get_docker_stats_managers_ports(example_emulation_env_config)
         assert test_list[0] == 50046
 
-    def test_get_docker_stats_managers_info(self, mocker: pytest_mock.MockFixture, socket_fix,
-                                            example_emulation_env_config: EmulationEnvConfig,
-                                            host_ip, dsm_status, stub,
-                                            example_docker_stats_managers_info: DockerStatsManagersInfo):
+    def test_get_docker_stats_managers_info(
+            self, mocker: pytest_mock.MockFixture, socket_fix, example_emulation_env_config: EmulationEnvConfig,
+            host_ip, dsm_status, stub, example_docker_stats_managers_info: DockerStatsManagersInfo) -> None:
         """
         Testing the get_docker_stats_managers_info
         
