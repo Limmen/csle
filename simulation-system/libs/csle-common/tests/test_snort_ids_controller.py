@@ -73,14 +73,12 @@ class TestSnortIdsControllerSuite:
         )
 
     @patch("csle_common.controllers.snort_ids_controller.SnortIDSController.start_snort_manager")
-    @patch(
-        "csle_common.controllers.snort_ids_controller.SnortIDSController.get_snort_idses_monitor_threads_statuses_by_ip_and_port"
-    )
+    @patch("csle_common.controllers.snort_ids_controller.SnortIDSController."
+           "get_snort_idses_monitor_threads_statuses_by_ip_and_port")
     @patch("csle_collector.snort_ids_manager.query_snort_ids_manager.start_snort_ids")
     @patch("grpc.insecure_channel")
-    def test_start_snort_ids(
-        self, mock_insecure_channel, mock_start_snort_ids, mock_get_statuses, mock_start_manager
-    ) -> None:
+    def test_start_snort_ids(self, mock_insecure_channel, mock_start_snort_ids, mock_get_statuses, mock_start_manager) \
+            -> None:
         """
         Test utility function for starting the Snort IDS on a specific IP
 
@@ -111,13 +109,12 @@ class TestSnortIdsControllerSuite:
         mock_start_snort_ids.assert_called()
 
     @patch("csle_common.controllers.snort_ids_controller.SnortIDSController.start_snort_manager")
-    @patch(
-        "csle_common.controllers.snort_ids_controller.SnortIDSController.get_snort_idses_monitor_threads_statuses_by_ip_and_port"
-    )
+    @patch("csle_common.controllers.snort_ids_controller.SnortIDSController."
+           "get_snort_idses_monitor_threads_statuses_by_ip_and_port")
     @patch("csle_collector.snort_ids_manager.query_snort_ids_manager.stop_snort_ids")
     @patch("grpc.insecure_channel")
     def test_stop_snort_ids(
-        self, mock_insecure_channel, mock_stop_snort_ids, mock_get_statuses, mock_start_manager
+            self, mock_insecure_channel, mock_stop_snort_ids, mock_get_statuses, mock_start_manager
     ) -> None:
         """
         Test utility function for stopping the Snort IDS on a specific IP
@@ -245,14 +242,12 @@ class TestSnortIdsControllerSuite:
         self.logger.info.assert_called_once_with("Starting Snort IDS monitor thread on IP: 10.0.0.1")
 
     @patch("csle_common.controllers.snort_ids_controller.SnortIDSController.start_snort_manager")
-    @patch(
-        "csle_common.controllers.snort_ids_controller.SnortIDSController.get_snort_idses_monitor_threads_statuses_by_ip_and_port"
-    )
+    @patch("csle_common.controllers.snort_ids_controller.SnortIDSController."
+           "get_snort_idses_monitor_threads_statuses_by_ip_and_port")
     @patch("csle_collector.snort_ids_manager.query_snort_ids_manager.start_snort_ids_monitor")
     @patch("grpc.insecure_channel")
-    def test_start_snort_idses_monitor_thread(
-        self, mock_insecure_channel, mock_start_monitor, mock_get_statuses, mock_start_manager
-    ):
+    def test_start_snort_idses_monitor_thread(self, mock_insecure_channel, mock_start_monitor, mock_get_statuses,
+                                              mock_start_manager) -> None:
         """
         Test a method that sends a request to the SnortIDSManager on a specific container that runs
         an IDS to start the IDS manager and the monitor thread
@@ -335,7 +330,8 @@ class TestSnortIdsControllerSuite:
 
     @patch("csle_common.controllers.snort_ids_controller.SnortIDSController.start_snort_managers")
     @patch(
-        "csle_common.controllers.snort_ids_controller.SnortIDSController.get_snort_idses_monitor_threads_statuses_by_ip_and_port"
+        "csle_common.controllers.snort_ids_controller.SnortIDSController."
+        "get_snort_idses_monitor_threads_statuses_by_ip_and_port"
     )
     def test_get_snort_idses_monitor_threads_statuses(self, mock_get_statuses, mock_start_managers) -> None:
         """
@@ -365,9 +361,8 @@ class TestSnortIdsControllerSuite:
 
     @patch("grpc.insecure_channel")
     @patch("csle_collector.snort_ids_manager.query_snort_ids_manager.get_snort_ids_monitor_status")
-    def test_get_snort_idses_monitor_threads_statuses_by_ip_and_port(
-        self, mock_get_status, mock_insecure_channel
-    ) -> None:
+    def test_get_snort_idses_monitor_threads_statuses_by_ip_and_port(self, mock_get_status, mock_insecure_channel) \
+            -> None:
         """
         Test a method that sends a request to the SnortIDSManager with a specific port and ip
         to get the status of the IDS monitor thread
@@ -407,14 +402,13 @@ class TestSnortIdsControllerSuite:
 
     @patch("csle_common.controllers.snort_ids_controller.SnortIDSController.get_snort_ids_managers_ips")
     @patch("csle_common.controllers.snort_ids_controller.SnortIDSController.get_snort_idses_managers_ports")
-    @patch(
-        "csle_common.controllers.snort_ids_controller.SnortIDSController.get_snort_idses_monitor_threads_statuses_by_ip_and_port"
-    )
+    @patch("csle_common.controllers.snort_ids_controller.SnortIDSController."
+           "get_snort_idses_monitor_threads_statuses_by_ip_and_port")
     @patch("csle_common.util.emulation_util.EmulationUtil.physical_ip_match")
     @patch("csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.snort_ids_monitor_dto_empty")
     def test_get_snort_managers_info(
-        self, mock_snort_ids_monitor_dto_empty, mock_physical_ip_match, mock_get_statuses, mock_get_ports, mock_get_ips
-    ) -> None:
+            self, mock_snort_ids_monitor_dto_empty, mock_physical_ip_match, mock_get_statuses, mock_get_ports,
+            mock_get_ips) -> None:
         """
         Test the method that extracts the information of the Snort managers for a given emulation
 
@@ -445,7 +439,6 @@ class TestSnortIdsControllerSuite:
             logger=self.logger,
             physical_server_ip=physical_server_ip,
         )
-
         mock_get_ips.assert_called_once_with(emulation_env_config=emulation_env_config)
         mock_get_ports.assert_called_once_with(emulation_env_config=emulation_env_config)
         mock_get_statuses.assert_any_call(port=50051, ip="10.0.0.1")
