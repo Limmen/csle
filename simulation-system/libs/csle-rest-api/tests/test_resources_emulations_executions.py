@@ -2168,7 +2168,7 @@ class TestResourcesEmulationExecutionsSuite:
 
     def test_emulation_execution_ids_dcm_post(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
                                               logged_in, logged_in_as_admin, get_em_ex,
-                                              merged_info, start_dcm, stop_dcm) -> None:
+                                              merged_info, start_dcm, stop_dcm, config) -> None:
         """
         Testing the HTTPS GET method for the /emulation-executions/id/docker-stats-manager resource
         
@@ -2182,9 +2182,11 @@ class TestResourcesEmulationExecutionsSuite:
         :param get_ex_exec: the get_ex_exec fixture
         :param start_dcm: the start_dcm fixture
         :param stop_dcm: the stop_dcm fixture
+        :param config: the config fixture
         :return: None
         """
         mocker.patch('time.sleep', return_value=None)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
