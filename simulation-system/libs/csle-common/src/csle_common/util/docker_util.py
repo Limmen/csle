@@ -117,7 +117,7 @@ class DockerUtil:
         parsed_containers = []
         for c in containers:
             if constants.CONTAINER_IMAGES.CSLE_PREFIX in c.name:
-                name_parts = c.name.split("_")
+                name_parts = c.name.split("-")
                 container_name_2 = name_parts[0]
                 level = name_parts[1]
                 inspect_info = client2.inspect_container(c.id)
