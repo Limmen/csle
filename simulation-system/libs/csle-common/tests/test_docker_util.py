@@ -173,7 +173,7 @@ class TestDockerUtilSuite:
         mock_inspect_container.return_value = mock_inspect_info
 
         container_1 = MagicMock()
-        container_1.name = "csle_container_1"
+        container_1.name = "csle_container_1-level1-1"
         container_1.status = "running"
         container_1.short_id = "1"
         container_1.image.short_id = "image1"
