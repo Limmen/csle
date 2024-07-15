@@ -131,6 +131,10 @@ features. We currently support each release for a window of 6 months.
 <img src="https://upload.wikimedia.org/wikipedia/commons/3/35/Tux.svg" width="7%" height="7%" style="margin-left:70px;"/>
 </p>
 
+## Datasets
+
+A dataset of 6400 intrusion traces can be found [here](https://zenodo.org/records/10234379).
+
 ## Maintainer
 
 <table>
