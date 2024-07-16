@@ -8,12 +8,13 @@ class TestGrpcUtilSuite:
     Test suite for grpc util
     """
     @patch("grpc.channel_ready_future")
-    def test_grpc_server_on(self, mock_channel_ready_future):
+    def test_grpc_server_on(self, mock_channel_ready_future) -> None:
         """
-        Test 
+        Test utility function to test if a given gRPC channel is working or not
 
-        :param mock_channel_ready_future: _description_
-        :type mock_channel_ready_future: _type_
+        :param mock_channel_ready_future: mock_channel_ready_future
+        
+        :return: None
         """
         mock_future = MagicMock()
         mock_channel_ready_future.return_value = mock_future
@@ -22,12 +23,13 @@ class TestGrpcUtilSuite:
         assert result
         
     @patch("grpc.channel_ready_future")
-    def test_grpc_server_on_timeout(self, mock_channel_ready_future):
+    def test_grpc_server_on_timeout(self, mock_channel_ready_future) -> None:
         """
-        Test 
+        Test utility function to test if a given gRPC channel is working or not
 
-        :param mock_channel_ready_future: _description_
-        :type mock_channel_ready_future: _type_
+        :param mock_channel_ready_future: mock_channel_ready_future
+        
+        :return: None
         """
         mock_future = MagicMock()
         mock_future.result.side_effect = grpc.FutureTimeoutError()
