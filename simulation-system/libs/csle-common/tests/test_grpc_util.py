@@ -26,7 +26,7 @@ class TestGrpcUtilSuite:
     @patch("grpc.channel_ready_future")
     def test_grpc_server_on_timeout(self, mock_channel_ready_future) -> None:
         """
-        Test utility function to test if a given gRPC channel is working or not
+        Test utility function to test if a given gRPC channel is not working
 
         :param mock_channel_ready_future: mock_channel_ready_future
 
