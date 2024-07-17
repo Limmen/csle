@@ -5,7 +5,7 @@ from csle_common.util.grpc_util import GrpcUtil
 
 class TestGrpcUtilSuite:
     """
-    Test suite for grpc util
+    Test suite for grpc_util
     """
 
     @patch("grpc.channel_ready_future")
@@ -14,7 +14,6 @@ class TestGrpcUtilSuite:
         Test utility function to test if a given gRPC channel is working or not
 
         :param mock_channel_ready_future: mock_channel_ready_future
-
         :return: None
         """
         mock_future = MagicMock()
@@ -26,10 +25,9 @@ class TestGrpcUtilSuite:
     @patch("grpc.channel_ready_future")
     def test_grpc_server_on_timeout(self, mock_channel_ready_future) -> None:
         """
-        Test utility function to test if a given gRPC channel is working or not
+        Test utility function to test if a given gRPC channel is not working
 
         :param mock_channel_ready_future: mock_channel_ready_future
-
         :return: None
         """
         mock_future = MagicMock()

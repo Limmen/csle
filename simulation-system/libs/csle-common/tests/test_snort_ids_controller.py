@@ -418,6 +418,7 @@ class TestSnortIdsControllerSuite:
         :param mock_get_ports:mock_get_ports
         :param mock_get_ips: mock_get_ips
 
+
         :return: None
         """
         mock_get_ips.return_value = ["10.0.0.1", "10.0.0.2"]

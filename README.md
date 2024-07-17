@@ -131,6 +131,10 @@ features. We currently support each release for a window of 6 months.
 <img src="https://upload.wikimedia.org/wikipedia/commons/3/35/Tux.svg" width="7%" height="7%" style="margin-left:70px;"/>
 </p>
 
+## Datasets
+
+A dataset of 6400 intrusion traces can be found [here](https://zenodo.org/records/10234379).
+
 ## Maintainer
 
 <table>
@@ -168,6 +172,7 @@ Thanks go to these people!
     </tr>
     <tr>
        <td align="center" valign="top" width="14.28%"><a href="https://github.com/kingxiaofire"><img src="https://github.com/kingxiaofire.png" width="100px;" alt="Yan Wang"/><br /><sub><b>Yan Wang</b></sub></a></td>
+       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Awsnaser"><img src="https://github.com/Awsnaser.png" width="100px;" alt="Aws Jaber"/><br /><sub><b>Aws Jaber</b></sub></a></td>
     </tr>
   </tbody>
 </table>
