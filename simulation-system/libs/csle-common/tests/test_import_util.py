@@ -6,7 +6,7 @@ class TestImportUtilSuite:
     """
     Test suite for import_util
     """
-
+    
     @patch("os.path.exists")
     @patch("csle_common.dao.system_identification.emulation_statistics.EmulationStatistics.from_json_file")
     @patch("csle_common.metastore.metastore_facade.MetastoreFacade.save_emulation_statistic")
