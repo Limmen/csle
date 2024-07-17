@@ -5,7 +5,7 @@ from csle_common.util.grpc_util import GrpcUtil
 
 class TestGrpcUtilSuite:
     """
-    Test suite for grpc util
+    Test suite for grpc_util
     """
 
     @patch("grpc.channel_ready_future")
