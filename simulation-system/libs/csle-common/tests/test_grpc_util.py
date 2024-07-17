@@ -14,7 +14,6 @@ class TestGrpcUtilSuite:
         Test utility function to test if a given gRPC channel is working or not
 
         :param mock_channel_ready_future: mock_channel_ready_future
-
         :return: None
         """
         mock_future = MagicMock()
@@ -29,7 +28,6 @@ class TestGrpcUtilSuite:
         Test utility function to test if a given gRPC channel is not working
 
         :param mock_channel_ready_future: mock_channel_ready_future
-
         :return: None
         """
         mock_future = MagicMock()
