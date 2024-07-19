@@ -384,7 +384,5 @@ class StoppingGameUtil:
                 for s_prime in config.S:
                     for o in config.O:
                         r = config.R[0][a1][0][s]
-                        file_str = (
-                                file_str + f"R: {a1} : {s} : {s_prime} : {o} {r:.80f}\n"
-                        )
+                        file_str = file_str + f"R: {a1} : {s} : {s_prime} : {o} {r:.80f}\n"
         return file_str

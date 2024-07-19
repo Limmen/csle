@@ -1,5 +1,4 @@
 import numpy as np
-from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from csle_tolerance.util.pomdp_solve_parser import PomdpSolveParser
@@ -21,15 +20,16 @@ if __name__ == '__main__':
     simulation_env_config.simulation_env_input_config.stopping_game_config.L = 1
     simulation_env_config.simulation_env_input_config.stopping_game_config.O = list(range(10))
     simulation_env_config.simulation_env_input_config.stopping_game_config.Z = \
-        StoppingGameUtil.observation_tensor(n=10-1)
+        StoppingGameUtil.observation_tensor(n=10 - 1)
     gamma = 0.95
     pi2 = np.array([
         [0.9, 0.1],
         [1, 0],
         [1, 0]
     ])
-    pomdp_solve_file_str = StoppingGameUtil.pomdp_solver_file(config=simulation_env_config.simulation_env_input_config.stopping_game_config,
-                                       discount_factor=gamma, pi2=pi2)
+    pomdp_solve_file_str = StoppingGameUtil.pomdp_solver_file(
+        config=simulation_env_config.simulation_env_input_config.stopping_game_config,
+        discount_factor=gamma, pi2=pi2)
     with open("/home/kim/thesis/paper_1.pomdp", 'w') as f:
         f.write(pomdp_solve_file_str)
 
