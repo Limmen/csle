@@ -337,3 +337,54 @@ class StoppingGameUtil:
         :return: a2 is the attacker action
         """
         return int(np.random.choice(np.arange(0, len(pi2[s])), p=pi2[s]))
+
+    @staticmethod
+    def pomdp_solver_file(config: StoppingGameConfig, discount_factor: float, pi2: npt.NDArray[Any]) -> str:
+        """
+        Gets the POMDP environment specification based on the format at http://www.pomdp.org/code/index.html,
+        for the defender's local problem against a static attacker
+
+        :param config: the POMDP config
+        :param discount_factor: the discount factor
+        :param pi2: the attacker strategy
+        :return: the file content as a string
+        """
+        file_str = ""
+        file_str = file_str + f"discount: {discount_factor}\n\n"
+        file_str = file_str + "values: reward\n\n"
+        file_str = file_str + f"states: {len(config.S)}\n\n"
+        file_str = file_str + f"actions: {len(config.A1)}\n\n"
+        file_str = file_str + f"observations: {len(config.O)}\n\n"
+        initial_belief_str = " ".join(list(map(lambda x: str(x), config.b1)))
+        file_str = file_str + f"start: {initial_belief_str}\n\n\n"
+        num_transitions = 0
+        for s in config.S:
+            for a1 in config.A1:
+                probs = []
+                for s_prime in range(len(config.S)):
+                    num_transitions += 1
+                    prob = 0
+                    for a2 in config.A2:
+                        prob += config.T[0][a1][a2][s][s_prime] * pi2[s][a2]
+                    file_str = file_str + f"T: {a1} : {s} : {s_prime} {prob:.80f}\n"
+                    probs.append(prob)
+                assert round(sum(probs), 3) == 1
+        file_str = file_str + "\n\n"
+        for a1 in config.A1:
+            for s_prime in config.S:
+                probs = []
+                for o in range(len(config.O)):
+                    prob = config.Z[0][0][s_prime][o]
+                    file_str = file_str + f"O : {a1} : {s_prime} : {o} {prob:.80f}\n"
+                    probs.append(prob)
+                assert round(sum(probs), 3) == 1
+        file_str = file_str + "\n\n"
+        for s in config.S:
+            for a1 in config.A1:
+                for s_prime in config.S:
+                    for o in config.O:
+                        r = config.R[0][a1][0][s]
+                        file_str = (
+                                file_str + f"R: {a1} : {s} : {s_prime} : {o} {r:.80f}\n"
+                        )
+        return file_str
