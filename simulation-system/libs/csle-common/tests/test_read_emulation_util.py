@@ -1,6 +1,4 @@
-from unittest.mock import MagicMock, patch
 from csle_common.util.read_emulation_statistics_util import ReadEmulationStatisticsUtil
-from confluent_kafka import TopicPartition
 from csle_collector.host_manager.dao.host_metrics import HostMetrics
 from csle_collector.ossec_ids_manager.dao.ossec_ids_alert_counters import OSSECIdsAlertCounters
 from csle_collector.snort_ids_manager.dao.snort_ids_alert_counters import SnortIdsAlertCounters
@@ -13,56 +11,6 @@ class TestReadEmulationUtilSuite:
     """
     Test suite for read_emulation_util
     """
-
-    @patch("confluent_kafka.Consumer")
-    def test_read_all(self, mock_consumer):
-        """
-
-
-        :param mock_consumer: _description_
-        :type mock_consumer: _type_
-        """
-
-        mock_env_config = MagicMock()
-
-        class MockContainer:
-            def __init__(self, name):
-                self.name = name
-
-            def get_full_name(self):
-                return self.name
-
-            def get_ips(self):
-                return ["127.0.0.1"]
-
-        mock_env_config.containers_config.containers = [
-            MockContainer("snort"),
-            MockContainer("ossec"),
-            MockContainer("kafka"),
-            MockContainer("elk"),
-        ]
-
-        mock_env_config.kafka_config.container.get_full_name.return_value = "kafka"
-        mock_env_config.kafka_config.container.docker_gw_bridge_ip = "127.0.0.1"
-        mock_env_config.kafka_config.kafka_port_external = 9092
-        mock_env_config.elk_config.container.get_full_name.return_value = "elk"
-        mock_env_config.sdn_controller_config = None
-
-        instance = mock_consumer.return_value
-        mock_topic_partitions = [MagicMock(TopicPartition) for _ in range(3)]
-        instance.offsets_for_times.return_value = mock_topic_partitions
-        instance.poll.side_effect = [
-            MagicMock(value=lambda: b'{"ip": "127.0.0.1"}', topic=lambda: "host_metrics"),
-            None,
-        ]
-        instance.offsets_for_times.return_value = []
-        instance.subscribe.side_effect = lambda topics, on_assign: on_assign(instance, [])
-        instance.close.return_value = None
-
-        pass
-        # result = ReadEmulationStatisticsUtil.read_all(emulation_env_config=mock_env_config,logger=logger)
-
-        # assert instance.subscribe.call_count == 1
 
     def test_average_host_metrics(self) -> None:
         """
