@@ -679,11 +679,12 @@ def stop_shell_complete(ctx, param, incomplete) -> List[str]:
 
 @click.option('--ip', default="", type=str)
 @click.argument('id', default=-1)
+@click.argument('name', default="", type=str)
 @click.argument('entity', default="", shell_complete=stop_shell_complete)
 @click.command("stop", help="prometheus | node_exporter | cadvisor | grafana | flask | container-name | "
                             "emulation-name | statsmanager | emulation_executions | pgadmin | all | nginx | postgresql "
-                            "| docker | clustermanager")
-def stop(entity: str, id: int = -1, ip: str = "") -> None:
+                            "| docker | clustermanager | hostmanagers")
+def stop(entity: str, name: str, id: int = -1, ip: str = "") -> None:
     """
     Stops an entity
 
@@ -726,6 +727,8 @@ def stop(entity: str, id: int = -1, ip: str = "") -> None:
         stop_statsmanager(ip=ip)
     elif entity == "emulation_executions":
         stop_emulation_executions()
+    elif entity == "hostmanager":
+        stop_host_managers(ip=ip, emulation=name, ip_first_octet=id)
     else:
         container_stopped = False
         for node in config.cluster_config.cluster_nodes:
@@ -895,6 +898,30 @@ def stop_statsmanager(ip: str) -> None:
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
             ClusterController.stop_docker_statsmanager(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+
+
+def stop_host_managers(ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for stopping the Docker statsmanager
+
+    :param ip: the ip of the node to stop the Docker statsmanager
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            stopped = ClusterController.stop_host_managers(ip=ip, port= constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                                                emulation=emulation, ip_first_octet=ip_first_octet)
+            if stopped:
+                click.secho(f"Stopping host managers on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
+            else:
+                click.secho(f"Host managers are not stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
+                            bold=False)
+
 
 
 @click.argument('max_workers', default=10, type=int)
@@ -1086,7 +1113,7 @@ def start_shell_complete(ctx, param, incomplete) -> List[str]:
 @click.argument('entity', default="", type=str, shell_complete=start_shell_complete)
 @click.command("start", help="prometheus | node_exporter | grafana | cadvisor | flask | pgadmin | "
                              "container-name | emulation-name | all | statsmanager | training_job "
-                             "| system_id_job | nginx | postgresql | docker | clustermanager")
+                             "| system_id_job | nginx | postgresql | docker | clustermanager | hostmanager")
 def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, no_network: bool, ip: str,
           no_beats: bool) -> None:
     """
@@ -1140,6 +1167,8 @@ def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, n
             data_collection_job=system_id_job)
     elif entity == "flask":
         start_flask(ip=ip)
+    elif entity == "hostmanager":
+        start_host_manager(ip=ip, emulation=name, ip_first_octet=id)
     else:
         container_started = False
         for node in config.cluster_config.cluster_nodes:
@@ -1311,6 +1340,24 @@ def start_statsmanager(ip: str) -> None:
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
             ClusterController.start_docker_statsmanager(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+
+def start_host_manager(ip: str, emulation: str, ip_first_octet: int):
+    """
+        Utility function for starting host manager
+
+        :param ip: the ip of the node to start host manager
+        :param emulation: the emulation of the execution
+        :param ip_first_octet: the ID of the execution
+
+        :return: None
+        """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            ClusterController.start_host_managers(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                                                  emulation=emulation, ip_first_octet=ip_first_octet)
 
 
 def run_image(image: str, name: str, create_network: bool = True, version: str = "0.0.1") -> bool:
@@ -1599,12 +1646,15 @@ def ls_shell_complete(ctx, param, incomplete) -> List[str]:
 
 @click.command("ls", help="containers | networks | images | emulations | all | environments | prometheus "
                           "| node_exporter | cadvisor | pgadmin | statsmanager | flask | "
-                          "simulations | emulation_executions | cluster | nginx | postgresql | docker")
+                          "simulations | emulation_executions | cluster | nginx | postgresql | docker | hostmanagers")
 @click.argument('entity', default='all', type=str, shell_complete=ls_shell_complete)
 @click.option('--all', is_flag=True, help='list all')
 @click.option('--running', is_flag=True, help='list running only (default)')
 @click.option('--stopped', is_flag=True, help='list stopped only')
-def ls(entity: str, all: bool, running: bool, stopped: bool) -> None:
+@click.option('--ip', default="", type=str)
+@click.option('--id', default=None, type=int)
+@click.option('--name', default="", type=str)
+def ls(entity: str, all: bool, running: bool, stopped: bool, ip: str, name: str, id: int) -> None:
     """
     Lists the set of containers, networks, images, or emulations, or all
 
@@ -1661,6 +1711,8 @@ def ls(entity: str, all: bool, running: bool, stopped: bool) -> None:
         list_simulations()
     elif entity == "emulation_executions":
         list_emulation_executions()
+    elif entity == "hostmanagers":
+        list_host_managers(ip=ip, emulation=name, ip_first_octet=id)
     else:
         container = get_running_container(name=entity)
         if container is not None:
@@ -1693,6 +1745,39 @@ def ls(entity: str, all: bool, running: bool, stopped: bool) -> None:
                                 print_simulation_config(simulation_config=simulation_env_config)
                             else:
                                 click.secho(f"entity: {entity} is not recognized", fg="red", bold=True)
+
+def list_host_managers(ip: str, emulation: str , ip_first_octet: int) -> None:
+    """
+            Utility function for listing host managers
+
+            :param ip: the ip of the node to start host manager
+            :param emulation: the emulation of the execution
+            :param ip_first_octet: the ID of the execution
+
+            :return: None
+            """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            host_manage_info = ClusterController.get_host_managers_info(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                                                  emulation=emulation, ip_first_octet=ip_first_octet)
+            host_managers = host_manage_info.hostManagersStatuses
+
+            click.secho('+' + '-' * 50 + '+', fg='white')
+            click.secho(f'|{"Host IP":^30}|{"Running Status":^19}|', fg='white')
+            click.secho('+' + '-' * 50 + '+', fg='white')
+            for hosts in host_managers:
+                status = "Running" if hosts.monitor_running else "Stopped"
+                status_color = 'green' if hosts.monitor_running else 'red'
+
+                click.secho('|', nl=False, fg='white')
+                click.secho(f'{hosts.ip:<30}', nl=False, fg='white')
+                click.secho('|', nl=False, fg='white')
+                click.secho(f'{status:<19}', nl=False, fg=status_color)
+                click.secho('|', fg='white')
+                click.secho('+' + '-' * 50 + '+', fg='white')
 
 
 def print_running_container(container: DockerContainerDTO) -> None:
