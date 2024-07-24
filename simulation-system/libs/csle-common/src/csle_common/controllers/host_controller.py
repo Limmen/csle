@@ -1308,7 +1308,7 @@ class HostController:
                 host_managers_statuses.append((status, ip))
             else:
                 host_managers_statuses.append(
-                    csle_collector.host_manager.host_manager_util.HostManagerUtil.host_monitor_dto_empty())
+                    (csle_collector.host_manager.host_manager_util.HostManagerUtil.host_monitor_dto_empty(), ip))
             host_managers_running.append(running)
         execution_id = emulation_env_config.execution_id
         emulation_name = emulation_env_config.name

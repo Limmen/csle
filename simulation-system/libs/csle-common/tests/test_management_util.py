@@ -2,6 +2,7 @@ import csle_common.constants.constants as constants
 from csle_common.util.management_util import ManagementUtil
 from unittest.mock import patch
 
+
 class TestManagementUtilSuite:
     """
     Test suite for management util
@@ -12,7 +13,7 @@ class TestManagementUtilSuite:
     @patch("bcrypt.hashpw")
     @patch("csle_common.metastore.metastore_facade.MetastoreFacade.save_management_user")
     def test_create_default_management_admin_account(
-        self, mock_save_management_user, mock_hashpw, mock_gensalt, mock_list_management_users
+            self, mock_save_management_user, mock_hashpw, mock_gensalt, mock_list_management_users
     ) -> None:
         """
         Test the method that creates the default management admin account
@@ -48,7 +49,7 @@ class TestManagementUtilSuite:
     @patch("bcrypt.hashpw")
     @patch("csle_common.metastore.metastore_facade.MetastoreFacade.save_management_user")
     def test_create_default_management_guest_account(
-        self, mock_save_management_user, mock_hashpw, mock_gensalt, mock_list_management_users
+            self, mock_save_management_user, mock_hashpw, mock_gensalt, mock_list_management_users
     ) -> None:
         """
         Test the method that creates the default management guest account
