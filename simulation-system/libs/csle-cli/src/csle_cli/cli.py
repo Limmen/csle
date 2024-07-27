@@ -942,10 +942,11 @@ def stop_host_manager(ip: str, container_ip: str, emulation: str, ip_first_octet
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
             stopped = ClusterController.stop_host_manager(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
-                                                           emulation=emulation, ip_first_octet=ip_first_octet,
-                                                           container_ip=container_ip)
+                                                          emulation=emulation, ip_first_octet=ip_first_octet,
+                                                          container_ip=container_ip)
             if stopped:
-                click.secho(f"Stopping host with ip {container_ip} on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
+                click.secho(
+                    f"Stopping host with ip {container_ip} on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
             else:
                 click.secho(f"Host with ip {container_ip} is not "
                             f"stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
@@ -1389,15 +1390,18 @@ def start_host_managers(ip: str, emulation: str, ip_first_octet: int):
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
-            operation_outcome = ClusterController.start_host_managers(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
-                                                  emulation=emulation, ip_first_octet=ip_first_octet)
+            operation_outcome = ClusterController.start_host_managers(ip=ip,
+                                                                      port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                                                                      emulation=emulation,
+                                                                      ip_first_octet=ip_first_octet)
             if operation_outcome.outcome:
                 click.secho(f"Starting host managers on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
             else:
                 click.secho(f"Host managers are not started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
                             bold=False)
 
-def start_host_manager(ip: str, container_ip:str, emulation: str, ip_first_octet: int):
+
+def start_host_manager(ip: str, container_ip: str, emulation: str, ip_first_octet: int):
     """
     Utility function for starting host manager
 
@@ -1412,9 +1416,10 @@ def start_host_manager(ip: str, container_ip:str, emulation: str, ip_first_octet
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
-            operation_outcome = ClusterController.start_host_manager(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
-                                                 emulation=emulation, ip_first_octet=ip_first_octet,
-                                                 container_ip=container_ip)
+            operation_outcome = ClusterController.start_host_manager(ip=ip,
+                                                                     port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                                                                     emulation=emulation, ip_first_octet=ip_first_octet,
+                                                                     container_ip=container_ip)
             if operation_outcome.outcome:
                 click.secho(f"Started host manager with ip {container_ip} on "
                             f"port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
