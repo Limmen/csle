@@ -678,13 +678,14 @@ def stop_shell_complete(ctx, param, incomplete) -> List[str]:
 
 
 @click.option('--ip', default="", type=str)
+@click.option('--container_ip', default="", type=str)
 @click.argument('id', default=-1)
 @click.argument('name', default="", type=str)
 @click.argument('entity', default="", shell_complete=stop_shell_complete)
 @click.command("stop", help="prometheus | node_exporter | cadvisor | grafana | flask | container-name | "
                             "emulation-name | statsmanager | emulation_executions | pgadmin | all | nginx | postgresql "
-                            "| docker | clustermanager | hostmanagers")
-def stop(entity: str, name: str, id: int = -1, ip: str = "") -> None:
+                            "| docker | clustermanager | hostmanagers | hostmanager")
+def stop(entity: str, name: str, id: int = -1, ip: str = "", container_ip: str = "") -> None:
     """
     Stops an entity
 
@@ -729,6 +730,8 @@ def stop(entity: str, name: str, id: int = -1, ip: str = "") -> None:
         stop_emulation_executions()
     elif entity == "hostmanagers":
         stop_host_managers(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "hostmanager":
+        stop_host_manager(ip=ip, container_ip=container_ip, emulation=name, ip_first_octet=id)
     else:
         container_stopped = False
         for node in config.cluster_config.cluster_nodes:
@@ -923,6 +926,32 @@ def stop_host_managers(ip: str, emulation: str, ip_first_octet: int) -> None:
                             bold=False)
 
 
+def stop_host_manager(ip: str, container_ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for stopping the Docker statsmanager
+
+    :param ip: the ip of the node to stop the Docker statsmanager
+    :param container_ip: the ip of the host to be stopped
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            stopped = ClusterController.stop_host_manager(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                                                           emulation=emulation, ip_first_octet=ip_first_octet,
+                                                           container_ip=container_ip)
+            if stopped:
+                click.secho(f"Stopping host with ip {container_ip} on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
+            else:
+                click.secho(f"Host with ip {container_ip} is not "
+                            f"stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
+                            bold=False)
+
+
 @click.argument('max_workers', default=10, type=int)
 @click.argument('log_file', default="docker_statsmanager.log", type=str)
 @click.argument('log_dir', default="/var/log/csle", type=str)
@@ -1103,6 +1132,7 @@ def start_shell_complete(ctx, param, incomplete) -> List[str]:
 
 
 @click.option('--ip', default="", type=str)
+@click.option('--container_ip', default="", type=str)
 @click.option('--id', default=None, type=int)
 @click.option('--no_clients', is_flag=True, help='skip starting the client population')
 @click.option('--no_traffic', is_flag=True, help='skip starting the traffic generators')
@@ -1112,9 +1142,10 @@ def start_shell_complete(ctx, param, incomplete) -> List[str]:
 @click.argument('entity', default="", type=str, shell_complete=start_shell_complete)
 @click.command("start", help="prometheus | node_exporter | grafana | cadvisor | flask | pgadmin | "
                              "container-name | emulation-name | all | statsmanager | training_job "
-                             "| system_id_job | nginx | postgresql | docker | clustermanager | hostmanager")
+                             "| system_id_job | nginx | postgresql | docker | clustermanager | hostmanagers "
+                             "| hostmanager")
 def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, no_network: bool, ip: str,
-          no_beats: bool) -> None:
+          container_ip: str, no_beats: bool) -> None:
     """
     Starts an entity, e.g., a container or the management system
 
@@ -1126,6 +1157,7 @@ def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, n
     :param no_network: a boolean parameter that is True if the network should be skipped when creating a container
     :param id: (optional) an id parameter to identify the entity to start
     :param ip: ip when stopping a service on a specific physical server (empty ip means all servers)
+    :param container_ip: ip of the host to be started
     :return: None
     """
     from csle_agents.job_controllers.training_job_manager import TrainingJobManager
@@ -1166,8 +1198,10 @@ def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, n
             data_collection_job=system_id_job)
     elif entity == "flask":
         start_flask(ip=ip)
+    elif entity == "hostmanagers":
+        start_host_managers(ip=ip, emulation=name, ip_first_octet=id)
     elif entity == "hostmanager":
-        start_host_manager(ip=ip, emulation=name, ip_first_octet=id)
+        start_host_manager(ip=ip, container_ip=container_ip, emulation=name, ip_first_octet=id)
     else:
         container_started = False
         for node in config.cluster_config.cluster_nodes:
@@ -1341,7 +1375,7 @@ def start_statsmanager(ip: str) -> None:
             ClusterController.start_docker_statsmanager(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
 
 
-def start_host_manager(ip: str, emulation: str, ip_first_octet: int):
+def start_host_managers(ip: str, emulation: str, ip_first_octet: int):
     """
     Utility function for starting host manager
 
@@ -1355,8 +1389,40 @@ def start_host_manager(ip: str, emulation: str, ip_first_octet: int):
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
-            ClusterController.start_host_managers(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+            started = ClusterController.start_host_managers(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
                                                   emulation=emulation, ip_first_octet=ip_first_octet)
+
+            if started:
+                click.secho(f"Starting host managers on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
+            else:
+                click.secho(f"Host managers are not started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
+                            bold=False)
+
+def start_host_manager(ip: str, container_ip:str, emulation: str, ip_first_octet: int):
+    """
+    Utility function for starting host manager
+
+    :param ip: the ip of the node to start host manager
+    :param container_ip: the ip of the host to start
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            started = ClusterController.start_host_manager(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                                                 emulation=emulation, ip_first_octet=ip_first_octet,
+                                                 container_ip=container_ip)
+            if started:
+                click.secho(f"Starting host with ip {container_ip} on "
+                            f"port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
+            else:
+                click.secho(f"Host with ip {container_ip} is not "
+                            f"started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
+                            bold=False)
 
 
 def run_image(image: str, name: str, create_network: bool = True, version: str = "0.0.1") -> bool:
