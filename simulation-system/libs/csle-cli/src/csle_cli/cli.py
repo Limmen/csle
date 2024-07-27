@@ -1829,17 +1829,18 @@ def list_host_managers(ip: str, emulation: str, ip_first_octet: int) -> None:
             host_manager_info = ClusterController.get_host_managers_info(
                 ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
                 ip_first_octet=ip_first_octet)
-            host_managers = host_manager_info.hostManagersStatuses
+            host_managers_running = host_manager_info.hostManagersRunning
+            host_managers_ips = host_manager_info.ips
 
             click.secho('+' + '-' * 50 + '+', fg='white')
             click.secho(f'|{"Host IP":^30}|{"Running Status":^19}|', fg='white')
             click.secho('+' + '-' * 50 + '+', fg='white')
-            for hosts in host_managers:
-                status = "Running" if hosts.monitor_running else "Stopped"
-                status_color = 'green' if hosts.monitor_running else 'red'
+            for i in range(len(host_managers_ips)):
+                status = "Running" if host_managers_running[i] else "Stopped"
+                status_color = 'green' if host_managers_running[i] else 'red'
 
                 click.secho('|', nl=False, fg='white')
-                click.secho(f'{hosts.ip:<30}', nl=False, fg='white')
+                click.secho(f'{host_managers_ips[i]:<30}', nl=False, fg='white')
                 click.secho('|', nl=False, fg='white')
                 click.secho(f'{status:<19}', nl=False, fg=status_color)
                 click.secho('|', fg='white')
