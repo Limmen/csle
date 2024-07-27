@@ -1389,10 +1389,9 @@ def start_host_managers(ip: str, emulation: str, ip_first_octet: int):
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
-            started = ClusterController.start_host_managers(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+            operation_outcome = ClusterController.start_host_managers(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
                                                   emulation=emulation, ip_first_octet=ip_first_octet)
-
-            if started:
+            if operation_outcome.outcome:
                 click.secho(f"Starting host managers on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
             else:
                 click.secho(f"Host managers are not started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
@@ -1413,14 +1412,14 @@ def start_host_manager(ip: str, container_ip:str, emulation: str, ip_first_octet
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
-            started = ClusterController.start_host_manager(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+            operation_outcome = ClusterController.start_host_manager(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
                                                  emulation=emulation, ip_first_octet=ip_first_octet,
                                                  container_ip=container_ip)
-            if started:
-                click.secho(f"Starting host with ip {container_ip} on "
+            if operation_outcome.outcome:
+                click.secho(f"Started host manager with ip {container_ip} on "
                             f"port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
             else:
-                click.secho(f"Host with ip {container_ip} is not "
+                click.secho(f"Host manager with ip {container_ip} is not "
                             f"started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
                             bold=False)
 

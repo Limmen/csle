@@ -89,6 +89,9 @@ class HostController:
             o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd,
                                                     conn=emulation_env_config.get_connection(ip=ip))
             time.sleep(5)
+        else:
+            logger.info(f"Host manager is already running on: {ip}. Output of {cmd} was: {str(o)}, "
+                        f"err output was: {str(e)}")
 
     @staticmethod
     def stop_host_managers(emulation_env_config: EmulationEnvConfig, physical_host_ip: str) -> None:

@@ -2425,6 +2425,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                                               ip=container_config.docker_gw_bridge_ip, logger=logging.getLogger())
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
+            logging.info(f"Container with ip: {request.containerIp} not found in execution "
+                         f"with id: {request.ipFirstOctet} of emulation {request.emulation}")
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
 
     def stopHostManagers(
