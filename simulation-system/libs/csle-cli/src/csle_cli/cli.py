@@ -907,9 +907,9 @@ def stop_statsmanager(ip: str) -> None:
 
 def stop_host_managers(ip: str, emulation: str, ip_first_octet: int) -> None:
     """
-    Utility function for stopping the Docker statsmanager
+    Utility function for stopping the host managers
 
-    :param ip: the ip of the node to stop the Docker statsmanager
+    :param ip: the ip of the node to stop the host mangers
     :param emulation: the emulation of the execution
     :param ip_first_octet: the ID of the execution
     :return: None
@@ -930,9 +930,9 @@ def stop_host_managers(ip: str, emulation: str, ip_first_octet: int) -> None:
 
 def stop_host_manager(ip: str, container_ip: str, emulation: str, ip_first_octet: int) -> None:
     """
-    Utility function for stopping the Docker statsmanager
+    Utility function for stopping the host manager
 
-    :param ip: the ip of the node to stop the Docker statsmanager
+    :param ip: the ip of the node to stop the host manager
     :param container_ip: the ip of the host to be stopped
     :param emulation: the emulation of the execution
     :param ip_first_octet: the ID of the execution
@@ -1929,7 +1929,7 @@ def list_host_managers(ip: str, emulation: str, ip_first_octet: int) -> None:
 
 def list_client_manager(ip: str, emulation: str, ip_first_octet: int) -> None:
     """
-    Utility function for listing host managers
+    Utility function for listing client managers
 
     :param ip: the ip of the node to start host manager
     :param emulation: the emulation of the execution
