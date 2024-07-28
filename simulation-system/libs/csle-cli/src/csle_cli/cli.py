@@ -970,7 +970,7 @@ def stop_client_manager(ip: str, emulation: str, ip_first_octet: int) -> None:
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
             stopped = ClusterController.stop_client_manager(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
-                                                           emulation=emulation, ip_first_octet=ip_first_octet)
+                                                            emulation=emulation, ip_first_octet=ip_first_octet)
             if stopped:
                 click.secho(f"Stopping client manager on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
             else:
@@ -1443,29 +1443,27 @@ def start_client_manager(ip: str, emulation: str, ip_first_octet: int):
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
             operation_outcome = ClusterController.start_client_manager(ip=ip,
-                                                                      port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
-                                                                      emulation=emulation,
-                                                                      ip_first_octet=ip_first_octet)
+                                                                       port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                                                                       emulation=emulation,
+                                                                       ip_first_octet=ip_first_octet)
             if operation_outcome.outcome:
                 click.secho(f"Starting client manager on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
             else:
                 click.secho(f"Client manager is not started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
                             bold=False)
 
-            operation_outcome = ClusterController.start_client_population(ip=ip,
-                                                                       port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
-                                                                       emulation=emulation,
-                                                                       ip_first_octet=ip_first_octet)
+            operation_outcome = ClusterController.start_client_population(
+                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                ip_first_octet=ip_first_octet)
             if operation_outcome.outcome:
                 click.secho(f"Starting client population on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
             else:
                 click.secho(f"Client population is not started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
                             bold=False)
 
-            operation_outcome = ClusterController.start_kafka_client_producer(ip=ip,
-                                                                          port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
-                                                                          emulation=emulation,
-                                                                          ip_first_octet=ip_first_octet)
+            operation_outcome = ClusterController.start_kafka_client_producer(
+                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                ip_first_octet=ip_first_octet)
             if operation_outcome.outcome:
                 click.secho(f"Starting Kafka client producer on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
             else:
@@ -1987,6 +1985,7 @@ def list_client_manager(ip: str, emulation: str, ip_first_octet: int) -> None:
                             nl=False, fg="green")
                 click.secho('|', fg='white')
                 click.secho('+' + '-' * 60 + '+', fg='white')
+
 
 def print_running_container(container: DockerContainerDTO) -> None:
     """
