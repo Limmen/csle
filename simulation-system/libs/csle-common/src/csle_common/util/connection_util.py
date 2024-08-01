@@ -272,7 +272,6 @@ class ConnectionUtil:
                 if s.attacker_obs_state is None or s.attacker_obs_state.agent_reachable is None:
                     raise ValueError("EmulationAttackerObservationState is None")
                 if not a.ips_match(list(s.attacker_obs_state.agent_reachable)):
-                    print("2")
                     continue
             for cr in credentials:
                 for ip in a.ips:
@@ -283,7 +282,6 @@ class ConnectionUtil:
                             agent_transport = proxy_conn.conn.get_transport()
                             relay_channel = agent_transport.open_channel(constants.SSH.DIRECT_CHANNEL, target_addr,
                                                                          agent_addr)
-                            print("here")
                             target_conn = paramiko.SSHClient()
                             target_conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
                             if target_conn is None:
@@ -468,7 +466,6 @@ class ConnectionUtil:
         """
         start = time.time()
         root = False
-        print(connection_setup_dto.target_connections)
         for i in range(constants.ENV_CONSTANTS.ATTACKER_RETRY_CHECK_ROOT):
             connection_setup_dto.target_connections[i].write("sudo -l\n".encode())
             response = connection_setup_dto.target_connections[i].read_until(constants.TELNET.PROMPT, timeout=3)
