@@ -35,7 +35,7 @@ class ExportUtil:
     @staticmethod
     def get_dir_size_gb(dir_path: str = '.') -> float:
         """
-        Utility method to calculate the zie of a file directory in gb
+        Utility method to calculate the size of a file directory in gb
 
         :param dir_path: the path to the directory
         :return: the size of the directory in GB
