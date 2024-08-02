@@ -685,7 +685,7 @@ def stop_shell_complete(ctx, param, incomplete) -> List[str]:
 @click.command("stop", help="prometheus | node_exporter | cadvisor | grafana | flask | container-name | "
                             "emulation-name | statsmanager | emulation_executions | pgadmin | all | nginx | postgresql "
                             "| docker | clustermanager | hostmanagers | hostmanager | clientmanager | snortmanagers "
-                            "| snortmanager")
+                            "| snortmanager | elkmanager")
 def stop(entity: str, name: str, id: int = -1, ip: str = "", container_ip: str = "") -> None:
     """
     Stops an entity
@@ -739,6 +739,8 @@ def stop(entity: str, name: str, id: int = -1, ip: str = "", container_ip: str =
         stop_snort_ids_managers(ip=ip, emulation=name, ip_first_octet=id)
     elif entity == "snortmanager":
         stop_snort_ids_manager(ip=ip, container_ip=container_ip, emulation=name, ip_first_octet=id)
+    elif entity == "elkmanager":
+        stop_elk_manager(ip=ip, emulation=name, ip_first_octet=id)
     else:
         container_stopped = False
         for node in config.cluster_config.cluster_nodes:
@@ -926,7 +928,7 @@ def stop_host_managers(ip: str, emulation: str, ip_first_octet: int) -> None:
         if node.ip == ip or ip == "":
             stopped = ClusterController.stop_host_managers(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
                                                            emulation=emulation, ip_first_octet=ip_first_octet)
-            if stopped:
+            if stopped.outcome:
                 click.secho(f"Stopping host managers on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
             else:
                 click.secho(f"Host managers are not stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
@@ -951,7 +953,7 @@ def stop_host_manager(ip: str, container_ip: str, emulation: str, ip_first_octet
             stopped = ClusterController.stop_host_manager(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
                                                           emulation=emulation, ip_first_octet=ip_first_octet,
                                                           container_ip=container_ip)
-            if stopped:
+            if stopped.outcome:
                 click.secho(
                     f"Stopping host with ip {container_ip} on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
             else:
@@ -976,7 +978,7 @@ def stop_client_manager(ip: str, emulation: str, ip_first_octet: int) -> None:
         if node.ip == ip or ip == "":
             stopped = ClusterController.stop_client_manager(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
                                                             emulation=emulation, ip_first_octet=ip_first_octet)
-            if stopped:
+            if stopped.outcome:
                 click.secho(f"Stopping client manager on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
             else:
                 click.secho(f"Client manager is not stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
@@ -999,7 +1001,7 @@ def stop_snort_ids_managers(ip: str, emulation: str, ip_first_octet: int) -> Non
         if node.ip == ip or ip == "":
             stopped = ClusterController.stop_snort_ids_managers(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
                                                                 emulation=emulation, ip_first_octet=ip_first_octet)
-            if stopped:
+            if stopped.outcome:
                 click.secho(f"Stopping snort ids managers on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
             else:
                 click.secho(f"Snort ids managers are not stopped:"
@@ -1024,13 +1026,36 @@ def stop_snort_ids_manager(ip: str, container_ip: str, emulation: str, ip_first_
             stopped = ClusterController.stop_snort_ids_manager(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
                                                                emulation=emulation, ip_first_octet=ip_first_octet,
                                                                container_ip=container_ip)
-            if stopped:
+            if stopped.outcome:
                 click.secho(
                     f"Stopping snort ids on the host with ip {container_ip} on "
                     f"port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
             else:
                 click.secho(f"Snort ids on the host with ip {container_ip} is not "
                             f"stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
+                            bold=False)
+
+
+def stop_elk_manager(ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for stopping the elk manage
+
+    :param ip: the ip of the node to stop the elk manger
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            stopped = ClusterController.stop_elk_manager(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                                                         emulation=emulation, ip_first_octet=ip_first_octet)
+            if stopped.outcome:
+                click.secho(f"Stopping elk manager on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
+            else:
+                click.secho(f"Elk manager is not stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
                             bold=False)
 
 
@@ -1225,7 +1250,7 @@ def start_shell_complete(ctx, param, incomplete) -> List[str]:
 @click.command("start", help="prometheus | node_exporter | grafana | cadvisor | flask | pgadmin | "
                              "container-name | emulation-name | all | statsmanager | training_job "
                              "| system_id_job | nginx | postgresql | docker | clustermanager | hostmanagers "
-                             "| hostmanager | clientmanager | snortmanagers | snortmanager")
+                             "| hostmanager | clientmanager | snortmanagers | snortmanager | elkmanager")
 def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, no_network: bool, ip: str,
           container_ip: str, no_beats: bool) -> None:
     """
@@ -1290,6 +1315,8 @@ def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, n
         start_snort_ids_managers(ip=ip, emulation=name, ip_first_octet=id)
     elif entity == "snortmanager":
         start_snort_ids_manager(ip=ip, container_ip=container_ip, emulation=name, ip_first_octet=id)
+    elif entity == "elkmanager":
+        start_elk_manager(ip=ip, emulation=name, ip_first_octet=id)
     else:
         container_started = False
         for node in config.cluster_config.cluster_nodes:
@@ -1610,6 +1637,30 @@ def start_snort_ids_manager(ip: str, container_ip: str, emulation: str, ip_first
                             bold=False)
 
 
+def start_elk_manager(ip: str, emulation: str, ip_first_octet: int):
+    """
+    Utility function for starting elk manager
+
+    :param ip: the ip of the node to start elk manager
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            operation_outcome = ClusterController.start_elk_manager(
+                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                ip_first_octet=ip_first_octet)
+            if operation_outcome.outcome:
+                click.secho(f"Starting elk manager on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
+            else:
+                click.secho(f"Elk manager is not started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
+                            bold=False)
+
+
 def run_image(image: str, name: str, create_network: bool = True, version: str = "0.0.1") -> bool:
     """
     Runs a container with a given image
@@ -1897,7 +1948,7 @@ def ls_shell_complete(ctx, param, incomplete) -> List[str]:
 @click.command("ls", help="containers | networks | images | emulations | all | environments | prometheus "
                           "| node_exporter | cadvisor | pgadmin | statsmanager | flask | "
                           "simulations | emulation_executions | cluster | nginx | postgresql | docker | hostmanagers | "
-                          "clientmanager | snortmanagers")
+                          "clientmanager | snortmanagers | elkmanager")
 @click.argument('entity', default='all', type=str, shell_complete=ls_shell_complete)
 @click.option('--all', is_flag=True, help='list all')
 @click.option('--running', is_flag=True, help='list running only (default)')
@@ -1968,6 +2019,8 @@ def ls(entity: str, all: bool, running: bool, stopped: bool, ip: str, name: str,
         list_client_manager(ip=ip, emulation=name, ip_first_octet=id)
     elif entity == "snortmanagers":
         list_snort_ids_managers(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "elkmanager":
+        list_elk_manager(ip=ip, emulation=name, ip_first_octet=id)
     else:
         container = get_running_container(name=entity)
         if container is not None:
@@ -2006,7 +2059,7 @@ def list_host_managers(ip: str, emulation: str, ip_first_octet: int) -> None:
     """
     Utility function for listing host managers
 
-    :param ip: the ip of the node to start host manager
+    :param ip: the ip of the node to list host manager
     :param emulation: the emulation of the execution
     :param ip_first_octet: the ID of the execution
 
@@ -2038,11 +2091,69 @@ def list_host_managers(ip: str, emulation: str, ip_first_octet: int) -> None:
                 click.secho('+' + '-' * 50 + '+', fg='white')
 
 
+def list_elk_manager(ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for listing elk manager
+
+    :param ip: the ip of the node to list elk manager
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            elk_manager_info = ClusterController.get_elk_managers_info(
+                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                ip_first_octet=ip_first_octet)
+            for i in range(len(elk_manager_info.ips)):
+                status_color = 'green' if elk_manager_info.elkManagersRunning[i] else 'red'
+                manager_status = 'Running' if elk_manager_info.elkManagersRunning[i] else 'Stopped'
+                click.secho('+' + '-' * 60 + '+', fg='white')
+                click.secho(f'|{"Elk manager IP":^40}', nl=False, fg='white')
+                click.secho('|', nl=False, fg='white')
+                click.secho(f'{elk_manager_info.ips[i]:<19}', nl=False, fg=status_color)
+                click.secho('|', fg='white')
+                click.secho('+' + '-' * 60 + '+', fg='white')
+                click.secho(f'|{"Elk manager status":^40}', nl=False, fg='white')
+                click.secho('|', nl=False, fg='white')
+                click.secho(f'{manager_status:<19}', nl=False, fg=status_color)
+                click.secho('|', fg='white')
+                click.secho('+' + '-' * 60 + '+', fg='white')
+                if manager_status == "Running":
+                    click.secho(f'|{"Elk manager elasticRunning":^40}', nl=False, fg='white')
+                    click.secho('|', nl=False, fg='white')
+                    elasticRunning = 'True' if elk_manager_info.elkManagersStatuses[0].elasticRunning else 'False'
+                    click.secho(f'{elasticRunning:<19}',
+                                nl=False, fg=status_color)
+                    click.secho('|', fg='white')
+                    click.secho('+' + '-' * 60 + '+', fg='white')
+
+                    click.secho(f'|{"Elk manager kibanaRunning":^40}', nl=False, fg='white')
+                    click.secho('|', nl=False, fg='white')
+                    kibanaRunning = 'True' if elk_manager_info.elkManagersStatuses[0].kibanaRunning else 'False'
+                    click.secho(f'{kibanaRunning:<19}',
+                                nl=False, fg=status_color)
+                    click.secho('|', fg='white')
+                    click.secho('+' + '-' * 60 + '+', fg='white')
+
+                    click.secho(f'|{"Elk manager logstashRunning":^40}', nl=False, fg='white')
+                    click.secho('|', nl=False, fg='white')
+                    logstashRunning = 'True' if elk_manager_info.elkManagersStatuses[0].logstashRunning else 'False'
+                    click.secho(f'{logstashRunning:<19}',
+                                nl=False, fg=status_color)
+                    click.secho('|', fg='white')
+                    click.secho('+' + '-' * 60 + '+', fg='white')
+
+
 def list_snort_ids_managers(ip: str, emulation: str, ip_first_octet: int) -> None:
     """
     Utility function for listing snort ids managers
 
-    :param ip: the ip of the node to start snort ids managers
+    :param ip: the ip of the node to list snort ids managers
     :param emulation: the emulation of the execution
     :param ip_first_octet: the ID of the execution
 
@@ -2079,7 +2190,7 @@ def list_client_manager(ip: str, emulation: str, ip_first_octet: int) -> None:
     """
     Utility function for listing client managers
 
-    :param ip: the ip of the node to start host manager
+    :param ip: the ip of the node to list client manager
     :param emulation: the emulation of the execution
     :param ip_first_octet: the ID of the execution
 
