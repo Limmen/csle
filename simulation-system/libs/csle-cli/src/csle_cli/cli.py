@@ -1051,7 +1051,7 @@ def stop_elk_manager(ip: str, emulation: str, ip_first_octet: int) -> None:
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
             stopped = ClusterController.stop_elk_manager(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
-                                                           emulation=emulation, ip_first_octet=ip_first_octet)
+                                                         emulation=emulation, ip_first_octet=ip_first_octet)
             if stopped.outcome:
                 click.secho(f"Stopping elk manager on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
             else:
@@ -1651,10 +1651,9 @@ def start_elk_manager(ip: str, emulation: str, ip_first_octet: int):
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
-            operation_outcome = ClusterController.start_elk_manager(ip=ip,
-                                                                      port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
-                                                                      emulation=emulation,
-                                                                      ip_first_octet=ip_first_octet)
+            operation_outcome = ClusterController.start_elk_manager(
+                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                ip_first_octet=ip_first_octet)
             if operation_outcome.outcome:
                 click.secho(f"Starting elk manager on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
             else:
@@ -2111,8 +2110,8 @@ def list_elk_manager(ip: str, emulation: str, ip_first_octet: int) -> None:
                 ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
                 ip_first_octet=ip_first_octet)
             for i in range(len(elk_manager_info.ips)):
-                status_color = 'green' if elk_manager_info.elkManagersRunning[i] == True else 'red'
-                manager_status = 'Running' if elk_manager_info.elkManagersRunning[i] == True else 'Stopped'
+                status_color = 'green' if elk_manager_info.elkManagersRunning[i] else 'red'
+                manager_status = 'Running' if elk_manager_info.elkManagersRunning[i] else 'Stopped'
                 click.secho('+' + '-' * 60 + '+', fg='white')
                 click.secho(f'|{"Elk manager IP":^40}', nl=False, fg='white')
                 click.secho('|', nl=False, fg='white')
@@ -2127,8 +2126,7 @@ def list_elk_manager(ip: str, emulation: str, ip_first_octet: int) -> None:
                 if manager_status == "Running":
                     click.secho(f'|{"Elk manager elasticRunning":^40}', nl=False, fg='white')
                     click.secho('|', nl=False, fg='white')
-                    elasticRunning = 'True' if elk_manager_info.elkManagersStatuses[0].elasticRunning == True \
-                        else 'False'
+                    elasticRunning = 'True' if elk_manager_info.elkManagersStatuses[0].elasticRunning else 'False'
                     click.secho(f'{elasticRunning:<19}',
                                 nl=False, fg=status_color)
                     click.secho('|', fg='white')
@@ -2136,8 +2134,7 @@ def list_elk_manager(ip: str, emulation: str, ip_first_octet: int) -> None:
 
                     click.secho(f'|{"Elk manager kibanaRunning":^40}', nl=False, fg='white')
                     click.secho('|', nl=False, fg='white')
-                    kibanaRunning = 'True' if elk_manager_info.elkManagersStatuses[0].kibanaRunning == True \
-                        else 'False'
+                    kibanaRunning = 'True' if elk_manager_info.elkManagersStatuses[0].kibanaRunning else 'False'
                     click.secho(f'{kibanaRunning:<19}',
                                 nl=False, fg=status_color)
                     click.secho('|', fg='white')
@@ -2145,8 +2142,7 @@ def list_elk_manager(ip: str, emulation: str, ip_first_octet: int) -> None:
 
                     click.secho(f'|{"Elk manager logstashRunning":^40}', nl=False, fg='white')
                     click.secho('|', nl=False, fg='white')
-                    logstashRunning = 'True' if elk_manager_info.elkManagersStatuses[0].logstashRunning == True \
-                        else 'False'
+                    logstashRunning = 'True' if elk_manager_info.elkManagersStatuses[0].logstashRunning else 'False'
                     click.secho(f'{logstashRunning:<19}',
                                 nl=False, fg=status_color)
                     click.secho('|', fg='white')
