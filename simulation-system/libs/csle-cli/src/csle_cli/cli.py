@@ -685,7 +685,8 @@ def stop_shell_complete(ctx, param, incomplete) -> List[str]:
 @click.command("stop", help="prometheus | node_exporter | cadvisor | grafana | flask | container-name | "
                             "emulation-name | statsmanager | emulation_executions | pgadmin | all | nginx | postgresql "
                             "| docker | clustermanager | hostmanagers | hostmanager | clientmanager | snortmanagers "
-                            "| snortmanager | elkmanager | trafficmanagers | trafficmanager | kafkamanager")
+                            "| snortmanager | elkmanager | trafficmanagers | trafficmanager | kafkamanager "
+                            "| ossecmanagers | ossecmanager")
 def stop(entity: str, name: str, id: int = -1, ip: str = "", container_ip: str = "") -> None:
     """
     Stops an entity
@@ -747,6 +748,10 @@ def stop(entity: str, name: str, id: int = -1, ip: str = "", container_ip: str =
         stop_traffic_manager(ip=ip, container_ip=container_ip, emulation=name, ip_first_octet=id)
     elif entity == "kafkamanager":
         stop_kafka_manager(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "ossecmanagers":
+        stop_ossec_ids_managers(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "ossecmanager":
+        stop_ossec_ids_manager(ip=ip, container_ip=container_ip, emulation=name, ip_first_octet=id)
     else:
         container_stopped = False
         for node in config.cluster_config.cluster_nodes:
@@ -941,6 +946,29 @@ def stop_host_managers(ip: str, emulation: str, ip_first_octet: int) -> None:
                             bold=False)
 
 
+def stop_ossec_ids_managers(ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for stopping the ossec managers
+
+    :param ip: the ip of the node to stop the ossec mangers
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            stopped = ClusterController.stop_ossec_ids_managers(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                                                           emulation=emulation, ip_first_octet=ip_first_octet)
+            if stopped.outcome:
+                click.secho(f"Stopping ossec managers on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
+            else:
+                click.secho(f"Ossec managers are not stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
+                            bold=False)
+
+
 def stop_host_manager(ip: str, container_ip: str, emulation: str, ip_first_octet: int) -> None:
     """
     Utility function for stopping the host manager
@@ -964,6 +992,34 @@ def stop_host_manager(ip: str, container_ip: str, emulation: str, ip_first_octet
                     f"Stopping host with ip {container_ip} on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
             else:
                 click.secho(f"Host with ip {container_ip} is not "
+                            f"stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
+                            bold=False)
+
+
+def stop_ossec_ids_manager(ip: str, container_ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for stopping the ossec manager
+
+    :param ip: the ip of the node to stop the ossec manager
+    :param container_ip: the ip of the host to be stopped
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            stopped = ClusterController.stop_ossec_ids_manager(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                                                          emulation=emulation, ip_first_octet=ip_first_octet,
+                                                          container_ip=container_ip)
+            if stopped.outcome:
+                click.secho(
+                    f"Stopping ossec manager with ip {container_ip} on port:"
+                    f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
+            else:
+                click.secho(f"Ossec manager with ip {container_ip} is not "
                             f"stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
                             bold=False)
 
@@ -1333,7 +1389,7 @@ def start_shell_complete(ctx, param, incomplete) -> List[str]:
                              "container-name | emulation-name | all | statsmanager | training_job "
                              "| system_id_job | nginx | postgresql | docker | clustermanager | hostmanagers "
                              "| hostmanager | clientmanager | snortmanagers | snortmanager | elkmanager "
-                             "| trafficmanagers | trafficmanager | kafkamanager")
+                             "| trafficmanagers | trafficmanager | kafkamanager | ossecmanagers | ossecmanager")
 def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, no_network: bool, ip: str,
           container_ip: str, no_beats: bool) -> None:
     """
@@ -1406,6 +1462,10 @@ def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, n
         start_traffic_manager(ip=ip, container_ip=container_ip, emulation=name, ip_first_octet=id)
     elif entity == "kafkamanager":
         start_kafka_manager(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "ossecmanagers":
+        start_ossec_ids_managers(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "ossecmanager":
+        start_ossec_ids_manager(ip=ip, container_ip=container_ip, emulation=name, ip_first_octet=id)
     else:
         container_started = False
         for node in config.cluster_config.cluster_nodes:
@@ -1722,6 +1782,57 @@ def start_snort_ids_manager(ip: str, container_ip: str, emulation: str, ip_first
                             f"port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
             else:
                 click.secho(f"Snort ids manager with ip {container_ip} is not "
+                            f"started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
+                            bold=False)
+
+
+def start_ossec_ids_managers(ip: str, emulation: str, ip_first_octet: int):
+    """
+    Utility function for starting ossec managers
+
+    :param ip: the ip of the node to start ossec managers
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            operation_outcome = ClusterController.start_ossec_ids_managers(
+                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                ip_first_octet=ip_first_octet)
+            if operation_outcome.outcome:
+                click.secho(f"Starting ossec ids managers on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
+            else:
+                click.secho(f"Ossec ids managers are not started:"
+                            f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}", bold=False)
+
+
+def start_ossec_ids_manager(ip: str, container_ip: str, emulation: str, ip_first_octet: int):
+    """
+    Utility function for starting ossec ids manager
+
+    :param ip: the ip of the node to start ossec ids manager
+    :param container_ip: the ip of the host to start
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            operation_outcome = ClusterController.start_ossec_ids_manager(
+                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                ip_first_octet=ip_first_octet, container_ip=container_ip)
+            if operation_outcome.outcome:
+                click.secho(f"Started ossec ids manager with ip {container_ip} on "
+                            f"port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
+            else:
+                click.secho(f"Ossec ids manager with ip {container_ip} is not "
                             f"started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
                             bold=False)
 
@@ -2112,7 +2223,7 @@ def ls_shell_complete(ctx, param, incomplete) -> List[str]:
 @click.command("ls", help="containers | networks | images | emulations | all | environments | prometheus "
                           "| node_exporter | cadvisor | pgadmin | statsmanager | flask | "
                           "simulations | emulation_executions | cluster | nginx | postgresql | docker | hostmanagers | "
-                          "clientmanager | snortmanagers | elkmanager | trafficmanagers | kafkamanager")
+                          "clientmanager | snortmanagers | elkmanager | trafficmanagers | kafkamanager | ossecmanagers")
 @click.argument('entity', default='all', type=str, shell_complete=ls_shell_complete)
 @click.option('--all', is_flag=True, help='list all')
 @click.option('--running', is_flag=True, help='list running only (default)')
@@ -2189,6 +2300,8 @@ def ls(entity: str, all: bool, running: bool, stopped: bool, ip: str, name: str,
         list_traffic_managers(ip=ip, emulation=name, ip_first_octet=id)
     elif entity == "kafkamanager":
         list_kafka_managers(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "ossecmanagers":
+        list_ossec_ids_managers(ip=ip, emulation=name, ip_first_octet=id)
     else:
         container = get_running_container(name=entity)
         if container is not None:
@@ -2426,6 +2539,43 @@ def list_snort_ids_managers(ip: str, emulation: str, ip_first_octet: int) -> Non
                 click.secho(f'|{"Status":^40}', nl=False, fg='white')
                 click.secho('|', nl=False, fg='white')
                 click.secho(f'{status:<19}', nl=False, fg=status_color)
+                click.secho('|', fg='white')
+            click.secho('+' + '-' * 60 + '+', fg='white')
+
+
+def list_ossec_ids_managers(ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for listing ossec ids managers
+
+    :param ip: the ip of the node to list ossec ids managers
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            ossec_manager_info = ClusterController.get_ossec_ids_managers_info(
+                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                ip_first_octet=ip_first_octet)
+
+            click.secho('+' + '-' * 60 + '+', fg='white')
+            click.secho(f'|{"Ossec ids manager IP":^30}', nl=False, fg='white')
+            click.secho('|', nl=False, fg='white')
+            click.secho(f'{"Ossec ids status":^29}', nl=False, fg='white')
+            click.secho('|', fg='white')
+
+            for i in range(len(ossec_manager_info.ips)):
+                status = "Running" if ossec_manager_info.ossecIdsManagersRunning[i] else "Stopped"
+                status_color = 'green' if ossec_manager_info.ossecIdsManagersRunning[i] else 'red'
+
+                click.secho('+' + '-' * 60 + '+', fg='white')
+                click.secho(f'|{ossec_manager_info.ips[i]:^30}', nl=False, fg='white')
+                click.secho('|', nl=False, fg='white')
+                click.secho(f'{status:^29}', nl=False, fg=status_color)
                 click.secho('|', fg='white')
             click.secho('+' + '-' * 60 + '+', fg='white')
 
