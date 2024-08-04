@@ -687,7 +687,7 @@ def stop_shell_complete(ctx, param, incomplete) -> List[str]:
                             "| docker | clustermanager | hostmanagers | hostmanager | clientmanager | snortmanagers "
                             "| snortmanager | elkmanager | trafficmanagers | trafficmanager | kafkamanager "
                             "| ossecmanagers | ossecmanager | ryumanager | filebeats | filebeat | metricbeat "
-                            "| metricbeats | heartbeats | heartbeat")
+                            "| metricbeats | heartbeats | heartbeat | packetbeat | packetbeats")
 def stop(entity: str, name: str, id: int = -1, ip: str = "", container_ip: str = "") -> None:
     """
     Stops an entity
@@ -767,6 +767,10 @@ def stop(entity: str, name: str, id: int = -1, ip: str = "", container_ip: str =
         stop_heartbeats(ip=ip, emulation=name, ip_first_octet=id)
     elif entity == "heartbeat":
         stop_heartbeat(ip=ip, container_ip=container_ip, emulation=name, ip_first_octet=id)
+    elif entity == "packetbeats":
+        stop_packetbeats(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "packetbeat":
+        stop_packetbeat(ip=ip, container_ip=container_ip, emulation=name, ip_first_octet=id)
     else:
         container_stopped = False
         for node in config.cluster_config.cluster_nodes:
@@ -1393,6 +1397,58 @@ def stop_heartbeat(ip: str, container_ip: str, emulation: str, ip_first_octet: i
                             bold=False)
 
 
+def stop_packetbeats(ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for stopping the packetbeats
+
+    :param ip: the ip of the node to stop the packetbeats
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            stopped = ClusterController.stop_packetbeats(
+                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                ip_first_octet=ip_first_octet)
+            if stopped.outcome:
+                click.secho(f"Stopping packetbeats on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
+            else:
+                click.secho(f"Packetbeats are not stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
+                            bold=False)
+
+
+def stop_packetbeat(ip: str, container_ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for stopping the packetbeat
+
+    :param ip: the ip of the node to stop the packetbeat
+    :param container_ip: the ip of the host that traffic is running on
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            stopped = ClusterController.stop_packetbeat(
+                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                ip_first_octet=ip_first_octet, container_ip=container_ip)
+            if stopped.outcome:
+                click.secho(
+                    f"Stopping packetbeat with ip {container_ip} on port:"
+                    f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
+            else:
+                click.secho(f"Packetbeat with ip {container_ip} is not "
+                            f"stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
+                            bold=False)
+
+
 @click.argument('max_workers', default=10, type=int)
 @click.argument('log_file', default="docker_statsmanager.log", type=str)
 @click.argument('log_dir', default="/var/log/csle", type=str)
@@ -1587,7 +1643,8 @@ def start_shell_complete(ctx, param, incomplete) -> List[str]:
                              "| system_id_job | nginx | postgresql | docker | clustermanager | hostmanagers "
                              "| hostmanager | clientmanager | snortmanagers | snortmanager | elkmanager "
                              "| trafficmanagers | trafficmanager | kafkamanager | ossecmanagers | ossecmanager "
-                             "| ryumanager | filebeats | filebeat | metricbeats | metricbeat | heartbeat | heartbeats")
+                             "| ryumanager | filebeats | filebeat | metricbeats | metricbeat | heartbeat | heartbeats"
+                             "| packetbeat | packetbeats")
 def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, no_network: bool, ip: str,
           container_ip: str, no_beats: bool, initial_start: bool) -> None:
     """
@@ -1681,6 +1738,11 @@ def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, n
     elif entity == "heartbeat":
         start_heartbeat(ip=ip, container_ip=container_ip, emulation=name, ip_first_octet=id,
                         initial_start=initial_start)
+    elif entity == "packetbeats":
+        start_packetbeats(ip=ip, emulation=name, ip_first_octet=id, initial_start=initial_start)
+    elif entity == "packetbeat":
+        start_packetbeat(ip=ip, container_ip=container_ip, emulation=name, ip_first_octet=id,
+                         initial_start=initial_start)
     else:
         container_started = False
         for node in config.cluster_config.cluster_nodes:
@@ -2029,6 +2091,30 @@ def start_heartbeats(ip: str, emulation: str, ip_first_octet: int, initial_start
                             bold=False)
 
 
+def start_packetbeats(ip: str, emulation: str, ip_first_octet: int, initial_start: bool):
+    """
+    Utility function for starting packetbeats
+
+    :param ip: the ip of the node to start packetbeats
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            operation_outcome = ClusterController.start_packetbeats(
+                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                ip_first_octet=ip_first_octet, initial_start=initial_start)
+            if operation_outcome.outcome:
+                click.secho(f"Starting packetbeats on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
+            else:
+                click.secho(f"Packetbeats are not started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
+                            bold=False)
+
+
 def start_heartbeat(ip: str, container_ip: str, emulation: str, ip_first_octet: int, initial_start: bool):
     """
     Utility function for starting heartbeat
@@ -2052,6 +2138,33 @@ def start_heartbeat(ip: str, container_ip: str, emulation: str, ip_first_octet: 
                             f"port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
             else:
                 click.secho(f"Heartbeat with ip {container_ip} is not "
+                            f"started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
+                            bold=False)
+
+
+def start_packetbeat(ip: str, container_ip: str, emulation: str, ip_first_octet: int, initial_start: bool):
+    """
+    Utility function for starting packetbeat
+
+    :param ip: the ip of the node to start packetbeat
+    :param container_ip: the ip of the host to start
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            operation_outcome = ClusterController.start_packetbeat(
+                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                ip_first_octet=ip_first_octet, container_ip=container_ip, initial_start=initial_start)
+            if operation_outcome.outcome:
+                click.secho(f"Started packetbeat with ip {container_ip} on "
+                            f"port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
+            else:
+                click.secho(f"Packetbeat with ip {container_ip} is not "
                             f"started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
                             bold=False)
 
@@ -2703,6 +2816,8 @@ def ls(entity: str, all: bool, running: bool, stopped: bool, ip: str, name: str,
         list_metricbeats(ip=ip, emulation=name, ip_first_octet=id)
     elif entity == "heartbeats":
         list_heartbeats(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "packetbeats":
+        list_packetbeats(ip=ip, emulation=name, ip_first_octet=id)
     else:
         container = get_running_container(name=entity)
         if container is not None:
@@ -2800,6 +2915,38 @@ def list_heartbeats(ip: str, emulation: str, ip_first_octet: int) -> None:
                 click.secho('|', fg='white')
                 click.secho('+' + '-' * 60 + '+', fg='white')
                 
+
+def list_packetbeats(ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for listing packetbeats
+
+    :param ip: the ip of the node to list packetbeats
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            packetbeats_info = ClusterController.get_host_managers_info(
+                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                ip_first_octet=ip_first_octet)
+            click.secho('+' + '-' * 60 + '+', fg='white')
+            click.secho(f'|{"Host IP":^30}|{"Packetbeats running Status":^29}|', fg='white')
+            click.secho('+' + '-' * 60 + '+', fg='white')
+            for i in range(len(packetbeats_info.hostManagersStatuses)):
+                status = "Running" if packetbeats_info.hostManagersStatuses[i].packetbeat_running else "Stopped"
+                status_color = 'green' if packetbeats_info.hostManagersStatuses[i].packetbeat_running else 'red'
+                click.secho('|', nl=False, fg='white')
+                click.secho(f'{packetbeats_info.ips[i]:<30}', nl=False, fg='white')
+                click.secho('|', nl=False, fg='white')
+                click.secho(f'{status:^29}', nl=False, fg=status_color)
+                click.secho('|', fg='white')
+                click.secho('+' + '-' * 60 + '+', fg='white')
+
 
 def list_metricbeats(ip: str, emulation: str, ip_first_octet: int) -> None:
     """
