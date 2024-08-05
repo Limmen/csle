@@ -21,7 +21,12 @@ def containers(docker_client) -> None:
     """
     match_tag = "0.6.0"
     all_images = docker_client.images.list()
-    images = [image for image in all_images if any(match_tag in tag for tag in image.tags)] #56
+    images = [
+        image for image in all_images 
+        if any(match_tag in tag for tag in image.tags) and
+        all("base" not in tag for tag in image.tags) and
+        all("kimham/csle_blank_ubuntu_22:0.6.0" not in tag for tag in image.tags)
+        ] #56
     started_containers = []
     try:
         for image in images:
@@ -46,5 +51,4 @@ def test_container_running(docker_client, containers) -> None:
     for container in containers:
         if container not in running_containers:
             failed_containers.append(f"Container with ID {container.id} and image {container.image.tags} is not running.")
-    print(len(failed_containers))
     assert not failed_containers, f"Some containers failed to run: {failed_containers}"
