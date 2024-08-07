@@ -1,8 +1,8 @@
 docker network create --subnet=15.15.15.0/24 my_custom_network
 
-docker run -d --name test_container1 --network my_custom_network --ip 15.15.15.15 alpine sh -c "while true; do sleep 3600; done"
+docker run -d --name test_container1 --network my_custom_network --ip 15.15.15.15 kimham/csle_spark_1:0.6.0 sh -c "while true; do sleep 3600; done"
 
-docker run -d --name test_container2 --network my_custom_network --ip 15.15.15.14 alpine sh -c "while true; do sleep 3600; done"
+docker run -d --name test_container2 --network my_custom_network --ip 15.15.15.14 kimham/csle_elk_1:0.6.0 sh -c "while true; do sleep 3600; done"
 
 docker exec test_container2 ping -c 3 15.15.15.15
 
