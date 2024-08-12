@@ -128,7 +128,6 @@ def test_start_host_manager(
     try:
         container_setup.reload()
         assert container_setup.status == "running", f"Container {container_setup.name} is not running"
-        print(f"Container {container_setup} is running.")
         # Connect using the mocked connect_admin method
         EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ip)
         # Check if the host_manager is already running
