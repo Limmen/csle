@@ -8,6 +8,7 @@ import logging
 from typing import List, Tuple, Union
 import click
 import warnings
+from typing import Any
 
 warnings.filterwarnings("ignore")
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
@@ -955,9 +956,10 @@ def stop_host_managers(ip: str, emulation: str, ip_first_octet: int) -> None:
     from csle_common.metastore.metastore_facade import MetastoreFacade
 
     total_steps = 100
-    step_size = total_steps / 2
-    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
-                           show_eta=False, width=40) as progress_bar):
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                           show_eta=False, width=40) as progress_bar:
         config = MetastoreFacade.get_config(id=1)
         progress_bar.update(step_size)
         for node in config.cluster_config.cluster_nodes:
@@ -977,8 +979,6 @@ def stop_host_managers(ip: str, emulation: str, ip_first_octet: int) -> None:
         click.secho(stop_message, fg=text_color, bold=text_style_bold)
 
 
-
-
 def stop_ryu_manager(ip: str, emulation: str, ip_first_octet: int) -> None:
     """
     Utility function for stopping the ryu manager
@@ -993,7 +993,8 @@ def stop_ryu_manager(ip: str, emulation: str, ip_first_octet: int) -> None:
     emulation_config = MetastoreFacade.get_emulation_by_name(name=emulation)
     has_sdn = emulation_config.sdn_controller_config is not None
     total_steps = 100
-    step_size = total_steps / 2
+    step_size = int(total_steps / 2)
+    progress_bar: Any
     with click.progressbar(length=total_steps, label='Processing', fill_char='█',
                            show_eta=False, width=40) as progress_bar:
         config = MetastoreFacade.get_config(id=1)
@@ -1010,8 +1011,8 @@ def stop_ryu_manager(ip: str, emulation: str, ip_first_octet: int) -> None:
                         text_color = "white"
                         text_style_bold = False
                     else:
-                        stop_message= (f"\nHost managers are not stopped:"
-                                       f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
+                        stop_message = (f"\nHost managers are not stopped:"
+                                        f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
                         text_color = "white"
                         text_style_bold = True
                 else:
@@ -1034,7 +1035,8 @@ def stop_ossec_ids_managers(ip: str, emulation: str, ip_first_octet: int) -> Non
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
     total_steps = 100
-    step_size = total_steps / 2
+    step_size = int(total_steps / 2)
+    progress_bar: Any
     with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
                             show_eta=False, width=40) as progress_bar):
         config = MetastoreFacade.get_config(id=1)
@@ -1069,7 +1071,8 @@ def stop_host_manager(ip: str, container_ip: str, emulation: str, ip_first_octet
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
     total_steps = 100
-    step_size = total_steps / 2
+    step_size = int(total_steps / 2)
+    progress_bar: Any
     with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
                             show_eta=False, width=40) as progress_bar):
         config = MetastoreFacade.get_config(id=1)
@@ -1106,7 +1109,8 @@ def stop_ossec_ids_manager(ip: str, container_ip: str, emulation: str, ip_first_
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
     total_steps = 100
-    step_size = total_steps / 2
+    step_size = int(total_steps / 2)
+    progress_bar: Any
     with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
                             show_eta=False, width=40) as progress_bar):
         config = MetastoreFacade.get_config(id=1)
@@ -1117,12 +1121,12 @@ def stop_ossec_ids_manager(ip: str, container_ip: str, emulation: str, ip_first_
                     ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
                     ip_first_octet=ip_first_octet, container_ip=container_ip)
                 if stopped.outcome:
-                    stop_message =  (f"\nOssec manager with ip {container_ip} on port:" 
-                                     f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is stopped.")
+                    stop_message = (f"\nOssec manager with ip {container_ip} on port:"
+                                    f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is stopped.")
                     text_color = "white"
                     text_style_bold = False
                 else:
-                    stop_message = (f"\nOssec manager with ip {container_ip} is not " 
+                    stop_message = (f"\nOssec manager with ip {container_ip} is not "
                                     f"stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
                     text_color = "white"
                     text_style_bold = True
@@ -1142,7 +1146,8 @@ def stop_client_manager(ip: str, emulation: str, ip_first_octet: int) -> None:
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
     total_steps = 100
-    step_size = total_steps / 2
+    step_size = int(total_steps / 2)
+    progress_bar: Any
     with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
                             show_eta=False, width=40) as progress_bar):
         config = MetastoreFacade.get_config(id=1)
@@ -1176,22 +1181,24 @@ def stop_snort_ids_managers(ip: str, emulation: str, ip_first_octet: int) -> Non
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
     total_steps = 100
-    step_size = total_steps / 2
+    step_size = int(total_steps / 2)
+    progress_bar: Any
     with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
                             show_eta=False, width=40) as progress_bar):
         config = MetastoreFacade.get_config(id=1)
         progress_bar.update(step_size)
         for node in config.cluster_config.cluster_nodes:
             if node.ip == ip or ip == "":
-                stopped = ClusterController.stop_snort_ids_managers(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
-                                                                    emulation=emulation, ip_first_octet=ip_first_octet)
+                stopped = ClusterController.stop_snort_ids_managers(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet)
                 if stopped.outcome:
                     stop_message = (f"\nSnort ids managers on port:"
                                     f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is stopped. ")
                     text_color = "white"
                     text_style_bold = False
                 else:
-                    stop_message = (f"\nSnort ids managers are not stopped:" 
+                    stop_message = (f"\nSnort ids managers are not stopped:"
                                     f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
                     text_color = "white"
                     text_style_bold = True
@@ -1212,23 +1219,24 @@ def stop_snort_ids_manager(ip: str, container_ip: str, emulation: str, ip_first_
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
     total_steps = 100
-    step_size = total_steps / 2
+    step_size = int(total_steps / 2)
+    progress_bar: Any
     with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
                             show_eta=False, width=40) as progress_bar):
         config = MetastoreFacade.get_config(id=1)
         progress_bar.update(step_size)
         for node in config.cluster_config.cluster_nodes:
             if node.ip == ip or ip == "":
-                stopped = ClusterController.stop_snort_ids_manager(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
-                                                                   emulation=emulation, ip_first_octet=ip_first_octet,
-                                                                   container_ip=container_ip)
+                stopped = ClusterController.stop_snort_ids_manager(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet, container_ip=container_ip)
                 if stopped.outcome:
-                    stop_message = (f"\nSnort ids on the host with ip {container_ip} on " 
+                    stop_message = (f"\nSnort ids on the host with ip {container_ip} on "
                                     f"port {constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is stopped.")
                     text_color = "white"
                     text_style_bold = False
                 else:
-                    stop_message = (f"\nSnort ids on the host with ip {container_ip} is not " 
+                    stop_message = (f"\nSnort ids on the host with ip {container_ip} is not "
                                     f"stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
                     text_color = "white"
                     text_style_bold = True
@@ -1248,7 +1256,8 @@ def stop_elk_manager(ip: str, emulation: str, ip_first_octet: int) -> None:
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
     total_steps = 100
-    step_size = total_steps / 2
+    step_size = int(total_steps / 2)
+    progress_bar: Any
     with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
                             show_eta=False, width=40) as progress_bar):
         config = MetastoreFacade.get_config(id=1)
@@ -1281,7 +1290,8 @@ def stop_kafka_manager(ip: str, emulation: str, ip_first_octet: int) -> None:
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
     total_steps = 100
-    step_size = total_steps / 2
+    step_size = int(total_steps / 2)
+    progress_bar: Any
     with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
                             show_eta=False, width=40) as progress_bar):
         config = MetastoreFacade.get_config(id=1)
@@ -1315,7 +1325,8 @@ def stop_traffic_managers(ip: str, emulation: str, ip_first_octet: int) -> None:
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
     total_steps = 100
-    step_size = total_steps / 2
+    step_size = int(total_steps / 2)
+    progress_bar: Any
     with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
                             show_eta=False, width=40) as progress_bar):
         config = MetastoreFacade.get_config(id=1)
@@ -1331,7 +1342,7 @@ def stop_traffic_managers(ip: str, emulation: str, ip_first_octet: int) -> None:
                     text_color = "white"
                     text_style_bold = False
                 else:
-                    stop_message= f"\nTraffic managers are not stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}."
+                    stop_message = f"\nTraffic managers are not stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}."
                     text_color = "white"
                     text_style_bold = True
         progress_bar.update(step_size)
@@ -1351,7 +1362,8 @@ def stop_traffic_manager(ip: str, container_ip: str, emulation: str, ip_first_oc
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
     total_steps = 100
-    step_size = total_steps / 2
+    step_size = int(total_steps / 2)
+    progress_bar: Any
     with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
                             show_eta=False, width=40) as progress_bar):
         config = MetastoreFacade.get_config(id=1)
@@ -1367,7 +1379,7 @@ def stop_traffic_manager(ip: str, container_ip: str, emulation: str, ip_first_oc
                     text_color = "white"
                     text_style_bold = False
                 else:
-                    stop_message = (f"\nTraffic manager with ip {container_ip} is not " 
+                    stop_message = (f"\nTraffic manager with ip {container_ip} is not "
                                     f"stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
                     text_color = "white"
                     text_style_bold = True
@@ -1387,7 +1399,8 @@ def stop_filebeats(ip: str, emulation: str, ip_first_octet: int) -> None:
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
     total_steps = 100
-    step_size = total_steps / 2
+    step_size = int(total_steps / 2)
+    progress_bar: Any
     with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
                             show_eta=False, width=40) as progress_bar):
         config = MetastoreFacade.get_config(id=1)
@@ -1422,7 +1435,8 @@ def stop_filebeat(ip: str, container_ip: str, emulation: str, ip_first_octet: in
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
     total_steps = 100
-    step_size = total_steps / 2
+    step_size = int(total_steps / 2)
+    progress_bar: Any
     with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
                             show_eta=False, width=40) as progress_bar):
         config = MetastoreFacade.get_config(id=1)
@@ -1439,7 +1453,7 @@ def stop_filebeat(ip: str, container_ip: str, emulation: str, ip_first_octet: in
                     text_color = "white"
                     text_style_bold = False
                 else:
-                    stop_message = (f"\nFilebeat with ip {container_ip} is not " 
+                    stop_message = (f"\nFilebeat with ip {container_ip} is not "
                                     f"stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
                     text_color = "white"
                     text_style_bold = True
@@ -1459,7 +1473,8 @@ def stop_metricbeats(ip: str, emulation: str, ip_first_octet: int) -> None:
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
     total_steps = 100
-    step_size = total_steps / 2
+    step_size = int(total_steps / 2)
+    progress_bar: Any
     with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
                             show_eta=False, width=40) as progress_bar):
         config = MetastoreFacade.get_config(id=1)
@@ -1494,7 +1509,8 @@ def stop_metricbeat(ip: str, container_ip: str, emulation: str, ip_first_octet: 
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
     total_steps = 100
-    step_size = total_steps / 2
+    step_size = int(total_steps / 2)
+    progress_bar: Any
     with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
                             show_eta=False, width=40) as progress_bar):
         config = MetastoreFacade.get_config(id=1)
@@ -1505,12 +1521,12 @@ def stop_metricbeat(ip: str, container_ip: str, emulation: str, ip_first_octet: 
                     ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
                     ip_first_octet=ip_first_octet, container_ip=container_ip)
                 if stopped.outcome:
-                    stop_message = (f"\nMetricbeat with ip {container_ip} on port:" 
+                    stop_message = (f"\nMetricbeat with ip {container_ip} on port:"
                                     f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is stopped.")
                     text_color = "white"
                     text_style_bold = False
                 else:
-                    stop_message = (f"\nMetricbeat with ip {container_ip} is not " 
+                    stop_message = (f"\nMetricbeat with ip {container_ip} is not "
                                     f"stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}.")
                     text_color = "white"
                     text_style_bold = True
@@ -1530,7 +1546,8 @@ def stop_heartbeats(ip: str, emulation: str, ip_first_octet: int) -> None:
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
     total_steps = 100
-    step_size = total_steps / 2
+    step_size = int(total_steps / 2)
+    progress_bar: Any
     with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
                             show_eta=False, width=40) as progress_bar):
         config = MetastoreFacade.get_config(id=1)
@@ -1565,7 +1582,8 @@ def stop_heartbeat(ip: str, container_ip: str, emulation: str, ip_first_octet: i
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
     total_steps = 100
-    step_size = total_steps / 2
+    step_size = int(total_steps / 2)
+    progress_bar: Any
     with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
                             show_eta=False, width=40) as progress_bar):
         config = MetastoreFacade.get_config(id=1)
@@ -1581,7 +1599,7 @@ def stop_heartbeat(ip: str, container_ip: str, emulation: str, ip_first_octet: i
                     text_color = "white"
                     text_style_bold = False
                 else:
-                    stop_message = (f"\nHeartbeat with ip {container_ip} is not " 
+                    stop_message = (f"\nHeartbeat with ip {container_ip} is not "
                                     f"stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}.")
                     text_color = "white"
                     text_style_bold = True
@@ -1601,7 +1619,8 @@ def stop_packetbeats(ip: str, emulation: str, ip_first_octet: int) -> None:
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
     total_steps = 100
-    step_size = total_steps / 2
+    step_size = int(total_steps / 2)
+    progress_bar: Any
     with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
                             show_eta=False, width=40) as progress_bar):
         config = MetastoreFacade.get_config(id=1)
@@ -1636,7 +1655,8 @@ def stop_packetbeat(ip: str, container_ip: str, emulation: str, ip_first_octet: 
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
     total_steps = 100
-    step_size = total_steps / 2
+    step_size = int(total_steps / 2)
+    progress_bar: Any
     with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
                             show_eta=False, width=40) as progress_bar):
         config = MetastoreFacade.get_config(id=1)
@@ -1652,7 +1672,7 @@ def stop_packetbeat(ip: str, container_ip: str, emulation: str, ip_first_octet: 
                     text_color = "white"
                     text_style_bold = False
                 else:
-                    stop_message = (f"\nPacketbeat with ip {container_ip} is not " 
+                    stop_message = (f"\nPacketbeat with ip {container_ip} is not "
                                     f"stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}.")
                     text_color = "white"
                     text_style_bold = True
@@ -2138,18 +2158,29 @@ def start_host_managers(ip: str, emulation: str, ip_first_octet: int):
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            operation_outcome = ClusterController.start_host_managers(ip=ip,
-                                                                      port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
-                                                                      emulation=emulation,
-                                                                      ip_first_octet=ip_first_octet)
-            if operation_outcome.outcome:
-                click.secho(f"Starting host managers on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Host managers are not started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                operation_outcome = ClusterController.start_host_managers(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet)
+                if operation_outcome.outcome:
+                    start_message = (f"\nHost managers on port:"
+                                     f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} are started.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    start_message = f"\nHost managers are not started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}."
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(start_message, fg=text_color, bold=text_style_bold)
 
 
 def start_ryu_manager(ip: str, emulation: str, ip_first_octet: int):
@@ -2163,17 +2194,36 @@ def start_ryu_manager(ip: str, emulation: str, ip_first_octet: int):
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            operation_outcome = ClusterController.start_ryu_manager(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
-                ip_first_octet=ip_first_octet)
-            if operation_outcome.outcome:
-                click.secho(f"Starting ryu managers on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Ryu managers are not started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+    emulation_config = MetastoreFacade.get_emulation_by_name(name=emulation)
+    has_sdn = emulation_config.sdn_controller_config is not None
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                if has_sdn:
+                    operation_outcome = ClusterController.start_ryu_manager(
+                        ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                        ip_first_octet=ip_first_octet)
+                    if operation_outcome.outcome:
+                        start_message = (f"\nRyu managers on port:"
+                                         f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} are started.")
+                        text_color = "white"
+                        text_style_bold = False
+                    else:
+                        start_message = f"\nRyu managers are not started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}."
+                        text_color = "white"
+                        text_style_bold = True
+                else:
+                    start_message = f"\nEmulation with name: {emulation} does not have SDN."
+                    text_color = "red"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(start_message, fg=text_color, bold=text_style_bold)
 
 
 def start_filebeats(ip: str, emulation: str, ip_first_octet: int, initial_start: bool):
@@ -2187,17 +2237,28 @@ def start_filebeats(ip: str, emulation: str, ip_first_octet: int, initial_start:
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            operation_outcome = ClusterController.start_filebeats(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
-                ip_first_octet=ip_first_octet, initial_start=initial_start)
-            if operation_outcome.outcome:
-                click.secho(f"Starting filebeats on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Filebeats are not started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                operation_outcome = ClusterController.start_filebeats(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet, initial_start=initial_start)
+                if operation_outcome.outcome:
+                    start_message = f"\nFilebeats on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} are started."
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    start_message = f"\nFilebeats are not started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}."
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(start_message, fg=text_color, bold=text_style_bold)
 
 
 def start_filebeat(ip: str, container_ip: str, emulation: str, ip_first_octet: int, initial_start: bool):
@@ -2212,19 +2273,30 @@ def start_filebeat(ip: str, container_ip: str, emulation: str, ip_first_octet: i
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            operation_outcome = ClusterController.start_filebeat(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
-                ip_first_octet=ip_first_octet, container_ip=container_ip, initial_start=initial_start)
-            if operation_outcome.outcome:
-                click.secho(f"Started filebeat with ip {container_ip} on "
-                            f"port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Filebeat with ip {container_ip} is not "
-                            f"started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                operation_outcome = ClusterController.start_filebeat(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet, container_ip=container_ip, initial_start=initial_start)
+                if operation_outcome.outcome:
+                    start_message = (f"\nFilebeat with ip {container_ip} on "
+                                     f"port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is started.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    start_message = (f"\nFilebeat with ip {container_ip} is not "
+                                     f"started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}.")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(start_message, fg=text_color, bold=text_style_bold)
 
 
 def start_metricbeats(ip: str, emulation: str, ip_first_octet: int, initial_start: bool):
@@ -2238,17 +2310,28 @@ def start_metricbeats(ip: str, emulation: str, ip_first_octet: int, initial_star
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            operation_outcome = ClusterController.start_metricbeats(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
-                ip_first_octet=ip_first_octet, initial_start=initial_start)
-            if operation_outcome.outcome:
-                click.secho(f"Starting metricbeats on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Metricbeats are not started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                operation_outcome = ClusterController.start_metricbeats(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet, initial_start=initial_start)
+                if operation_outcome.outcome:
+                    start_message = f"\nMetricbeats on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} are started."
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    start_message = f"\nMetricbeats are not started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}."
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(start_message, fg=text_color, bold=text_style_bold)
 
 
 def start_metricbeat(ip: str, container_ip: str, emulation: str, ip_first_octet: int, initial_start: bool):
@@ -2263,19 +2346,30 @@ def start_metricbeat(ip: str, container_ip: str, emulation: str, ip_first_octet:
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            operation_outcome = ClusterController.start_metricbeat(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
-                ip_first_octet=ip_first_octet, container_ip=container_ip, initial_start=initial_start)
-            if operation_outcome.outcome:
-                click.secho(f"Started metricbeat with ip {container_ip} on "
-                            f"port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Metricbeat with ip {container_ip} is not "
-                            f"started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                operation_outcome = ClusterController.start_metricbeat(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet, container_ip=container_ip, initial_start=initial_start)
+                if operation_outcome.outcome:
+                    start_message = (f"\nMetricbeat with ip {container_ip} on "
+                                     f"port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is started.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    start_message = (f"\nMetricbeat with ip {container_ip} is not "
+                                     f"started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}.")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(start_message, fg=text_color, bold=text_style_bold)
 
 
 def start_heartbeats(ip: str, emulation: str, ip_first_octet: int, initial_start: bool):
@@ -2289,17 +2383,28 @@ def start_heartbeats(ip: str, emulation: str, ip_first_octet: int, initial_start
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            operation_outcome = ClusterController.start_heartbeats(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
-                ip_first_octet=ip_first_octet, initial_start=initial_start)
-            if operation_outcome.outcome:
-                click.secho(f"Starting heartbeats on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Heartbeats are not started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                operation_outcome = ClusterController.start_heartbeats(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet, initial_start=initial_start)
+                if operation_outcome.outcome:
+                    start_message = f"\nHeartbeats on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} are started."
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    start_message = f"\nHeartbeats are not started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}."
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(start_message, fg=text_color, bold=text_style_bold)
 
 
 def start_packetbeats(ip: str, emulation: str, ip_first_octet: int, initial_start: bool):
@@ -2313,17 +2418,28 @@ def start_packetbeats(ip: str, emulation: str, ip_first_octet: int, initial_star
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            operation_outcome = ClusterController.start_packetbeats(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
-                ip_first_octet=ip_first_octet, initial_start=initial_start)
-            if operation_outcome.outcome:
-                click.secho(f"Starting packetbeats on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Packetbeats are not started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                operation_outcome = ClusterController.start_packetbeats(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet, initial_start=initial_start)
+                if operation_outcome.outcome:
+                    start_message = f"\nPacketbeats on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} are started."
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    start_message = f"\nPacketbeats are not started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}."
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(start_message, fg=text_color, bold=text_style_bold)
 
 
 def start_heartbeat(ip: str, container_ip: str, emulation: str, ip_first_octet: int, initial_start: bool):
@@ -2338,19 +2454,30 @@ def start_heartbeat(ip: str, container_ip: str, emulation: str, ip_first_octet: 
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            operation_outcome = ClusterController.start_heartbeat(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
-                ip_first_octet=ip_first_octet, container_ip=container_ip, initial_start=initial_start)
-            if operation_outcome.outcome:
-                click.secho(f"Started heartbeat with ip {container_ip} on "
-                            f"port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Heartbeat with ip {container_ip} is not "
-                            f"started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                operation_outcome = ClusterController.start_heartbeat(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet, container_ip=container_ip, initial_start=initial_start)
+                if operation_outcome.outcome:
+                    start_message = (f"\nHeartbeat with ip {container_ip} on "
+                                     f"port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is started.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    start_message = (f"\nHeartbeat with ip {container_ip} is not "
+                                     f"started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}.")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(start_message, fg=text_color, bold=text_style_bold)
 
 
 def start_packetbeat(ip: str, container_ip: str, emulation: str, ip_first_octet: int, initial_start: bool):
@@ -2365,19 +2492,30 @@ def start_packetbeat(ip: str, container_ip: str, emulation: str, ip_first_octet:
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            operation_outcome = ClusterController.start_packetbeat(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
-                ip_first_octet=ip_first_octet, container_ip=container_ip, initial_start=initial_start)
-            if operation_outcome.outcome:
-                click.secho(f"Started packetbeat with ip {container_ip} on "
-                            f"port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Packetbeat with ip {container_ip} is not "
-                            f"started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                operation_outcome = ClusterController.start_packetbeat(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet, container_ip=container_ip, initial_start=initial_start)
+                if operation_outcome.outcome:
+                    start_message = (f"\nPacketbeat with ip {container_ip} on "
+                                     f"port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is started.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    start_message = (f"\nPacketbeat with ip {container_ip} is not "
+                                     f"started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}.")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(start_message, fg=text_color, bold=text_style_bold)
 
 
 def start_host_manager(ip: str, container_ip: str, emulation: str, ip_first_octet: int):
@@ -2392,20 +2530,30 @@ def start_host_manager(ip: str, container_ip: str, emulation: str, ip_first_octe
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            operation_outcome = ClusterController.start_host_manager(ip=ip,
-                                                                     port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
-                                                                     emulation=emulation, ip_first_octet=ip_first_octet,
-                                                                     container_ip=container_ip)
-            if operation_outcome.outcome:
-                click.secho(f"Started host manager with ip {container_ip} on "
-                            f"port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Host manager with ip {container_ip} is not "
-                            f"started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                operation_outcome = ClusterController.start_host_manager(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet, container_ip=container_ip)
+                if operation_outcome.outcome:
+                    start_message = (f"\nHost manager with ip {container_ip} on "
+                                     f"port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is started.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    start_message = (f"\nHost manager with ip {container_ip} is not "
+                                     f"started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}.")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(start_message, fg=text_color, bold=text_style_bold)
 
 
 def start_client_manager(ip: str, emulation: str, ip_first_octet: int):
@@ -2419,36 +2567,58 @@ def start_client_manager(ip: str, emulation: str, ip_first_octet: int):
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            operation_outcome = ClusterController.start_client_manager(ip=ip,
-                                                                       port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
-                                                                       emulation=emulation,
-                                                                       ip_first_octet=ip_first_octet)
-            if operation_outcome.outcome:
-                click.secho(f"Starting client manager on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Client manager is not started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+    total_steps = 100
+    step_size = int(total_steps / 4)
 
-            operation_outcome = ClusterController.start_client_population(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
-                ip_first_octet=ip_first_octet)
-            if operation_outcome.outcome:
-                click.secho(f"Starting client population on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Client population is not started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+    messages = []
 
-            operation_outcome = ClusterController.start_kafka_client_producer(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
-                ip_first_octet=ip_first_octet)
-            if operation_outcome.outcome:
-                click.secho(f"Starting Kafka client producer on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Kafka client producer is not started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+    progress_bar: Any
+    with click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                           show_eta=False, width=40) as progress_bar:
+        # Step 1: Retrieve the configuration
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+
+        # Step 2: Start client manager
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                outcome = ClusterController.start_client_manager(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                    emulation=emulation, ip_first_octet=ip_first_octet)
+                if outcome.outcome:
+                    messages.append(("Client manager on port:"
+                                     f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is started.", "white", False))
+                else:
+                    messages.append(("Client manager is not started:"
+                                     f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}.", "white", True))
+                progress_bar.update(step_size)
+
+                # Step 3: Start client population
+                outcome = ClusterController.start_client_population(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                    emulation=emulation, ip_first_octet=ip_first_octet)
+                if outcome.outcome:
+                    messages.append(("Client population on port:"
+                                     f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is started.", "white", False))
+                else:
+                    messages.append(("Client population is not started:"
+                                     f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}.", "white", True))
+                progress_bar.update(step_size)
+
+                # Step 4: Start Kafka client producer
+                outcome = ClusterController.start_kafka_client_producer(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                    emulation=emulation, ip_first_octet=ip_first_octet)
+                if outcome.outcome:
+                    messages.append(("Kafka client producer on port:"
+                                     f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is started.", "white", False))
+                else:
+                    messages.append(("Kafka client producer is not started:"
+                                     f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}.", "white", True))
+                progress_bar.update(step_size)
+
+    for message, color, bold in messages:
+        click.secho(message, fg=color, bold=bold)
 
 
 def start_snort_ids_managers(ip: str, emulation: str, ip_first_octet: int):
@@ -2462,17 +2632,30 @@ def start_snort_ids_managers(ip: str, emulation: str, ip_first_octet: int):
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            operation_outcome = ClusterController.start_snort_ids_managers(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
-                ip_first_octet=ip_first_octet)
-            if operation_outcome.outcome:
-                click.secho(f"Starting snort ids managers on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Snort ids managers are not started:"
-                            f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}", bold=False)
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                operation_outcome = ClusterController.start_snort_ids_managers(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet)
+                if operation_outcome.outcome:
+                    start_message = (f"\nSnort ids managers on port:"
+                                     f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} are started.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    start_message = (f"\nSnort ids managers are not started:"
+                                     f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}.")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(start_message, fg=text_color, bold=text_style_bold)
 
 
 def start_snort_ids_manager(ip: str, container_ip: str, emulation: str, ip_first_octet: int):
@@ -2487,19 +2670,30 @@ def start_snort_ids_manager(ip: str, container_ip: str, emulation: str, ip_first
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            operation_outcome = ClusterController.start_snort_ids_manager(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
-                ip_first_octet=ip_first_octet, container_ip=container_ip)
-            if operation_outcome.outcome:
-                click.secho(f"Started snort ids manager with ip {container_ip} on "
-                            f"port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Snort ids manager with ip {container_ip} is not "
-                            f"started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                operation_outcome = ClusterController.start_snort_ids_manager(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet, container_ip=container_ip)
+                if operation_outcome.outcome:
+                    start_message = (f"\nSnort ids manager with ip {container_ip} on "
+                                     f"port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is started.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    start_message = (f"\nSnort ids manager with ip {container_ip} is not "
+                                     f"started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}.")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(start_message, fg=text_color, bold=text_style_bold)
 
 
 def start_ossec_ids_managers(ip: str, emulation: str, ip_first_octet: int):
@@ -2513,17 +2707,30 @@ def start_ossec_ids_managers(ip: str, emulation: str, ip_first_octet: int):
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            operation_outcome = ClusterController.start_ossec_ids_managers(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
-                ip_first_octet=ip_first_octet)
-            if operation_outcome.outcome:
-                click.secho(f"Starting ossec ids managers on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Ossec ids managers are not started:"
-                            f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}", bold=False)
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                operation_outcome = ClusterController.start_ossec_ids_managers(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet)
+                if operation_outcome.outcome:
+                    start_message = (f"\nOssec ids managers on port:"
+                                     f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} are started.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    start_message = (f"\nOssec ids managers are not started:"
+                                     f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}.")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(start_message, fg=text_color, bold=text_style_bold)
 
 
 def start_ossec_ids_manager(ip: str, container_ip: str, emulation: str, ip_first_octet: int):
@@ -2538,19 +2745,30 @@ def start_ossec_ids_manager(ip: str, container_ip: str, emulation: str, ip_first
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            operation_outcome = ClusterController.start_ossec_ids_manager(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
-                ip_first_octet=ip_first_octet, container_ip=container_ip)
-            if operation_outcome.outcome:
-                click.secho(f"Started ossec ids manager with ip {container_ip} on "
-                            f"port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Ossec ids manager with ip {container_ip} is not "
-                            f"started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                operation_outcome = ClusterController.start_ossec_ids_manager(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet, container_ip=container_ip)
+                if operation_outcome.outcome:
+                    start_message = (f"\nOssec ids manager with ip {container_ip} on "
+                                     f"port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is started.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    start_message = (f"\nOssec ids manager with ip {container_ip} is not "
+                                     f"started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}.")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(start_message, fg=text_color, bold=text_style_bold)
 
 
 def start_elk_manager(ip: str, emulation: str, ip_first_octet: int):
@@ -2564,17 +2782,28 @@ def start_elk_manager(ip: str, emulation: str, ip_first_octet: int):
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            operation_outcome = ClusterController.start_elk_manager(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
-                ip_first_octet=ip_first_octet)
-            if operation_outcome.outcome:
-                click.secho(f"Starting elk manager on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Elk manager is not started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                operation_outcome = ClusterController.start_elk_manager(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet)
+                if operation_outcome.outcome:
+                    start_message = f"\nElk manager on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is started."
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    start_message = f"\nElk manager is not started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}."
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(start_message, fg=text_color, bold=text_style_bold)
 
 
 def start_traffic_managers(ip: str, emulation: str, ip_first_octet: int):
@@ -2588,17 +2817,29 @@ def start_traffic_managers(ip: str, emulation: str, ip_first_octet: int):
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            operation_outcome = ClusterController.start_traffic_managers(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
-                ip_first_octet=ip_first_octet)
-            if operation_outcome.outcome:
-                click.secho(f"Starting traffic managers on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Traffic managers are not started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                operation_outcome = ClusterController.start_traffic_managers(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet)
+                if operation_outcome.outcome:
+                    start_message = (f"\nTraffic managers on port:"
+                                     f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} are started.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    start_message = f"\nTraffic managers are not started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}."
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(start_message, fg=text_color, bold=text_style_bold)
 
 
 def start_traffic_manager(ip: str, container_ip: str, emulation: str, ip_first_octet: int):
@@ -2613,19 +2854,30 @@ def start_traffic_manager(ip: str, container_ip: str, emulation: str, ip_first_o
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            operation_outcome = ClusterController.start_traffic_manager(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
-                ip_first_octet=ip_first_octet, container_ip=container_ip)
-            if operation_outcome.outcome:
-                click.secho(f"Started ttraffic manager with ip {container_ip} on "
-                            f"port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Traffic manager with ip {container_ip} is not "
-                            f"started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                operation_outcome = ClusterController.start_traffic_manager(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet, container_ip=container_ip)
+                if operation_outcome.outcome:
+                    start_message = (f"\nTraffic manager with ip {container_ip} on "
+                                     f"port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is started.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    start_message = (f"\nTraffic manager with ip {container_ip} is not "
+                                     f"started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}.")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(start_message, fg=text_color, bold=text_style_bold)
 
 
 def start_kafka_manager(ip: str, emulation: str, ip_first_octet: int):
@@ -2639,17 +2891,29 @@ def start_kafka_manager(ip: str, emulation: str, ip_first_octet: int):
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            operation_outcome = ClusterController.start_kafka_manager(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
-                ip_first_octet=ip_first_octet)
-            if operation_outcome.outcome:
-                click.secho(f"Starting Kafka manager on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Kafka manager are not started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                operation_outcome = ClusterController.start_kafka_manager(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet)
+                if operation_outcome.outcome:
+                    start_message = (f"\nKafka manager on port:"
+                                     f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is started.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    start_message = (f"\nKafka manager are not started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}.")
+                    text_color = "white"
+                    text_style_bold = False
+        progress_bar.update(step_size)
+        click.secho(start_message, fg=text_color, bold=text_style_bold)
 
 
 def run_image(image: str, name: str, create_network: bool = True, version: str = "0.0.1") -> bool:
