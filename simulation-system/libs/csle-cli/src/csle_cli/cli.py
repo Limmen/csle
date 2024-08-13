@@ -953,16 +953,30 @@ def stop_host_managers(ip: str, emulation: str, ip_first_octet: int) -> None:
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            stopped = ClusterController.stop_host_managers(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
-                                                           emulation=emulation, ip_first_octet=ip_first_octet)
-            if stopped.outcome:
-                click.secho(f"Stopping host managers on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Host managers are not stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+
+    total_steps = 100
+    step_size = total_steps / 2
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                           show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                stopped = ClusterController.stop_host_managers(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                                                               emulation=emulation, ip_first_octet=ip_first_octet)
+                if stopped.outcome:
+                    stop_message = f"\nHost managers are stopped on port: {constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}"
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    stop_message = (f"\nHost managers are not stopped on port: "
+                                    f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
+
+
 
 
 def stop_ryu_manager(ip: str, emulation: str, ip_first_octet: int) -> None:
@@ -976,17 +990,36 @@ def stop_ryu_manager(ip: str, emulation: str, ip_first_octet: int) -> None:
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            stopped = ClusterController.stop_ryu_manager(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
-                ip_first_octet=ip_first_octet)
-            if stopped.outcome:
-                click.secho(f"Stopping host managers on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Host managers are not stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+    emulation_config = MetastoreFacade.get_emulation_by_name(name=emulation)
+    has_sdn = emulation_config.sdn_controller_config is not None
+    total_steps = 100
+    step_size = total_steps / 2
+    with click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                           show_eta=False, width=40) as progress_bar:
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                if has_sdn:
+                    stopped = ClusterController.stop_ryu_manager(
+                        ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                        ip_first_octet=ip_first_octet)
+                    if stopped.outcome:
+                        stop_message = (f"\nRyu managers are stopped on port:"
+                                        f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
+                        text_color = "white"
+                        text_style_bold = False
+                    else:
+                        stop_message= (f"\nHost managers are not stopped:"
+                                       f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
+                        text_color = "white"
+                        text_style_bold = True
+                else:
+                    stop_message = f"\nEmulation with name: {emulation} does not have SDN."
+                    text_color = "red"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
 
 
 def stop_ossec_ids_managers(ip: str, emulation: str, ip_first_octet: int) -> None:
@@ -1000,17 +1033,27 @@ def stop_ossec_ids_managers(ip: str, emulation: str, ip_first_octet: int) -> Non
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            stopped = ClusterController.stop_ossec_ids_managers(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
-                ip_first_octet=ip_first_octet)
-            if stopped.outcome:
-                click.secho(f"Stopping ossec managers on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Ossec managers are not stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+    total_steps = 100
+    step_size = total_steps / 2
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                stopped = ClusterController.stop_ossec_ids_managers(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet)
+                if stopped.outcome:
+                    stop_message = f"\nOssec managers are stopped on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}"
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    stop_message = f"\nOssec managers are not stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}"
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
 
 
 def stop_host_manager(ip: str, container_ip: str, emulation: str, ip_first_octet: int) -> None:
@@ -1025,19 +1068,29 @@ def stop_host_manager(ip: str, container_ip: str, emulation: str, ip_first_octet
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            stopped = ClusterController.stop_host_manager(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
-                                                          emulation=emulation, ip_first_octet=ip_first_octet,
-                                                          container_ip=container_ip)
-            if stopped.outcome:
-                click.secho(
-                    f"Stopping host with ip {container_ip} on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Host with ip {container_ip} is not "
-                            f"stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+    total_steps = 100
+    step_size = total_steps / 2
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                stopped = ClusterController.stop_host_manager(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                                                              emulation=emulation, ip_first_octet=ip_first_octet,
+                                                              container_ip=container_ip)
+                if stopped.outcome:
+                    stop_message = (f"\nHost with ip {container_ip} on port "
+                                    f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is stopped.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    stop_message = (f"\nHost with ip {container_ip} is not "
+                                    f"stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
 
 
 def stop_ossec_ids_manager(ip: str, container_ip: str, emulation: str, ip_first_octet: int) -> None:
@@ -1052,20 +1105,29 @@ def stop_ossec_ids_manager(ip: str, container_ip: str, emulation: str, ip_first_
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            stopped = ClusterController.stop_ossec_ids_manager(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
-                ip_first_octet=ip_first_octet, container_ip=container_ip)
-            if stopped.outcome:
-                click.secho(
-                    f"Stopping ossec manager with ip {container_ip} on port:"
-                    f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Ossec manager with ip {container_ip} is not "
-                            f"stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+    total_steps = 100
+    step_size = total_steps / 2
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                stopped = ClusterController.stop_ossec_ids_manager(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet, container_ip=container_ip)
+                if stopped.outcome:
+                    stop_message =  (f"\nOssec manager with ip {container_ip} on port:" 
+                                     f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is stopped.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    stop_message = (f"\nOssec manager with ip {container_ip} is not " 
+                                    f"stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
 
 
 def stop_client_manager(ip: str, emulation: str, ip_first_octet: int) -> None:
@@ -1079,16 +1141,27 @@ def stop_client_manager(ip: str, emulation: str, ip_first_octet: int) -> None:
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            stopped = ClusterController.stop_client_manager(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
-                                                            emulation=emulation, ip_first_octet=ip_first_octet)
-            if stopped.outcome:
-                click.secho(f"Stopping client manager on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Client manager is not stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+    total_steps = 100
+    step_size = total_steps / 2
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                stopped = ClusterController.stop_client_manager(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                                                                emulation=emulation, ip_first_octet=ip_first_octet)
+                if stopped.outcome:
+                    stop_message = f"\nClient manager on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is stopped."
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    stop_message = (f"\nClient manager is not stopped:"
+                                    f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
 
 
 def stop_snort_ids_managers(ip: str, emulation: str, ip_first_octet: int) -> None:
@@ -1102,16 +1175,28 @@ def stop_snort_ids_managers(ip: str, emulation: str, ip_first_octet: int) -> Non
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            stopped = ClusterController.stop_snort_ids_managers(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
-                                                                emulation=emulation, ip_first_octet=ip_first_octet)
-            if stopped.outcome:
-                click.secho(f"Stopping snort ids managers on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Snort ids managers are not stopped:"
-                            f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}", bold=False)
+    total_steps = 100
+    step_size = total_steps / 2
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                stopped = ClusterController.stop_snort_ids_managers(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                                                                    emulation=emulation, ip_first_octet=ip_first_octet)
+                if stopped.outcome:
+                    stop_message = (f"\nSnort ids managers on port:"
+                                    f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is stopped. ")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    stop_message = (f"\nSnort ids managers are not stopped:" 
+                                    f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
 
 
 def stop_snort_ids_manager(ip: str, container_ip: str, emulation: str, ip_first_octet: int) -> None:
@@ -1126,20 +1211,29 @@ def stop_snort_ids_manager(ip: str, container_ip: str, emulation: str, ip_first_
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            stopped = ClusterController.stop_snort_ids_manager(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
-                                                               emulation=emulation, ip_first_octet=ip_first_octet,
-                                                               container_ip=container_ip)
-            if stopped.outcome:
-                click.secho(
-                    f"Stopping snort ids on the host with ip {container_ip} on "
-                    f"port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Snort ids on the host with ip {container_ip} is not "
-                            f"stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+    total_steps = 100
+    step_size = total_steps / 2
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                stopped = ClusterController.stop_snort_ids_manager(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                                                                   emulation=emulation, ip_first_octet=ip_first_octet,
+                                                                   container_ip=container_ip)
+                if stopped.outcome:
+                    stop_message = (f"\nSnort ids on the host with ip {container_ip} on " 
+                                    f"port {constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is stopped.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    stop_message = (f"\nSnort ids on the host with ip {container_ip} is not " 
+                                    f"stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
 
 
 def stop_elk_manager(ip: str, emulation: str, ip_first_octet: int) -> None:
@@ -1153,16 +1247,26 @@ def stop_elk_manager(ip: str, emulation: str, ip_first_octet: int) -> None:
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            stopped = ClusterController.stop_elk_manager(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
-                                                         emulation=emulation, ip_first_octet=ip_first_octet)
-            if stopped.outcome:
-                click.secho(f"Stopping elk manager on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Elk manager is not stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+    total_steps = 100
+    step_size = total_steps / 2
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                stopped = ClusterController.stop_elk_manager(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                                                             emulation=emulation, ip_first_octet=ip_first_octet)
+                if stopped.outcome:
+                    stop_message = f"\nElk manager on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is stopped."
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    stop_message = f"\nElk manager is not stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}"
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
 
 
 def stop_kafka_manager(ip: str, emulation: str, ip_first_octet: int) -> None:
@@ -1176,17 +1280,27 @@ def stop_kafka_manager(ip: str, emulation: str, ip_first_octet: int) -> None:
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            stopped = ClusterController.stop_kafka_manager(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
-                ip_first_octet=ip_first_octet)
-            if stopped.outcome:
-                click.secho(f"Stopping Kafka manager on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Kafka manager is not stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+    total_steps = 100
+    step_size = total_steps / 2
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                stopped = ClusterController.stop_kafka_manager(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet)
+                if stopped.outcome:
+                    stop_message = f"\nKafka manager on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is stopped."
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    stop_message = f"\nKafka manager is not stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}."
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
 
 
 def stop_traffic_managers(ip: str, emulation: str, ip_first_octet: int) -> None:
@@ -1200,17 +1314,28 @@ def stop_traffic_managers(ip: str, emulation: str, ip_first_octet: int) -> None:
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            stopped = ClusterController.stop_traffic_managers(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
-                ip_first_octet=ip_first_octet)
-            if stopped.outcome:
-                click.secho(f"Stopping traffic managers on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Traffic managers are not stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+    total_steps = 100
+    step_size = total_steps / 2
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                stopped = ClusterController.stop_traffic_managers(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet)
+                if stopped.outcome:
+                    stop_message = (f"\nTraffic managers on port:"
+                                    f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} are stopped.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    stop_message= f"\nTraffic managers are not stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}."
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
 
 
 def stop_traffic_manager(ip: str, container_ip: str, emulation: str, ip_first_octet: int) -> None:
@@ -1225,20 +1350,29 @@ def stop_traffic_manager(ip: str, container_ip: str, emulation: str, ip_first_oc
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            stopped = ClusterController.stop_traffic_manager(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
-                ip_first_octet=ip_first_octet, container_ip=container_ip)
-            if stopped.outcome:
-                click.secho(
-                    f"Stopping traffic manager with ip {container_ip} on port:"
-                    f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Traffic manager with ip {container_ip} is not "
-                            f"stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+    total_steps = 100
+    step_size = total_steps / 2
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                stopped = ClusterController.stop_traffic_manager(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet, container_ip=container_ip)
+                if stopped.outcome:
+                    stop_message = (f"\nTraffic manager with ip {container_ip} on port:"
+                                    f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is stopped.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    stop_message = (f"\nTraffic manager with ip {container_ip} is not " 
+                                    f"stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
 
 
 def stop_filebeats(ip: str, emulation: str, ip_first_octet: int) -> None:
@@ -1252,17 +1386,27 @@ def stop_filebeats(ip: str, emulation: str, ip_first_octet: int) -> None:
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            stopped = ClusterController.stop_filebeats(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
-                ip_first_octet=ip_first_octet)
-            if stopped.outcome:
-                click.secho(f"Stopping filebeats on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Filebeats are not stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+    total_steps = 100
+    step_size = total_steps / 2
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                stopped = ClusterController.stop_filebeats(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet)
+                if stopped.outcome:
+                    stop_message = f"\nFilebeats on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is stopped."
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    stop_message = f"\nFilebeats are not stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}."
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
 
 
 def stop_filebeat(ip: str, container_ip: str, emulation: str, ip_first_octet: int) -> None:
@@ -1277,20 +1421,30 @@ def stop_filebeat(ip: str, container_ip: str, emulation: str, ip_first_octet: in
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            stopped = ClusterController.stop_filebeat(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
-                ip_first_octet=ip_first_octet, container_ip=container_ip)
-            if stopped.outcome:
-                click.secho(
-                    f"Stopping filebeat with ip {container_ip} on port:"
-                    f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Filebeat with ip {container_ip} is not "
-                            f"stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+    total_steps = 100
+    step_size = total_steps / 2
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                stopped = ClusterController.stop_filebeat(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet, container_ip=container_ip)
+                if stopped.outcome:
+                    stop_message = (
+                        f"\nFilebeat with ip {container_ip} on port:"
+                        f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is stopped.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    stop_message = (f"\nFilebeat with ip {container_ip} is not " 
+                                    f"stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
 
 
 def stop_metricbeats(ip: str, emulation: str, ip_first_octet: int) -> None:
@@ -1304,17 +1458,27 @@ def stop_metricbeats(ip: str, emulation: str, ip_first_octet: int) -> None:
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            stopped = ClusterController.stop_metricbeats(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
-                ip_first_octet=ip_first_octet)
-            if stopped.outcome:
-                click.secho(f"Stopping metricbeats on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Metricbeats are not stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+    total_steps = 100
+    step_size = total_steps / 2
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                stopped = ClusterController.stop_metricbeats(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet)
+                if stopped.outcome:
+                    stop_message = f"\nMetricbeats on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} are stopped."
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    stop_message = f"\nMetricbeats are not stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}."
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
 
 
 def stop_metricbeat(ip: str, container_ip: str, emulation: str, ip_first_octet: int) -> None:
@@ -1329,20 +1493,29 @@ def stop_metricbeat(ip: str, container_ip: str, emulation: str, ip_first_octet: 
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            stopped = ClusterController.stop_metricbeat(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
-                ip_first_octet=ip_first_octet, container_ip=container_ip)
-            if stopped.outcome:
-                click.secho(
-                    f"Stopping metricbeat with ip {container_ip} on port:"
-                    f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Metricbeat with ip {container_ip} is not "
-                            f"stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+    total_steps = 100
+    step_size = total_steps / 2
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                stopped = ClusterController.stop_metricbeat(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet, container_ip=container_ip)
+                if stopped.outcome:
+                    stop_message = (f"\nMetricbeat with ip {container_ip} on port:" 
+                                    f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is stopped.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    stop_message = (f"\nMetricbeat with ip {container_ip} is not " 
+                                    f"stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}.")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
 
 
 def stop_heartbeats(ip: str, emulation: str, ip_first_octet: int) -> None:
@@ -1356,17 +1529,27 @@ def stop_heartbeats(ip: str, emulation: str, ip_first_octet: int) -> None:
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            stopped = ClusterController.stop_heartbeats(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
-                ip_first_octet=ip_first_octet)
-            if stopped.outcome:
-                click.secho(f"Stopping heartbeats on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Heartbeats are not stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+    total_steps = 100
+    step_size = total_steps / 2
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                stopped = ClusterController.stop_heartbeats(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet)
+                if stopped.outcome:
+                    stop_message = f"\nHeartbeats on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} are stopped."
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    stop_message = f"\nHeartbeats are not stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}."
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
 
 
 def stop_heartbeat(ip: str, container_ip: str, emulation: str, ip_first_octet: int) -> None:
@@ -1381,20 +1564,29 @@ def stop_heartbeat(ip: str, container_ip: str, emulation: str, ip_first_octet: i
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            stopped = ClusterController.stop_heartbeat(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
-                ip_first_octet=ip_first_octet, container_ip=container_ip)
-            if stopped.outcome:
-                click.secho(
-                    f"Stopping heartbeat with ip {container_ip} on port:"
-                    f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Heartbeat with ip {container_ip} is not "
-                            f"stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+    total_steps = 100
+    step_size = total_steps / 2
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                stopped = ClusterController.stop_heartbeat(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet, container_ip=container_ip)
+                if stopped.outcome:
+                    stop_message = (f"\nHeartbeat with ip {container_ip} on port: "
+                                    f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is stopped.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    stop_message = (f"\nHeartbeat with ip {container_ip} is not " 
+                                    f"stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}.")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
 
 
 def stop_packetbeats(ip: str, emulation: str, ip_first_octet: int) -> None:
@@ -1408,17 +1600,27 @@ def stop_packetbeats(ip: str, emulation: str, ip_first_octet: int) -> None:
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            stopped = ClusterController.stop_packetbeats(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
-                ip_first_octet=ip_first_octet)
-            if stopped.outcome:
-                click.secho(f"Stopping packetbeats on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Packetbeats are not stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+    total_steps = 100
+    step_size = total_steps / 2
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                stopped = ClusterController.stop_packetbeats(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet)
+                if stopped.outcome:
+                    stop_message = f"\nPacketbeats on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} are stopped."
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    stop_message = f"\nPacketbeats are not stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}."
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
 
 
 def stop_packetbeat(ip: str, container_ip: str, emulation: str, ip_first_octet: int) -> None:
@@ -1433,20 +1635,29 @@ def stop_packetbeat(ip: str, container_ip: str, emulation: str, ip_first_octet: 
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    config = MetastoreFacade.get_config(id=1)
-    for node in config.cluster_config.cluster_nodes:
-        if node.ip == ip or ip == "":
-            stopped = ClusterController.stop_packetbeat(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
-                ip_first_octet=ip_first_octet, container_ip=container_ip)
-            if stopped.outcome:
-                click.secho(
-                    f"Stopping packetbeat with ip {container_ip} on port:"
-                    f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
-            else:
-                click.secho(f"Packetbeat with ip {container_ip} is not "
-                            f"stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}",
-                            bold=False)
+    total_steps = 100
+    step_size = total_steps / 2
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                stopped = ClusterController.stop_packetbeat(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet, container_ip=container_ip)
+                if stopped.outcome:
+                    stop_message = (f"\nPacketbeat with ip {container_ip} on port:"
+                                    f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is stopped.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    stop_message = (f"\nPacketbeat with ip {container_ip} is not " 
+                                    f"stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}.")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
 
 
 @click.argument('max_workers', default=10, type=int)
