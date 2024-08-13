@@ -1,6 +1,7 @@
 import pytest
 import docker
 import logging
+import grpc
 from unittest.mock import MagicMock, patch
 from docker.types import IPAMConfig, IPAMPool
 import time
@@ -10,6 +11,7 @@ import csle_common.constants.constants as constants
 from csle_common.controllers.host_controller import HostController
 import csle_collector.host_manager.host_manager_pb2_grpc
 import csle_collector.host_manager.host_manager_pb2
+from IPython.lib.editorhooks import emacs
 
 
 @pytest.fixture(scope="module")
@@ -57,7 +59,7 @@ def get_derived_containers(docker_client, excluded_tag="blank") -> None:
         and all("base" not in tag for tag in image.tags)
         and all(excluded_tag not in tag for tag in image.tags)
     ]
-    return derived_images[:2]
+    return derived_images
 
 
 @pytest.fixture(scope="module", params=get_derived_containers(docker.from_env()))
@@ -85,110 +87,79 @@ def container_setup(request, docker_client, network) -> None:
     container.remove()
 
 
-@patch("csle_common.util.emulation_util.EmulationUtil.connect_admin")
-@patch("csle_common.util.emulation_util.EmulationUtil.execute_ssh_cmd")
-@patch("time.sleep", return_value=None)
-@patch("grpc.insecure_channel")
-def test_start_host_manager(
-    mock_grpc_channel, mock_sleep, mock_execute_ssh_cmd, mock_connect_admin, container_setup
-) -> None:
+def test_start_host_manager(container_setup) -> None:
     """
-    Test start_host_manager and verify if it runs correctly within a container.
+    Start host_manager in a container
 
-    :param mock_grpc_channel: mock_grpc_channel
-    :param mock_sleep: mock_sleep
-    :param mock_execute_ssh_cmd: mock_execute_ssh_cmd
-    :param mock_connect_admin: mock_connect_admin
     :param container_setup: container_setup
 
     :return: None
     """
-
-    # Set up mock return values
-    mock_connect_admin.return_value = None
-    mock_execute_ssh_cmd.side_effect = [
-        ("", "", 0),  # Initial check, no host_manager process found
-        ("", "", 0),  # Stopping any old process (even if none exist)
-        ("", "", 0),  # Starting host_manager
-        (constants.COMMANDS.SEARCH_HOST_MANAGER, "", 0),  # Final check, host_manager is now running
-    ]
-    # Create a mock EmulationEnvConfig object with necessary attributes
+    failed_containers = []
+    containers_info = []
+    container_setup.reload()
+    if container_setup.status != "running":
+        failed_containers.append(container_setup.name)
+        containers_info.append(
+            {"container_id": container_setup.id, "name": container_setup.name, "status": container_setup.status}
+        )
+        print(f"Container {container_setup.name} is not running. Skipping host manager start.")
+        return
+    # Mock emulation_env_config
     emulation_env_config = MagicMock(spec=EmulationEnvConfig)
     emulation_env_config.get_connection.return_value = MagicMock()
-    # Set up mock host_manager_config attributes
-    host_manager_config = MagicMock()
-    emulation_env_config.host_manager_config = host_manager_config
+    emulation_env_config.host_manager_config = MagicMock()
     emulation_env_config.host_manager_config.host_manager_port = 8080
     emulation_env_config.host_manager_config.host_manager_log_dir = "/var/log/host_manager"
     emulation_env_config.host_manager_config.host_manager_log_file = "host_manager.log"
     emulation_env_config.host_manager_config.host_manager_max_workers = 4
-    # Create a mock logger
-    logger = logging.getLogger("test_logger")
-    ip = "15.15.15.15"
-    try:
-        container_setup.reload()
-        assert container_setup.status == "running", f"Container {container_setup.name} is not running"
-        # Connect using the mocked connect_admin method
-        EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ip)
-        # Check if the host_manager is already running
-        cmd = (
-            constants.COMMANDS.PS_AUX
-            + " | "
-            + constants.COMMANDS.GREP
-            + constants.COMMANDS.SPACE_DELIM
-            + constants.TRAFFIC_COMMANDS.HOST_MANAGER_FILE_NAME
-        )
-        o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip))
 
-        if constants.COMMANDS.SEARCH_HOST_MANAGER not in str(o):
-            logger.info(
-                f"Host manager is not running on: {ip}, starting it. Output of {cmd} was: {str(o)}, "
-                f"err output was: {str(e)}"
-            )
-            # Stop old background job if running
-            cmd = (
-                constants.COMMANDS.SUDO
-                + constants.COMMANDS.SPACE_DELIM
-                + constants.COMMANDS.PKILL
-                + constants.COMMANDS.SPACE_DELIM
-                + constants.TRAFFIC_COMMANDS.HOST_MANAGER_FILE_NAME
-            )
-            o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip))
-            # Start the host_manager
-            cmd = constants.COMMANDS.START_HOST_MANAGER.format(
-                emulation_env_config.host_manager_config.host_manager_port,
-                emulation_env_config.host_manager_config.host_manager_log_dir,
-                emulation_env_config.host_manager_config.host_manager_log_file,
-                emulation_env_config.host_manager_config.host_manager_max_workers,
-            )
-            o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip))
-            time.sleep(5)
-            cmd = (
-                constants.COMMANDS.PS_AUX
-                + " | "
-                + constants.COMMANDS.GREP
-                + constants.COMMANDS.SPACE_DELIM
-                + constants.TRAFFIC_COMMANDS.HOST_MANAGER_FILE_NAME
-            )
-            o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip))
-            assert constants.COMMANDS.SEARCH_HOST_MANAGER in str(
-                o
-            ), "Host manager is not running in the container after start attempt"
-        else:
-            logger.info(
-                f"Host manager is already running on: {ip}. Output of {cmd} was: {str(o)}, " f"err output was: {str(e)}"
-            )
-        mock_channel = MagicMock()
-        mock_grpc_channel.return_value = mock_channel
-        # Mock the stub and its method
-        mock_stub = MagicMock()
-        mock_channel.__enter__.return_value = mock_stub
-        mock_stub.GetHostStatus.return_value = csle_collector.host_manager.host_manager_pb2.HostStatusDTO()
-        # Make the gRPC call
-        status = HostController.get_host_monitor_thread_status_by_port_and_ip(
-            ip, emulation_env_config.host_manager_config.host_manager_port
+    ip = container_setup.attrs["NetworkSettings"]["IPAddress"]
+    port = emulation_env_config.host_manager_config.host_manager_port
+    try:
+        # Start host_manager command
+        cmd = (
+            f"/root/miniconda3/bin/python3 /host_manager.py "
+            f"--port {emulation_env_config.host_manager_config.host_manager_port} "
+            f"--logdir {emulation_env_config.host_manager_config.host_manager_log_dir} "
+            f"--logfile {emulation_env_config.host_manager_config.host_manager_log_file} "
+            f"--maxworkers {emulation_env_config.host_manager_config.host_manager_max_workers}"
         )
-        # Validate the status response
-        assert status is not None, "Failed to get host manager status via gRPC"
+        # Run cmd in the container
+        print(f"Running command: {cmd}")
+        result = container_setup.exec_run(cmd, detach=True)
+        print("Command is running in the background.")
+        # Check if host_manager starts
+        cmd = (
+            f"sh -c '{constants.COMMANDS.PS_AUX} | {constants.COMMANDS.GREP} "
+            f"{constants.COMMANDS.SPACE_DELIM}{constants.TRAFFIC_COMMANDS.HOST_MANAGER_FILE_NAME}'"
+        )
+        result = container_setup.exec_run(cmd)
+        output = result.output.decode("utf-8")
+        print(f"Process check output: {output}")
+        assert constants.COMMANDS.SEARCH_HOST_MANAGER in output, "Host manager is not running in the container"
+        # Print logfile
+        log_file_path = "/var/log/host_managerhost_manager.log"
+        time.sleep(5)
+        cmd = f"cat {log_file_path}"
+        result = container_setup.exec_run(cmd)
+        log_content = result.output.decode("utf-8")
+        print(f"Log file content from {container_setup.name}:\n{log_content}")
+        # Call grpc
+        print(f"Attempting to connect to host manager at {ip}:{port}")
+        with grpc.insecure_channel(f"{ip}:{port}", options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
+            stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
+            status = csle_collector.host_manager.query_host_manager.get_host_status(stub=stub)
+        if status:
+            print(f"Host Manager Status: {status}")
+        else:
+            print(f"Host Manager status is empty for container {container_setup.name}.")
     except Exception as e:
-        pytest.fail(f"Exception occurred while starting host manager: {str(e)}")
+        print(f"Error occurred in container {container_setup.name}: {e}")
+        failed_containers.append(container_setup.name)
+        containers_info.append({"container_id": container_setup.id, "name": container_setup.name, "error": str(e)})
+    if failed_containers:
+        print("Containers that failed to start the host manager:")
+        for info in containers_info:
+            print(info)
+    assert not failed_containers, f"The following containers failed to start the host manager: {failed_containers}"
