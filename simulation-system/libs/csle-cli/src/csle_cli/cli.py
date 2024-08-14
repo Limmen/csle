@@ -3197,22 +3197,84 @@ def ls_shell_complete(ctx, param, incomplete) -> List[str]:
     image_names: List[str] = list(map(lambda x: x[0], images))
     active_networks_names: List[str] = ContainerController.list_all_networks()
     return (["containers", "networks", "images", "emulations", "all", "environments", "prometheus", "node_exporter",
-             "cadvisor", "pgadmin", "flask", "statsmanager", "--all", "--running", "--stopped"] + emulations
-            + container_names + image_names + active_networks_names + simulations)
+             "cadvisor", "pgadmin", "flask", "statsmanager", "simulations", "emulation_executions", "cluster", "nginx",
+             "postgresql", "docker", "hostmanagers", "clientmanager", "snortmanagers", "elkmanager", "trafficmanagers",
+             "kafkamanager", "ossecmanagers", "ryumanager", "filebeats", "metricbeats", "packetbeats", "logfiles",
+             "heartbeats", "logfile", "--ip", "--id", "--name", "--logfile_name", "--all", "--running", "--stopped"]
+            + emulations + container_names + image_names + active_networks_names + simulations)
 
 
 @click.command("ls", help="containers | networks | images | emulations | all | environments | prometheus "
                           "| node_exporter | cadvisor | pgadmin | statsmanager | flask | "
                           "simulations | emulation_executions | cluster | nginx | postgresql | docker | hostmanagers | "
                           "clientmanager | snortmanagers | elkmanager | trafficmanagers | kafkamanager | "
-                          "ossecmanagers | ryumanager | filebeats | metricbeats | heartbeats | logfiles | logfile")
+                          "ossecmanagers | ryumanager | filebeats | metricbeats | heartbeats| packetbeats | logfiles | "
+                          "logfile \n\n"
+                          "\b\n"
+                          "- \033[95mcontainers\033[0m: list all|stopped|running containers. \n"
+                          "- \033[95mnetworks\033[0m: list active networks. \n"
+                          "- \033[95mimages\033[0m: list all images in CSLE. \n"
+                          "- \033[95memulations\033[0m: list all|stopped|running emulations.\n"
+                          "- \033[95mall\033[0m: list all cluster, networks, containers, images, emulations, emulation"
+                          " executions, simulations, and CSLE gym environments.\n"
+                          "- \033[95menvironments\033[0m: list all registered Open AI gym environments.\n"
+                          "- \033[95mprometheus\033[0m: list status of prometheus. \n"
+                          "- \033[95mnode_exporter\033[0m: list status of node exporter. \n"
+                          "- \033[95mcadvisor\033[0m: list status of cadvisor. \n"
+                          "- \033[95mpgadmin\033[0m: list status of pgadmin. \n"
+                          "- \033[95mstatsmanager\033[0m: list status of the docker stats manager.\n"
+                          "- \033[95mflask\033[0m: list status of the management system.\n"
+                          "- \033[95msimulations\033[0m: list all simulations. \n"
+                          "- \033[95memulation_executions\033[0m: list all emulation executions. \n"
+                          "- \033[95mcluster\033[0m: list all clusters. \n"
+                          "- \033[95mnginx\033[0m: lists status of nginx. \n"
+                          "- \033[95mpostgresql\033[0m: lists status of PostgreSQL. \n"
+                          "- \033[95mdocker\033[0m: lists status of the docker engine. \n"
+                          "- \033[95mhostmanagers\033[0m: displays the status and IP addresses of host managers running"
+                          " on a node with the specified --ip option for the emulation identified by the specified"
+                          " --name and --id.\n"
+                          "- \033[95mclientmanager\033[0m: list the information about the client manager and its status"
+                          " for a node with the specified --ip option for the emulation identified by the specified"
+                          " --name and --id.\n"
+                          "- \033[95msnortmanagers\033[0m: list the ip address and status of snortmangers for a "
+                          "node with the specified --ip option for the emulation identified by the specified"
+                          " --name and --id.\n"
+                          "- \033[95melkmanager\033[0m: list information and status of elk manager for a node with the"
+                          " specified --ip option for the emulation identified by the specified --name and --id.\n"
+                          "- \033[95mtrafficmanagers\033[0m: list ip address and status of trafficmangers for a "
+                          "node with the specified --ip option for the emulation identified by the specified"
+                          " --name and --id.\n"
+                          "- \033[95mkafkamanager\033[0m: list information and status of the kafka manager for "
+                          "a node with the specified --ip option for the emulation identified by the specified "
+                          "--name and --id.\n"
+                          "- \033[95mossecmanagers\033[0m: list ip address and status of ossec managers for a node with"
+                          " the specified --ip option for the emulation identified by the specified --name and --id.\n"
+                          "- \033[95mryumanager\033[0m: list information about ryu managers for a node with"
+                          " the specified --ip option for the emulation identified by the specified --name and --id."
+                          "The emulation should include SDN for this command.\n"
+                          "- \033[95mfilebeats\033[0m: list ip address and status of filebeats for the running "
+                          "containers for a node with the specified --ip option for the emulation identified by the"
+                          " specified --name and --id.\n"
+                          "- \033[95mmetricbeats\033[0m: list ip address and status of metricbeats for the running"
+                          " containers for a node with the specified --ip option for the emulation identified by"
+                          " the specified --name and --id.\n"
+                          "- \033[95mheartbeats\033[0m: list ip address and status of heartbeats for the running "
+                          "containers for a node with the specified --ip option for the emulation identified by the "
+                          "specified --name and --id.\n"
+                          "- \033[95mpacketbeats\033[0m: list ip address and status of packetbeats for the running"
+                          " containers for a node with the specified --ip option for the emulation identified by the"
+                          " specified --name and --id.\n"
+                          "- \033[95mlogfiles\033[0m: list all CSLE log files with their path for a node with "
+                          "the specified --ip option.\n"
+                          "- \033[95mlogfile\033[0m: show the logs in a file with the path specified with "
+                          "--logfile_name option for a node with the specified --ip option.\n")
 @click.argument('entity', default='all', type=str, shell_complete=ls_shell_complete)
 @click.option('--all', is_flag=True, help='list all')
 @click.option('--running', is_flag=True, help='list running only (default)')
 @click.option('--stopped', is_flag=True, help='list stopped only')
-@click.option('--ip', default="", type=str)
-@click.option('--id', default=None, type=int)
-@click.option('--name', default="", type=str)
+@click.option('--ip', default="", type=str, help='node IP address to run the command')
+@click.option('--id', default=None, type=int, help="emulation id")
+@click.option('--name', default="", type=str, help='name of the emulation')
 @click.option('--logfile_name', default="", type=str, help='name of the logfile to to retrieve')
 def ls(entity: str, all: bool, running: bool, stopped: bool, ip: str, name: str, id: int, logfile_name: str) -> None:
     """
@@ -3222,6 +3284,10 @@ def ls(entity: str, all: bool, running: bool, stopped: bool, ip: str, name: str,
     :param all: flag that indicates whether all containers/emulations should be listed
     :param running: flag that indicates whether running containers/emulations should be listed (default)
     :param stopped: flag that indicates whether stopped containers/emulations should be listed
+    :param ip: node IP address to run the command
+    :param id: id of the emulation that we run ls command for
+    :param name: name of the emulation that we run ls command for
+    :param logfile_name: name of the log file to be shown
     :return: None
     """
     import csle_common.constants.constants as constants
@@ -4045,7 +4111,7 @@ def list_all(all: bool = False, running: bool = True, stopped: bool = False) -> 
 
 def list_statsmanager() -> None:
     """
-    List status of the docker host manager
+    List status of the docker stats manager
 
     :return: None
     """
@@ -4718,9 +4784,9 @@ def help() -> None:
     click.secho(f"{click.style('init', fg='magenta')} Initializes CSLE and sets up mgmt accounts ",
                 bold=False)
     click.secho(f"{click.style('ls', fg='magenta')} Lists information about CSLE ", bold=False)
-    click.secho(f"{click.style('start', fg='magenta')} Starts en emulation, a job,"
+    click.secho(f"{click.style('start', fg='magenta')} Starts an emulation, a job,"
                 f" or a container ", bold=False)
-    click.secho(f"{click.style('stop', fg='magenta')} Stops en entity, eg. emulation, a job,"
+    click.secho(f"{click.style('stop', fg='magenta')} Stops an entity, eg. emulation, a job,"
                 f" or a container ", bold=False)
     click.secho(f"{click.style('rm', fg='magenta')} Removes a container, a network, an image, "
                 f"all networks, all images, or all containers ", bold=False)
