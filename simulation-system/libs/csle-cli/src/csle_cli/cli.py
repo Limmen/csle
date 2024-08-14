@@ -714,9 +714,16 @@ def stop_shell_complete(ctx, param, incomplete) -> List[str]:
                             "- \033[95mdocker\033[0m: stops docker engine for a node with ip address "
                             "specified with --ip option.\n"
                             "- \033[95mclustermanager\033[0m: stops cluster manager.\n"
-                            "- \033[95mhostmanagers\033[0m: Stops all host managers on the node specified by --ip,"
+                            "- \033[95mhostmanagers\033[0m: stops all host managers on the node specified by --ip,"
                             " for the emulation identified by --name and --id.\n"
-                            "- \033[95mhostmanager\033[0m: Stops the host manager on the node specified by --ip, "
+                            "- \033[95mhostmanager\033[0m: stops the host manager on the node specified by --ip, "
+                            "targeting the container with the IP from --container_ip, for the emulation identified "
+                            "by --name and --id.\n"
+                            "- \033[95mclientmanager\033[0m: stops client manager on the node specified by --ip,"
+                            " for the emulation identified by --name and --id.\n"
+                            "- \033[95msnortmanagers\033[0m: stops all snort managers on the node specified by --ip,"
+                            " for the emulation identified by --name and --id.\n"
+                            "- \033[95msnortmanager\033[0m: stops the snort manager on the node specified by --ip, "
                             "targeting the container with the IP from --container_ip, for the emulation identified "
                             "by --name and --id.\n")
 def stop(entity: str, name: str, id: int = -1, ip: str = "", container_ip: str = "") -> None:
