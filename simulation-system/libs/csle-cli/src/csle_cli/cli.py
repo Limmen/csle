@@ -9,6 +9,7 @@ from typing import List, Tuple, Union
 import click
 import warnings
 from typing import Any
+import re
 
 warnings.filterwarnings("ignore")
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
@@ -3204,7 +3205,7 @@ def ls_shell_complete(ctx, param, incomplete) -> List[str]:
                           "| node_exporter | cadvisor | pgadmin | statsmanager | flask | "
                           "simulations | emulation_executions | cluster | nginx | postgresql | docker | hostmanagers | "
                           "clientmanager | snortmanagers | elkmanager | trafficmanagers | kafkamanager | "
-                          "ossecmanagers | ryumanager | filebeats | metricbeats | heartbeats")
+                          "ossecmanagers | ryumanager | filebeats | metricbeats | heartbeats | logfiles | logfile")
 @click.argument('entity', default='all', type=str, shell_complete=ls_shell_complete)
 @click.option('--all', is_flag=True, help='list all')
 @click.option('--running', is_flag=True, help='list running only (default)')
@@ -3212,7 +3213,8 @@ def ls_shell_complete(ctx, param, incomplete) -> List[str]:
 @click.option('--ip', default="", type=str)
 @click.option('--id', default=None, type=int)
 @click.option('--name', default="", type=str)
-def ls(entity: str, all: bool, running: bool, stopped: bool, ip: str, name: str, id: int) -> None:
+@click.option('--logfile_name', default="", type=str, help='name of the logfile to to retrieve')
+def ls(entity: str, all: bool, running: bool, stopped: bool, ip: str, name: str, id: int, logfile_name: str) -> None:
     """
     Lists the set of containers, networks, images, or emulations, or all
 
@@ -3293,6 +3295,10 @@ def ls(entity: str, all: bool, running: bool, stopped: bool, ip: str, name: str,
         list_heartbeats(ip=ip, emulation=name, ip_first_octet=id)
     elif entity == "packetbeats":
         list_packetbeats(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "logfiles":
+        list_logfiles(ip=ip)
+    elif entity == "logfile":
+        list_logfile(ip=ip, logfile_name=logfile_name)
     else:
         container = get_running_container(name=entity)
         if container is not None:
@@ -3325,6 +3331,122 @@ def ls(entity: str, all: bool, running: bool, stopped: bool, ip: str, name: str,
                                 print_simulation_config(simulation_config=simulation_env_config)
                             else:
                                 click.secho(f"entity: {entity} is not recognized", fg="red", bold=True)
+
+
+def list_logfiles(ip: str) -> None:
+    """
+    Utility function for listing logfiles
+
+    :param ip: the ip of the node to list logfiles
+
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            logfiles_info = ClusterController.get_csle_log_files(
+                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+            click.secho('+' + '-' * 60 + '+', fg='white')
+            click.secho(f'|{"CSLE log files":^20}|{"Directory":^39}|', fg='white')
+            click.secho('+' + '=' * 60 + '+', fg='white')
+            for key, value in logfiles_info.items():
+                click.secho('|', nl=False, fg='white')
+                click.secho(f'{key:^20}', nl=False, fg='white')
+                click.secho('|', nl=False, fg='white')
+                click.secho(f'{value[0]:^39}', nl=False, fg='white')
+                click.secho('|', fg='white')
+                for dir_index in range(1, len(value)):
+                    click.secho('|' + ' ' * 20 + '+', fg='white', nl=False)
+                    click.secho('-' * 39 + '+', fg='white')
+                    click.secho('|', nl=False, fg='white')
+                    click.secho(f'{"":^20}', nl=False, fg='white')
+                    click.secho('|', nl=False, fg='white')
+                    click.secho(f'{value[dir_index]:^39}', nl=False, fg='white')
+                    click.secho('|', fg='white')
+                click.secho('+' + '=' * 60 + '+', fg='white')
+
+
+def style_log_line(line: str) -> str:
+    """
+    Utility function for changing the color of lines and words in the logfiles when print them.
+
+    :param line: the line to be printed.
+
+    :return: the line with style we defined.
+    """
+
+    date_pattern = r"\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2},\d{3}"
+    log_type_pattern = r"INFO|ERROR|WARNING|DEBUG"
+    file_path_pattern = r'(?<=File ")(.*?)(?=")'
+    line_number_pattern = r'(?<=line )\d+'
+
+    date_match = re.search(date_pattern, line)
+    if date_match:
+        date_str = click.style(date_match.group(), fg='yellow')
+        line = line.replace(date_match.group(), date_str)
+
+    log_type_match = re.search(log_type_pattern, line)
+    if log_type_match:
+        log_type = log_type_match.group()
+        color = 'green' if log_type == 'INFO' else 'red' if log_type == 'ERROR' else 'blue'
+        log_type_str = click.style(log_type, fg=color, bold=True)
+        line = line.replace(log_type, log_type_str)
+
+    file_path_match = re.search(file_path_pattern, line)
+    if file_path_match:
+        file_path_str = click.style(file_path_match.group(), fg='cyan', bold=False)
+        line = line.replace(file_path_match.group(), file_path_str)
+
+    line_number_match = re.search(line_number_pattern, line)
+    if line_number_match:
+        line_number_str = click.style(line_number_match.group(), fg='magenta', bold=False)
+        line = line.replace(line_number_match.group(), line_number_str)
+
+    return line
+
+
+def list_logfile(ip: str, logfile_name: str) -> None:
+    """
+    Utility function for listing logfiles
+
+    :param ip: the ip of the node to list logfiles
+    :param logfile_name: the file name to retrieve
+
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            logfile_info = ClusterController.get_log_file(
+                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, log_file_name=logfile_name)
+            error_block = False
+            for key, value in logfile_info.items():
+                click.secho(key)
+                for i, line in enumerate(value):
+                    styled_line = style_log_line(line)
+
+                    if "ERROR" in line and not error_block:
+                        click.secho("\n" + "=" * 80, fg='red', bold=True)
+                        error_block = True
+
+                    next_line_starts_log = \
+                        (i + 1 < len(value) and re.match(
+                            r"\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2},\d{3} - (INFO|ERROR|WARNING|DEBUG)",
+                            value[i + 1]))
+                    if error_block and (next_line_starts_log or i == len(value) - 1):
+                        click.secho(styled_line)
+                        click.secho("=" * 80 + "\n", fg='red', bold=True)
+                        error_block = False
+                    else:
+                        click.secho(styled_line)
+
+                if error_block:
+                    click.secho("=" * 80 + "\n", fg='red', bold=True)
+                    error_block = False
 
 
 def list_filebeats(ip: str, emulation: str, ip_first_octet: int) -> None:
