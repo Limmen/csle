@@ -689,7 +689,36 @@ def stop_shell_complete(ctx, param, incomplete) -> List[str]:
                             "| docker | clustermanager | hostmanagers | hostmanager | clientmanager | snortmanagers "
                             "| snortmanager | elkmanager | trafficmanagers | trafficmanager | kafkamanager "
                             "| ossecmanagers | ossecmanager | ryumanager | filebeats | filebeat | metricbeat "
-                            "| metricbeats | heartbeats | heartbeat | packetbeat | packetbeats")
+                            "| metricbeats | heartbeats | heartbeat | packetbeat | packetbeats \n\n"
+                            "\b\n"
+                            "- \033[95mprometheus\033[0m: stops prometheus for a node with ip address specified with"
+                            " --ip option.\n"
+                            "- \033[95mnode_exporter\033[0m: stops node exporter for a node with ip address specified "
+                            "with --ip option.\n"
+                            "- \033[95mcadvisor\033[0m: stops cadvisor for a node with ip address specified "
+                            "with --ip option.\n"
+                            "- \033[95mgrafana\033[0m: stops grafana for a node with ip address specified "
+                            "with --ip option.\n"
+                            "- \033[95mflask\033[0m: stops flask for a node with ip address specified "
+                            "with --ip option.\n"
+                            "- \033[95mstatsmanager\033[0m: stops docker statsmanager for a node with ip address "
+                            "specified with --ip option.\n"
+                            "- \033[95memulation_executions\033[0m: stops all emulation executions.\n"
+                            "- \033[95mpgadmin\033[0m: stops pgadmin for a node with ip address "
+                            "specified with --ip option.\n"
+                            "- \033[95mall\033[0m: stops all running emulations and containers on all the nodes.\n"
+                            "- \033[95mnginx\033[0m: stops nginx for a node with ip address "
+                            "specified with --ip option.\n"
+                            "- \033[95mpostgresql\033[0m: stops PostgreSQL for a node with ip address "
+                            "specified with --ip option.\n"
+                            "- \033[95mdocker\033[0m: stops docker engine for a node with ip address "
+                            "specified with --ip option.\n"
+                            "- \033[95mclustermanager\033[0m: stops cluster manager.\n"
+                            "- \033[95mhostmanagers\033[0m: Stops all host managers on the node specified by --ip,"
+                            " for the emulation identified by --name and --id.\n"
+                            "- \033[95mhostmanager\033[0m: Stops the host manager on the node specified by --ip, "
+                            "targeting the container with the IP from --container_ip, for the emulation identified "
+                            "by --name and --id.\n")
 def stop(entity: str, name: str, id: int = -1, ip: str = "", container_ip: str = "") -> None:
     """
     Stops an entity
@@ -3267,7 +3296,9 @@ def ls_shell_complete(ctx, param, incomplete) -> List[str]:
                           "- \033[95mlogfiles\033[0m: list all CSLE log files with their path for a node with "
                           "the specified --ip option.\n"
                           "- \033[95mlogfile\033[0m: show the logs in a file with the path specified with "
-                          "--logfile_name option for a node with the specified --ip option.\n")
+                          "--logfile_name option for a node with the specified --ip option.\n\n"
+                          "\b\n"
+                          "* \033[93mExample: csle ls filebeats --name csle-level4-060 --id 15 --ip X.X.X.X \033[0m")
 @click.argument('entity', default='all', type=str, shell_complete=ls_shell_complete)
 @click.option('--all', is_flag=True, help='list all')
 @click.option('--running', is_flag=True, help='list running only (default)')
