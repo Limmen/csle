@@ -675,8 +675,13 @@ def stop_shell_complete(ctx, param, incomplete) -> List[str]:
     running_containers = ContainerController.list_all_running_containers()
     containers: List[Tuple[str, str, str]] = running_containers
     container_names: List[str] = list(map(lambda x: x[0], containers))
-    return ["prometheus", "node_exporter", "cadvisor", "pgadmin", "grafana", "flask",
-            "statsmanager", "all", "emulation_executions"] + emulations + container_names
+    return (["prometheus", "node_exporter", "cadvisor", "pgadmin", "grafana", "flask",
+             "statsmanager", "all", "statsmanager", "nginx", "postgresql", "docker",
+             "clustermanager", "hostmanagers", "hostmanager", "clientmanager", "snortmanagers", "snortmanager",
+             "elkmanager", "trafficmanagers", "trafficmanager", "kafkamanager", "ossecmanagers", "ossecmanager",
+             "ryumanager", "filebeats", "filebeat", "metricbeats", "metricbeat", "heartbeat", "heartbeats",
+             "packetbeat", "packetbeats", "emulation_executions", "--ip", "--container_ip"]
+            + emulations + container_names)
 
 
 @click.option('--ip', default="", type=str)
@@ -689,7 +694,79 @@ def stop_shell_complete(ctx, param, incomplete) -> List[str]:
                             "| docker | clustermanager | hostmanagers | hostmanager | clientmanager | snortmanagers "
                             "| snortmanager | elkmanager | trafficmanagers | trafficmanager | kafkamanager "
                             "| ossecmanagers | ossecmanager | ryumanager | filebeats | filebeat | metricbeat "
-                            "| metricbeats | heartbeats | heartbeat | packetbeat | packetbeats")
+                            "| metricbeats | heartbeats | heartbeat | packetbeat | packetbeats \n\n"
+                            "\b\n"
+                            "- \033[95mprometheus\033[0m: stops prometheus for a node with ip address specified with"
+                            " --ip option.\n"
+                            "- \033[95mnode_exporter\033[0m: stops node exporter for a node with ip address specified "
+                            "with --ip option.\n"
+                            "- \033[95mcadvisor\033[0m: stops cadvisor for a node with ip address specified "
+                            "with --ip option.\n"
+                            "- \033[95mgrafana\033[0m: stops grafana for a node with ip address specified "
+                            "with --ip option.\n"
+                            "- \033[95mflask\033[0m: stops flask for a node with ip address specified "
+                            "with --ip option.\n"
+                            "- \033[95mstatsmanager\033[0m: stops docker statsmanager for a node with ip address "
+                            "specified with --ip option.\n"
+                            "- \033[95memulation_executions\033[0m: stops all emulation executions.\n"
+                            "- \033[95mpgadmin\033[0m: stops pgadmin for a node with ip address "
+                            "specified with --ip option.\n"
+                            "- \033[95mall\033[0m: stops all running emulations and containers on all the nodes.\n"
+                            "- \033[95mnginx\033[0m: stops nginx for a node with ip address "
+                            "specified with --ip option.\n"
+                            "- \033[95mpostgresql\033[0m: stops PostgreSQL for a node with ip address "
+                            "specified with --ip option.\n"
+                            "- \033[95mdocker\033[0m: stops docker engine for a node with ip address "
+                            "specified with --ip option.\n"
+                            "- \033[95mclustermanager\033[0m: stops cluster manager.\n"
+                            "- \033[95mhostmanagers\033[0m: stops all host managers on the node specified by --ip,"
+                            " for the emulation identified by --name and --id.\n"
+                            "- \033[95mhostmanager\033[0m: stops the host manager on the node specified by --ip, "
+                            "targeting the container with the IP from --container_ip, for the emulation identified "
+                            "by --name and --id.\n"
+                            "- \033[95mclientmanager\033[0m: stops client manager on the node specified by --ip,"
+                            " for the emulation identified by --name and --id.\n"
+                            "- \033[95msnortmanagers\033[0m: stops all snort managers on the node specified by --ip,"
+                            " for the emulation identified by --name and --id.\n"
+                            "- \033[95msnortmanager\033[0m: stops the snort manager on the node specified by --ip, "
+                            "targeting the container with the IP from --container_ip, for the emulation identified "
+                            "by --name and --id.\n"
+                            "- \033[95melkmanager\033[0m: stops the elk manager on the node specified by --ip,"
+                            " for the emulation identified by --name and --id.\n"
+                            "- \033[95mtrafficmanagers\033[0m: stops all traffic managers on the node specified by"
+                            " --ip, for the emulation identified by --name and --id.\n"
+                            "- \033[95mtrafficmanager\033[0m: stops the traffic manager on the node specified by --ip, "
+                            "targeting the container with the IP from --container_ip, for the emulation identified "
+                            "by --name and --id.\n"
+                            "- \033[95mkafkamanager\033[0m: stops the ossec manager on the node specified by --ip,"
+                            " for the emulation identified by --name and --id.\n"
+                            "- \033[95mossecmanagers\033[0m: stops all traffic managers on the node specified by --ip,"
+                            " for the emulation identified by --name and --id.\n"
+                            "- \033[95mossecmanager\033[0m: stops the ossec manager on the node specified by --ip, "
+                            "targeting the container with the IP from --container_ip, for the emulation identified "
+                            "by --name and --id.\n"
+                            "- \033[95mtyumanager\033[0m: stops the ryu manager on the node specified by --ip,"
+                            " for the emulation identified by --name and --id. To stop the ryu manager the emulation"
+                            " should include the SDN network.\n"
+                            "- \033[95mfilebeats\033[0m: stops all filebeats for a node with the specified --ip option"
+                            " and the emulation identified by the specified --name and --id.\n"
+                            "- \033[95mfilebeat\033[0m: stops filebeat for a container with the IP address "
+                            "--container_ip, node specified by --ip, and emulation identified by --name and --id.\n"
+                            "- \033[95mmetricbeats\033[0m: stops all metricbeats for a node with the specified --ip "
+                            "option and the emulation identified by the specified --name and --id.\n"
+                            "- \033[95mmetricbeat\033[0m: stops metricbeat for a container with the IP address "
+                            "--container_ip, node specified by --ip, and emulation identified by --name and --id.\n"
+                            "- \033[95mheartbeats\033[0m: stops all heartbeats for a node with the specified --ip"
+                            " option and the emulation identified by the specified --name and --id.\n"
+                            "- \033[95mheartbeat\033[0m: stops heartbeat for a container with the IP address "
+                            "--container_ip, node specified by --ip, and emulation identified by --name and --id.\n"
+                            "- \033[95mpacketbeats\033[0m: stops all packetbeats for a node with the specified --ip"
+                            " option and the emulation identified by the specified --name and --id.\n"
+                            "- \033[95mpacketbeat\033[0m: stops packetbeat for a container with the IP address "
+                            "--container_ip, node specified by --ip, and emulation identified by --name and --id.\n\n"
+                            "\b\n"
+                            "* \033[93mExample: csle stop filebeat csle-level4-060 15 --ip X.X.X.X "
+                            "--container_ip Y.Y.Y.Y \033[0m")
 def stop(entity: str, name: str, id: int = -1, ip: str = "", container_ip: str = "") -> None:
     """
     Stops an entity
@@ -1856,7 +1933,12 @@ def start_shell_complete(ctx, param, incomplete) -> List[str]:
     images: List[Tuple[str, str, str, str, str]] = ContainerController.list_all_images()
     image_names: List[str] = list(map(lambda x: x[0], images))
     return (["prometheus", "node_exporter", "grafana", "cadvisor", "pgadmin", "flask", "all",
-             "statsmanager", "training_job", "system_id_job", "--id", "--no_traffic"]
+             "statsmanager", "training_job", "system_id_job", "nginx", "postgresql", "docker", "clustermanager",
+             "hostmanagers", "hostmanager", "clientmanager", "snortmanagers", "snortmanager", "elkmanager",
+             "trafficmanagers", "trafficmanager", "kafkamanager", "ossecmanagers", "ossecmanager", "ryumanager",
+             "filebeats", "filebeat", "metricbeats", "metricbeat", "heartbeat", "heartbeats", "packetbeat",
+             "packetbeats", "--container_ip", "--initial_start", "--no_clients", "--no_network", "--no_beats",
+             "--id", "--no_traffic"]
             + emulations + container_names + image_names)
 
 
@@ -1876,7 +1958,83 @@ def start_shell_complete(ctx, param, incomplete) -> List[str]:
                              "| hostmanager | clientmanager | snortmanagers | snortmanager | elkmanager "
                              "| trafficmanagers | trafficmanager | kafkamanager | ossecmanagers | ossecmanager "
                              "| ryumanager | filebeats | filebeat | metricbeats | metricbeat | heartbeat | heartbeats"
-                             "| packetbeat | packetbeats")
+                             "| packetbeat | packetbeats\n\n"
+                             "\b\n"
+                             "- \033[95mprometheus\033[0m: starts prometheus for a node with ip address specified with"
+                             " --ip option.\n"
+                             "- \033[95mnode_exporter\033[0m: starts node exporter for a node with ip address "
+                             "specified with --ip option.\n"
+                             "- \033[95mcadvisor\033[0m: starts cadvisor for a node with ip address specified "
+                             "with --ip option.\n"
+                             "- \033[95mgrafana\033[0m: starts grafana for a node with ip address specified "
+                             "with --ip option.\n"
+                             "- \033[95mflask\033[0m: starts flask for a node with ip address specified "
+                             "with --ip option.\n"
+                             "- \033[95mstatsmanager\033[0m: starts docker statsmanager for a node with ip address "
+                             "specified with --ip option.\n"
+                             "- \033[95memulation_executions\033[0m: starts all emulation executions.\n"
+                             "- \033[95mpgadmin\033[0m: starts pgadmin for a node with ip address "
+                             "specified with --ip option.\n"
+                             "- \033[95mall\033[0m: starts all running emulations and containers on all the nodes.\n"
+                             "- \033[95mnginx\033[0m: starts nginx for a node with ip address "
+                             "specified with --ip option.\n"
+                             "- \033[95mpostgresql\033[0m: starts PostgreSQL for a node with ip address "
+                             "specified with --ip option.\n"
+                             "- \033[95mdocker\033[0m: starts docker engine for a node with ip address "
+                             "specified with --ip option.\n"
+                             "- \033[95mclustermanager\033[0m: starts cluster manager.\n"
+                             "- \033[95mhostmanagers\033[0m: starts all host managers on the node specified by --ip,"
+                             " for the emulation identified by --name and --id.\n"
+                             "- \033[95mhostmanager\033[0m: starts the host manager on the node specified by --ip, "
+                             "targeting the container with the IP from --container_ip, for the emulation identified "
+                             "by --name and --id.\n"
+                             "- \033[95mclientmanager\033[0m: starts client manager on the node specified by --ip,"
+                             " for the emulation identified by --name and --id.\n"
+                             "- \033[95msnortmanagers\033[0m: starts all snort managers on the node specified by --ip,"
+                             " for the emulation identified by --name and --id.\n"
+                             "- \033[95msnortmanager\033[0m: starts the snort manager on the node specified by --ip, "
+                             "targeting the container with the IP from --container_ip, for the emulation identified "
+                             "by --name and --id.\n"
+                             "- \033[95melkmanager\033[0m: starts the elk manager on the node specified by --ip,"
+                             " for the emulation identified by --name and --id.\n"
+                             "- \033[95mtrafficmanagers\033[0m: starts all traffic managers on the node specified by "
+                             "--ip, for the emulation identified by --name and --id.\n"
+                             "- \033[95mtrafficmanager\033[0m: starts the traffic manager on the node specified by "
+                             "--ip, targeting the container with the IP from --container_ip, for the emulation"
+                             " identified by --name and --id.\n"
+                             "- \033[95mkafkamanager\033[0m: starts the ossec manager on the node specified by --ip,"
+                             " for the emulation identified by --name and --id.\n"
+                             "- \033[95mossecmanagers\033[0m: starts all traffic managers on the node specified by "
+                             "--ip, for the emulation identified by --name and --id.\n"
+                             "- \033[95mossecmanager\033[0m: starts the ossec manager on the node specified by --ip, "
+                             "targeting the container with the IP from --container_ip, for the emulation identified "
+                             "by --name and --id.\n"
+                             "- \033[95mtyumanager\033[0m: starts the ryu manager on the node specified by --ip,"
+                             " for the emulation identified by --name and --id. To stop the ryu manager the emulation"
+                             " should include the SDN network.\n"
+                             "- \033[95mfilebeats\033[0m: starts all Filebeats for a node with --ip and emulation "
+                             "identified by --name and --id. Use --initial_start for the first start.\n"
+                             "- \033[95mfilebeat\033[0m: starts filebeat for a container with --container_ip, "
+                             "node with --ip, and emulation with --name and --id. Use --initial_start for "
+                             "the initial start.\n"
+                             "- \033[95mmetricbeats\033[0m: starts all metricbeats for a node with --ip and emulation "
+                             "identified by --name and --id. Use --initial_start for the first start.\n"
+                             "- \033[95mmetricbeat\033[0m: starts hearttbeat for a container with --container_ip, "
+                             "node with --ip, and emulation with --name and --id. Use --initial_start for the "
+                             "initial start.\n"
+                             "- \033[95mheartbeats\033[0m: starts all heartbeats for a node with --ip and emulation"
+                             " identified by --name and --id. Use --initial_start for the first start.\n"
+                             "- \033[95mheartbeat\033[0m: starts heartbeat for a container with --container_ip, "
+                             "node with --ip, and emulation with --name and --id. Use --initial_start for the "
+                             "initial start.\n"
+                             "- \033[95mpacketbeats\033[0m: starts all packetbeats for a node with --ip and emulation"
+                             " identified by --name and --id. Use --initial_start for the first start.\n"
+                             "- \033[95mpacketbeat\033[0m: starts packetbeat for a container with --container_ip, "
+                             "node with --ip, and emulation with --name and --id. Use --initial_start for the"
+                             " initial start.\n\n"
+                             "\b\n"
+                             "* \033[93mExample: csle start filebeat csle-level4-060 --id 15 --ip X.X.X.X "
+                             "--container_ip Y.Y.Y.Y \033[0m")
 def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, no_network: bool, ip: str,
           container_ip: str, no_beats: bool, initial_start: bool) -> None:
     """
@@ -3267,7 +3425,9 @@ def ls_shell_complete(ctx, param, incomplete) -> List[str]:
                           "- \033[95mlogfiles\033[0m: list all CSLE log files with their path for a node with "
                           "the specified --ip option.\n"
                           "- \033[95mlogfile\033[0m: show the logs in a file with the path specified with "
-                          "--logfile_name option for a node with the specified --ip option.\n")
+                          "--logfile_name option for a node with the specified --ip option.\n\n"
+                          "\b\n"
+                          "* \033[93mExample: csle ls filebeats --name csle-level4-060 --id 15 --ip X.X.X.X \033[0m")
 @click.argument('entity', default='all', type=str, shell_complete=ls_shell_complete)
 @click.option('--all', is_flag=True, help='list all')
 @click.option('--running', is_flag=True, help='list running only (default)')
