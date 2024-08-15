@@ -675,8 +675,13 @@ def stop_shell_complete(ctx, param, incomplete) -> List[str]:
     running_containers = ContainerController.list_all_running_containers()
     containers: List[Tuple[str, str, str]] = running_containers
     container_names: List[str] = list(map(lambda x: x[0], containers))
-    return ["prometheus", "node_exporter", "cadvisor", "pgadmin", "grafana", "flask",
-            "statsmanager", "all", "emulation_executions"] + emulations + container_names
+    return (["prometheus", "node_exporter", "cadvisor", "pgadmin", "grafana", "flask",
+             "statsmanager", "all", "statsmanager", "nginx", "postgresql", "docker",
+             "clustermanager", "hostmanagers", "hostmanager", "clientmanager", "snortmanagers", "snortmanager",
+             "elkmanager", "trafficmanagers", "trafficmanager", "kafkamanager", "ossecmanagers", "ossecmanager",
+             "ryumanager", "filebeats", "filebeat", "metricbeats", "metricbeat", "heartbeat", "heartbeats",
+             "packetbeat", "packetbeats", "emulation_executions", "--ip", "--container_ip"]
+            + emulations + container_names)
 
 
 @click.option('--ip', default="", type=str)
@@ -728,8 +733,8 @@ def stop_shell_complete(ctx, param, incomplete) -> List[str]:
                             "by --name and --id.\n"
                             "- \033[95melkmanager\033[0m: stops the elk manager on the node specified by --ip,"
                             " for the emulation identified by --name and --id.\n"
-                            "- \033[95mtrafficmanagers\033[0m: stops all traffic managers on the node specified by --ip,"
-                            " for the emulation identified by --name and --id.\n"
+                            "- \033[95mtrafficmanagers\033[0m: stops all traffic managers on the node specified by"
+                            " --ip, for the emulation identified by --name and --id.\n"
                             "- \033[95mtrafficmanager\033[0m: stops the traffic manager on the node specified by --ip, "
                             "targeting the container with the IP from --container_ip, for the emulation identified "
                             "by --name and --id.\n"
@@ -1928,7 +1933,12 @@ def start_shell_complete(ctx, param, incomplete) -> List[str]:
     images: List[Tuple[str, str, str, str, str]] = ContainerController.list_all_images()
     image_names: List[str] = list(map(lambda x: x[0], images))
     return (["prometheus", "node_exporter", "grafana", "cadvisor", "pgadmin", "flask", "all",
-             "statsmanager", "training_job", "system_id_job", "--id", "--no_traffic"]
+             "statsmanager", "training_job", "system_id_job", "nginx", "postgresql", "docker", "clustermanager",
+             "hostmanagers", "hostmanager", "clientmanager", "snortmanagers", "snortmanager", "elkmanager",
+             "trafficmanagers", "trafficmanager", "kafkamanager", "ossecmanagers", "ossecmanager", "ryumanager",
+             "filebeats", "filebeat", "metricbeats", "metricbeat", "heartbeat", "heartbeats", "packetbeat",
+             "packetbeats", "--container_ip", "--initial_start", "--no_clients", "--no_network", "--no_beats",
+             "--id", "--no_traffic"]
             + emulations + container_names + image_names)
 
 
@@ -1994,30 +2004,34 @@ def start_shell_complete(ctx, param, incomplete) -> List[str]:
                              " identified by --name and --id.\n"
                              "- \033[95mkafkamanager\033[0m: starts the ossec manager on the node specified by --ip,"
                              " for the emulation identified by --name and --id.\n"
-                             "- \033[95mossecmanagers\033[0m: starts all traffic managers on the node specified by --ip,"
-                             " for the emulation identified by --name and --id.\n"
+                             "- \033[95mossecmanagers\033[0m: starts all traffic managers on the node specified by "
+                             "--ip, for the emulation identified by --name and --id.\n"
                              "- \033[95mossecmanager\033[0m: starts the ossec manager on the node specified by --ip, "
                              "targeting the container with the IP from --container_ip, for the emulation identified "
                              "by --name and --id.\n"
                              "- \033[95mtyumanager\033[0m: starts the ryu manager on the node specified by --ip,"
                              " for the emulation identified by --name and --id. To stop the ryu manager the emulation"
                              " should include the SDN network.\n"
-                             "- \033[95mfilebeats\033[0m: starts all filebeats for a node with the specified --ip option"
-                             " and the emulation identified by the specified --name and --id.\n"
-                             "- \033[95mfilebeat\033[0m: starts filebeat for a container with the IP address "
-                             "--container_ip, node specified by --ip, and emulation identified by --name and --id.\n"
-                             "- \033[95mmetricbeats\033[0m: starts all metricbeats for a node with the specified --ip "
-                             "option and the emulation identified by the specified --name and --id.\n"
-                             "- \033[95mmetricbeat\033[0m: starts metricbeat for a container with the IP address "
-                             "--container_ip, node specified by --ip, and emulation identified by --name and --id.\n"
-                             "- \033[95mheartbeats\033[0m: starts all heartbeats for a node with the specified --ip"
-                             " option and the emulation identified by the specified --name and --id.\n"
-                             "- \033[95mheartbeat\033[0m: starts heartbeat for a container with the IP address "
-                             "--container_ip, node specified by --ip, and emulation identified by --name and --id.\n"
-                             "- \033[95mpacketbeats\033[0m: starts all packetbeats for a node with the specified --ip"
-                             " option and the emulation identified by the specified --name and --id.\n"
-                             "- \033[95mpacketbeat\033[0m: starts packetbeat for a container with the IP address "
-                             "--container_ip, node specified by --ip, and emulation identified by --name and --id.\n\n"
+                             "- \033[95mfilebeats\033[0m: starts all Filebeats for a node with --ip and emulation "
+                             "identified by --name and --id. Use --initial_start for the first start.\n"
+                             "- \033[95mfilebeat\033[0m: starts filebeat for a container with --container_ip, "
+                             "node with --ip, and emulation with --name and --id. Use --initial_start for "
+                             "the initial start.\n"
+                             "- \033[95mmetricbeats\033[0m: starts all metricbeats for a node with --ip and emulation "
+                             "identified by --name and --id. Use --initial_start for the first start.\n"
+                             "- \033[95mmetricbeat\033[0m: starts hearttbeat for a container with --container_ip, "
+                             "node with --ip, and emulation with --name and --id. Use --initial_start for the "
+                             "initial start.\n"
+                             "- \033[95mheartbeats\033[0m: starts all heartbeats for a node with --ip and emulation"
+                             " identified by --name and --id. Use --initial_start for the first start.\n"
+                             "- \033[95mheartbeat\033[0m: starts heartbeat for a container with --container_ip, "
+                             "node with --ip, and emulation with --name and --id. Use --initial_start for the "
+                             "initial start.\n"
+                             "- \033[95mpacketbeats\033[0m: starts all packetbeats for a node with --ip and emulation"
+                             " identified by --name and --id. Use --initial_start for the first start.\n"
+                             "- \033[95mpacketbeat\033[0m: starts packetbeat for a container with --container_ip, "
+                             "node with --ip, and emulation with --name and --id. Use --initial_start for the"
+                             " initial start.\n\n"
                              "\b\n"
                              "* \033[93mExample: csle start filebeat csle-level4-060 --id 15 --ip X.X.X.X "
                              "--container_ip Y.Y.Y.Y \033[0m")
