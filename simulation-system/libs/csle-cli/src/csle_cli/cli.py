@@ -3367,7 +3367,7 @@ def ls_shell_complete(ctx, param, incomplete) -> List[str]:
                           "simulations | emulation_executions | cluster | nginx | postgresql | docker | hostmanagers | "
                           "clientmanager | snortmanagers | elkmanager | trafficmanagers | kafkamanager | "
                           "ossecmanagers | ryumanager | filebeats | metricbeats | heartbeats| packetbeats | logfiles | "
-                          "logfile \n\n"
+                          "logfile | emulation_description\n\n"
                           "\b\n"
                           "- \033[95mcontainers\033[0m: list all|stopped|running containers. \n"
                           "- \033[95mnetworks\033[0m: list active networks. \n"
@@ -3425,7 +3425,9 @@ def ls_shell_complete(ctx, param, incomplete) -> List[str]:
                           "- \033[95mlogfiles\033[0m: list all CSLE log files with their path for a node with "
                           "the specified --ip option.\n"
                           "- \033[95mlogfile\033[0m: show the logs in a file with the path specified with "
-                          "--logfile_name option for a node with the specified --ip option.\n\n"
+                          "--logfile_name option for a node with the specified --ip option.\n"
+                          "- \033[95memulation_description\033[0m: show detailed information about the containers"
+                          " running in the emaultion with the given name and id.\n\n"
                           "\b\n"
                           "* \033[93mExample: csle ls filebeats --name csle-level4-060 --id 15 --ip X.X.X.X \033[0m")
 @click.argument('entity', default='all', type=str, shell_complete=ls_shell_complete)
@@ -3525,6 +3527,8 @@ def ls(entity: str, all: bool, running: bool, stopped: bool, ip: str, name: str,
         list_logfiles(ip=ip)
     elif entity == "logfile":
         list_logfile(ip=ip, logfile_name=logfile_name)
+    elif entity == "emulation_description":
+        list_containers_hw_info(ip=ip, emulation=name, ip_first_octet=id)
     else:
         container = get_running_container(name=entity)
         if container is not None:
@@ -3557,6 +3561,93 @@ def ls(entity: str, all: bool, running: bool, stopped: bool, ip: str, name: str,
                                 print_simulation_config(simulation_config=simulation_env_config)
                             else:
                                 click.secho(f"entity: {entity} is not recognized", fg="red", bold=True)
+
+
+def list_containers_hw_info(ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for listing containers hardware information
+
+    :param ip: the ip of the node to list hardware information
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+
+    :return: None
+    """
+    ### Still working on this
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    execution_config = MetastoreFacade.get_emulation_execution(ip_first_octet=ip_first_octet, emulation_name=emulation)
+    if (execution_config):
+        click.secho('+' + '=' * 80 + '+', fg='white', bold=True)
+        click.secho('|', nl=False, fg='white')
+        click.secho((f'Emulation {emulation} description').center(80), nl=False, fg='bright_yellow', bold=True)
+        click.secho('|', fg='white')
+        click.secho('+' + '=' * 80 + '+', fg='white', bold=True)
+
+        click.secho('|', nl=False, fg='white')
+        ID_line = f"Emulation name is {click.style(execution_config.emulation_name, fg='magenta')}"
+        click.secho(ID_line, nl=False)
+        click.secho(' ' * (89 - len(ID_line)), nl=False)
+        click.secho('|', fg='white')
+        click.secho('+' + '-' * 80 + '+', fg='white')
+
+        click.secho('|', nl=False, fg='white')
+        ID_line = f"Emulation ID is {click.style(execution_config.ip_first_octet, fg='magenta')}"
+        click.secho(ID_line, nl=False)
+        click.secho(' ' * (89 - len(ID_line)), nl=False)
+        click.secho('|', fg='white')
+        click.secho('+' + '-' * 80 + '+', fg='white')
+
+        line = (f"This emulation is running on physical servers with IPs of:  "
+                f"{click.style(execution_config.physical_servers[0], fg='magenta')}")
+        padding_length = 89 - len(line)
+        click.secho(f"|{line}{' ' * padding_length}|")
+        for i in range(1,len(execution_config.physical_servers)):
+            click.secho('|', nl=False, fg='white')
+            click.secho(f"{execution_config.physical_servers[i]}{' ' * padding_length}|",
+                        fg="magenta", nl=False)
+        click.secho('+' + '=' * 80 + '+', fg='white', bold=True)
+
+        click.secho("|", nl=False)
+        click.secho("Network information emulation containers".center(80), nl=False)
+        click.secho('|')
+        click.secho('+' + '=' * 80 + '+', fg='white', bold=True)
+
+        agent_ip = execution_config.emulation_env_config.containers_config.agent_ip
+        router_ip = execution_config.emulation_env_config.containers_config.router_ip
+
+        table_headers = ["Name", "IP", "Interface", "Subnet mask"]
+        for container in execution_config.emulation_env_config.containers_config.containers:
+            role = ""
+            for ip_network in container.ips_and_networks:
+                if agent_ip == ip_network[0]:
+                    role = " (Agent)"
+                    break
+                elif router_ip == ip_network[0]:
+                    role = " (Router)"
+                    break
+            click.secho('|', nl=False, fg='white')
+            click.secho(f"Container {click.style(container.name + role, fg='magenta')}".center(89), nl=False)
+            click.secho('|')
+            click.secho('+' + '-' * 80 + '+', fg='white')
+            for headers in table_headers:
+                click.secho('|', nl=False, fg='white')
+                click.secho(headers.center(19), nl=False)
+            click.secho(' |')
+            click.secho('+' + '-' * 80 + '+', fg='white')
+            for ip_network in container.ips_and_networks:
+                click.secho('|', nl=False, fg='white')
+                click.secho(ip_network[0].center(19), nl=False)
+                click.secho('|', nl=False, fg='white')
+                click.secho(ip_network[1].name.center(19), nl=False)
+                click.secho('|', nl=False, fg='white')
+                click.secho(ip_network[1].interface.center(19), nl=False)
+                click.secho('|', nl=False, fg='white')
+                click.secho(ip_network[1].subnet_mask.center(19), nl=False)
+                click.secho(' |')
+            click.secho('+' + '-' * 80 + '+', fg='white')
+    else:
+        click.secho(f"The emulation with the name \033[95m{emulation}\033[0m "
+                    f"and ID \033[95m{ip_first_octet}\033[0m is not running.")
 
 
 def list_logfiles(ip: str) -> None:
