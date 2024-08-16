@@ -3573,7 +3573,6 @@ def list_containers_hw_info(ip: str, emulation: str, ip_first_octet: int) -> Non
 
     :return: None
     """
-    ### Still working on this
     from csle_common.metastore.metastore_facade import MetastoreFacade
     execution_config = MetastoreFacade.get_emulation_execution(ip_first_octet=ip_first_octet, emulation_name=emulation)
     if (execution_config):
@@ -3601,7 +3600,7 @@ def list_containers_hw_info(ip: str, emulation: str, ip_first_octet: int) -> Non
                 f"{click.style(execution_config.physical_servers[0], fg='magenta')}")
         padding_length = 89 - len(line)
         click.secho(f"|{line}{' ' * padding_length}|")
-        for i in range(1,len(execution_config.physical_servers)):
+        for i in range(1, len(execution_config.physical_servers)):
             click.secho('|', nl=False, fg='white')
             click.secho(f"{execution_config.physical_servers[i]}{' ' * padding_length}|",
                         fg="magenta", nl=False)
