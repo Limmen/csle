@@ -33,9 +33,7 @@ class TestResourcesConfigSuite:
         def save_config_file(config: Config) -> None:
             return None
 
-        save_config_file_mocker = mocker.MagicMock(
-            side_effect=save_config_file
-        )
+        save_config_file_mocker = mocker.MagicMock(side_effect=save_config_file)
         return save_config_file_mocker
 
     @pytest.fixture
@@ -46,11 +44,12 @@ class TestResourcesConfigSuite:
         param: mocker the pytest mocker object
         return: the mock
         """
+
         def set_config_parameters_from_config_file() -> None:
             return None
+
         set_config_parameters_from_config_file_mocker = mocker.MagicMock(
-            side_effect=set_config_parameters_from_config_file
-        )
+            side_effect=set_config_parameters_from_config_file)
         return set_config_parameters_from_config_file_mocker
 
     @pytest.fixture
@@ -65,9 +64,7 @@ class TestResourcesConfigSuite:
         def read_config_file() -> Config:
             return example_config
 
-        read_config_file_mock = mocker.MagicMock(
-            side_effect=read_config_file
-        )
+        read_config_file_mock = mocker.MagicMock(side_effect=read_config_file)
         return read_config_file_mock
 
     @pytest.fixture
@@ -82,9 +79,7 @@ class TestResourcesConfigSuite:
         def read_config_file():
             raise ValueError("Test")
 
-        read_failed_config_file_mock = mocker.MagicMock(
-            side_effect=read_config_file
-        )
+        read_failed_config_file_mock = mocker.MagicMock(side_effect=read_config_file)
         return read_failed_config_file_mock
 
     def test_config_get(self, flask_app, mocker: pytest_mock.MockFixture, logged_in, logged_in_as_admin,

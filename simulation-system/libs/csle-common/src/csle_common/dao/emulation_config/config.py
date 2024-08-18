@@ -449,6 +449,7 @@ class Config(JSONSerializable):
             }
         )
         d["cluster_config"] = self.cluster_config.to_dict()
+        d["version"] = self.version
         return d
 
     @staticmethod
@@ -522,6 +523,7 @@ class Config(JSONSerializable):
         :return: a dto representation of the object
         """
         d = {}
+        d["version"] = d2["version"]
         d["cluster_config"] = d2["cluster_config"]
         for param_value in d2["parameters"]:
             d[param_value["param"]] = param_value["value"]
@@ -743,7 +745,6 @@ class Config(JSONSerializable):
             "grafana_password",
             "postgresql_log_dir",
             "nginx_log_dir",
-            "flask_log_file",
-            "version"
+            "flask_log_file"
         ]
         return std_param_names

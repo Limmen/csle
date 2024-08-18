@@ -631,6 +631,7 @@ def example_config(example_cluster_config: ClusterConfig) -> Config:
         nginx_log_dir="null",
         flask_log_file="null",
         cluster_manager_log_file="null",
+        version="0.0.6"
     )
     return config
 
