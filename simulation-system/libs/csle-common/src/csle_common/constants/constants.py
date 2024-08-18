@@ -49,6 +49,7 @@ class CONTAINER_IMAGES:
     """
     CSLE_PREFIX = "csle_"
     DOCKERHUB_USERNAME = "kimham"
+    BLANK_UBUNTU_22 = "csle_blank_ubuntu_22"
     SSH_1 = "csle_ssh_1"
     ROUTER_2 = "csle_router_2"
     SAMBA_2 = "csle_samba_2"

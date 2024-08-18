@@ -1,6 +1,7 @@
 import pytest
-import docker 
+import docker
 import csle_common.constants.constants as constants
+
 
 @pytest.fixture(scope="module")
 def docker_client() -> None:
@@ -10,6 +11,7 @@ def docker_client() -> None:
     :return: None
     """
     return docker.from_env()
+
 
 @pytest.fixture(scope="module")
 def container(docker_client) -> None:
@@ -25,7 +27,8 @@ def container(docker_client) -> None:
     yield container
     container.stop()
     container.remove()
-    
+
+
 def test_container_running(docker_client, container) -> None:
     """
     Checks if the container is running and check if its in the running containers list

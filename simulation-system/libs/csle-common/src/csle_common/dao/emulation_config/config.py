@@ -1,8 +1,7 @@
+from typing import Any, Dict, Union
 import io
 import json
 import os
-from typing import Any, Dict, Union
-
 import csle_common.constants.constants as constants
 from csle_base.json_serializable import JSONSerializable
 from csle_common.dao.emulation_config.cluster_config import ClusterConfig
@@ -64,6 +63,7 @@ class Config(JSONSerializable):
             nginx_log_dir: str,
             flask_log_file: str,
             cluster_manager_log_file: str,
+            version: str
     ):
         """
         Initializes the DTO
@@ -118,23 +118,20 @@ class Config(JSONSerializable):
         :param nginx_log_dir: the log directory for Nginx
         :param flask_log_file: the log file of Flask
         :param cluster_manager_log_file: the log file of the cluster manager
+        :param version: the CSLE version in the format: "major.minor.patch"
         """
         self.management_admin_username_default = management_admin_username_default
         self.management_admin_password_default = management_admin_password_default
         self.management_admin_first_name_default = management_admin_first_name_default
         self.management_admin_last_name_default = management_admin_last_name_default
         self.management_admin_email_default = management_admin_email_default
-        self.management_admin_organization_default = (
-            management_admin_organization_default
-        )
+        self.management_admin_organization_default = management_admin_organization_default
         self.management_guest_username_default = management_guest_username_default
         self.management_guest_password_default = management_guest_password_default
         self.management_guest_first_name_default = management_guest_first_name_default
         self.management_guest_last_name_default = management_guest_last_name_default
         self.management_guest_email_default = management_guest_email_default
-        self.management_guest_organization_default = (
-            management_guest_organization_default
-        )
+        self.management_guest_organization_default = management_guest_organization_default
         self.ssh_admin_username = ssh_admin_username
         self.ssh_admin_password = ssh_admin_password
         self.ssh_agent_username = ssh_agent_username
@@ -173,6 +170,7 @@ class Config(JSONSerializable):
         self.flask_log_file = flask_log_file
         self.cluster_manager_log_file = cluster_manager_log_file
         self.id = 1
+        self.version = version
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -183,28 +181,16 @@ class Config(JSONSerializable):
         d: Dict[str, Any] = {}
         d["management_admin_username_default"] = self.management_admin_username_default
         d["management_admin_password_default"] = self.management_admin_password_default
-        d[
-            "management_admin_first_name_default"
-        ] = self.management_admin_first_name_default
-        d[
-            "management_admin_last_name_default"
-        ] = self.management_admin_last_name_default
+        d["management_admin_first_name_default"] = self.management_admin_first_name_default
+        d["management_admin_last_name_default"] = self.management_admin_last_name_default
         d["management_admin_email_default"] = self.management_admin_email_default
-        d[
-            "management_admin_organization_default"
-        ] = self.management_admin_organization_default
+        d["management_admin_organization_default"] = self.management_admin_organization_default
         d["management_guest_username_default"] = self.management_guest_username_default
         d["management_guest_password_default"] = self.management_guest_password_default
-        d[
-            "management_guest_first_name_default"
-        ] = self.management_guest_first_name_default
-        d[
-            "management_guest_last_name_default"
-        ] = self.management_guest_last_name_default
+        d["management_guest_first_name_default"] = self.management_guest_first_name_default
+        d["management_guest_last_name_default"] = self.management_guest_last_name_default
         d["management_guest_email_default"] = self.management_guest_email_default
-        d[
-            "management_guest_organization_default"
-        ] = self.management_guest_organization_default
+        d["management_guest_organization_default"] = self.management_guest_organization_default
         d["ssh_admin_username"] = self.ssh_admin_username
         d["ssh_admin_password"] = self.ssh_admin_password
         d["ssh_agent_username"] = self.ssh_agent_username
@@ -242,6 +228,7 @@ class Config(JSONSerializable):
         d["nginx_log_dir"] = self.nginx_log_dir
         d["flask_log_file"] = self.flask_log_file
         d["cluster_manager_log_file"] = self.cluster_manager_log_file
+        d["version"] = self.version
         d["id"] = 1
         return d
 
@@ -335,24 +322,12 @@ class Config(JSONSerializable):
                 "value": self.management_guest_organization_default,
             }
         )
-        d["parameters"].append(
-            {"id": 12, "param": "ssh_admin_username", "value": self.ssh_admin_username}
-        )
-        d["parameters"].append(
-            {"id": 13, "param": "ssh_admin_password", "value": self.ssh_admin_password}
-        )
-        d["parameters"].append(
-            {"id": 14, "param": "ssh_agent_username", "value": self.ssh_agent_username}
-        )
-        d["parameters"].append(
-            {"id": 15, "param": "ssh_agent_password", "value": self.ssh_agent_password}
-        )
-        d["parameters"].append(
-            {"id": 16, "param": "metastore_user", "value": self.metastore_user}
-        )
-        d["parameters"].append(
-            {"id": 17, "param": "metastore_password", "value": self.metastore_password}
-        )
+        d["parameters"].append({"id": 12, "param": "ssh_admin_username", "value": self.ssh_admin_username})
+        d["parameters"].append({"id": 13, "param": "ssh_admin_password", "value": self.ssh_admin_password})
+        d["parameters"].append({"id": 14, "param": "ssh_agent_username", "value": self.ssh_agent_username})
+        d["parameters"].append({"id": 15, "param": "ssh_agent_password", "value": self.ssh_agent_password})
+        d["parameters"].append({"id": 16, "param": "metastore_user", "value": self.metastore_user})
+        d["parameters"].append({"id": 17, "param": "metastore_password", "value": self.metastore_password})
         d["parameters"].append(
             {
                 "id": 18,
@@ -360,15 +335,9 @@ class Config(JSONSerializable):
                 "value": self.metastore_database_name,
             }
         )
-        d["parameters"].append(
-            {"id": 19, "param": "metastore_ip", "value": self.metastore_ip}
-        )
-        d["parameters"].append(
-            {"id": 20, "param": "node_exporter_port", "value": self.node_exporter_port}
-        )
-        d["parameters"].append(
-            {"id": 21, "param": "grafana_port", "value": self.grafana_port}
-        )
+        d["parameters"].append({"id": 19, "param": "metastore_ip", "value": self.metastore_ip})
+        d["parameters"].append({"id": 20, "param": "node_exporter_port", "value": self.node_exporter_port})
+        d["parameters"].append({"id": 21, "param": "grafana_port", "value": self.grafana_port})
         d["parameters"].append(
             {
                 "id": 23,
@@ -376,12 +345,8 @@ class Config(JSONSerializable):
                 "value": self.management_system_port,
             }
         )
-        d["parameters"].append(
-            {"id": 24, "param": "cadvisor_port", "value": self.cadvisor_port}
-        )
-        d["parameters"].append(
-            {"id": 25, "param": "prometheus_port", "value": self.prometheus_port}
-        )
+        d["parameters"].append({"id": 24, "param": "cadvisor_port", "value": self.cadvisor_port})
+        d["parameters"].append({"id": 25, "param": "prometheus_port", "value": self.prometheus_port})
         d["parameters"].append(
             {
                 "id": 26,
@@ -459,9 +424,7 @@ class Config(JSONSerializable):
                 "value": self.prometheus_config_file,
             }
         )
-        d["parameters"].append(
-            {"id": 37, "param": "default_log_dir", "value": self.default_log_dir}
-        )
+        d["parameters"].append({"id": 37, "param": "default_log_dir", "value": self.default_log_dir})
         d["parameters"].append(
             {
                 "id": 39,
@@ -469,33 +432,15 @@ class Config(JSONSerializable):
                 "value": self.node_exporter_log_file,
             }
         ),
-        d["parameters"].append(
-            {"id": 40, "param": "allow_registration", "value": self.allow_registration}
-        )
-        d["parameters"].append(
-            {"id": 41, "param": "pgadmin_port", "value": self.pgadmin_port}
-        )
-        d["parameters"].append(
-            {"id": 42, "param": "pgadmin_username", "value": self.pgadmin_username}
-        )
-        d["parameters"].append(
-            {"id": 43, "param": "pgadmin_password", "value": self.pgadmin_password}
-        )
-        d["parameters"].append(
-            {"id": 44, "param": "grafana_username", "value": self.grafana_username}
-        )
-        d["parameters"].append(
-            {"id": 45, "param": "grafana_password", "value": self.grafana_password}
-        )
-        d["parameters"].append(
-            {"id": 46, "param": "postgresql_log_dir", "value": self.postgresql_log_dir}
-        )
-        d["parameters"].append(
-            {"id": 47, "param": "nginx_log_dir", "value": self.nginx_log_dir}
-        )
-        d["parameters"].append(
-            {"id": 48, "param": "flask_log_file", "value": self.flask_log_file}
-        )
+        d["parameters"].append({"id": 40, "param": "allow_registration", "value": self.allow_registration})
+        d["parameters"].append({"id": 41, "param": "pgadmin_port", "value": self.pgadmin_port})
+        d["parameters"].append({"id": 42, "param": "pgadmin_username", "value": self.pgadmin_username})
+        d["parameters"].append({"id": 43, "param": "pgadmin_password", "value": self.pgadmin_password})
+        d["parameters"].append({"id": 44, "param": "grafana_username", "value": self.grafana_username})
+        d["parameters"].append({"id": 45, "param": "grafana_password", "value": self.grafana_password})
+        d["parameters"].append({"id": 46, "param": "postgresql_log_dir", "value": self.postgresql_log_dir})
+        d["parameters"].append({"id": 47, "param": "nginx_log_dir", "value": self.nginx_log_dir})
+        d["parameters"].append({"id": 48, "param": "flask_log_file", "value": self.flask_log_file})
         d["parameters"].append(
             {
                 "id": 48,
@@ -516,24 +461,16 @@ class Config(JSONSerializable):
         dto = Config(
             management_admin_username_default=d["management_admin_username_default"],
             management_admin_password_default=d["management_admin_password_default"],
-            management_admin_first_name_default=d[
-                "management_admin_first_name_default"
-            ],
+            management_admin_first_name_default=d["management_admin_first_name_default"],
             management_admin_last_name_default=d["management_admin_last_name_default"],
             management_admin_email_default=d["management_admin_email_default"],
-            management_admin_organization_default=d[
-                "management_admin_organization_default"
-            ],
+            management_admin_organization_default=d["management_admin_organization_default"],
             management_guest_username_default=d["management_guest_username_default"],
             management_guest_password_default=d["management_guest_password_default"],
-            management_guest_first_name_default=d[
-                "management_guest_first_name_default"
-            ],
+            management_guest_first_name_default=d["management_guest_first_name_default"],
             management_guest_last_name_default=d["management_guest_last_name_default"],
             management_guest_email_default=d["management_guest_email_default"],
-            management_guest_organization_default=d[
-                "management_guest_organization_default"
-            ],
+            management_guest_organization_default=d["management_guest_organization_default"],
             ssh_admin_username=d["ssh_admin_username"],
             ssh_admin_password=d["ssh_admin_password"],
             ssh_agent_username=d["ssh_agent_username"],
@@ -571,6 +508,7 @@ class Config(JSONSerializable):
             nginx_log_dir=d["nginx_log_dir"],
             flask_log_file=d["flask_log_file"],
             cluster_manager_log_file=d["cluster_manager_log_file"],
+            version=d["version"]
         )
         if "id" in d:
             dto.id = d["id"]
@@ -591,24 +529,16 @@ class Config(JSONSerializable):
         dto = Config(
             management_admin_username_default=d["management_admin_username_default"],
             management_admin_password_default=d["management_admin_password_default"],
-            management_admin_first_name_default=d[
-                "management_admin_first_name_default"
-            ],
+            management_admin_first_name_default=d["management_admin_first_name_default"],
             management_admin_last_name_default=d["management_admin_last_name_default"],
             management_admin_email_default=d["management_admin_email_default"],
-            management_admin_organization_default=d[
-                "management_admin_organization_default"
-            ],
+            management_admin_organization_default=d["management_admin_organization_default"],
             management_guest_username_default=d["management_guest_username_default"],
             management_guest_password_default=d["management_guest_password_default"],
-            management_guest_first_name_default=d[
-                "management_guest_first_name_default"
-            ],
+            management_guest_first_name_default=d["management_guest_first_name_default"],
             management_guest_last_name_default=d["management_guest_last_name_default"],
             management_guest_email_default=d["management_guest_email_default"],
-            management_guest_organization_default=d[
-                "management_guest_organization_default"
-            ],
+            management_guest_organization_default=d["management_guest_organization_default"],
             ssh_admin_username=d["ssh_admin_username"],
             ssh_admin_password=d["ssh_admin_password"],
             ssh_agent_username=d["ssh_agent_username"],
@@ -646,6 +576,7 @@ class Config(JSONSerializable):
             nginx_log_dir=d["nginx_log_dir"],
             flask_log_file=d["flask_log_file"],
             cluster_manager_log_file=d["cluster_manager_log_file"],
+            version=d["version"]
         )
         if "id" in d:
             dto.id = d["id"]
@@ -693,7 +624,8 @@ class Config(JSONSerializable):
             f"id:{self.id}, grafana_username: {self.grafana_username}, grafana_password: {self.grafana_password},"
             f"pgadmin_username: {self.pgadmin_username}, pgadmin_password: {self.pgadmin_password},"
             f"postgresql_log_dir: {self.postgresql_log_dir}, nginx_log_dir: {self.nginx_log_dir},"
-            f"flask_log_file: {self.flask_log_file}, cluster_manager_log_file: {self.cluster_manager_log_file}"
+            f"flask_log_file: {self.flask_log_file}, cluster_manager_log_file: {self.cluster_manager_log_file},"
+            f"version: {self.version}"
         )
 
     @staticmethod
@@ -727,13 +659,8 @@ class Config(JSONSerializable):
         if constants.CONFIG_FILE.CSLE_HOME_ENV_PARAM in os.environ:
             csle_home = os.environ[constants.CONFIG_FILE.CSLE_HOME_ENV_PARAM]
         else:
-            raise Exception(
-                f"The environment parameter {constants.CONFIG_FILE.CSLE_HOME_ENV_PARAM} is not set"
-            )
-        config_file_path = (
-            f"{csle_home}{constants.COMMANDS.SLASH_DELIM}"
-            f"{constants.CONFIG_FILE.CONFIG_FILE_NAME}"
-        )
+            raise Exception(f"The environment parameter {constants.CONFIG_FILE.CSLE_HOME_ENV_PARAM} is not set")
+        config_file_path = f"{csle_home}{constants.COMMANDS.SLASH_DELIM}{constants.CONFIG_FILE.CONFIG_FILE_NAME}"
         with io.open(config_file_path, "r", encoding="utf-8") as f:
             json_str = f.read()
             config_dict = json.loads(json_str)
@@ -750,13 +677,8 @@ class Config(JSONSerializable):
         if constants.CONFIG_FILE.CSLE_HOME_ENV_PARAM in os.environ:
             csle_home = os.environ[constants.CONFIG_FILE.CSLE_HOME_ENV_PARAM]
         else:
-            raise Exception(
-                f"The environment parameter {constants.CONFIG_FILE.CSLE_HOME_ENV_PARAM} is not set"
-            )
-        config_file_path = (
-            f"{csle_home}{constants.COMMANDS.SLASH_DELIM}"
-            f"{constants.CONFIG_FILE.CONFIG_FILE_NAME}"
-        )
+            raise Exception(f"The environment parameter {constants.CONFIG_FILE.CSLE_HOME_ENV_PARAM} is not set")
+        config_file_path = f"{csle_home}{constants.COMMANDS.SLASH_DELIM}{constants.CONFIG_FILE.CONFIG_FILE_NAME}"
         with io.open(config_file_path, "w", encoding="utf-8") as f:
             json_str = json.dumps(config, indent=4, sort_keys=True)
             f.write(json_str)
@@ -822,5 +744,6 @@ class Config(JSONSerializable):
             "postgresql_log_dir",
             "nginx_log_dir",
             "flask_log_file",
+            "version"
         ]
         return std_param_names

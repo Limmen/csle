@@ -73,8 +73,8 @@ def other_containers(docker_client, network):
         image
         for image in all_images
         if any(match_tag in tag for tag in image.tags)
-        and all("base" not in tag for tag in image.tags)
-        and all("kimham/csle_blank_ubuntu_22:0.6.0" not in tag for tag in image.tags)
+           and all("base" not in tag for tag in image.tags)
+           and all("kimham/csle_blank_ubuntu_22:0.6.0" not in tag for tag in image.tags)
     ]
     containers = []
     start_ip = 11

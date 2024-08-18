@@ -1,17 +1,14 @@
+from typing import List, Any
 import pytest
 import docker
-import logging
 import grpc
 from unittest.mock import MagicMock
 from docker.types import IPAMConfig, IPAMPool
 import time
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
-from csle_common.util.emulation_util import EmulationUtil
 import csle_common.constants.constants as constants
-from csle_common.controllers.host_controller import HostController
 import csle_collector.host_manager.host_manager_pb2_grpc
 import csle_collector.host_manager.host_manager_pb2
-from IPython.lib.editorhooks import emacs
 
 
 @pytest.fixture(scope="module")
@@ -41,7 +38,7 @@ def network(docker_client) -> None:
     network.remove()
 
 
-def get_derived_containers(docker_client, excluded_tag="blank") -> None:
+def get_derived_containers(docker_client, excluded_tag="blank") -> List[Any]:
     """
     Get all the containers except the blank ones
 
@@ -52,13 +49,9 @@ def get_derived_containers(docker_client, excluded_tag="blank") -> None:
     # Get all images except those with the excluded tag
     match_tag = "0.6.0"
     all_images = docker_client.images.list()
-    derived_images = [
-        image
-        for image in all_images
-        if any(match_tag in tag for tag in image.tags)
-        and all("base" not in tag for tag in image.tags)
-        and all(excluded_tag not in tag for tag in image.tags)
-    ]
+    derived_images = [image for image in all_images if (any(match_tag in tag for tag in image.tags)
+                                                        and all("base" not in tag for tag in image.tags)
+                                                        and all(excluded_tag not in tag for tag in image.tags))]
     return derived_images
 
 
