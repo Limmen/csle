@@ -51,7 +51,7 @@ class CONTAINER_IMAGES:
     BASE = "base"
     DERIVED = "derived"
     DOCKERHUB_USERNAME = "kimham"
-    BLANK_UBUNTU_22 = "csle_blank_ubuntu_22"
+    BLANK = "csle_blank"
     BLANK_1 = "csle_blank_1"
     SSH_1 = "csle_ssh_1"
     ROUTER_2 = "csle_router_2"

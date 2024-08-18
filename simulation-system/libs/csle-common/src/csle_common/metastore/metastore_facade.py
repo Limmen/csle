@@ -3885,7 +3885,7 @@ class MetastoreFacade:
         :param config: the config to save
         :return: id of the config
         """
-        Logger.__call__().get_logger().debug("Saving a config in the metastore")
+        Logger.__call__().get_logger().info("Updating the configuration in the metastore")
         with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
                              f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "

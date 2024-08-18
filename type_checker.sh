@@ -33,4 +33,4 @@ cd simulation-system/libs/gym-csle-cyborg; mypy src tests; cd ../../../
 echo "Running type checker for csle-attack-profiler"
 cd simulation-system/libs/csle-attack-profiler; mypy src tests; cd ../../../
 echo "Running type checker for emulation-system tests"
-cd emulation-system/; mypy tests; cd ../
+cd emulation-system/; mypy tests --ignore-missing-imports; cd ../
