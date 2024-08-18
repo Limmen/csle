@@ -19,33 +19,15 @@ class TestReadEmulationUtilSuite:
         :return: None
         """
         metrics1 = HostMetrics(
-            num_logged_in_users=5,
-            num_failed_login_attempts=2,
-            num_open_connections=10,
-            num_login_events=3,
-            num_processes=50,
-            num_users=5,
-        )
+            num_logged_in_users=5, num_failed_login_attempts=2, num_open_connections=10, num_login_events=3,
+            num_processes=50, num_users=5)
         metrics2 = HostMetrics(
-            num_logged_in_users=7,
-            num_failed_login_attempts=4,
-            num_open_connections=14,
-            num_login_events=5,
-            num_processes=60,
-            num_users=6,
-        )
-
+            num_logged_in_users=7, num_failed_login_attempts=4, num_open_connections=14, num_login_events=5,
+            num_processes=60, num_users=6)
         metrics3 = HostMetrics(
-            num_logged_in_users=6,
-            num_failed_login_attempts=3,
-            num_open_connections=12,
-            num_login_events=4,
-            num_processes=55,
-            num_users=7,
-        )
-
+            num_logged_in_users=6, num_failed_login_attempts=3, num_open_connections=12, num_login_events=4,
+            num_processes=55, num_users=7)
         average_metrics = ReadEmulationStatisticsUtil.average_host_metrics([metrics1, metrics2, metrics3])
-
         assert average_metrics.num_logged_in_users == 18
         assert average_metrics.num_failed_login_attempts == 9
         assert average_metrics.num_open_connections == 36
@@ -74,9 +56,7 @@ class TestReadEmulationUtilSuite:
         metrics2.warning_alerts = 6
         metrics2.total_alerts = 20
         metrics2.alerts_weighted_by_level = 40
-
         average_metrics = ReadEmulationStatisticsUtil.average_ossec_metrics([metrics1, metrics2])
-
         assert average_metrics.level_alerts == [0] * 16
         assert average_metrics.group_alerts == [0] * len(set(constants.OSSEC.OSSEC_IDS_ALERT_GROUP_ID.values()))
         assert average_metrics.severe_alerts == 15
@@ -109,9 +89,7 @@ class TestReadEmulationUtilSuite:
         metrics2.warning_alerts = 6
         metrics2.total_alerts = 20
         metrics2.alerts_weighted_by_priority = 40
-
         average_metrics = ReadEmulationStatisticsUtil.average_snort_metrics([metrics1, metrics2])
-
         assert average_metrics.priority_alerts == [0] * 4
         assert average_metrics.class_alerts == [0] * len(set(constants.SNORT_IDS_ROUTER.SNORT_ALERT_IDS_ID.values()))
         assert average_metrics.severe_alerts == 15
@@ -127,10 +105,7 @@ class TestReadEmulationUtilSuite:
         """
         metrics1 = SnortIdsRuleCounters()
         metrics1.rule_alerts = {}
-
         metrics2 = SnortIdsAlertCounters()
         metrics2.rule_alerts = {}
-
         average_metrics = ReadEmulationStatisticsUtil.average_snort_rule_metrics([metrics1, metrics2])
-
         assert average_metrics.rule_alerts == {}

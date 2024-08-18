@@ -437,7 +437,6 @@ class TestHostControllerSuite:
         :param mock_insecure_channel: mock insecure_channel
         :param mock_get_host_monitor_thread_status: mock get_host_monitor_thread_status
         :param mock_start_host_manager: mock start_host_manager
-
         :return: None
         """
         beats_config = MagicMock()
@@ -480,7 +479,6 @@ class TestHostControllerSuite:
         :param mock_insecure_channel: mock insecure_channel
         :param mock_get_host_monitor_thread_status: mock get_host_monitor_thread_status
         :param mock_start_host_manager: mock start_host_manager
-
         :return: None
         """
         beats_config = MagicMock()
@@ -528,8 +526,7 @@ class TestHostControllerSuite:
         beats_config = MagicMock()
         self.emulation_env_config.beats_config = beats_config
         self.emulation_env_config.beats_config.get_node_beats_config_by_ips.return_value = MagicMock(
-            start_metricbeat_automatically=True
-        )
+            start_metricbeat_automatically=True)
         host_monitor_dto = MagicMock()
         host_monitor_dto.metricbeat_running = False
         mock_get_host_monitor_thread_status.return_value = host_monitor_dto
@@ -538,17 +535,10 @@ class TestHostControllerSuite:
         mock_stub = MagicMock()
         mock_HostManagerStub.return_value = mock_stub
         ips = ["172.17.0.2", "192.168.1.2"]
-        HostController.start_metricbeat(
-            emulation_env_config=self.emulation_env_config,
-            ips=ips,
-            logger=self.logger,
-            initial_start=True,
-        )
-        mock_start_host_manager.assert_called_once_with(
-            emulation_env_config=self.emulation_env_config,
-            ip=ips[0],
-            logger=self.logger,
-        )
+        HostController.start_metricbeat(emulation_env_config=self.emulation_env_config, ips=ips, logger=self.logger,
+                                        initial_start=True)
+        mock_start_host_manager.assert_called_once_with(emulation_env_config=self.emulation_env_config, ip=ips[0],
+                                                        logger=self.logger)
         self.emulation_env_config.beats_config.get_node_beats_config_by_ips.assert_called_once_with(ips=ips)
         mock_get_host_monitor_thread_status.assert_called_once_with(ip=ips[0], port=12345)
         self.logger.info.assert_called_once_with(f"Metricbeat is not running on {ips[0]}, starting it.")
@@ -561,10 +551,8 @@ class TestHostControllerSuite:
     @patch("csle_common.controllers.host_controller.grpc.insecure_channel")
     @patch("csle_common.controllers.host_controller.csle_collector.host_manager.query_host_manager.start_heartbeat")
     @patch("csle_common.controllers.host_controller.csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub")
-    def test_start_heartbeat(
-            self, mock_HostManagerStub, mock_start_heartbeat, mock_insecure_channel,
-            mock_get_host_monitor_thread_status,
-            mock_start_host_manager) -> None:
+    def test_start_heartbeat(self, mock_HostManagerStub, mock_start_heartbeat, mock_insecure_channel,
+                             mock_get_host_monitor_thread_status, mock_start_host_manager) -> None:
         """
         Test start_heartbeat method
 
@@ -587,10 +575,10 @@ class TestHostControllerSuite:
         mock_stub = MagicMock()
         mock_HostManagerStub.return_value = mock_stub
         ips = ["172.17.0.2", "192.168.1.2"]
-        HostController.start_heartbeat(
-            emulation_env_config=self.emulation_env_config, ips=ips, logger=self.logger, initial_start=True)
-        mock_start_host_manager.assert_called_once_with(
-            emulation_env_config=self.emulation_env_config, ip=ips[0], logger=self.logger)
+        HostController.start_heartbeat(emulation_env_config=self.emulation_env_config, ips=ips, logger=self.logger,
+                                       initial_start=True)
+        mock_start_host_manager.assert_called_once_with(emulation_env_config=self.emulation_env_config, ip=ips[0],
+                                                        logger=self.logger)
         self.emulation_env_config.beats_config.get_node_beats_config_by_ips.assert_called_once_with(ips=ips)
         mock_get_host_monitor_thread_status.assert_called_once_with(ip=ips[0], port=12345)
         self.logger.info.assert_called_once_with(f"Heartbeat is not running on {ips[0]}, starting it.")
@@ -761,22 +749,14 @@ class TestHostControllerSuite:
         mock_HostManagerStub.return_value = mock_stub
         # Call the function
         container = self.emulation_env_config.containers_config.containers[0]
-        HostController.config_packetbeat(
-            self.emulation_env_config, container, self.logger
-        )
+        HostController.config_packetbeat(self.emulation_env_config, container, self.logger)
         mock_start_host_manager.assert_called_once_with(
-            emulation_env_config=self.emulation_env_config,
-            ip=container.docker_gw_bridge_ip,
-            logger=self.logger,
-        )
+            emulation_env_config=self.emulation_env_config, ip=container.docker_gw_bridge_ip, logger=self.logger)
         self.logger.info.assert_called_once_with(
             f"Configuring packetbeat on {container.docker_gw_bridge_ip}, "
-            f"{container.get_full_name()}, ips: {container.get_ips()}"
-        )
-        mock_insecure_channel.assert_called_once_with(
-            f"{container.docker_gw_bridge_ip}:12345",
-            options=constants.GRPC_SERVERS.GRPC_OPTIONS,
-        )
+            f"{container.get_full_name()}, ips: {container.get_ips()}")
+        mock_insecure_channel.assert_called_once_with(f"{container.docker_gw_bridge_ip}:12345",
+                                                      options=constants.GRPC_SERVERS.GRPC_OPTIONS)
         mock_HostManagerStub.assert_called_once_with(mock_channel)
         mock_config_packetbeat.assert_called()
 
@@ -804,17 +784,12 @@ class TestHostControllerSuite:
         container = self.emulation_env_config.containers_config.containers[0]
         HostController.config_metricbeat(self.emulation_env_config, container, self.logger)
         mock_start_host_manager.assert_called_once_with(
-            emulation_env_config=self.emulation_env_config,
-            ip=container.docker_gw_bridge_ip,
-            logger=self.logger,
-        )
+            emulation_env_config=self.emulation_env_config, ip=container.docker_gw_bridge_ip, logger=self.logger)
         self.emulation_env_config.beats_config.get_node_beats_config_by_ips.assert_called_once_with(
-            ips=container.get_ips()
-        )
+            ips=container.get_ips())
         self.logger.info.assert_called_once_with(
             f"Configuring metricbeat on {container.docker_gw_bridge_ip}, "
-            f"{container.get_full_name()}, ips: {container.get_ips()}"
-        )
+            f"{container.get_full_name()}, ips: {container.get_ips()}")
         mock_insecure_channel.assert_called_once_with(
             f"{container.docker_gw_bridge_ip}:12345", options=constants.GRPC_SERVERS.GRPC_OPTIONS)
         mock_HostManagerStub.assert_called_once_with(mock_channel)
@@ -824,8 +799,8 @@ class TestHostControllerSuite:
     @patch("csle_common.controllers.host_controller.grpc.insecure_channel")
     @patch("csle_common.controllers.host_controller.csle_collector.host_manager.query_host_manager.config_heartbeat")
     @patch("csle_common.controllers.host_controller.csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub")
-    def test_config_heartbeat(
-            self, mock_HostManagerStub, mock_config_heartbeat, mock_insecure_channel, mock_start_host_manager) -> None:
+    def test_config_heartbeat(self, mock_HostManagerStub, mock_config_heartbeat, mock_insecure_channel,
+                              mock_start_host_manager) -> None:
         """
         Test config_heartbeat method
 
@@ -852,8 +827,7 @@ class TestHostControllerSuite:
             ips=container.get_ips())
         self.logger.info.assert_called_once_with(
             f"Configuring heartbeat on {container.docker_gw_bridge_ip}, "
-            f"{container.get_full_name()}, ips: {container.get_ips()}"
-        )
+            f"{container.get_full_name()}, ips: {container.get_ips()}")
         mock_insecure_channel.assert_called_once_with(
             f"{container.docker_gw_bridge_ip}:12345", options=constants.GRPC_SERVERS.GRPC_OPTIONS)
         mock_HostManagerStub.assert_called_once_with(mock_channel)
@@ -869,19 +843,15 @@ class TestHostControllerSuite:
         """
         physical_host_ip = "192.168.1.10"
         HostController.stop_host_monitor_threads(
-            emulation_env_config=self.emulation_env_config,
-            physical_host_ip=physical_host_ip,
-            logger=self.logger,
-        )
+            emulation_env_config=self.emulation_env_config, physical_host_ip=physical_host_ip, logger=self.logger)
         assert mock_stop_host_monitor_thread.call_count == 3
 
     @patch("csle_common.controllers.host_controller.HostController.start_host_manager")
     @patch("csle_common.controllers.host_controller.grpc.insecure_channel")
     @patch("csle_common.controllers.host_controller.csle_collector.host_manager.query_host_manager.stop_host_monitor")
     @patch("csle_common.controllers.host_controller.csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub")
-    def test_stop_host_monitor_thread(
-            self, mock_HostManagerStub, mock_stop_host_monitor_thread, mock_insecure_channel, mock_start_host_manager) \
-            -> None:
+    def test_stop_host_monitor_thread(self, mock_HostManagerStub, mock_stop_host_monitor_thread,
+                                      mock_insecure_channel, mock_start_host_manager) -> None:
         """
         Test stop_host_monitor_thread method
 
@@ -908,8 +878,8 @@ class TestHostControllerSuite:
     @patch("csle_common.controllers.host_controller.grpc.insecure_channel")
     @patch("csle_common.controllers.host_controller.csle_collector.host_manager.query_host_manager.stop_filebeat")
     @patch("csle_common.controllers.host_controller.csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub")
-    def test_stop_filebeat(
-            self, mock_HostManagerStub, mock_stop_filebeat, mock_insecure_channel, mock_start_host_manager) -> None:
+    def test_stop_filebeat(self, mock_HostManagerStub, mock_stop_filebeat, mock_insecure_channel,
+                           mock_start_host_manager) -> None:
         """
         Test stop_filebeat method
 
@@ -935,8 +905,8 @@ class TestHostControllerSuite:
     @patch("csle_common.controllers.host_controller.grpc.insecure_channel")
     @patch("csle_common.controllers.host_controller.csle_collector.host_manager.query_host_manager.stop_packetbeat")
     @patch("csle_common.controllers.host_controller.csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub")
-    def test_stop_packetbeat(
-            self, mock_HostManagerStub, mock_stop_packetbeat, mock_insecure_channel, mock_start_host_manager) -> None:
+    def test_stop_packetbeat(self, mock_HostManagerStub, mock_stop_packetbeat, mock_insecure_channel,
+                             mock_start_host_manager) -> None:
         """
         Test stop_packetbeat method
 
@@ -962,8 +932,8 @@ class TestHostControllerSuite:
     @patch("csle_common.controllers.host_controller.grpc.insecure_channel")
     @patch("csle_common.controllers.host_controller.csle_collector.host_manager.query_host_manager.stop_metricbeat")
     @patch("csle_common.controllers.host_controller.csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub")
-    def test_stop_metricbeat(
-            self, mock_HostManagerStub, mock_stop_metricbeat, mock_insecure_channel, mock_start_host_manager) -> None:
+    def test_stop_metricbeat(self, mock_HostManagerStub, mock_stop_metricbeat, mock_insecure_channel,
+                             mock_start_host_manager) -> None:
         """
         Test stop_metricbeat method
 
@@ -989,8 +959,8 @@ class TestHostControllerSuite:
     @patch("csle_common.controllers.host_controller.grpc.insecure_channel")
     @patch("csle_common.controllers.host_controller.csle_collector.host_manager.query_host_manager.stop_heartbeat")
     @patch("csle_common.controllers.host_controller.csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub")
-    def test_stop_heartbeat(
-            self, mock_HostManagerStub, mock_stop_heartbeat, mock_insecure_channel, mock_start_host_manager) -> None:
+    def test_stop_heartbeat(self, mock_HostManagerStub, mock_stop_heartbeat, mock_insecure_channel,
+                            mock_start_host_manager) -> None:
         """
         Test stop_heartbeat method
 
@@ -1072,13 +1042,7 @@ class TestHostControllerSuite:
         :return: None
         """
         result = HostController.get_host_managers_ips(self.emulation_env_config)
-        expected_result = [
-            "172.17.0.1",
-            "172.17.0.2",
-            "172.17.0.3",
-            "172.17.0.4",
-            "172.17.0.5",
-        ]
+        expected_result = ["172.17.0.1", "172.17.0.2", "172.17.0.3", "172.17.0.4", "172.17.0.5"]
         assert result == expected_result
 
     def test_get_host_managers_ports(self) -> None:

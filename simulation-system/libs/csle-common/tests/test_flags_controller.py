@@ -21,6 +21,7 @@ class TestFlagsControllerSuite:
         :param mock_disconnect_admin: Mocked disconnect_admin method
         :param mock_execute_ssh_cmd: Mocked execute_ssh_cmd method
         :param mock_connect_admin: Mocked connect_admin
+        :return: None
         """
         emulation_env_config = MagicMock(spec=EmulationEnvConfig)
         flags_config = MagicMock()
@@ -33,8 +34,8 @@ class TestFlagsControllerSuite:
                 flags=[
                     Flag(name="flag1", dir="/dir1", id=1, path="/path/to/flag1"),
                     Flag(name="flag2", dir="/dir2", id=2, path="/path/to/flag2"),
-                ],
-            ),
+                ]
+            )
         ]
         logger = MagicMock(spec=logging.Logger)
         physical_server_ip = "192.168.0.1"

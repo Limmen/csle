@@ -35,7 +35,6 @@ class TestMultiprocessingUtilSuite:
         Test the method that initializes the pool
 
         :param mock_get_context: mock_get_context
-
         :return: None
         """
         mock_get_context.return_value = NoDaemonContext()

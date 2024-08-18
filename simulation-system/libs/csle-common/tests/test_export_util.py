@@ -50,16 +50,14 @@ class TestExportUtilSuite:
     @patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_emulation_traces_ids")
     @patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_trace")
     @patch("csle_common.util.export_util.ExportUtil.zipdir")
-    def test_export_emulation_traces_to_disk_json(
-        self, mock_zipdir, mock_get_emulation_trace, mock_list_emulation_traces_ids
-    ) -> None:
+    def test_export_emulation_traces_to_disk_json(self, mock_zipdir,
+                                                  mock_get_emulation_trace, mock_list_emulation_traces_ids) -> None:
         """
         Test the method that exports emulation traces from the metastore to disk
 
         :param mock_zipdir: mock_zipdir
         :param mock_get_emulation_trace: mock_get_emulation_trace
         :param mock_list_emulation_traces_ids: mock_list_emulation_traces_ids
-
         :return: None
         """
         mock_list_emulation_traces_ids.return_value = [(1,), (2,)]
@@ -85,9 +83,8 @@ class TestExportUtilSuite:
     @patch("os.listdir")
     @patch("os.path.getsize")
     @patch("io.open")
-    def test_extract_emulation_traces_dataset_metadata(
-        self, mock_open, mock_getsize, mock_listdir, mock_get_dir_size_gb
-    ) -> None:
+    def test_extract_emulation_traces_dataset_metadata(self, mock_open, mock_getsize, mock_listdir,
+                                                       mock_get_dir_size_gb) -> None:
         """
         Test the method that extracts metadata of a traces dataset stored on disk
 
@@ -95,7 +92,6 @@ class TestExportUtilSuite:
         :param mock_getsize: mock_getsize
         :param mock_listdir: mock_listdir
         :param mock_get_dir_size_gb: mock_get_dir_size_gb
-
         :return: None
         """
         mock_metadata = {
@@ -119,16 +115,14 @@ class TestExportUtilSuite:
     @patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_emulation_traces_ids")
     @patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_trace")
     @patch("csle_common.util.export_util.ExportUtil.zipdir")
-    def test_export_emulation_traces_to_disk_csv(
-        self, mock_zipdir, mock_get_emulation_trace, mock_list_emulation_traces_ids
-    ) -> None:
+    def test_export_emulation_traces_to_disk_csv(self, mock_zipdir, mock_get_emulation_trace,
+                                                 mock_list_emulation_traces_ids) -> None:
         """
         Test the method that exports emulation traces from the metastore to disk
 
         :param mock_zipdir: mock_zipdir
         :param mock_get_emulation_trace: mock_get_emulation_trace
         :param mock_list_emulation_traces_ids: mock_list_emulation_traces_id
-
         :return: None
         """
         mock_list_emulation_traces_ids.return_value = [(1,), (2,)]
@@ -160,7 +154,6 @@ class TestExportUtilSuite:
 
         :param mock_zipdir: mock_zipdir
         :param mock_get_emulation_statistic: mock_get_emulation_statistic
-
         :return: None
         """
         mock_statistic = MagicMock()
@@ -182,9 +175,8 @@ class TestExportUtilSuite:
     @patch("os.listdir")
     @patch("os.path.getsize")
     @patch("io.open")
-    def test_extract_emulation_statistics_dataset_metadata(
-        self, mock_open, mock_getsize, mock_listdir, mock_get_dir_size_gb
-    ) -> None:
+    def test_extract_emulation_statistics_dataset_metadata(self, mock_open, mock_getsize, mock_listdir,
+                                                           mock_get_dir_size_gb) -> None:
         """
         Test the method that extracts metadata of a traces dataset stored on disk
 
@@ -192,7 +184,6 @@ class TestExportUtilSuite:
         :param mock_getsize: mock_getsize
         :param mock_listdir: mock_listdir
         :param mock_get_dir_size_gb: mock_get_dir_size_gb
-
         :return: None
         """
         mock_metadata = {
@@ -210,7 +201,6 @@ class TestExportUtilSuite:
         mock_get_dir_size_gb.return_value = 1.5
         dir_path = "/dir"
         zip_file_path = "/dir/zipfile.zip"
-        result = ExportUtil.extract_emulation_statistics_dataset_metadata(
-            dir_path=dir_path, zip_file_path=zip_file_path
-        )
+        result = ExportUtil.extract_emulation_statistics_dataset_metadata(dir_path=dir_path,
+                                                                          zip_file_path=zip_file_path)
         assert result

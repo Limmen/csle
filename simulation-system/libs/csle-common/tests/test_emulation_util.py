@@ -17,7 +17,6 @@ class TestEmulationUtilSuite:
         Test the method that executes a list of commands over an ssh connection to the emulation
 
         :param mock_execute_ssh_cmds: mock_execute_ssh_cmds
-
         :return: None
         """
         cmds = ["ls", "pwd", "whoami"]
@@ -36,13 +35,11 @@ class TestEmulationUtilSuite:
         Test the method that executes an action on the emulation over a ssh connection
 
         :param mock_execute_ssh_cmd: mock_execute_ssh_cmd
-
         :return: None
         """
         cmd = "ls -l"
         mock_conn = MagicMock()
         wait_for_completion = True
-
         mock_return_value = (b"file1\nfile2\n", b"", 0.1)
         mock_execute_ssh_cmd.return_value = mock_return_value
         result = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=mock_conn, wait_for_completion=wait_for_completion)
@@ -74,7 +71,6 @@ class TestEmulationUtilSuite:
         Test the method that checks if an ssh server is running on the machine
 
         :param mock_execute_ssh_cmd: mock_execute_ssh_cmd
-
         :return: None
         """
         mock_conn = MagicMock()
@@ -89,7 +85,6 @@ class TestEmulationUtilSuite:
         Test the method that list all users on a machine
 
         :param mock_execute_ssh_cmd: mock_execute_ssh_cmd
-
         :return: None
         """
         mock_conn = MagicMock()
@@ -124,7 +119,6 @@ class TestEmulationUtilSuite:
         Test utility function for setting up a custom SSH connection given credentials and a proxy connection
 
         :param mock_SSHClient: mock_SSHClient
-
         :return: None
         """
         user = "user"
@@ -213,7 +207,6 @@ class TestEmulationUtilSuite:
         Test the method that reads the result of an action executed in interactive mode
 
         :param mock_read_result_interactive_channel: mock_read_result_interactive_channel
-
         :return: None
         """
         mock_read_result_interactive_channel.return_value = "result"
@@ -234,9 +227,8 @@ class TestEmulationUtilSuite:
         mock_channel.recv.return_value = b"Mocked result"
         mock_shell_escape = MagicMock()
         mock_shell_escape.sub.return_value = "result"
-        result = EmulationUtil.read_result_interactive_channel(
-            emulation_env_config=emulation_env_config, channel=mock_channel
-        )
+        result = EmulationUtil.read_result_interactive_channel(emulation_env_config=emulation_env_config,
+                                                               channel=mock_channel)
         mock_channel.recv_ready.assert_called()
         mock_channel.recv.assert_called()
         assert result
@@ -251,8 +243,7 @@ class TestEmulationUtilSuite:
         emulation_env_config = MagicMock()
         emulation_env_state = MagicMock()
         result = EmulationUtil.is_emulation_defense_action_legal(
-            defense_action_id=defense_action_id, env_config=emulation_env_config, env_state=emulation_env_state
-        )
+            defense_action_id=defense_action_id, env_config=emulation_env_config, env_state=emulation_env_state)
         assert result
 
     @patch("csle_common.util.env_dynamics_util.EnvDynamicsUtil.logged_in_ips_str")
@@ -261,7 +252,6 @@ class TestEmulationUtilSuite:
         Test the method that checks if a given attack action is legal in the current state of the environment
 
         :param mock_logged_in_ips_str: mock_logged_in_ips_str
-
         :return: None
         """
         mock_env_config = MagicMock()
@@ -289,7 +279,6 @@ class TestEmulationUtilSuite:
         mock_action.index = 0
         mock_action.type = EmulationAttackerActionType.RECON
         mock_env_state.attacker_action_config.actions[action_id] = mock_action
-
         result = EmulationUtil.is_emulation_attack_action_legal(action_id, mock_env_config, mock_env_state)
         assert not result
 
@@ -323,6 +312,5 @@ class TestEmulationUtilSuite:
         physical_host_ip = "10.0.0.1"
 
         result = EmulationUtil.physical_ip_match(
-            emulation_env_config=emulation_env_config, ip=ip, physical_host_ip=physical_host_ip
-        )
+            emulation_env_config=emulation_env_config, ip=ip, physical_host_ip=physical_host_ip)
         assert result

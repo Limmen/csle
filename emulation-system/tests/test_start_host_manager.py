@@ -50,7 +50,7 @@ def get_derived_containers(docker_client, excluded_tag="blank") -> List[Any]:
     match_tag = "0.6.0"
     all_images = docker_client.images.list()
     derived_images = [image for image in all_images if (any(match_tag in tag for tag in image.tags)
-                                                        and all("base" not in tag for tag in image.tags)
+                                                        and all(constants.CONTAINER_IMAGES.BASE not in tag for tag in image.tags)
                                                         and all(excluded_tag not in tag for tag in image.tags))]
     return derived_images
 
@@ -101,7 +101,7 @@ def test_start_host_manager(container_setup) -> None:
     emulation_env_config.host_manager_config.host_manager_log_file = "host_manager.log"
     emulation_env_config.host_manager_config.host_manager_max_workers = 4
 
-    ip = container_setup.attrs["NetworkSettings"]["IPAddress"]
+    ip = container_setup.attrs[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.IP_ADDRESS_INFO]
     port = emulation_env_config.host_manager_config.host_manager_port
     try:
         # Start host_manager command
@@ -136,7 +136,7 @@ def test_start_host_manager(container_setup) -> None:
                 "container_status": container_setup.status,
                 "container_image": container_setup.image.tags,
                 "name": container_setup.name,
-                "error": str(e),
+                "error": str(e)
             }
         )
     if failed_containers:

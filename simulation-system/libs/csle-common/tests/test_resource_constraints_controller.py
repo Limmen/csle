@@ -60,9 +60,7 @@ class TestResourceConstraintsControllerSuite:
         logger = MagicMock()
         ResourceConstraintsController.apply_resource_constraints(
             emulation_env_config=emulation_env_config, physical_server_ip=physical_server_ip, logger=logger)
-        mock_connect_admin.assert_any_call(
-            emulation_env_config=emulation_env_config, ip="192.168.1.2"
-        )
+        mock_connect_admin.assert_any_call(emulation_env_config=emulation_env_config, ip="192.168.1.2")
         expected_docker_update_cmd = "docker update --memory=2G --cpus=1 container_1"
         mock_popen.assert_any_call(expected_docker_update_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
                                    shell=True)

@@ -1,6 +1,7 @@
 import pytest
 import docker
 from docker.types import IPAMConfig, IPAMPool
+import csle_common.constants.constants as constants
 
 
 @pytest.fixture(scope="module")
@@ -44,10 +45,9 @@ def blank1(docker_client, network) -> None:
     """
     # Create and start the first container with a specific IP
     container = docker_client.containers.create(
-        "kimham/csle_blank_1:0.6.0",
+        f"{constants.CONTAINER_IMAGES.DOCKERHUB_USERNAME}/{constants.CONTAINER_IMAGES.BLANK_1}:0.6.0",
         command="sh -c 'apt-get update && apt-get install -y iputils-ping && while true; do sleep 3600; done'",
-        detach=True,
-    )
+        detach=True)
     network.connect(container, ipv4_address="15.15.15.10")
     container.start()
     yield container
@@ -56,7 +56,7 @@ def blank1(docker_client, network) -> None:
 
 
 @pytest.fixture(scope="module")
-def other_containers(docker_client, network):
+def other_containers(docker_client, network) -> None:
     """
     Create and start the second container with a specific IP
 
@@ -73,8 +73,9 @@ def other_containers(docker_client, network):
         image
         for image in all_images
         if any(match_tag in tag for tag in image.tags)
-           and all("base" not in tag for tag in image.tags)
-           and all("kimham/csle_blank_ubuntu_22:0.6.0" not in tag for tag in image.tags)
+           and all(constants.CONTAINER_IMAGES.BASE not in tag for tag in image.tags)
+           and all(f"{constants.CONTAINER_IMAGES.DOCKERHUB_USERNAME}/{constants.CONTAINER_IMAGES.BLANK_UBUNTU_22}:0.6.0"
+                   not in tag for tag in image.tags)
     ]
     containers = []
     start_ip = 11
@@ -119,9 +120,8 @@ def test_ping_containers(blank1, other_containers) -> None:
                 failed_tests.append(f"Ping to {container.image.tags} from blank1 failed. Logs: {output}")
         except Exception as e:
             failed_tests.append(
-                f"Ping to {container.image.tags} from blank1 failed. Container: {container.image.tags}, \
-                    IP: {ip}, Error: {str(e)}"
-            )
+                f"Ping to {container.image.tags} from blank1 failed. Container: {container.image.tags}, "
+                f"IP: {ip}, Error: {str(e)}")
     if failed_tests:
         for fail in failed_tests:
             print(fail)

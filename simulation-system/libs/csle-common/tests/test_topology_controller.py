@@ -18,7 +18,6 @@ class TestTopologyControllerSuite:
         :param mock_disconnect_admin: mock_disconnect_admin
         :param mock_execute_ssh_cmd: mock_execute_ssh_cmd
         :param mock_connect_admin: mock_connect_admin
-
         :return: None
         """
         logger = MagicMock()
@@ -52,13 +51,11 @@ class TestTopologyControllerSuite:
         # set return values of execute_ssh_cmd
         mock_execute_ssh_cmd.return_value = (b"", b"", 0)
         TopologyController.create_topology(
-            emulation_env_config=emulation_env_config, physical_server_ip="192.168.1.100", logger=logger
-        )
+            emulation_env_config=emulation_env_config, physical_server_ip="192.168.1.100", logger=logger)
         mock_connect_admin.assert_called()
         expected_cmd = f"{constants.COMMANDS.SUDO_ADD_ROUTE} 192.168.0.0/24 gw 192.168.1.1"
         mock_execute_ssh_cmd.assert_any_call(
-            cmd=expected_cmd, conn=emulation_env_config.get_connection.return_value, wait_for_completion=True
-        )
+            cmd=expected_cmd, conn=emulation_env_config.get_connection.return_value, wait_for_completion=True)
         mock_disconnect_admin.assert_called()
         logger.info.assert_any_call("Creating topology")
         logger.info.assert_any_call("Connecting to node:10.0.0.1")

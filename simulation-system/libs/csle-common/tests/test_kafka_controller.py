@@ -23,7 +23,6 @@ class TestKafkaControllerSuite:
         :param mock_disconnect_admin: Mocked disconnect_admin method
         :param mock_execute_ssh_cmd: Mocked execute_ssh_cmd method
         :param mock_connect_admin: Mocked connect_admin
-
         :return: None
         """
         mock_connect_admin.return_value = None
@@ -47,10 +46,8 @@ class TestKafkaControllerSuite:
     @patch("csle_common.controllers.kafka_controller.KafkaController.start_kafka_manager")
     @patch("csle_common.controllers.kafka_controller.KafkaController.get_kafka_status_by_port_and_ip")
     @patch("time.sleep", return_value=None)
-    def test_create_topics(
-            self, mock_time_sleep, mock_get_kafka_status_by_port_and_ip, mock_start_kafka_manager,
-            mock_KafkaManagerStub,
-            mock_start_kafka, mock_create_topic) -> None:
+    def test_create_topics(self, mock_time_sleep, mock_get_kafka_status_by_port_and_ip, mock_start_kafka_manager,
+                           mock_KafkaManagerStub, mock_start_kafka, mock_create_topic) -> None:
         """
         Tests the method that sends a request to the KafkaManager to create topics according to the given configuration
 
@@ -102,6 +99,7 @@ class TestKafkaControllerSuite:
 
         :param mock_get_kafka_status_by_port_and_ip: mocked get_kafka_status_by_port_and_ip method
         :param mock_start_kafka_manager: mocked start_kafka_manager method
+        :return: None
         """
         mock_start_kafka_manager.return_value = None
         expected_kafka_dto = MagicMock(spec=csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO)
@@ -277,9 +275,8 @@ class TestKafkaControllerSuite:
     @patch("csle_common.controllers.kafka_controller.KafkaController.get_kafka_managers_ports")
     @patch("csle_common.controllers.kafka_controller.KafkaController.get_kafka_status_by_port_and_ip")
     @patch("csle_collector.kafka_manager.kafka_manager_util.KafkaManagerUtil.kafka_dto_empty")
-    def test_get_kafka_managers_infos(
-            self, mock_kafka_dto_empty, mock_get_kafka_status_by_port_and_ip, mock_get_kafka_managers_ports,
-            mock_get_kafka_managers_ips) -> None:
+    def test_get_kafka_managers_infos(self, mock_kafka_dto_empty, mock_get_kafka_status_by_port_and_ip,
+                                      mock_get_kafka_managers_ports, mock_get_kafka_managers_ips) -> None:
         """
         Test case for extracting the infomation of the kafka managers for a given emulation
 

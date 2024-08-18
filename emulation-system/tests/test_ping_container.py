@@ -1,6 +1,7 @@
 import pytest
 import docker
 from docker.types import IPAMConfig, IPAMPool
+import csle_common.constants.constants as constants
 
 
 @pytest.fixture(scope="module")
@@ -44,7 +45,7 @@ def container1(docker_client, network) -> None:
     """
     # Create and start the first container with a specific IP
     container = docker_client.containers.create(
-        "kimham/csle_spark_1:0.6.0",
+        f"{constants.CONTAINER_IMAGES.DOCKERHUB_USERNAME}/{constants.CONTAINER_IMAGES.SPARK_1}:0.6.0",
         command="sh -c 'while true; do sleep 3600; done'",
         name="test_container1",
         detach=True
@@ -69,7 +70,7 @@ def container2(docker_client, network):
     """
     # Create and start the second container with a specific IP
     container = docker_client.containers.create(
-        "kimham/csle_elk_1:0.6.0",
+        f"{constants.CONTAINER_IMAGES.DOCKERHUB_USERNAME}/{constants.CONTAINER_IMAGES.ELK_1}:0.6.0",
         command="sh -c 'while true; do sleep 3600; done'",
         name="test_container2",
         detach=True

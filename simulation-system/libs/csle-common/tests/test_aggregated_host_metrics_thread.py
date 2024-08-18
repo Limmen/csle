@@ -28,7 +28,6 @@ class TestSuiteAggregatedHostMetricsThread:
         Test the method that runs the thread
 
         :param mock_sleep: mock_sleep
-
         :return: None
         """
         mock_host_metrics_1 = MagicMock(spec="HostMetrics")

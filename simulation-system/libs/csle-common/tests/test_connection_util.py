@@ -17,7 +17,6 @@ class TestConnectionUtilSuite:
         Test the helper function for setting up a SSH connection
 
         :param mock_SSHClient: mock_SSHClient
-
         :return: None
         """
         mock_ssh_client = MagicMock()
@@ -26,28 +25,22 @@ class TestConnectionUtilSuite:
         mock_relay_channel = MagicMock()
         mock_ssh_client.get_transport.return_value = mock_transport
         mock_transport.open_channel.return_value = mock_relay_channel
-
         a = MagicMock()
         a.ips = ["192.168.1.2"]
         a.ips_match.side_effect = lambda ips: True
-
         credentials = [MagicMock()]
         credentials[0].service = constants.SSH.SERVICE_NAME
         credentials[0].username = "user"
         credentials[0].pw = "password"
         credentials[0].port = 22
-
         proxy_connections = [MagicMock()]
         proxy_connections[0].ip = "192.168.1.1"
         proxy_connections[0].conn.get_transport.return_value = mock_transport
-
         s = MagicMock()
         s.emulation_env_config.containers_config.agent_ip = "192.168.1.3"
         s.attacker_obs_state.agent_reachable = ["192.168.1.1"]
-
-        result = ConnectionUtil._ssh_setup_connection(
-            a=a, credentials=credentials, proxy_connections=proxy_connections, s=s
-        )
+        result = ConnectionUtil._ssh_setup_connection(a=a, credentials=credentials,
+                                                      proxy_connections=proxy_connections, s=s)
         mock_SSHClient.assert_not_called()
         assert result
 
@@ -57,7 +50,6 @@ class TestConnectionUtilSuite:
         Test the helper function for finalizing a SSH connection and setting up the DTO
 
         :param mock_execute_ssh_cmd: mock_execute_ssh_cmd
-
         :return: None
         """
         mock_execute_ssh_cmd.side_effect = [
@@ -67,7 +59,6 @@ class TestConnectionUtilSuite:
             (b"output", b"error", 0.1),
             (b"(ALL) NOPASSWD: ALL", b"", 0.1),
         ]
-
         target_machine = MagicMock()
         connection_setup_dto = MagicMock()
         connection_setup_dto.target_connections = [MagicMock()]
@@ -90,33 +81,25 @@ class TestConnectionUtilSuite:
         Test the helper function for setting up a Telnet connection to a target machine
 
         :param mock_telnet: mock_telnet
-
         :return: None
         """
         mock_telnet_conn = MagicMock()
         mock_telnet.return_value = mock_telnet_conn
-        mock_telnet_conn.read_until.side_effect = [
-            constants.TELNET.LOGIN_PROMPT,
-            constants.TELNET.PASSWORD_PROMPT,
-            constants.TELNET.PROMPT,
-        ]
+        mock_telnet_conn.read_until.side_effect = [constants.TELNET.LOGIN_PROMPT, constants.TELNET.PASSWORD_PROMPT,
+                                                   constants.TELNET.PROMPT]
         mock_telnet_conn.write.return_value = None
         mock_telnet_conn.read_until.return_value = b"$"
-
         a = MagicMock()
         a.ips = ["192.168.1.2"]
         a.ips_match.side_effect = lambda ips: True
-
         credentials = [MagicMock()]
         credentials[0].service = constants.TELNET.SERVICE_NAME
         credentials[0].username = "user"
         credentials[0].pw = "password"
         credentials[0].port = 23
-
         proxy_connections = [MagicMock()]
         proxy_connections[0].ip = "192.168.1.1"
         proxy_connections[0].conn.get_transport.return_value = MagicMock()
-
         s = MagicMock()
         s.emulation_env_config.containers_config.agent_ip = "192.168.1.3"
         s.attacker_obs_state.agent_reachable = ["192.168.1.1"]
@@ -124,8 +107,7 @@ class TestConnectionUtilSuite:
         s.emulation_env_config.get_port_forward_port.return_value = 9999
 
         result = ConnectionUtil._telnet_setup_connection(
-            a=a, credentials=credentials, proxy_connections=proxy_connections, s=s
-        )
+            a=a, credentials=credentials, proxy_connections=proxy_connections, s=s)
         mock_telnet.assert_called()
         assert result
 
@@ -140,13 +122,11 @@ class TestConnectionUtilSuite:
         mock_telnet_conn = [MagicMock() for _ in range(constants.ENV_CONSTANTS.ATTACKER_RETRY_CHECK_ROOT)]
         connection_setup_dto.target_connections = mock_telnet_conn
         connection_setup_dto.credentials = [
-            MagicMock() for _ in range(constants.ENV_CONSTANTS.ATTACKER_RETRY_CHECK_ROOT)
-        ]
+            MagicMock() for _ in range(constants.ENV_CONSTANTS.ATTACKER_RETRY_CHECK_ROOT)]
         for credential in connection_setup_dto.credentials:
             credential.username = "user"
         connection_setup_dto.tunnel_threads = [
-            MagicMock() for _ in range(constants.ENV_CONSTANTS.ATTACKER_RETRY_CHECK_ROOT)
-        ]
+            MagicMock() for _ in range(constants.ENV_CONSTANTS.ATTACKER_RETRY_CHECK_ROOT)]
         connection_setup_dto.forward_ports = [9999 for _ in range(constants.ENV_CONSTANTS.ATTACKER_RETRY_CHECK_ROOT)]
         connection_setup_dto.ports = [23 for _ in range(constants.ENV_CONSTANTS.ATTACKER_RETRY_CHECK_ROOT)]
         connection_setup_dto.proxies = [MagicMock() for _ in range(constants.ENV_CONSTANTS.ATTACKER_RETRY_CHECK_ROOT)]
@@ -156,8 +136,7 @@ class TestConnectionUtilSuite:
             conn.read_until.side_effect = [b"user may not run sudo" if i < 4 else b"(ALL) NOPASSWD: ALL"]
 
         root, total_time = ConnectionUtil._telnet_finalize_connection(
-            target_machine=target_machine, i=0, connection_setup_dto=connection_setup_dto
-        )
+            target_machine=target_machine, i=0, connection_setup_dto=connection_setup_dto)
         assert not root
         assert total_time
 
@@ -167,7 +146,6 @@ class TestConnectionUtilSuite:
         Test the helper function for setting up a FTP connection
 
         :param mock_ftp: mock_ftp
-
         :return: None
         """
         mock_ftp_conn = MagicMock()
@@ -196,8 +174,7 @@ class TestConnectionUtilSuite:
         s.emulation_env_config.get_port_forward_port.return_value = 9999
 
         result = ConnectionUtil._ftp_setup_connection(
-            a=a, credentials=credentials, proxy_connections=proxy_connections, s=s
-        )
+            a=a, credentials=credentials, proxy_connections=proxy_connections, s=s)
         mock_ftp.assert_not_called()
         assert result
 
@@ -221,8 +198,7 @@ class TestConnectionUtilSuite:
         connection_setup_dto.ip = "192.168.1.2"
 
         root, cost = ConnectionUtil._ftp_finalize_connection(
-            target_machine=target_machine, i=0, connection_setup_dto=connection_setup_dto
-        )
+            target_machine=target_machine, i=0, connection_setup_dto=connection_setup_dto)
         assert not root
         assert cost == 0
 
@@ -249,14 +225,12 @@ class TestConnectionUtilSuite:
         Test utility function for testing if a connection is alive or not
 
         :param mock_execute_ssh_cmd: mock_execute_ssh_cmd
-
         :return: None
         """
         mock_conn = MagicMock()
         mock_execute_ssh_cmd.return_value = (b"user", b"", 0.1)
         c = EmulationConnectionObservationState(
-            conn=mock_conn, credential=MagicMock(), root=False, service="ssh", port=22
-        )
+            conn=mock_conn, credential=MagicMock(), root=False, service="ssh", port=22)
         result = ConnectionUtil.test_connection(c=c)
         assert result
 
@@ -275,8 +249,7 @@ class TestConnectionUtilSuite:
         mock_credential.port = 22
 
         c = EmulationConnectionObservationState(
-            conn=MagicMock(), credential=mock_credential, root=False, service="ssh", port=22, ip="192.168.1.2"
-        )
+            conn=MagicMock(), credential=mock_credential, root=False, service="ssh", port=22, ip="192.168.1.2")
         mock_ssh_client = mock_SSHClient.return_value
         mock_transport = MagicMock()
         mock_ssh_client.get_transport.return_value = mock_transport
@@ -292,7 +265,6 @@ class TestConnectionUtilSuite:
 
         :param mock_telnet: mock_telnet
         :param mock_reconnect_ssh: mock_reconnect_ssh
-
         :return: None
         """
         mock_credential = MagicMock()
@@ -301,19 +273,13 @@ class TestConnectionUtilSuite:
 
         mock_proxy_conn = MagicMock()
         proxy = EmulationConnectionObservationState(
-            conn=mock_proxy_conn, credential=mock_credential, root=False, service="ssh", port=22, ip="192.168.1.1"
-        )
+            conn=mock_proxy_conn, credential=mock_credential, root=False, service="ssh", port=22, ip="192.168.1.1")
         c = EmulationConnectionObservationState(
-            conn=None, credential=mock_credential, root=False, service="telnet", port=23, ip="192.168.1.2", proxy=proxy
-        )
+            conn=None, credential=mock_credential, root=False, service="telnet", port=23, ip="192.168.1.2", proxy=proxy)
 
         mock_telnet_conn = mock_telnet.return_value
-        mock_telnet_conn.read_until.side_effect = [
-            constants.TELNET.LOGIN_PROMPT,
-            constants.TELNET.PASSWORD_PROMPT,
-            constants.TELNET.PROMPT,
-        ]
-
+        mock_telnet_conn.read_until.side_effect = [constants.TELNET.LOGIN_PROMPT, constants.TELNET.PASSWORD_PROMPT,
+                                                   constants.TELNET.PROMPT]
         mock_reconnect_ssh.return_value = proxy
         result = ConnectionUtil.reconnect_telnet(c)
         assert result.conn == mock_telnet_conn

@@ -24,25 +24,17 @@ class TestOssecIdsSuite:
         container1.physical_host_ip = "192.168.1.10"
         container1.docker_gw_bridge_ip = "172.17.0.1"
         container1.name = "container-1"
-
         container2 = MagicMock()
         container2.physical_host_ip = "192.168.1.10"
         container2.docker_gw_bridge_ip = "172.17.0.2"
         container2.name = "container-2"
-
         container3 = MagicMock()
         container3.physical_host_ip = "192.168.1.11"
         container3.docker_gw_bridge_ip = "172.17.0.3"
         container3.name = "container-3"
-
         containers_config = MagicMock()
         emulation_env_config.containers_config = containers_config
-        emulation_env_config.containers_config.containers = [
-            container1,
-            container2,
-            container3,
-        ]
-
+        emulation_env_config.containers_config.containers = [container1, container2, container3]
         ossec_ids_manager_config = MagicMock()
         emulation_env_config.ossec_ids_manager_config = ossec_ids_manager_config
         emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port = 1515
@@ -95,7 +87,6 @@ class TestOssecIdsSuite:
         :param mock_insecure_channel: mock insecure_channel
         :param mock_get_monitor_status: mock get_monitor_status
         :param mock_start_manager: mock start_manager
-
         :return: None
         """
         mock_get_monitor_status.return_value.ossec_ids_running = False
@@ -121,7 +112,6 @@ class TestOssecIdsSuite:
         :param mock_insecure_channel: mock insecure_channel
         :param mock_get_monitor_status: mock get_monitor_status
         :param mock_start_manager: mock start_manager
-
         :return: None
         """
         mock_get_monitor_status.return_value.ossec_ids_running = True
@@ -138,7 +128,6 @@ class TestOssecIdsSuite:
         Test the method for starting OSSEC IDS managers
 
         :param mock_start_manager: mock start_manager
-
         :return: None
         """
         constants.CONTAINER_IMAGES = MagicMock()  # type: ignore
@@ -188,7 +177,6 @@ class TestOssecIdsSuite:
 
         :param mock_execute_ssh_cmd: mock execute_ssh_cmd
         :param mock_connect_admin: mock connect_admin
-
         :return: None
         """
         ip = "192.168.1.10"
@@ -205,7 +193,7 @@ class TestOssecIdsSuite:
 
         :param mock_start_monitor: mock of the start_monitor method
         :param mock_start_managers: mock of the start_managers method
-        :return:
+        :return: None
         """
         constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES = ["container-1", "container-2"]
         physical_server_ip = "192.168.1.10"
@@ -226,7 +214,7 @@ class TestOssecIdsSuite:
             -> None:
         """
         A method that sends a request to the OSSECIDSManager on a specific IP to start
-        to start the IDS manager and the monitor thread
+        the IDS manager and the monitor thread
 
         :param mock_insecure_channel: mock insecure_channel
         :param mock_get_monitor_status: mock get_monitor_status

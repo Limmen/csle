@@ -18,7 +18,6 @@ class TestSDNControllerSuite:
 
         :param mock_execute_ssh_cmd: mock_execute_ssh_cmd
         :param mock_connect_admin: mock_connect_admin
-
         :return: None
         """
         logger = MagicMock()
@@ -44,7 +43,6 @@ class TestSDNControllerSuite:
 
         :param mock_execute_ssh_cmd: mock_execute_ssh_cmd
         :param mock_connect_admin: mock_connect_admin
-
         :return: None
         """
         logger = MagicMock()
@@ -64,7 +62,6 @@ class TestSDNControllerSuite:
 
         :param mock_get_ryu_status_by_port_and_ip: mock_get_ryu_status_by_port_and_ip
         :param mock_get_ryu_manager: mock_get_ryu_manager
-
         :return: None
         """
         logger = MagicMock()
@@ -85,7 +82,6 @@ class TestSDNControllerSuite:
 
         :param mock_get_ryu_status: mock_get_ryu_status
         :param mock_insecure_channel: mock_insecure_channel
-
         :return: None
         """
         ryu_dto_mock = MagicMock(spec=ryu_manager_pb2.RyuDTO)
@@ -110,7 +106,6 @@ class TestSDNControllerSuite:
         :param mock_stop_ryu: mock_stop_ryu
         :param mock_insecure_channel: mock_insecure_channel
         :param mock_start_manager: mock_start_manager
-
         :return: None
         """
         logger = MagicMock()
@@ -138,7 +133,6 @@ class TestSDNControllerSuite:
         :param mock_start_ryu: mock_start_ryu
         :param mock_insecure_channel: mock_insecure_channel
         :param mock_start_manager: mock_start_manager
-
         :return: None
         """
         logger = MagicMock()
@@ -173,7 +167,6 @@ class TestSDNControllerSuite:
         :param mock_start_ryu_monitor: mock_start_ryu_monitor
         :param mock_insecure_channel: mock_insecure_channel
         :param mock_start_manager: mock_start_manager
-
         :return: None
         """
         logger = MagicMock()
@@ -205,7 +198,6 @@ class TestSDNControllerSuite:
         :param mock_stop_ryu_monitor: mock_stop_ryu_monitor
         :param mock_insecure_channel: mock_insecure_channel
         :param mock_start_manager: mock_start_manager
-
         :return: None
         """
         logger = MagicMock()
@@ -228,12 +220,8 @@ class TestSDNControllerSuite:
 
         :return: None
         """
-        sdn_controller_config = MagicMock(
-            container=MagicMock(docker_gw_bridge_ip="192.168.1.2")
-        )
-        emulation_env_config = MagicMock(
-            sdn_controller_config=sdn_controller_config, name="Test Emulation"
-        )
+        sdn_controller_config = MagicMock(container=MagicMock(docker_gw_bridge_ip="192.168.1.2"))
+        emulation_env_config = MagicMock(sdn_controller_config=sdn_controller_config, name="Test Emulation")
         result = SDNControllerManager.get_ryu_managers_ips(emulation_env_config)
         assert result == ["192.168.1.2"]
 
@@ -244,9 +232,7 @@ class TestSDNControllerSuite:
         :return: None
         """
         sdn_controller_config = MagicMock(manager_port=6633)
-        emulation_env_config = MagicMock(
-            sdn_controller_config=sdn_controller_config, name="Test Emulation"
-        )
+        emulation_env_config = MagicMock(sdn_controller_config=sdn_controller_config, name="Test Emulation")
         result = SDNControllerManager.get_ryu_managers_ports(emulation_env_config)
         assert result == [6633]
 
@@ -265,14 +251,11 @@ class TestSDNControllerSuite:
         :param mock_get_ryu_status_by_port_and_ip: mock_get_ryu_status_by_port_and_ip
         :param mock_get_ryu_managers_ports: mock_get_ryu_managers_ports
         :param mock_get_ryu_managers_ips: mock_get_ryu_managers_ips
-
         :return: None
         """
         logger = MagicMock()
         sdn_controller_config = MagicMock(
-            container=MagicMock(
-                docker_gw_bridge_ip="192.168.1.2", physical_host_ip="192.168.1.1"
-            ), manager_port=6633)
+            container=MagicMock(docker_gw_bridge_ip="192.168.1.2", physical_host_ip="192.168.1.1"), manager_port=6633)
         emulation_env_config = MagicMock(sdn_controller_config=sdn_controller_config, execution_id="123",
                                          name="Test Emulation")
         mock_get_ryu_managers_ips.return_value = ["192.168.1.2"]

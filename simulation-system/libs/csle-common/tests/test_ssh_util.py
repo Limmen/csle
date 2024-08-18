@@ -22,7 +22,6 @@ class TestSSHUtilSuite:
         Test the method that executes a list of commands over an ssh connection to the emulation
 
         :param mock_execute_ssh_cmd: mock_execute_ssh_cmd
-
         :return: None
         """
         mock_execute_ssh_cmd.return_value = (b"output", b"error", 1.0)

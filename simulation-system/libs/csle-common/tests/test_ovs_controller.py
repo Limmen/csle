@@ -41,6 +41,7 @@ class TestOVSControllerSuite:
         :param mock_sleep: mock_sleep
         :param mock_popen: mock_popen
         :param mock_containers_config: mock_containers_config
+        :return: None
         """
         logger = MagicMock()
         physical_server_ip = "192.168.1.1"
@@ -57,7 +58,7 @@ class TestOVSControllerSuite:
 
         :param mock_execute_ssh_cmd: mock_execute_ssh_cmd
         :param mock_connect_admin: mock_connect_admin
-        :return:
+        :return: None
         """
         emulation_env_config = MagicMock()
         ovs_switch_config = MagicMock()

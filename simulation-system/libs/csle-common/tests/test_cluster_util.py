@@ -31,7 +31,6 @@ class TestClusterUtilSuite:
 
         :param mock_get_config: mock_get_config
         :param mock_connect: mock_connect
-
         :return: None
         """
         mock_config = MagicMock()
@@ -48,7 +47,6 @@ class TestClusterUtilSuite:
         Test function that reads the config file from $CSLE_HOME/config.json and initializes certain config parameters
 
         :param mock_get_config: mock_get_config
-
         :return: None
         """
         mock_config = MagicMock()
@@ -92,11 +90,8 @@ class TestClusterUtilSuite:
         mock_config.nginx_log_dir = "/var/log/nginx"
         mock_config.flask_log_file = "/var/log/flask.log"
         mock_config.default_log_dir = "/var/log"
-
         mock_get_config.return_value = mock_config
-
         ClusterUtil.set_config_parameters_from_config_file()
-
         assert constants.CONFIG_FILE.PARSED_CONFIG == mock_config
         assert constants.CSLE_ADMIN.MANAGEMENT_USER == "admin"
         assert constants.CSLE_ADMIN.MANAGEMENT_PW == "admin_pw"

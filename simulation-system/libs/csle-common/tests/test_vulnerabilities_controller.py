@@ -17,7 +17,6 @@ class TestVulnControllerSuite:
 
         :param mock_execute_ssh_cmd: mock_execute_ssh_cmd
         :param mock_connect_admin: mock_connect_admin
-
         :return: None
         """
         logger = MagicMock()

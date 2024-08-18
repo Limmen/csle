@@ -22,20 +22,16 @@ class TestSnortIdsControllerSuite:
         container1.name = "container1"
         container1.physical_host_ip = "192.168.1.1"
         container1.docker_gw_bridge_ip = "10.0.0.1"
-
         container2 = MagicMock()
         container2.name = "container2"
         container2.physical_host_ip = "192.168.1.2"
         container2.docker_gw_bridge_ip = "10.0.0.2"
         containers = [container1, container2]
-
         emulation_env_config = MagicMock()
         emulation_env_config.containers_config.containers = containers
-
         emulation_env_config.snort_ids_manager_config.snort_ids_manager_port = 50051
         emulation_env_config.execution_id = "12345"
         emulation_env_config.level = "1"
-
         self.emulation_env_config = emulation_env_config
         self.logger = logger
 
@@ -45,16 +41,13 @@ class TestSnortIdsControllerSuite:
         Test utility function for starting the Snort IDSes
 
         :param mock_start_snort_ides: mock_start_snort_ides
-
         :return: None
         """
         SnortIDSController.start_snort_idses(
-            emulation_env_config=self.emulation_env_config, physical_server_ip="192.168.1.1", logger=self.logger
-        )
+            emulation_env_config=self.emulation_env_config, physical_server_ip="192.168.1.1", logger=self.logger)
         self.logger.info.assert_called_once_with("Starting the Snort IDS on IP: 10.0.0.1")
-        mock_start_snort_ids.assert_called_once_with(
-            emulation_env_config=self.emulation_env_config, ip="10.0.0.1", logger=self.logger
-        )
+        mock_start_snort_ids.assert_called_once_with(emulation_env_config=self.emulation_env_config, ip="10.0.0.1",
+                                                     logger=self.logger)
 
     @patch("csle_common.controllers.snort_ids_controller.SnortIDSController.stop_snort_ids")
     def test_stop_snort_ides(self, mock_stop_snort_ids) -> None:
@@ -62,15 +55,12 @@ class TestSnortIdsControllerSuite:
         Test utility function for stopping the Snort IDSes
 
         :param mock_start_snort_ides: mock_start_snort_ides
-
         :return: None
         """
         SnortIDSController.stop_snort_idses(
-            emulation_env_config=self.emulation_env_config, physical_server_ip="192.168.1.1", logger=self.logger
-        )
+            emulation_env_config=self.emulation_env_config, physical_server_ip="192.168.1.1", logger=self.logger)
         mock_stop_snort_ids.assert_called_once_with(
-            emulation_env_config=self.emulation_env_config, ip="10.0.0.1", logger=self.logger
-        )
+            emulation_env_config=self.emulation_env_config, ip="10.0.0.1", logger=self.logger)
 
     @patch("csle_common.controllers.snort_ids_controller.SnortIDSController.start_snort_manager")
     @patch("csle_common.controllers.snort_ids_controller.SnortIDSController."
@@ -86,7 +76,6 @@ class TestSnortIdsControllerSuite:
         :param mock_start_snort_ids: mock_start_snort_ids
         :param mock_get_statuses: mock_get_statuses
         :param mock_start_manager: mock_start_manager
-
         :return: None
         """
         mock_get_statuses.return_value.snort_ids_running = False
@@ -99,11 +88,9 @@ class TestSnortIdsControllerSuite:
         mock_stub = MagicMock()
         mock_channel.__enter__.return_value = mock_stub
         SnortIDSController.start_snort_ids(
-            emulation_env_config=self.emulation_env_config, ip="10.0.0.1", logger=self.logger
-        )
+            emulation_env_config=self.emulation_env_config, ip="10.0.0.1", logger=self.logger)
         mock_start_manager.assert_called_once_with(
-            emulation_env_config=self.emulation_env_config, ip="10.0.0.1", logger=self.logger
-        )
+            emulation_env_config=self.emulation_env_config, ip="10.0.0.1", logger=self.logger)
         self.logger.info.assert_any_call("Snort IDS is not running on 10.0.0.1, starting it.")
         mock_insecure_channel.assert_called()
         mock_start_snort_ids.assert_called()
@@ -113,9 +100,8 @@ class TestSnortIdsControllerSuite:
            "get_snort_idses_monitor_threads_statuses_by_ip_and_port")
     @patch("csle_collector.snort_ids_manager.query_snort_ids_manager.stop_snort_ids")
     @patch("grpc.insecure_channel")
-    def test_stop_snort_ids(
-            self, mock_insecure_channel, mock_stop_snort_ids, mock_get_statuses, mock_start_manager
-    ) -> None:
+    def test_stop_snort_ids(self, mock_insecure_channel, mock_stop_snort_ids, mock_get_statuses,
+                            mock_start_manager) -> None:
         """
         Test utility function for stopping the Snort IDS on a specific IP
 
@@ -124,7 +110,6 @@ class TestSnortIdsControllerSuite:
         :param mock_start_snort_ids: mock_start_snort_ids
         :param mock_get_statuses: mock_get_statuse
         :param mock_start_manager: mock_start_manager
-
         :return: None
         """
         mock_get_statuses.return_value.snort_ids_running = True
@@ -133,11 +118,9 @@ class TestSnortIdsControllerSuite:
         mock_stub = MagicMock()
         mock_channel.__enter__.return_value = mock_stub
         SnortIDSController.stop_snort_ids(
-            emulation_env_config=self.emulation_env_config, ip="10.0.0.1", logger=self.logger
-        )
+            emulation_env_config=self.emulation_env_config, ip="10.0.0.1", logger=self.logger)
         mock_start_manager.assert_called_once_with(
-            emulation_env_config=self.emulation_env_config, ip="10.0.0.1", logger=self.logger
-        )
+            emulation_env_config=self.emulation_env_config, ip="10.0.0.1", logger=self.logger)
         self.logger.info.assert_any_call("Snort IDS is running on 10.0.0.1, stopping it.")
         mock_insecure_channel.assert_called()
         mock_stop_snort_ids.assert_called()
@@ -148,12 +131,10 @@ class TestSnortIdsControllerSuite:
         Test utility function for starting snort IDS managers
 
         :param mock_start_manager: mock_start_manager
-
         :return: None
         """
         SnortIDSController.start_snort_managers(
-            emulation_env_config=self.emulation_env_config, physical_server_ip="192.168.1.1", logger=self.logger
-        )
+            emulation_env_config=self.emulation_env_config, physical_server_ip="192.168.1.1", logger=self.logger)
         mock_start_manager.assert_called()
 
     @patch("csle_common.util.emulation_util.EmulationUtil.connect_admin")
@@ -164,7 +145,6 @@ class TestSnortIdsControllerSuite:
 
         :param mock_execute_ssh_cmd: mock_execute_ssh_cmd
         :param mock_connect_admin: mock_connect_admin
-
         :return: None
         """
         emulation_env_config = self.emulation_env_config
@@ -181,8 +161,7 @@ class TestSnortIdsControllerSuite:
             (b"", b"", 0),  # Output for starting the ids_manager
         ]
         SnortIDSController.start_snort_manager(
-            emulation_env_config=emulation_env_config, ip="10.0.0.1", logger=self.logger
-        )
+            emulation_env_config=emulation_env_config, ip="10.0.0.1", logger=self.logger)
         mock_connect_admin.assert_called_once_with(emulation_env_config=emulation_env_config, ip="10.0.0.1")
         mock_execute_ssh_cmd.assert_called()
         self.logger.info.assert_any_call("Starting Snort IDS manager on node 10.0.0.1")
@@ -193,12 +172,10 @@ class TestSnortIdsControllerSuite:
         Test Utility function for stopping snort IDS managers
 
         :param mock_start_manager: mock_start_manager
-
         :return: None
         """
         SnortIDSController.stop_snort_managers(
-            emulation_env_config=self.emulation_env_config, physical_server_ip="192.168.1.1", logger=self.logger
-        )
+            emulation_env_config=self.emulation_env_config, physical_server_ip="192.168.1.1", logger=self.logger)
         mock_stop_manager.assert_called()
 
     @patch("csle_common.util.emulation_util.EmulationUtil.connect_admin")
@@ -209,7 +186,6 @@ class TestSnortIdsControllerSuite:
 
         :param mock_execute_ssh_cmd: mock_execute_ssh_cmd
         :param mock_connect_admin: mock_connect_admin
-
         :return: None
         """
         emulation_env_config = self.emulation_env_config
@@ -217,8 +193,7 @@ class TestSnortIdsControllerSuite:
         emulation_env_config.get_connection.return_value = mock_connection
         mock_execute_ssh_cmd.return_value = (b"", b"", 0)
         SnortIDSController.stop_snort_manager(
-            emulation_env_config=emulation_env_config, ip="10.0.0.1", logger=self.logger
-        )
+            emulation_env_config=emulation_env_config, ip="10.0.0.1", logger=self.logger)
         mock_connect_admin.assert_called_once_with(emulation_env_config=emulation_env_config, ip="10.0.0.1")
         mock_execute_ssh_cmd.assert_called()
         self.logger.info.assert_any_call("Stopping Snort IDS manager on node 10.0.0.1")
@@ -230,15 +205,12 @@ class TestSnortIdsControllerSuite:
         an IDS to start the IDS manager and the monitor thread
 
         :param mock_start_monitor_thread: mock_start_monitor_thread
-
         :return: None
         """
         SnortIDSController.start_snort_idses_monitor_threads(
-            emulation_env_config=self.emulation_env_config, physical_server_ip="192.168.1.1", logger=self.logger
-        )
+            emulation_env_config=self.emulation_env_config, physical_server_ip="192.168.1.1", logger=self.logger)
         mock_start_monitor_thread.assert_called_once_with(
-            emulation_env_config=self.emulation_env_config, ip="10.0.0.1", logger=self.logger
-        )
+            emulation_env_config=self.emulation_env_config, ip="10.0.0.1", logger=self.logger)
         self.logger.info.assert_called_once_with("Starting Snort IDS monitor thread on IP: 10.0.0.1")
 
     @patch("csle_common.controllers.snort_ids_controller.SnortIDSController.start_snort_manager")
@@ -256,7 +228,6 @@ class TestSnortIdsControllerSuite:
         :param mock_start_monitor: mock_start_monitor
         :param mock_get_statuses: mock_get_statuses
         :param mock_start_manager: mock_start_manager
-
         :return: None
         """
         emulation_env_config = self.emulation_env_config
@@ -264,18 +235,13 @@ class TestSnortIdsControllerSuite:
         emulation_env_config.kafka_config.container.get_ips.return_value = ["127.0.0.1"]
         emulation_env_config.kafka_config.kafka_port = 9092
         emulation_env_config.snort_ids_manager_config.time_step_len_seconds = 60
-
         mock_get_statuses.return_value.monitor_running = False
         mock_channel = MagicMock()
-        mock_stub = MagicMock()
         mock_insecure_channel.return_value.__enter__.return_value = mock_channel
-        mock_channel = mock_stub
         SnortIDSController.start_snort_idses_monitor_thread(
-            emulation_env_config=emulation_env_config, ip="10.0.0.1", logger=self.logger
-        )
+            emulation_env_config=emulation_env_config, ip="10.0.0.1", logger=self.logger)
         mock_start_manager.assert_called_once_with(
-            emulation_env_config=emulation_env_config, ip="10.0.0.1", logger=self.logger
-        )
+            emulation_env_config=emulation_env_config, ip="10.0.0.1", logger=self.logger)
         mock_get_statuses.assert_called_once_with(port=50051, ip="10.0.0.1")
         self.logger.info.assert_called_once_with("Snort IDS monitor thread is not running on 10.0.0.1, starting it.")
         mock_insecure_channel.assert_called_once_with("10.0.0.1:50051", options=constants.GRPC_SERVERS.GRPC_OPTIONS)
@@ -288,15 +254,12 @@ class TestSnortIdsControllerSuite:
         an IDS to stop the monitor threads
 
         :param mock_stop_monitor_thread: mock_stop_monitor_thread
-
         :return: None
         """
         SnortIDSController.stop_snort_idses_monitor_threads(
-            emulation_env_config=self.emulation_env_config, physical_server_ip="192.168.1.1", logger=self.logger
-        )
+            emulation_env_config=self.emulation_env_config, physical_server_ip="192.168.1.1", logger=self.logger)
         mock_stop_monitor_thread.assert_called_once_with(
-            emulation_env_config=self.emulation_env_config, ip="10.0.0.1", logger=self.logger
-        )
+            emulation_env_config=self.emulation_env_config, ip="10.0.0.1", logger=self.logger)
 
     @patch("csle_common.controllers.snort_ids_controller.SnortIDSController.start_snort_manager")
     @patch("csle_collector.snort_ids_manager.query_snort_ids_manager.stop_snort_ids_monitor")
@@ -309,21 +272,16 @@ class TestSnortIdsControllerSuite:
         :param mock_insecure_channel: mock_insecure_channel
         :param mock_stop_monitor: mock_stop_monitor
         :param mock_start_manager: mock_start_manager
-
         :return: None
         """
         emulation_env_config = self.emulation_env_config
         emulation_env_config.snort_ids_manager_config.snort_ids_manager_port = 50051
         mock_channel = MagicMock()
-        mock_stub = MagicMock()
         mock_insecure_channel.return_value.__enter__.return_value = mock_channel
-        mock_channel = mock_stub
         SnortIDSController.stop_snort_idses_monitor_thread(
-            emulation_env_config=emulation_env_config, ip="10.0.0.1", logger=self.logger
-        )
+            emulation_env_config=emulation_env_config, ip="10.0.0.1", logger=self.logger)
         mock_start_manager.assert_called_once_with(
-            emulation_env_config=emulation_env_config, ip="10.0.0.1", logger=self.logger
-        )
+            emulation_env_config=emulation_env_config, ip="10.0.0.1", logger=self.logger)
         self.logger.info.assert_called_once_with("Stopping the Snort IDS monitor thread on 10.0.0.1.")
         mock_insecure_channel.assert_called_once_with("10.0.0.1:50051", options=constants.GRPC_SERVERS.GRPC_OPTIONS)
         mock_stop_monitor.assert_called()
@@ -340,7 +298,6 @@ class TestSnortIdsControllerSuite:
 
         :param mock_get_statuses: mock_get_statuses
         :param mock_start_managers: mock_start_managers
-
         :return: None
         """
         emulation_env_config = self.emulation_env_config
@@ -348,14 +305,10 @@ class TestSnortIdsControllerSuite:
         mock_status = MagicMock()
         mock_get_statuses.return_value = mock_status
         statuses = SnortIDSController.get_snort_idses_monitor_threads_statuses(
-            emulation_env_config=emulation_env_config,
-            physical_server_ip="192.168.1.1",
-            logger=self.logger,
-            start_if_stopped=True,
-        )
-        mock_start_managers.assert_called_once_with(
-            emulation_env_config=emulation_env_config, physical_server_ip="192.168.1.1", logger=self.logger
-        )
+            emulation_env_config=emulation_env_config, physical_server_ip="192.168.1.1", logger=self.logger,
+            start_if_stopped=True)
+        mock_start_managers.assert_called_once_with(emulation_env_config=emulation_env_config,
+                                                    physical_server_ip="192.168.1.1", logger=self.logger)
         mock_get_statuses.assert_called_once_with(port=50051, ip="10.0.0.1")
         assert statuses == [mock_status]
 
@@ -369,15 +322,12 @@ class TestSnortIdsControllerSuite:
 
         :param mock_get_status: mock_get_status
         :param mock_insecure_channel: mock_insecure_channel
-
         :return: None
         """
         mock_status = MagicMock()
         mock_get_status.return_value = mock_status
         mock_channel = MagicMock()
-        mock_stub = MagicMock()
         mock_insecure_channel.return_value.__enter__.return_value = mock_channel
-        mock_channel = mock_stub
         port = 50051
         ip = "10.0.0.1"
         status = SnortIDSController.get_snort_idses_monitor_threads_statuses_by_ip_and_port(port=port, ip=ip)
@@ -417,8 +367,6 @@ class TestSnortIdsControllerSuite:
         :param mock_get_statuses: mock_get_statuses
         :param mock_get_ports:mock_get_ports
         :param mock_get_ips: mock_get_ips
-
-
         :return: None
         """
         mock_get_ips.return_value = ["10.0.0.1", "10.0.0.2"]
@@ -434,12 +382,8 @@ class TestSnortIdsControllerSuite:
         emulation_env_config.name = "test_emulation_name"
         active_ips = ["10.0.0.1"]
         physical_server_ip = "192.168.1.1"
-        SnortIDSController.get_snort_managers_info(
-            emulation_env_config=emulation_env_config,
-            active_ips=active_ips,
-            logger=self.logger,
-            physical_server_ip=physical_server_ip,
-        )
+        SnortIDSController.get_snort_managers_info(emulation_env_config=emulation_env_config, active_ips=active_ips,
+                                                   logger=self.logger, physical_server_ip=physical_server_ip)
         mock_get_ips.assert_called_once_with(emulation_env_config=emulation_env_config)
         mock_get_ports.assert_called_once_with(emulation_env_config=emulation_env_config)
         mock_get_statuses.assert_any_call(port=50051, ip="10.0.0.1")

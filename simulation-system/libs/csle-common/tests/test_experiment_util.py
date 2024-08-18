@@ -62,7 +62,6 @@ class TestExperimentUtilSuite:
         Test the function that configures the logger for writing log-data of training
 
         :param tmpdir: temporary directory
-
         :return: None
         """
         logger_name = "test_logger"
@@ -78,7 +77,6 @@ class TestExperimentUtilSuite:
         Test the function that writes a config object to a config file
 
         :param mock_open: mock_open
-
         :return: None
         """
         emulation_env_config = MagicMock()
@@ -92,7 +90,6 @@ class TestExperimentUtilSuite:
         Test the function that writes a config object to a config file
 
         :param mock_open: mock_open
-
         :return: None
         """
         simulation_env_config = MagicMock()
@@ -106,7 +103,6 @@ class TestExperimentUtilSuite:
         Mock the method that reads the environment topology picture from a file
 
         :param mock_open: mock_open
-
         :return: None
         """
         mock_open.return_value.__enter__.return_value.read.return_value = b"fake_image_data"
@@ -141,7 +137,6 @@ class TestExperimentUtilSuite:
         Test the method that returns the default output dir
 
         :param mock_get_script_path: mock_get_script_path
-
         :return: None
         """
         mock_get_script_path.return_value = "path"
@@ -155,7 +150,6 @@ class TestExperimentUtilSuite:
         Test the method that returns the default path to emulation config file
 
         :param mock_default_output_dir: mock_default_output_dir
-
         :return: None
         """
         mock_default_output_dir.return_value = "/fake/default/output/dir"
@@ -171,7 +165,6 @@ class TestExperimentUtilSuite:
         Test the method that returns the default path to simulation config file
 
         :param mock_default_output_dir: mock_default_output_dir
-
         :return: None
         """
         mock_default_output_dir.return_value = "/fake/default/output/dir"
@@ -187,7 +180,6 @@ class TestExperimentUtilSuite:
         Test the method that returns the default path to emulation picture file
 
         :param mock_default_output_dir: mock_default_output_dir
-
         :return: None
         """
         mock_default_output_dir.return_value = "/fake/default/output/dir"
@@ -203,7 +195,6 @@ class TestExperimentUtilSuite:
         Test the method that returns the default path to simulation picture file
 
         :param mock_default_output_dir: mock_default_output_dir
-
         :return: None
         """
         mock_default_output_dir.return_value = "/fake/default/output/dir"
@@ -219,7 +210,6 @@ class TestExperimentUtilSuite:
         Test the method that returns the default path to container folders
 
         :param mock_default_output_dir: mock_default_output_dir
-
         :return: None
         """
         mock_default_output_dir.return_value = "/fake/default/output/dir"
@@ -236,7 +226,6 @@ class TestExperimentUtilSuite:
         Test the method that returns the default path to makefile tempalte
 
         :param mock_default_output_dir: mock_default_output_dir
-
         :return: None
         """
         mock_default_output_dir.return_value = "/fake/default/output/dir"
@@ -253,7 +242,6 @@ class TestExperimentUtilSuite:
         Test the method that returns the default path to makefile tempalte
 
         :param mock_default_output_dir: mock_default_output_dir
-
         :return: None
         """
         mock_default_output_dir.return_value = "/fake/default/output/dir"

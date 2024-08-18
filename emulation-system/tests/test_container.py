@@ -22,7 +22,7 @@ def container(docker_client) -> None:
     
     :return: None
     """
-    image_with_tag = f"kimham/{constants.CONTAINER_IMAGES.FTP_1}:0.6.0"
+    image_with_tag = f"{constants.CONTAINER_IMAGES.DOCKERHUB_USERNAME}/{constants.CONTAINER_IMAGES.FTP_1}:0.6.0"
     container = docker_client.containers.run(image_with_tag, detach=True)
     yield container
     container.stop()
