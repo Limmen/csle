@@ -100,89 +100,89 @@ Table 24: Commands available in the CSLE command-line interface (1/2).
 </p>
 
 
-| *Command*                                                        | *Description*                                                  |
-|------------------------------------------------------------------|----------------------------------------------------------------|
-| `csle shell <containername> `                                    | Opens shell in a given container.                              |
-| `csle start prometheus `                                         | Starts prometheus.                                             |
-| `csle start node_exporter `                                      | Starts node exporter.                                          |
-| `csle start grafana `                                            | Starts grafana.                                                |
-| `csle start cadvisor `                                           | Starts cadvisor.                                               |
-| `csle start managementsystem `                                   | Starts the management system.                                  |
-| `csle start <containername> `                                    | Starts the given container.                                    |
-| `csle start <emulationname> `                                    | Starts the given emulation.                                    |
-| `csle start <emulationname> --no_network`                        | Starts the given emulation without virtual networks.           |
-| `csle start <emulationname> --no_traffic`                        | Starts the given emulation without traffic generators.         |
-| `csle start <emulationname> --no_beats`                          | Starts the given emulation without configuring/starting beats. |
-| `csle start <emulationname> --no_clients`                        | Starts the given emulation without clients.                    |
-| `csle start <emulationname> --id`                                | Starts the given emulation with execution id.                  |
-| `csle start all `                                                | Starts everything.                                             |
-| `csle start all --id `                                           | Starts everything in an execution.                             |
+| *Command*                                                       | *Description*                                                  |
+|-----------------------------------------------------------------|----------------------------------------------------------------|
+| `csle shell <containername> `                                   | Opens shell in a given container.                              |
+| `csle start prometheus `                                        | Starts prometheus.                                             |
+| `csle start node_exporter `                                     | Starts node exporter.                                          |
+| `csle start grafana `                                           | Starts grafana.                                                |
+| `csle start cadvisor `                                          | Starts cadvisor.                                               |
+| `csle start managementsystem `                                  | Starts the management system.                                  |
+| `csle start <containername> `                                   | Starts the given container.                                    |
+| `csle start <emulationname> `                                   | Starts the given emulation.                                    |
+| `csle start <emulationname> --no_network`                       | Starts the given emulation without virtual networks.           |
+| `csle start <emulationname> --no_traffic`                       | Starts the given emulation without traffic generators.         |
+| `csle start <emulationname> --no_beats`                         | Starts the given emulation without configuring/starting beats. |
+| `csle start <emulationname> --no_clients`                       | Starts the given emulation without clients.                    |
+| `csle start <emulationname> --id`                               | Starts the given emulation with execution id.                  |
+| `csle start all `                                               | Starts everything.                                             |
+| `csle start all --id `                                          | Starts everything in an execution.                             |
 | `csle start statsmanager <port> <logdir> <logfile> <maxworkers> ` | Starts statsmanager.                                           |
-| `csle start <trainingjobid> `                                    | Starts trainingjob with a given id.                            |
-| `csle start <systemidjobid> `                                    | Starts system identification job with a given id.              |
-| `csle start <image> <containername> `                            | Starts a container with a given image and name.                |
-| `csle start_traffic <emulationname> <executionid> `              | Starts the traffic and clients in execution.                   |
-| `csle statsmanager <port> <logdir> <logfile> <maxworkers>`  | Starts the statsmanager.                                       |
-| `csle start hostmanagers <emulationname> --id <emulationid> --ip <ip>`       | Starts host managers on the specified ip sever. |
-| `csle start hostmanager <emulationname> --id <emulationid> --ip <ip> --container_ip <containerip>`       | Starts a host manager on the specified container. |
-| `csle start clientmanager <emulationname> --id <emulationid> --ip <ip>`       | Starts a client managers on the specified ip sever. |
-| `csle start snortmanagers <emulationname> --id <emulationid> --ip <ip>`       | Starts snort managers on the specified ip sever. |
-| `csle start snort manager <emulationname> --id <emulationid> --ip <ip> --container_ip <containerip>`       | Starts a snort manager on the specified container. |
-| `csle start elkmanager <emulationname> --id <emulationid> --ip <ip>`       | Starts an Elk managers on the specified ip sever. |
-| `csle start traffic managers <emulationname> --id <emulationid> --ip <ip>`       | Starts traffic managers on the specified ip sever. |
-| `csle start trafficmanager <emulationname> --id <emulationid> --ip <ip> --container_ip <containerip>`       | Starts a traffic manager on the specified container. |
-| `csle start ossecmanagers <emulationname> --id <emulationid> --ip <ip>`       | Starts Ossec managers on the specified ip sever. |
-| `csle start ossecmanager <emulationname> --id <emulationid> --ip <ip> --container_ip <containerip>`         | Starts an Ossec manager on the specified container. |
-| `csle start ryumanager <emulationname> --id <emulationid> --ip <ip>`       | Starts a Ryu managers on the specified ip sever. |
-| `csle start filebeats <emulationname> --id <emulationid> --ip <ip>`       | Starts filebeats on the specified ip sever. |
-| `csle start filebeat <emulationname> --id <emulationid> --ip <ip> --container_ip <containerip>`       | Starts the filebeat on the specified container. |
-| `csle start metricbeats <emulationname> --id <emulationid> --ip <ip>`       | Starts metricbeats on the specified ip sever. |
-| `csle start metricbeat <emulationname> --id <emulationid> --ip <ip> --container_ip <containerip>`       | Starts the metricbeat on the specified container. |
-| `csle start heartbeats <emulationname> --id <emulationid> --ip <ip>`       | Starts heartbeats on the specified ip sever. |
-| `csle start heartbeat <emulationname> --id <emulationid> --ip <ip> --container_ip <containerip>`       | Starts the heartbeat on the specified container. |
-| `csle start packetbeats <emulationname> --id <emulationid> --ip <ip>`       | Starts packetbeats on the specified ip sever. |
-| `csle start packetbeat <emulationname> --id <emulationid> --ip <ip> --container_ip <containerip>`       | Starts the packetbeat on the specified container. |
-| `csle stop <emulationname> <execid>`                             | Stops the emulation execution.                                 |
-| `csle stop <prometheus>`                                         | Stops prometheus.                                              |
-| `csle stop <cadvisor>`                                           | Stops cadvisor.                                                |
-| `csle stop <grafana>`                                            | Stops grafana.                                                 |
-| `csle stop <managementsystem>`                                   | Stops the management system.                                   |
-| `csle stop <containername> <execid>`                             | Stops the container.                                           |
-| `csle stop <statsmanager> `                                      | Stops the statsmanager.                                        |
-| `csle stop emulation_executions `                                | Stops all emulation executions.                                |
-| `csle stop all `                                                 | Stops everything that runs.                                    |
-| `csle stop_traffic <emulationname> <execid>`                     | Stops client population and traffic in execution.              |
-| `csle stop hostmanagers <emulationname> <emulationid> --ip <ip>`        | Stops host managers on the specified ip sever. |
-| `csle stop hostmanager <emulationname> <emulationid> --ip <ip> --container_ip <containerip>`        | Stops a host manager on the specified container. |
-| `csle stop clientmanager <emulationname> <emulationid> --ip <ip>`        | Stops a client managers on the specified ip sever. |
-| `csle stop snortmanagers <emulationname> <emulationid> --ip <ip>`        | Stops snort managers on the specified ip sever. |
-| `csle stop snort manager <emulationname> <emulationid> --ip <ip> --container_ip <containerip>`        | Stops a snort manager on the specified container. |
-| `csle stop elkmanager <emulationname> <emulationid> --ip <ip>`        | Stops an Elk managers on the specified ip sever. |
-| `csle stop traffic managers <emulationname> <emulationid> --ip <ip>`        | Stops traffic managers on the specified ip sever. |
-| `csle stop trafficmanager <emulationname> <emulationid> --ip <ip> --container_ip <containerip>`        | Stops a traffic manager on the specified container. |
-| `csle stop ossecmanagers <emulationname> <emulationid> --ip <ip>`        | Stops Ossec managers on the specified ip sever. |
-| `csle stop ossecmanager <emulationname> <emulationid> --ip <ip> --container_ip <containerip>`          | Stops an Ossec manager on the specified container. |
-| `csle stop ryumanager <emulationname> <emulationid> --ip <ip>`        | Stops a Ryu managers on the specified ip sever. |
-| `csle stop filebeats <emulationname> <emulationid> --ip <ip>`        | Stops filebeats on the specified ip sever. |
-| `csle stop filebeat <emulationname> <emulationid> --ip <ip> --container_ip <containerip>`        | Stops the filebeat on the specified container. |
-| `csle stop metricbeats <emulationname> <emulationid> --ip <ip>`        | Stops metricbeats on the specified ip sever. |
-| `csle stop metricbeat <emulationname> <emulationid> --ip <ip> --container_ip <containerip>`        | Stops the metricbeat on the specified container. |
-| `csle stop heartbeats <emulationname> <emulationid> --ip <ip>`        | Stops heartbeats on the specified ip sever. |
-| `csle stop heartbeat <emulationname> <emulationid> --ip <ip> --container_ip <containerip>`        | Stops the heartbeat on the specified container. |
-| `csle stop packetbeats <emulationname> <emulationid> --ip <ip>`        | Stops packetbeats on the specified ip sever. |
-| `csle stop packetbeat <emulationname> <emulationid> --ip <ip> --container_ip <containerip>`        | Stops the packetbeat on the specified container. |
-| `csle systemidentificationjob <jobid>`                           | Starts job.                                                    |
-| `csle trainingjob <jobid>`                                       | Starts job.                                                    |
-| `csle datacollectionjob <jobid>`                                 | Starts job.                                                    |
-| `csle uninstall emulations`                                      | Uninstalls emulation environments.                             |
-| `csle uninstall simulations`                                     | Uninstalls simulation environments.                            |
-| `csle uninstall <emname>`                                        | Uninstalls emulation.                                          |
-| `csle uninstall <simname>`                                       | Uninstalls simulation.                                         |
-| `csle uninstall derived_images`                                  | Uninstalls derived images.                                     |
-| `csle uninstall base_images`                                     | Uninstalls base images.                                        |
-| `csle uninstall metastore`                                       | Uninstalls metastore.                                          |
-| `csle uninstall all`                                             | Uninstalls everything.                                         |
-| `csle help`                                                      | Lists all available commands                                   |
+| `csle start <trainingjobid> `                                   | Starts trainingjob with a given id.                            |
+| `csle start <systemidjobid> `                                   | Starts system identification job with a given id.              |
+| `csle start <image> <containername> `                           | Starts a container with a given image and name.                |
+| `csle start_traffic <emulationname> <executionid> `             | Starts the traffic and clients in execution.                   |
+| `csle statsmanager <port> <logdir> <logfile> <maxworkers>` | Starts the statsmanager.                                       |
+| `csle start hostmanagers <emulationname> --id <emulationid> --ip <ip>` | Starts host managers on the specified ip sever. |
+| `csle start hostmanager <emulationname> --id <emulationid> --ip <ip> --container_ip <containerip>` | Starts a host manager on the specified container. |
+| `csle start clientmanager <emulationname> --id <emulationid> --ip <ip>` | Starts a client managers on the specified ip sever. |
+| `csle start snortmanagers <emulationname> --id <emulationid> --ip <ip>` | Starts snort managers on the specified ip sever. |
+| `csle start snort manager <emulationname> --id <emulationid> --ip <ip> --container_ip <containerip>` | Starts a snort manager on the specified container. |
+| `csle start elkmanager <emulationname> --id <emulationid> --ip <ip>` | Starts an Elk managers on the specified ip sever. |
+| `csle start traffic managers <emulationname> --id <emulationid> --ip <ip>` | Starts traffic managers on the specified ip sever. |
+| `csle start trafficmanager <emulationname> --id <emulationid> --ip <ip> --container_ip <containerip>` | Starts a traffic manager on the specified container. |
+| `csle start ossecmanagers <emulationname> --id <emulationid> --ip <ip>` | Starts Ossec managers on the specified ip sever. |
+| `csle start ossecmanager <emulationname> --id <emulationid> --ip <ip> --container_ip <containerip>`      | Starts an Ossec manager on the specified container. |
+| `csle start ryumanager <emulationname> --id <emulationid> --ip <ip>` | Starts a Ryu managers on the specified ip sever. |
+| `csle start filebeats <emulationname> --id <emulationid> --ip <ip>` | Starts filebeats on the specified ip sever. |
+| `csle start filebeat <emulationname> --id <emulationid> --ip <ip> --container_ip <containerip>` | Starts the filebeat on the specified container. |
+| `csle start metricbeats <emulationname> --id <emulationid> --ip <ip>` | Starts metricbeats on the specified ip sever. |
+| `csle start metricbeat <emulationname> --id <emulationid> --ip <ip> --container_ip <containerip>` | Starts the metricbeat on the specified container. |
+| `csle start heartbeats <emulationname> --id <emulationid> --ip <ip>`  | Starts heartbeats on the specified ip sever. |
+| `csle start heartbeat <emulationname> --id <emulationid> --ip <ip> --container_ip <containerip>` | Starts the heartbeat on the specified container. |
+| `csle start packetbeats <emulationname> --id <emulationid> --ip <ip>` | Starts packetbeats on the specified ip sever. |
+| `csle start packetbeat <emulationname> --id <emulationid> --ip <ip> --container_ip <containerip>` | Starts the packetbeat on the specified container. |
+| `csle stop <emulationname> <execid>`                            | Stops the emulation execution.                                 |
+| `csle stop <prometheus>`                                        | Stops prometheus.                                              |
+| `csle stop <cadvisor>`                                          | Stops cadvisor.                                                |
+| `csle stop <grafana>`                                           | Stops grafana.                                                 |
+| `csle stop <managementsystem>`                                  | Stops the management system.                                   |
+| `csle stop <containername> <execid>`                            | Stops the container.                                           |
+| `csle stop <statsmanager> `                                     | Stops the statsmanager.                                        |
+| `csle stop emulation_executions `                               | Stops all emulation executions.                                |
+| `csle stop all `                                                | Stops everything that runs.                                    |
+| `csle stop_traffic <emulationname> <execid>`                    | Stops client population and traffic in execution.              |
+| `csle stop hostmanagers <emulationname> <emulationid> --ip <ip>`      | Stops host managers on the specified ip sever. |
+| `csle stop hostmanager <emulationname> <emulationid> --ip <ip> --container_ip <containerip>`      | Stops a host manager on the specified container. |
+| `csle stop clientmanager <emulationname> <emulationid> --ip <ip>`      | Stops a client managers on the specified ip sever. |
+| `csle stop snortmanagers <emulationname> <emulationid> --ip <ip>`      | Stops snort managers on the specified ip sever. |
+| `csle stop snort manager <emulationname> <emulationid> --ip <ip> --container_ip <containerip>`     | Stops a snort manager on the specified container. |
+| `csle stop elkmanager <emulationname> <emulationid> --ip <ip>`      | Stops an Elk managers on the specified ip sever. |
+| `csle stop traffic managers <emulationname> <emulationid> --ip <ip>`      | Stops traffic managers on the specified ip sever. |
+| `csle stop trafficmanager <emulationname> <emulationid> --ip <ip> --container_ip <containerip>`     | Stops a traffic manager on the specified container. |
+| `csle stop ossecmanagers <emulationname> <emulationid> --ip <ip>`      | Stops Ossec managers on the specified ip sever. |
+| `csle stop ossecmanager <emulationname> <emulationid> --ip <ip> --container_ip <containerip>`       | Stops an Ossec manager on the specified container. |
+| `csle stop ryumanager <emulationname> <emulationid> --ip <ip>`      | Stops a Ryu managers on the specified ip sever. |
+| `csle stop filebeats <emulationname> <emulationid> --ip <ip>`       | Stops filebeats on the specified ip sever. |
+| `csle stop filebeat <emulationname> <emulationid> --ip <ip> --container_ip <containerip>`      | Stops the filebeat on the specified container. |
+| `csle stop metricbeats <emulationname> <emulationid> --ip <ip>`      | Stops metricbeats on the specified ip sever. |
+| `csle stop metricbeat <emulationname> <emulationid> --ip <ip> --container_ip <containerip>`      | Stops the metricbeat on the specified container. |
+| `csle stop heartbeats <emulationname> <emulationid> --ip <ip>`      | Stops heartbeats on the specified ip sever. |
+| `csle stop heartbeat <emulationname> <emulationid> --ip <ip> --container_ip <containerip>`      | Stops the heartbeat on the specified container. |
+| `csle stop packetbeats <emulationname> <emulationid> --ip <ip>`      | Stops packetbeats on the specified ip sever. |
+| `csle stop packetbeat <emulationname> <emulationid> --ip <ip> --container_ip <containerip>`      | Stops the packetbeat on the specified container. |
+| `csle systemidentificationjob <jobid>`                          | Starts job.                                                    |
+| `csle trainingjob <jobid>`                                      | Starts job.                                                    |
+| `csle datacollectionjob <jobid>`                                | Starts job.                                                    |
+| `csle uninstall emulations`                                     | Uninstalls emulation environments.                             |
+| `csle uninstall simulations`                                    | Uninstalls simulation environments.                            |
+| `csle uninstall <emname>`                                       | Uninstalls emulation.                                          |
+| `csle uninstall <simname>`                                      | Uninstalls simulation.                                         |
+| `csle uninstall derived_images`                                 | Uninstalls derived images.                                     |
+| `csle uninstall base_images`                                    | Uninstalls base images.                                        |
+| `csle uninstall metastore`                                      | Uninstalls metastore.                                          |
+| `csle uninstall all`                                            | Uninstalls everything.                                         |
+| `csle help`                                                     | Lists all available commands                                   |
 
 
 <p class="captionFig">
