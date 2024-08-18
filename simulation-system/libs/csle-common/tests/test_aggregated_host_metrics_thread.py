@@ -1,10 +1,6 @@
-from typing import List
 from unittest.mock import MagicMock, patch
 from csle_common.consumer_threads.aggregated_host_metrics_thread import AggregatedHostMetricsThread
 from csle_collector.host_manager.dao.host_metrics import HostMetrics
-from csle_common.dao.emulation_observation.defender.emulation_defender_machine_observation_state import (
-    EmulationDefenderMachineObservationState,
-)
 
 
 class TestSuiteAggregatedHostMetricsThread:
@@ -103,7 +99,7 @@ class TestSuiteAggregatedHostMetricsThread:
         mock_host_metrics_2.num_processes = 35
         mock_host_metrics_2.num_users = 40
 
-        thread = thread = AggregatedHostMetricsThread(
+        thread = AggregatedHostMetricsThread(
             host_metrics=MagicMock(spec="HostMetrics"), machines=[], sleep_time=1
         )
         thread.host_metrics_list = [mock_host_metrics_1, mock_host_metrics_2]

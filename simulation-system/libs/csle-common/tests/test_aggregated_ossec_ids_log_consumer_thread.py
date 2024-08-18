@@ -1,4 +1,4 @@
-from unittest.mock import MagicMock,patch
+from unittest.mock import MagicMock
 from csle_common.consumer_threads.aggregated_ossec_ids_log_consumer_thread import AggregatedOSSECIdsLogConsumerThread
 
 
@@ -8,7 +8,11 @@ class TestSuiteAggregatedOSSECIdsLogConsumerThread:
     """
 
     def test_initialization(self) -> None:
-        """_summary_"""
+        """
+        Initializes the test
+
+        :return: None
+        """
         kafka_server_ip = "127.0.0.1"
         kafka_port = 9092
         alert_counters = MagicMock()
