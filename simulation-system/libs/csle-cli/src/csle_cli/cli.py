@@ -8,6 +8,8 @@ import logging
 from typing import List, Tuple, Union
 import click
 import warnings
+from typing import Any
+import re
 
 warnings.filterwarnings("ignore")
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
@@ -673,17 +675,99 @@ def stop_shell_complete(ctx, param, incomplete) -> List[str]:
     running_containers = ContainerController.list_all_running_containers()
     containers: List[Tuple[str, str, str]] = running_containers
     container_names: List[str] = list(map(lambda x: x[0], containers))
-    return ["prometheus", "node_exporter", "cadvisor", "pgadmin", "grafana", "flask",
-            "statsmanager", "all", "emulation_executions"] + emulations + container_names
+    return (["prometheus", "node_exporter", "cadvisor", "pgadmin", "grafana", "flask",
+             "statsmanager", "all", "statsmanager", "nginx", "postgresql", "docker",
+             "clustermanager", "hostmanagers", "hostmanager", "clientmanager", "snortmanagers", "snortmanager",
+             "elkmanager", "trafficmanagers", "trafficmanager", "kafkamanager", "ossecmanagers", "ossecmanager",
+             "ryumanager", "filebeats", "filebeat", "metricbeats", "metricbeat", "heartbeat", "heartbeats",
+             "packetbeat", "packetbeats", "emulation_executions", "--ip", "--container_ip"]
+            + emulations + container_names)
 
 
 @click.option('--ip', default="", type=str)
+@click.option('--container_ip', default="", type=str)
 @click.argument('id', default=-1)
+@click.argument('name', default="", type=str)
 @click.argument('entity', default="", shell_complete=stop_shell_complete)
 @click.command("stop", help="prometheus | node_exporter | cadvisor | grafana | flask | container-name | "
                             "emulation-name | statsmanager | emulation_executions | pgadmin | all | nginx | postgresql "
-                            "| docker | clustermanager")
-def stop(entity: str, id: int = -1, ip: str = "") -> None:
+                            "| docker | clustermanager | hostmanagers | hostmanager | clientmanager | snortmanagers "
+                            "| snortmanager | elkmanager | trafficmanagers | trafficmanager | kafkamanager "
+                            "| ossecmanagers | ossecmanager | ryumanager | filebeats | filebeat | metricbeat "
+                            "| metricbeats | heartbeats | heartbeat | packetbeat | packetbeats \n\n"
+                            "\b\n"
+                            "- \033[95mprometheus\033[0m: stops prometheus for a node with ip address specified with"
+                            " --ip option.\n"
+                            "- \033[95mnode_exporter\033[0m: stops node exporter for a node with ip address specified "
+                            "with --ip option.\n"
+                            "- \033[95mcadvisor\033[0m: stops cadvisor for a node with ip address specified "
+                            "with --ip option.\n"
+                            "- \033[95mgrafana\033[0m: stops grafana for a node with ip address specified "
+                            "with --ip option.\n"
+                            "- \033[95mflask\033[0m: stops flask for a node with ip address specified "
+                            "with --ip option.\n"
+                            "- \033[95mstatsmanager\033[0m: stops docker statsmanager for a node with ip address "
+                            "specified with --ip option.\n"
+                            "- \033[95memulation_executions\033[0m: stops all emulation executions.\n"
+                            "- \033[95mpgadmin\033[0m: stops pgadmin for a node with ip address "
+                            "specified with --ip option.\n"
+                            "- \033[95mall\033[0m: stops all running emulations and containers on all the nodes.\n"
+                            "- \033[95mnginx\033[0m: stops nginx for a node with ip address "
+                            "specified with --ip option.\n"
+                            "- \033[95mpostgresql\033[0m: stops PostgreSQL for a node with ip address "
+                            "specified with --ip option.\n"
+                            "- \033[95mdocker\033[0m: stops docker engine for a node with ip address "
+                            "specified with --ip option.\n"
+                            "- \033[95mclustermanager\033[0m: stops cluster manager.\n"
+                            "- \033[95mhostmanagers\033[0m: stops all host managers on the node specified by --ip,"
+                            " for the emulation identified by --name and --id.\n"
+                            "- \033[95mhostmanager\033[0m: stops the host manager on the node specified by --ip, "
+                            "targeting the container with the IP from --container_ip, for the emulation identified "
+                            "by --name and --id.\n"
+                            "- \033[95mclientmanager\033[0m: stops client manager on the node specified by --ip,"
+                            " for the emulation identified by --name and --id.\n"
+                            "- \033[95msnortmanagers\033[0m: stops all snort managers on the node specified by --ip,"
+                            " for the emulation identified by --name and --id.\n"
+                            "- \033[95msnortmanager\033[0m: stops the snort manager on the node specified by --ip, "
+                            "targeting the container with the IP from --container_ip, for the emulation identified "
+                            "by --name and --id.\n"
+                            "- \033[95melkmanager\033[0m: stops the elk manager on the node specified by --ip,"
+                            " for the emulation identified by --name and --id.\n"
+                            "- \033[95mtrafficmanagers\033[0m: stops all traffic managers on the node specified by"
+                            " --ip, for the emulation identified by --name and --id.\n"
+                            "- \033[95mtrafficmanager\033[0m: stops the traffic manager on the node specified by --ip, "
+                            "targeting the container with the IP from --container_ip, for the emulation identified "
+                            "by --name and --id.\n"
+                            "- \033[95mkafkamanager\033[0m: stops the ossec manager on the node specified by --ip,"
+                            " for the emulation identified by --name and --id.\n"
+                            "- \033[95mossecmanagers\033[0m: stops all traffic managers on the node specified by --ip,"
+                            " for the emulation identified by --name and --id.\n"
+                            "- \033[95mossecmanager\033[0m: stops the ossec manager on the node specified by --ip, "
+                            "targeting the container with the IP from --container_ip, for the emulation identified "
+                            "by --name and --id.\n"
+                            "- \033[95mtyumanager\033[0m: stops the ryu manager on the node specified by --ip,"
+                            " for the emulation identified by --name and --id. To stop the ryu manager the emulation"
+                            " should include the SDN network.\n"
+                            "- \033[95mfilebeats\033[0m: stops all filebeats for a node with the specified --ip option"
+                            " and the emulation identified by the specified --name and --id.\n"
+                            "- \033[95mfilebeat\033[0m: stops filebeat for a container with the IP address "
+                            "--container_ip, node specified by --ip, and emulation identified by --name and --id.\n"
+                            "- \033[95mmetricbeats\033[0m: stops all metricbeats for a node with the specified --ip "
+                            "option and the emulation identified by the specified --name and --id.\n"
+                            "- \033[95mmetricbeat\033[0m: stops metricbeat for a container with the IP address "
+                            "--container_ip, node specified by --ip, and emulation identified by --name and --id.\n"
+                            "- \033[95mheartbeats\033[0m: stops all heartbeats for a node with the specified --ip"
+                            " option and the emulation identified by the specified --name and --id.\n"
+                            "- \033[95mheartbeat\033[0m: stops heartbeat for a container with the IP address "
+                            "--container_ip, node specified by --ip, and emulation identified by --name and --id.\n"
+                            "- \033[95mpacketbeats\033[0m: stops all packetbeats for a node with the specified --ip"
+                            " option and the emulation identified by the specified --name and --id.\n"
+                            "- \033[95mpacketbeat\033[0m: stops packetbeat for a container with the IP address "
+                            "--container_ip, node specified by --ip, and emulation identified by --name and --id.\n\n"
+                            "\b\n"
+                            "* \033[93mExample: csle stop filebeat csle-level4-060 15 --ip X.X.X.X "
+                            "--container_ip Y.Y.Y.Y \033[0m")
+def stop(entity: str, name: str, id: int = -1, ip: str = "", container_ip: str = "") -> None:
     """
     Stops an entity
 
@@ -726,6 +810,46 @@ def stop(entity: str, id: int = -1, ip: str = "") -> None:
         stop_statsmanager(ip=ip)
     elif entity == "emulation_executions":
         stop_emulation_executions()
+    elif entity == "hostmanagers":
+        stop_host_managers(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "hostmanager":
+        stop_host_manager(ip=ip, container_ip=container_ip, emulation=name, ip_first_octet=id)
+    elif entity == "clientmanager":
+        stop_client_manager(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "snortmanagers":
+        stop_snort_ids_managers(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "snortmanager":
+        stop_snort_ids_manager(ip=ip, container_ip=container_ip, emulation=name, ip_first_octet=id)
+    elif entity == "elkmanager":
+        stop_elk_manager(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "trafficmanagers":
+        stop_traffic_managers(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "trafficmanager":
+        stop_traffic_manager(ip=ip, container_ip=container_ip, emulation=name, ip_first_octet=id)
+    elif entity == "kafkamanager":
+        stop_kafka_manager(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "ossecmanagers":
+        stop_ossec_ids_managers(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "ossecmanager":
+        stop_ossec_ids_manager(ip=ip, container_ip=container_ip, emulation=name, ip_first_octet=id)
+    elif entity == "ryumanager":
+        stop_ryu_manager(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "filebeats":
+        stop_filebeats(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "filebeat":
+        stop_filebeat(ip=ip, container_ip=container_ip, emulation=name, ip_first_octet=id)
+    elif entity == "metricbeats":
+        stop_metricbeats(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "metricbeat":
+        stop_metricbeat(ip=ip, container_ip=container_ip, emulation=name, ip_first_octet=id)
+    elif entity == "heartbeats":
+        stop_heartbeats(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "heartbeat":
+        stop_heartbeat(ip=ip, container_ip=container_ip, emulation=name, ip_first_octet=id)
+    elif entity == "packetbeats":
+        stop_packetbeats(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "packetbeat":
+        stop_packetbeat(ip=ip, container_ip=container_ip, emulation=name, ip_first_octet=id)
     else:
         container_stopped = False
         for node in config.cluster_config.cluster_nodes:
@@ -895,6 +1019,743 @@ def stop_statsmanager(ip: str) -> None:
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
             ClusterController.stop_docker_statsmanager(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+
+
+def stop_host_managers(ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for stopping the host managers
+
+    :param ip: the ip of the node to stop the host mangers
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                           show_eta=False, width=40) as progress_bar:
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                stopped = ClusterController.stop_host_managers(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                                                               emulation=emulation, ip_first_octet=ip_first_octet)
+                if stopped.outcome:
+                    stop_message = f"\nHost managers are stopped on port: {constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}"
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    stop_message = (f"\nHost managers are not stopped on port: "
+                                    f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
+
+
+def stop_ryu_manager(ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for stopping the ryu manager
+
+    :param ip: the ip of the node to stop the ryu manger
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    emulation_config = MetastoreFacade.get_emulation_by_name(name=emulation)
+    has_sdn = emulation_config.sdn_controller_config is not None
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                           show_eta=False, width=40) as progress_bar:
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                if has_sdn:
+                    stopped = ClusterController.stop_ryu_manager(
+                        ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                        ip_first_octet=ip_first_octet)
+                    if stopped.outcome:
+                        stop_message = (f"\nRyu managers are stopped on port:"
+                                        f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
+                        text_color = "white"
+                        text_style_bold = False
+                    else:
+                        stop_message = (f"\nHost managers are not stopped:"
+                                        f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
+                        text_color = "white"
+                        text_style_bold = True
+                else:
+                    stop_message = f"\nEmulation with name: {emulation} does not have SDN."
+                    text_color = "red"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
+
+
+def stop_ossec_ids_managers(ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for stopping the ossec managers
+
+    :param ip: the ip of the node to stop the ossec mangers
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                stopped = ClusterController.stop_ossec_ids_managers(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet)
+                if stopped.outcome:
+                    stop_message = f"\nOssec managers are stopped on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}"
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    stop_message = f"\nOssec managers are not stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}"
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
+
+
+def stop_host_manager(ip: str, container_ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for stopping the host manager
+
+    :param ip: the ip of the node to stop the host manager
+    :param container_ip: the ip of the host to be stopped
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                stopped = ClusterController.stop_host_manager(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                                                              emulation=emulation, ip_first_octet=ip_first_octet,
+                                                              container_ip=container_ip)
+                if stopped.outcome:
+                    stop_message = (f"\nHost with ip {container_ip} on port "
+                                    f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is stopped.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    stop_message = (f"\nHost with ip {container_ip} is not "
+                                    f"stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
+
+
+def stop_ossec_ids_manager(ip: str, container_ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for stopping the ossec manager
+
+    :param ip: the ip of the node to stop the ossec manager
+    :param container_ip: the ip of the host to be stopped
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                stopped = ClusterController.stop_ossec_ids_manager(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet, container_ip=container_ip)
+                if stopped.outcome:
+                    stop_message = (f"\nOssec manager with ip {container_ip} on port:"
+                                    f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is stopped.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    stop_message = (f"\nOssec manager with ip {container_ip} is not "
+                                    f"stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
+
+
+def stop_client_manager(ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for stopping the client manager
+
+    :param ip: the ip of the node to stop the client manger
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                stopped = ClusterController.stop_client_manager(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                                                                emulation=emulation, ip_first_octet=ip_first_octet)
+                if stopped.outcome:
+                    stop_message = f"\nClient manager on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is stopped."
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    stop_message = (f"\nClient manager is not stopped:"
+                                    f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
+
+
+def stop_snort_ids_managers(ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for stopping the snort ids managers
+
+    :param ip: the ip of the node to stop the snort ids mangers
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                stopped = ClusterController.stop_snort_ids_managers(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet)
+                if stopped.outcome:
+                    stop_message = (f"\nSnort ids managers on port:"
+                                    f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is stopped. ")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    stop_message = (f"\nSnort ids managers are not stopped:"
+                                    f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
+
+
+def stop_snort_ids_manager(ip: str, container_ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for stopping the snort ids manager
+
+    :param ip: the ip of the node to stop the host manager
+    :param container_ip: the ip of the host to be stopped
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                stopped = ClusterController.stop_snort_ids_manager(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet, container_ip=container_ip)
+                if stopped.outcome:
+                    stop_message = (f"\nSnort ids on the host with ip {container_ip} on "
+                                    f"port {constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is stopped.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    stop_message = (f"\nSnort ids on the host with ip {container_ip} is not "
+                                    f"stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
+
+
+def stop_elk_manager(ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for stopping the elk manage
+
+    :param ip: the ip of the node to stop the elk manger
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                stopped = ClusterController.stop_elk_manager(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                                                             emulation=emulation, ip_first_octet=ip_first_octet)
+                if stopped.outcome:
+                    stop_message = f"\nElk manager on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is stopped."
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    stop_message = f"\nElk manager is not stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}"
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
+
+
+def stop_kafka_manager(ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for stopping the Kafka manage
+
+    :param ip: the ip of the node to stop the Kafka manger
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                stopped = ClusterController.stop_kafka_manager(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet)
+                if stopped.outcome:
+                    stop_message = f"\nKafka manager on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is stopped."
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    stop_message = f"\nKafka manager is not stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}."
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
+
+
+def stop_traffic_managers(ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for stopping the traffic managers
+
+    :param ip: the ip of the node to stop the traffic mangers
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                stopped = ClusterController.stop_traffic_managers(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet)
+                if stopped.outcome:
+                    stop_message = (f"\nTraffic managers on port:"
+                                    f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} are stopped.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    stop_message = f"\nTraffic managers are not stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}."
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
+
+
+def stop_traffic_manager(ip: str, container_ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for stopping the traffic manager
+
+    :param ip: the ip of the node to stop the traffic manager
+    :param container_ip: the ip of the host that traffic is running on
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                stopped = ClusterController.stop_traffic_manager(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet, container_ip=container_ip)
+                if stopped.outcome:
+                    stop_message = (f"\nTraffic manager with ip {container_ip} on port:"
+                                    f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is stopped.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    stop_message = (f"\nTraffic manager with ip {container_ip} is not "
+                                    f"stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
+
+
+def stop_filebeats(ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for stopping the filebeats
+
+    :param ip: the ip of the node to stop the filebeats
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                stopped = ClusterController.stop_filebeats(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet)
+                if stopped.outcome:
+                    stop_message = f"\nFilebeats on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is stopped."
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    stop_message = f"\nFilebeats are not stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}."
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
+
+
+def stop_filebeat(ip: str, container_ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for stopping the filebeat
+
+    :param ip: the ip of the node to stop the filebeat
+    :param container_ip: the ip of the host that traffic is running on
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                stopped = ClusterController.stop_filebeat(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet, container_ip=container_ip)
+                if stopped.outcome:
+                    stop_message = (
+                        f"\nFilebeat with ip {container_ip} on port:"
+                        f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is stopped.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    stop_message = (f"\nFilebeat with ip {container_ip} is not "
+                                    f"stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
+
+
+def stop_metricbeats(ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for stopping the metricbeats
+
+    :param ip: the ip of the node to stop the metricbeats
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                stopped = ClusterController.stop_metricbeats(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet)
+                if stopped.outcome:
+                    stop_message = f"\nMetricbeats on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} are stopped."
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    stop_message = f"\nMetricbeats are not stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}."
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
+
+
+def stop_metricbeat(ip: str, container_ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for stopping the metricbeat
+
+    :param ip: the ip of the node to stop the metricbeat
+    :param container_ip: the ip of the host that traffic is running on
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                stopped = ClusterController.stop_metricbeat(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet, container_ip=container_ip)
+                if stopped.outcome:
+                    stop_message = (f"\nMetricbeat with ip {container_ip} on port:"
+                                    f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is stopped.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    stop_message = (f"\nMetricbeat with ip {container_ip} is not "
+                                    f"stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}.")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
+
+
+def stop_heartbeats(ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for stopping the heartbeats
+
+    :param ip: the ip of the node to stop the heartbeats
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                stopped = ClusterController.stop_heartbeats(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet)
+                if stopped.outcome:
+                    stop_message = f"\nHeartbeats on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} are stopped."
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    stop_message = f"\nHeartbeats are not stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}."
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
+
+
+def stop_heartbeat(ip: str, container_ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for stopping the heartbeat
+
+    :param ip: the ip of the node to stop the heartbeat
+    :param container_ip: the ip of the host that traffic is running on
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                stopped = ClusterController.stop_heartbeat(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet, container_ip=container_ip)
+                if stopped.outcome:
+                    stop_message = (f"\nHeartbeat with ip {container_ip} on port: "
+                                    f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is stopped.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    stop_message = (f"\nHeartbeat with ip {container_ip} is not "
+                                    f"stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}.")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
+
+
+def stop_packetbeats(ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for stopping the packetbeats
+
+    :param ip: the ip of the node to stop the packetbeats
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                stopped = ClusterController.stop_packetbeats(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet)
+                if stopped.outcome:
+                    stop_message = f"\nPacketbeats on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} are stopped."
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    stop_message = f"\nPacketbeats are not stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}."
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
+
+
+def stop_packetbeat(ip: str, container_ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for stopping the packetbeat
+
+    :param ip: the ip of the node to stop the packetbeat
+    :param container_ip: the ip of the host that traffic is running on
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                stopped = ClusterController.stop_packetbeat(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet, container_ip=container_ip)
+                if stopped.outcome:
+                    stop_message = (f"\nPacketbeat with ip {container_ip} on port:"
+                                    f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is stopped.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    stop_message = (f"\nPacketbeat with ip {container_ip} is not "
+                                    f"stopped:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}.")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(stop_message, fg=text_color, bold=text_style_bold)
 
 
 @click.argument('max_workers', default=10, type=int)
@@ -1072,11 +1933,18 @@ def start_shell_complete(ctx, param, incomplete) -> List[str]:
     images: List[Tuple[str, str, str, str, str]] = ContainerController.list_all_images()
     image_names: List[str] = list(map(lambda x: x[0], images))
     return (["prometheus", "node_exporter", "grafana", "cadvisor", "pgadmin", "flask", "all",
-             "statsmanager", "training_job", "system_id_job", "--id", "--no_traffic"]
+             "statsmanager", "training_job", "system_id_job", "nginx", "postgresql", "docker", "clustermanager",
+             "hostmanagers", "hostmanager", "clientmanager", "snortmanagers", "snortmanager", "elkmanager",
+             "trafficmanagers", "trafficmanager", "kafkamanager", "ossecmanagers", "ossecmanager", "ryumanager",
+             "filebeats", "filebeat", "metricbeats", "metricbeat", "heartbeat", "heartbeats", "packetbeat",
+             "packetbeats", "--container_ip", "--initial_start", "--no_clients", "--no_network", "--no_beats",
+             "--id", "--no_traffic"]
             + emulations + container_names + image_names)
 
 
 @click.option('--ip', default="", type=str)
+@click.option('--container_ip', default="", type=str)
+@click.option('--initial_start', default=False, type=bool)
 @click.option('--id', default=None, type=int)
 @click.option('--no_clients', is_flag=True, help='skip starting the client population')
 @click.option('--no_traffic', is_flag=True, help='skip starting the traffic generators')
@@ -1086,9 +1954,89 @@ def start_shell_complete(ctx, param, incomplete) -> List[str]:
 @click.argument('entity', default="", type=str, shell_complete=start_shell_complete)
 @click.command("start", help="prometheus | node_exporter | grafana | cadvisor | flask | pgadmin | "
                              "container-name | emulation-name | all | statsmanager | training_job "
-                             "| system_id_job | nginx | postgresql | docker | clustermanager")
+                             "| system_id_job | nginx | postgresql | docker | clustermanager | hostmanagers "
+                             "| hostmanager | clientmanager | snortmanagers | snortmanager | elkmanager "
+                             "| trafficmanagers | trafficmanager | kafkamanager | ossecmanagers | ossecmanager "
+                             "| ryumanager | filebeats | filebeat | metricbeats | metricbeat | heartbeat | heartbeats"
+                             "| packetbeat | packetbeats\n\n"
+                             "\b\n"
+                             "- \033[95mprometheus\033[0m: starts prometheus for a node with ip address specified with"
+                             " --ip option.\n"
+                             "- \033[95mnode_exporter\033[0m: starts node exporter for a node with ip address "
+                             "specified with --ip option.\n"
+                             "- \033[95mcadvisor\033[0m: starts cadvisor for a node with ip address specified "
+                             "with --ip option.\n"
+                             "- \033[95mgrafana\033[0m: starts grafana for a node with ip address specified "
+                             "with --ip option.\n"
+                             "- \033[95mflask\033[0m: starts flask for a node with ip address specified "
+                             "with --ip option.\n"
+                             "- \033[95mstatsmanager\033[0m: starts docker statsmanager for a node with ip address "
+                             "specified with --ip option.\n"
+                             "- \033[95memulation_executions\033[0m: starts all emulation executions.\n"
+                             "- \033[95mpgadmin\033[0m: starts pgadmin for a node with ip address "
+                             "specified with --ip option.\n"
+                             "- \033[95mall\033[0m: starts all running emulations and containers on all the nodes.\n"
+                             "- \033[95mnginx\033[0m: starts nginx for a node with ip address "
+                             "specified with --ip option.\n"
+                             "- \033[95mpostgresql\033[0m: starts PostgreSQL for a node with ip address "
+                             "specified with --ip option.\n"
+                             "- \033[95mdocker\033[0m: starts docker engine for a node with ip address "
+                             "specified with --ip option.\n"
+                             "- \033[95mclustermanager\033[0m: starts cluster manager.\n"
+                             "- \033[95mhostmanagers\033[0m: starts all host managers on the node specified by --ip,"
+                             " for the emulation identified by --name and --id.\n"
+                             "- \033[95mhostmanager\033[0m: starts the host manager on the node specified by --ip, "
+                             "targeting the container with the IP from --container_ip, for the emulation identified "
+                             "by --name and --id.\n"
+                             "- \033[95mclientmanager\033[0m: starts client manager on the node specified by --ip,"
+                             " for the emulation identified by --name and --id.\n"
+                             "- \033[95msnortmanagers\033[0m: starts all snort managers on the node specified by --ip,"
+                             " for the emulation identified by --name and --id.\n"
+                             "- \033[95msnortmanager\033[0m: starts the snort manager on the node specified by --ip, "
+                             "targeting the container with the IP from --container_ip, for the emulation identified "
+                             "by --name and --id.\n"
+                             "- \033[95melkmanager\033[0m: starts the elk manager on the node specified by --ip,"
+                             " for the emulation identified by --name and --id.\n"
+                             "- \033[95mtrafficmanagers\033[0m: starts all traffic managers on the node specified by "
+                             "--ip, for the emulation identified by --name and --id.\n"
+                             "- \033[95mtrafficmanager\033[0m: starts the traffic manager on the node specified by "
+                             "--ip, targeting the container with the IP from --container_ip, for the emulation"
+                             " identified by --name and --id.\n"
+                             "- \033[95mkafkamanager\033[0m: starts the ossec manager on the node specified by --ip,"
+                             " for the emulation identified by --name and --id.\n"
+                             "- \033[95mossecmanagers\033[0m: starts all traffic managers on the node specified by "
+                             "--ip, for the emulation identified by --name and --id.\n"
+                             "- \033[95mossecmanager\033[0m: starts the ossec manager on the node specified by --ip, "
+                             "targeting the container with the IP from --container_ip, for the emulation identified "
+                             "by --name and --id.\n"
+                             "- \033[95mtyumanager\033[0m: starts the ryu manager on the node specified by --ip,"
+                             " for the emulation identified by --name and --id. To stop the ryu manager the emulation"
+                             " should include the SDN network.\n"
+                             "- \033[95mfilebeats\033[0m: starts all Filebeats for a node with --ip and emulation "
+                             "identified by --name and --id. Use --initial_start for the first start.\n"
+                             "- \033[95mfilebeat\033[0m: starts filebeat for a container with --container_ip, "
+                             "node with --ip, and emulation with --name and --id. Use --initial_start for "
+                             "the initial start.\n"
+                             "- \033[95mmetricbeats\033[0m: starts all metricbeats for a node with --ip and emulation "
+                             "identified by --name and --id. Use --initial_start for the first start.\n"
+                             "- \033[95mmetricbeat\033[0m: starts hearttbeat for a container with --container_ip, "
+                             "node with --ip, and emulation with --name and --id. Use --initial_start for the "
+                             "initial start.\n"
+                             "- \033[95mheartbeats\033[0m: starts all heartbeats for a node with --ip and emulation"
+                             " identified by --name and --id. Use --initial_start for the first start.\n"
+                             "- \033[95mheartbeat\033[0m: starts heartbeat for a container with --container_ip, "
+                             "node with --ip, and emulation with --name and --id. Use --initial_start for the "
+                             "initial start.\n"
+                             "- \033[95mpacketbeats\033[0m: starts all packetbeats for a node with --ip and emulation"
+                             " identified by --name and --id. Use --initial_start for the first start.\n"
+                             "- \033[95mpacketbeat\033[0m: starts packetbeat for a container with --container_ip, "
+                             "node with --ip, and emulation with --name and --id. Use --initial_start for the"
+                             " initial start.\n\n"
+                             "\b\n"
+                             "* \033[93mExample: csle start filebeat csle-level4-060 --id 15 --ip X.X.X.X "
+                             "--container_ip Y.Y.Y.Y \033[0m")
 def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, no_network: bool, ip: str,
-          no_beats: bool) -> None:
+          container_ip: str, no_beats: bool, initial_start: bool) -> None:
     """
     Starts an entity, e.g., a container or the management system
 
@@ -1100,6 +2048,7 @@ def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, n
     :param no_network: a boolean parameter that is True if the network should be skipped when creating a container
     :param id: (optional) an id parameter to identify the entity to start
     :param ip: ip when stopping a service on a specific physical server (empty ip means all servers)
+    :param container_ip: ip of the host to be started
     :return: None
     """
     from csle_agents.job_controllers.training_job_manager import TrainingJobManager
@@ -1140,6 +2089,50 @@ def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, n
             data_collection_job=system_id_job)
     elif entity == "flask":
         start_flask(ip=ip)
+    elif entity == "hostmanagers":
+        start_host_managers(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "hostmanager":
+        start_host_manager(ip=ip, container_ip=container_ip, emulation=name, ip_first_octet=id)
+    elif entity == "clientmanager":
+        start_client_manager(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "snortmanagers":
+        start_snort_ids_managers(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "snortmanager":
+        start_snort_ids_manager(ip=ip, container_ip=container_ip, emulation=name, ip_first_octet=id)
+    elif entity == "elkmanager":
+        start_elk_manager(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "trafficmanagers":
+        start_traffic_managers(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "trafficmanager":
+        start_traffic_manager(ip=ip, container_ip=container_ip, emulation=name, ip_first_octet=id)
+    elif entity == "kafkamanager":
+        start_kafka_manager(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "ossecmanagers":
+        start_ossec_ids_managers(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "ossecmanager":
+        start_ossec_ids_manager(ip=ip, container_ip=container_ip, emulation=name, ip_first_octet=id)
+    elif entity == "ryumanager":
+        start_ryu_manager(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "filebeats":
+        start_filebeats(ip=ip, emulation=name, ip_first_octet=id, initial_start=initial_start)
+    elif entity == "filebeat":
+        start_filebeat(ip=ip, container_ip=container_ip, emulation=name, ip_first_octet=id,
+                       initial_start=initial_start)
+    elif entity == "metricbeats":
+        start_metricbeats(ip=ip, emulation=name, ip_first_octet=id, initial_start=initial_start)
+    elif entity == "metricbeat":
+        start_metricbeat(ip=ip, container_ip=container_ip, emulation=name, ip_first_octet=id,
+                         initial_start=initial_start)
+    elif entity == "heartbeats":
+        start_heartbeats(ip=ip, emulation=name, ip_first_octet=id, initial_start=initial_start)
+    elif entity == "heartbeat":
+        start_heartbeat(ip=ip, container_ip=container_ip, emulation=name, ip_first_octet=id,
+                        initial_start=initial_start)
+    elif entity == "packetbeats":
+        start_packetbeats(ip=ip, emulation=name, ip_first_octet=id, initial_start=initial_start)
+    elif entity == "packetbeat":
+        start_packetbeat(ip=ip, container_ip=container_ip, emulation=name, ip_first_octet=id,
+                         initial_start=initial_start)
     else:
         container_started = False
         for node in config.cluster_config.cluster_nodes:
@@ -1311,6 +2304,775 @@ def start_statsmanager(ip: str) -> None:
     for node in config.cluster_config.cluster_nodes:
         if node.ip == ip or ip == "":
             ClusterController.start_docker_statsmanager(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+
+
+def start_host_managers(ip: str, emulation: str, ip_first_octet: int):
+    """
+    Utility function for starting host manager
+
+    :param ip: the ip of the node to start host manager
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                operation_outcome = ClusterController.start_host_managers(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet)
+                if operation_outcome.outcome:
+                    start_message = (f"\nHost managers on port:"
+                                     f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} are started.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    start_message = f"\nHost managers are not started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}."
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(start_message, fg=text_color, bold=text_style_bold)
+
+
+def start_ryu_manager(ip: str, emulation: str, ip_first_octet: int):
+    """
+    Utility function for starting ryu manager
+
+    :param ip: the ip of the node to start ryu manager
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    emulation_config = MetastoreFacade.get_emulation_by_name(name=emulation)
+    has_sdn = emulation_config.sdn_controller_config is not None
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                if has_sdn:
+                    operation_outcome = ClusterController.start_ryu_manager(
+                        ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                        ip_first_octet=ip_first_octet)
+                    if operation_outcome.outcome:
+                        start_message = (f"\nRyu managers on port:"
+                                         f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} are started.")
+                        text_color = "white"
+                        text_style_bold = False
+                    else:
+                        start_message = f"\nRyu managers are not started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}."
+                        text_color = "white"
+                        text_style_bold = True
+                else:
+                    start_message = f"\nEmulation with name: {emulation} does not have SDN."
+                    text_color = "red"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(start_message, fg=text_color, bold=text_style_bold)
+
+
+def start_filebeats(ip: str, emulation: str, ip_first_octet: int, initial_start: bool):
+    """
+    Utility function for starting filebeats
+
+    :param ip: the ip of the node to start filebeats
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                operation_outcome = ClusterController.start_filebeats(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet, initial_start=initial_start)
+                if operation_outcome.outcome:
+                    start_message = f"\nFilebeats on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} are started."
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    start_message = f"\nFilebeats are not started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}."
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(start_message, fg=text_color, bold=text_style_bold)
+
+
+def start_filebeat(ip: str, container_ip: str, emulation: str, ip_first_octet: int, initial_start: bool):
+    """
+    Utility function for starting filebeat
+
+    :param ip: the ip of the node to start filebeat
+    :param container_ip: the ip of the host to start
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                operation_outcome = ClusterController.start_filebeat(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet, container_ip=container_ip, initial_start=initial_start)
+                if operation_outcome.outcome:
+                    start_message = (f"\nFilebeat with ip {container_ip} on "
+                                     f"port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is started.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    start_message = (f"\nFilebeat with ip {container_ip} is not "
+                                     f"started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}.")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(start_message, fg=text_color, bold=text_style_bold)
+
+
+def start_metricbeats(ip: str, emulation: str, ip_first_octet: int, initial_start: bool):
+    """
+    Utility function for starting metricbeats
+
+    :param ip: the ip of the node to start metricbeats
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                operation_outcome = ClusterController.start_metricbeats(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet, initial_start=initial_start)
+                if operation_outcome.outcome:
+                    start_message = f"\nMetricbeats on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} are started."
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    start_message = f"\nMetricbeats are not started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}."
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(start_message, fg=text_color, bold=text_style_bold)
+
+
+def start_metricbeat(ip: str, container_ip: str, emulation: str, ip_first_octet: int, initial_start: bool):
+    """
+    Utility function for starting metricbeat
+
+    :param ip: the ip of the node to start metricbeat
+    :param container_ip: the ip of the host to start
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                operation_outcome = ClusterController.start_metricbeat(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet, container_ip=container_ip, initial_start=initial_start)
+                if operation_outcome.outcome:
+                    start_message = (f"\nMetricbeat with ip {container_ip} on "
+                                     f"port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is started.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    start_message = (f"\nMetricbeat with ip {container_ip} is not "
+                                     f"started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}.")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(start_message, fg=text_color, bold=text_style_bold)
+
+
+def start_heartbeats(ip: str, emulation: str, ip_first_octet: int, initial_start: bool):
+    """
+    Utility function for starting heartbeats
+
+    :param ip: the ip of the node to start heartbeats
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                operation_outcome = ClusterController.start_heartbeats(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet, initial_start=initial_start)
+                if operation_outcome.outcome:
+                    start_message = f"\nHeartbeats on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} are started."
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    start_message = f"\nHeartbeats are not started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}."
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(start_message, fg=text_color, bold=text_style_bold)
+
+
+def start_packetbeats(ip: str, emulation: str, ip_first_octet: int, initial_start: bool):
+    """
+    Utility function for starting packetbeats
+
+    :param ip: the ip of the node to start packetbeats
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                operation_outcome = ClusterController.start_packetbeats(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet, initial_start=initial_start)
+                if operation_outcome.outcome:
+                    start_message = f"\nPacketbeats on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} are started."
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    start_message = f"\nPacketbeats are not started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}."
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(start_message, fg=text_color, bold=text_style_bold)
+
+
+def start_heartbeat(ip: str, container_ip: str, emulation: str, ip_first_octet: int, initial_start: bool):
+    """
+    Utility function for starting heartbeat
+
+    :param ip: the ip of the node to start heartbeat
+    :param container_ip: the ip of the host to start
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                operation_outcome = ClusterController.start_heartbeat(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet, container_ip=container_ip, initial_start=initial_start)
+                if operation_outcome.outcome:
+                    start_message = (f"\nHeartbeat with ip {container_ip} on "
+                                     f"port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is started.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    start_message = (f"\nHeartbeat with ip {container_ip} is not "
+                                     f"started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}.")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(start_message, fg=text_color, bold=text_style_bold)
+
+
+def start_packetbeat(ip: str, container_ip: str, emulation: str, ip_first_octet: int, initial_start: bool):
+    """
+    Utility function for starting packetbeat
+
+    :param ip: the ip of the node to start packetbeat
+    :param container_ip: the ip of the host to start
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                operation_outcome = ClusterController.start_packetbeat(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet, container_ip=container_ip, initial_start=initial_start)
+                if operation_outcome.outcome:
+                    start_message = (f"\nPacketbeat with ip {container_ip} on "
+                                     f"port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is started.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    start_message = (f"\nPacketbeat with ip {container_ip} is not "
+                                     f"started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}.")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(start_message, fg=text_color, bold=text_style_bold)
+
+
+def start_host_manager(ip: str, container_ip: str, emulation: str, ip_first_octet: int):
+    """
+    Utility function for starting host manager
+
+    :param ip: the ip of the node to start host manager
+    :param container_ip: the ip of the host to start
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                operation_outcome = ClusterController.start_host_manager(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet, container_ip=container_ip)
+                if operation_outcome.outcome:
+                    start_message = (f"\nHost manager with ip {container_ip} on "
+                                     f"port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is started.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    start_message = (f"\nHost manager with ip {container_ip} is not "
+                                     f"started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}.")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(start_message, fg=text_color, bold=text_style_bold)
+
+
+def start_client_manager(ip: str, emulation: str, ip_first_octet: int):
+    """
+    Utility function for starting client manager
+
+    :param ip: the ip of the node to start client manager
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    total_steps = 100
+    step_size = int(total_steps / 4)
+
+    messages = []
+
+    progress_bar: Any
+    with click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                           show_eta=False, width=40) as progress_bar:
+        # Step 1: Retrieve the configuration
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+
+        # Step 2: Start client manager
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                outcome = ClusterController.start_client_manager(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                    emulation=emulation, ip_first_octet=ip_first_octet)
+                if outcome.outcome:
+                    messages.append(("Client manager on port:"
+                                     f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is started.", "white", False))
+                else:
+                    messages.append(("Client manager is not started:"
+                                     f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}.", "white", True))
+                progress_bar.update(step_size)
+
+                # Step 3: Start client population
+                outcome = ClusterController.start_client_population(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                    emulation=emulation, ip_first_octet=ip_first_octet)
+                if outcome.outcome:
+                    messages.append(("Client population on port:"
+                                     f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is started.", "white", False))
+                else:
+                    messages.append(("Client population is not started:"
+                                     f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}.", "white", True))
+                progress_bar.update(step_size)
+
+                # Step 4: Start Kafka client producer
+                outcome = ClusterController.start_kafka_client_producer(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                    emulation=emulation, ip_first_octet=ip_first_octet)
+                if outcome.outcome:
+                    messages.append(("Kafka client producer on port:"
+                                     f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is started.", "white", False))
+                else:
+                    messages.append(("Kafka client producer is not started:"
+                                     f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}.", "white", True))
+                progress_bar.update(step_size)
+
+    for message, color, bold in messages:
+        click.secho(message, fg=color, bold=bold)
+
+
+def start_snort_ids_managers(ip: str, emulation: str, ip_first_octet: int):
+    """
+    Utility function for starting snort managers
+
+    :param ip: the ip of the node to start snort managers
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                operation_outcome = ClusterController.start_snort_ids_managers(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet)
+                if operation_outcome.outcome:
+                    start_message = (f"\nSnort ids managers on port:"
+                                     f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} are started.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    start_message = (f"\nSnort ids managers are not started:"
+                                     f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}.")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(start_message, fg=text_color, bold=text_style_bold)
+
+
+def start_snort_ids_manager(ip: str, container_ip: str, emulation: str, ip_first_octet: int):
+    """
+    Utility function for starting snort ids manager
+
+    :param ip: the ip of the node to start snort ids manager
+    :param container_ip: the ip of the host to start
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                operation_outcome = ClusterController.start_snort_ids_manager(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet, container_ip=container_ip)
+                if operation_outcome.outcome:
+                    start_message = (f"\nSnort ids manager with ip {container_ip} on "
+                                     f"port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is started.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    start_message = (f"\nSnort ids manager with ip {container_ip} is not "
+                                     f"started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}.")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(start_message, fg=text_color, bold=text_style_bold)
+
+
+def start_ossec_ids_managers(ip: str, emulation: str, ip_first_octet: int):
+    """
+    Utility function for starting ossec managers
+
+    :param ip: the ip of the node to start ossec managers
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                operation_outcome = ClusterController.start_ossec_ids_managers(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet)
+                if operation_outcome.outcome:
+                    start_message = (f"\nOssec ids managers on port:"
+                                     f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} are started.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    start_message = (f"\nOssec ids managers are not started:"
+                                     f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}.")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(start_message, fg=text_color, bold=text_style_bold)
+
+
+def start_ossec_ids_manager(ip: str, container_ip: str, emulation: str, ip_first_octet: int):
+    """
+    Utility function for starting ossec ids manager
+
+    :param ip: the ip of the node to start ossec ids manager
+    :param container_ip: the ip of the host to start
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                operation_outcome = ClusterController.start_ossec_ids_manager(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet, container_ip=container_ip)
+                if operation_outcome.outcome:
+                    start_message = (f"\nOssec ids manager with ip {container_ip} on "
+                                     f"port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is started.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    start_message = (f"\nOssec ids manager with ip {container_ip} is not "
+                                     f"started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}.")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(start_message, fg=text_color, bold=text_style_bold)
+
+
+def start_elk_manager(ip: str, emulation: str, ip_first_octet: int):
+    """
+    Utility function for starting elk manager
+
+    :param ip: the ip of the node to start elk manager
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                operation_outcome = ClusterController.start_elk_manager(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet)
+                if operation_outcome.outcome:
+                    start_message = f"\nElk manager on port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is started."
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    start_message = f"\nElk manager is not started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}."
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(start_message, fg=text_color, bold=text_style_bold)
+
+
+def start_traffic_managers(ip: str, emulation: str, ip_first_octet: int):
+    """
+    Utility function for starting traffic manager
+
+    :param ip: the ip of the node to start traffic manager
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                operation_outcome = ClusterController.start_traffic_managers(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet)
+                if operation_outcome.outcome:
+                    start_message = (f"\nTraffic managers on port:"
+                                     f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} are started.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    start_message = f"\nTraffic managers are not started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}."
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(start_message, fg=text_color, bold=text_style_bold)
+
+
+def start_traffic_manager(ip: str, container_ip: str, emulation: str, ip_first_octet: int):
+    """
+    Utility function for starting traffic manager
+
+    :param ip: the ip of the node to start traffic manager
+    :param container_ip: the ip of the host to start
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                operation_outcome = ClusterController.start_traffic_manager(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet, container_ip=container_ip)
+                if operation_outcome.outcome:
+                    start_message = (f"\nTraffic manager with ip {container_ip} on "
+                                     f"port:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is started.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    start_message = (f"\nTraffic manager with ip {container_ip} is not "
+                                     f"started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}.")
+                    text_color = "white"
+                    text_style_bold = True
+        progress_bar.update(step_size)
+        click.secho(start_message, fg=text_color, bold=text_style_bold)
+
+
+def start_kafka_manager(ip: str, emulation: str, ip_first_octet: int):
+    """
+    Utility function for starting Kafka manager
+
+    :param ip: the ip of the node to start Kafka manager
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    total_steps = 100
+    step_size = int(total_steps / 2)
+    progress_bar: Any
+    with (click.progressbar(length=total_steps, label='Processing', fill_char='█',
+                            show_eta=False, width=40) as progress_bar):
+        config = MetastoreFacade.get_config(id=1)
+        progress_bar.update(step_size)
+        for node in config.cluster_config.cluster_nodes:
+            if node.ip == ip or ip == "":
+                operation_outcome = ClusterController.start_kafka_manager(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet)
+                if operation_outcome.outcome:
+                    start_message = (f"\nKafka manager on port:"
+                                     f"{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT} is started.")
+                    text_color = "white"
+                    text_style_bold = False
+                else:
+                    start_message = (f"\nKafka manager are not started:{constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT}.")
+                    text_color = "white"
+                    text_style_bold = False
+        progress_bar.update(step_size)
+        click.secho(start_message, fg=text_color, bold=text_style_bold)
 
 
 def run_image(image: str, name: str, create_network: bool = True, version: str = "0.0.1") -> bool:
@@ -1593,18 +3355,90 @@ def ls_shell_complete(ctx, param, incomplete) -> List[str]:
     image_names: List[str] = list(map(lambda x: x[0], images))
     active_networks_names: List[str] = ContainerController.list_all_networks()
     return (["containers", "networks", "images", "emulations", "all", "environments", "prometheus", "node_exporter",
-             "cadvisor", "pgadmin", "flask", "statsmanager", "--all", "--running", "--stopped"] + emulations
-            + container_names + image_names + active_networks_names + simulations)
+             "cadvisor", "pgadmin", "flask", "statsmanager", "simulations", "emulation_executions", "cluster", "nginx",
+             "postgresql", "docker", "hostmanagers", "clientmanager", "snortmanagers", "elkmanager", "trafficmanagers",
+             "kafkamanager", "ossecmanagers", "ryumanager", "filebeats", "metricbeats", "packetbeats", "logfiles",
+             "heartbeats", "logfile", "--ip", "--id", "--name", "--logfile_name", "--all", "--running", "--stopped"]
+            + emulations + container_names + image_names + active_networks_names + simulations)
 
 
 @click.command("ls", help="containers | networks | images | emulations | all | environments | prometheus "
                           "| node_exporter | cadvisor | pgadmin | statsmanager | flask | "
-                          "simulations | emulation_executions | cluster | nginx | postgresql | docker")
+                          "simulations | emulation_executions | cluster | nginx | postgresql | docker | hostmanagers | "
+                          "clientmanager | snortmanagers | elkmanager | trafficmanagers | kafkamanager | "
+                          "ossecmanagers | ryumanager | filebeats | metricbeats | heartbeats| packetbeats | logfiles | "
+                          "logfile | emulation_description\n\n"
+                          "\b\n"
+                          "- \033[95mcontainers\033[0m: list all|stopped|running containers. \n"
+                          "- \033[95mnetworks\033[0m: list active networks. \n"
+                          "- \033[95mimages\033[0m: list all images in CSLE. \n"
+                          "- \033[95memulations\033[0m: list all|stopped|running emulations.\n"
+                          "- \033[95mall\033[0m: list all cluster, networks, containers, images, emulations, emulation"
+                          " executions, simulations, and CSLE gym environments.\n"
+                          "- \033[95menvironments\033[0m: list all registered Open AI gym environments.\n"
+                          "- \033[95mprometheus\033[0m: list status of prometheus. \n"
+                          "- \033[95mnode_exporter\033[0m: list status of node exporter. \n"
+                          "- \033[95mcadvisor\033[0m: list status of cadvisor. \n"
+                          "- \033[95mpgadmin\033[0m: list status of pgadmin. \n"
+                          "- \033[95mstatsmanager\033[0m: list status of the docker stats manager.\n"
+                          "- \033[95mflask\033[0m: list status of the management system.\n"
+                          "- \033[95msimulations\033[0m: list all simulations. \n"
+                          "- \033[95memulation_executions\033[0m: list all emulation executions. \n"
+                          "- \033[95mcluster\033[0m: list all clusters. \n"
+                          "- \033[95mnginx\033[0m: lists status of nginx. \n"
+                          "- \033[95mpostgresql\033[0m: lists status of PostgreSQL. \n"
+                          "- \033[95mdocker\033[0m: lists status of the docker engine. \n"
+                          "- \033[95mhostmanagers\033[0m: displays the status and IP addresses of host managers running"
+                          " on a node with the specified --ip option for the emulation identified by the specified"
+                          " --name and --id.\n"
+                          "- \033[95mclientmanager\033[0m: list the information about the client manager and its status"
+                          " for a node with the specified --ip option for the emulation identified by the specified"
+                          " --name and --id.\n"
+                          "- \033[95msnortmanagers\033[0m: list the ip address and status of snortmangers for a "
+                          "node with the specified --ip option for the emulation identified by the specified"
+                          " --name and --id.\n"
+                          "- \033[95melkmanager\033[0m: list information and status of elk manager for a node with the"
+                          " specified --ip option for the emulation identified by the specified --name and --id.\n"
+                          "- \033[95mtrafficmanagers\033[0m: list ip address and status of trafficmangers for a "
+                          "node with the specified --ip option for the emulation identified by the specified"
+                          " --name and --id.\n"
+                          "- \033[95mkafkamanager\033[0m: list information and status of the kafka manager for "
+                          "a node with the specified --ip option for the emulation identified by the specified "
+                          "--name and --id.\n"
+                          "- \033[95mossecmanagers\033[0m: list ip address and status of ossec managers for a node with"
+                          " the specified --ip option for the emulation identified by the specified --name and --id.\n"
+                          "- \033[95mryumanager\033[0m: list information about ryu managers for a node with"
+                          " the specified --ip option for the emulation identified by the specified --name and --id."
+                          "The emulation should include SDN for this command.\n"
+                          "- \033[95mfilebeats\033[0m: list ip address and status of filebeats for the running "
+                          "containers for a node with the specified --ip option for the emulation identified by the"
+                          " specified --name and --id.\n"
+                          "- \033[95mmetricbeats\033[0m: list ip address and status of metricbeats for the running"
+                          " containers for a node with the specified --ip option for the emulation identified by"
+                          " the specified --name and --id.\n"
+                          "- \033[95mheartbeats\033[0m: list ip address and status of heartbeats for the running "
+                          "containers for a node with the specified --ip option for the emulation identified by the "
+                          "specified --name and --id.\n"
+                          "- \033[95mpacketbeats\033[0m: list ip address and status of packetbeats for the running"
+                          " containers for a node with the specified --ip option for the emulation identified by the"
+                          " specified --name and --id.\n"
+                          "- \033[95mlogfiles\033[0m: list all CSLE log files with their path for a node with "
+                          "the specified --ip option.\n"
+                          "- \033[95mlogfile\033[0m: show the logs in a file with the path specified with "
+                          "--logfile_name option for a node with the specified --ip option.\n"
+                          "- \033[95memulation_description\033[0m: show detailed information about the containers"
+                          " running in the emaultion with the given name and id.\n\n"
+                          "\b\n"
+                          "* \033[93mExample: csle ls filebeats --name csle-level4-060 --id 15 --ip X.X.X.X \033[0m")
 @click.argument('entity', default='all', type=str, shell_complete=ls_shell_complete)
 @click.option('--all', is_flag=True, help='list all')
 @click.option('--running', is_flag=True, help='list running only (default)')
 @click.option('--stopped', is_flag=True, help='list stopped only')
-def ls(entity: str, all: bool, running: bool, stopped: bool) -> None:
+@click.option('--ip', default="", type=str, help='node IP address to run the command')
+@click.option('--id', default=None, type=int, help="emulation id")
+@click.option('--name', default="", type=str, help='name of the emulation')
+@click.option('--logfile_name', default="", type=str, help='name of the logfile to to retrieve')
+def ls(entity: str, all: bool, running: bool, stopped: bool, ip: str, name: str, id: int, logfile_name: str) -> None:
     """
     Lists the set of containers, networks, images, or emulations, or all
 
@@ -1612,6 +3446,10 @@ def ls(entity: str, all: bool, running: bool, stopped: bool) -> None:
     :param all: flag that indicates whether all containers/emulations should be listed
     :param running: flag that indicates whether running containers/emulations should be listed (default)
     :param stopped: flag that indicates whether stopped containers/emulations should be listed
+    :param ip: node IP address to run the command
+    :param id: id of the emulation that we run ls command for
+    :param name: name of the emulation that we run ls command for
+    :param logfile_name: name of the log file to be shown
     :return: None
     """
     import csle_common.constants.constants as constants
@@ -1661,6 +3499,36 @@ def ls(entity: str, all: bool, running: bool, stopped: bool) -> None:
         list_simulations()
     elif entity == "emulation_executions":
         list_emulation_executions()
+    elif entity == "hostmanagers":
+        list_host_managers(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "clientmanager":
+        list_client_manager(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "snortmanagers":
+        list_snort_ids_managers(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "elkmanager":
+        list_elk_manager(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "trafficmanagers":
+        list_traffic_managers(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "kafkamanager":
+        list_kafka_managers(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "ossecmanagers":
+        list_ossec_ids_managers(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "ryumanager":
+        list_ryu_manager(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "filebeats":
+        list_filebeats(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "metricbeats":
+        list_metricbeats(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "heartbeats":
+        list_heartbeats(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "packetbeats":
+        list_packetbeats(ip=ip, emulation=name, ip_first_octet=id)
+    elif entity == "logfiles":
+        list_logfiles(ip=ip)
+    elif entity == "logfile":
+        list_logfile(ip=ip, logfile_name=logfile_name)
+    elif entity == "emulation_description":
+        list_containers_hw_info(ip=ip, emulation=name, ip_first_octet=id)
     else:
         container = get_running_container(name=entity)
         if container is not None:
@@ -1693,6 +3561,678 @@ def ls(entity: str, all: bool, running: bool, stopped: bool) -> None:
                                 print_simulation_config(simulation_config=simulation_env_config)
                             else:
                                 click.secho(f"entity: {entity} is not recognized", fg="red", bold=True)
+
+
+def list_containers_hw_info(ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for listing containers hardware information
+
+    :param ip: the ip of the node to list hardware information
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+
+    :return: None
+    """
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    execution_config = MetastoreFacade.get_emulation_execution(ip_first_octet=ip_first_octet, emulation_name=emulation)
+    if (execution_config):
+        click.secho('+' + '=' * 80 + '+', fg='white', bold=True)
+        click.secho('|', nl=False, fg='white')
+        click.secho((f'Emulation {emulation} description').center(80), nl=False, fg='bright_yellow', bold=True)
+        click.secho('|', fg='white')
+        click.secho('+' + '=' * 80 + '+', fg='white', bold=True)
+
+        click.secho('|', nl=False, fg='white')
+        ID_line = f"Emulation name is {click.style(execution_config.emulation_name, fg='magenta')}"
+        click.secho(ID_line, nl=False)
+        click.secho(' ' * (89 - len(ID_line)), nl=False)
+        click.secho('|', fg='white')
+        click.secho('+' + '-' * 80 + '+', fg='white')
+
+        click.secho('|', nl=False, fg='white')
+        ID_line = f"Emulation ID is {click.style(execution_config.ip_first_octet, fg='magenta')}"
+        click.secho(ID_line, nl=False)
+        click.secho(' ' * (89 - len(ID_line)), nl=False)
+        click.secho('|', fg='white')
+        click.secho('+' + '-' * 80 + '+', fg='white')
+
+        line = (f"This emulation is running on physical servers with IPs of:  "
+                f"{click.style(execution_config.physical_servers[0], fg='magenta')}")
+        padding_length = 89 - len(line)
+        click.secho(f"|{line}{' ' * padding_length}|")
+        for i in range(1, len(execution_config.physical_servers)):
+            click.secho('|', nl=False, fg='white')
+            click.secho(f"{execution_config.physical_servers[i]}{' ' * padding_length}|",
+                        fg="magenta", nl=False)
+        click.secho('+' + '=' * 80 + '+', fg='white', bold=True)
+
+        click.secho("|", nl=False)
+        click.secho("Network information emulation containers".center(80), nl=False)
+        click.secho('|')
+        click.secho('+' + '=' * 80 + '+', fg='white', bold=True)
+
+        agent_ip = execution_config.emulation_env_config.containers_config.agent_ip
+        router_ip = execution_config.emulation_env_config.containers_config.router_ip
+
+        table_headers = ["Name", "IP", "Interface", "Subnet mask"]
+        for container in execution_config.emulation_env_config.containers_config.containers:
+            role = ""
+            for ip_network in container.ips_and_networks:
+                if agent_ip == ip_network[0]:
+                    role = " (Agent)"
+                    break
+                elif router_ip == ip_network[0]:
+                    role = " (Router)"
+                    break
+            click.secho('|', nl=False, fg='white')
+            click.secho(f"Container {click.style(container.name + role, fg='magenta')}".center(89), nl=False)
+            click.secho('|')
+            click.secho('+' + '-' * 80 + '+', fg='white')
+            for headers in table_headers:
+                click.secho('|', nl=False, fg='white')
+                click.secho(headers.center(19), nl=False)
+            click.secho(' |')
+            click.secho('+' + '-' * 80 + '+', fg='white')
+            for ip_network in container.ips_and_networks:
+                click.secho('|', nl=False, fg='white')
+                click.secho(ip_network[0].center(19), nl=False)
+                click.secho('|', nl=False, fg='white')
+                click.secho(ip_network[1].name.center(19), nl=False)
+                click.secho('|', nl=False, fg='white')
+                click.secho(ip_network[1].interface.center(19), nl=False)
+                click.secho('|', nl=False, fg='white')
+                click.secho(ip_network[1].subnet_mask.center(19), nl=False)
+                click.secho(' |')
+            click.secho('+' + '-' * 80 + '+', fg='white')
+    else:
+        click.secho(f"The emulation with the name \033[95m{emulation}\033[0m "
+                    f"and ID \033[95m{ip_first_octet}\033[0m is not running.")
+
+
+def list_logfiles(ip: str) -> None:
+    """
+    Utility function for listing logfiles
+
+    :param ip: the ip of the node to list logfiles
+
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            logfiles_info = ClusterController.get_csle_log_files(
+                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+            click.secho('+' + '-' * 60 + '+', fg='white')
+            click.secho(f'|{"CSLE log files":^20}|{"Directory":^39}|', fg='white')
+            click.secho('+' + '=' * 60 + '+', fg='white')
+            for key, value in logfiles_info.items():
+                click.secho('|', nl=False, fg='white')
+                click.secho(f'{key:^20}', nl=False, fg='white')
+                click.secho('|', nl=False, fg='white')
+                click.secho(f'{value[0]:^39}', nl=False, fg='white')
+                click.secho('|', fg='white')
+                for dir_index in range(1, len(value)):
+                    click.secho('|' + ' ' * 20 + '+', fg='white', nl=False)
+                    click.secho('-' * 39 + '+', fg='white')
+                    click.secho('|', nl=False, fg='white')
+                    click.secho(f'{"":^20}', nl=False, fg='white')
+                    click.secho('|', nl=False, fg='white')
+                    click.secho(f'{value[dir_index]:^39}', nl=False, fg='white')
+                    click.secho('|', fg='white')
+                click.secho('+' + '=' * 60 + '+', fg='white')
+
+
+def style_log_line(line: str) -> str:
+    """
+    Utility function for changing the color of lines and words in the logfiles when print them.
+
+    :param line: the line to be printed.
+
+    :return: the line with style we defined.
+    """
+
+    date_pattern = r"\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2},\d{3}"
+    log_type_pattern = r"INFO|ERROR|WARNING|DEBUG"
+    file_path_pattern = r'(?<=File ")(.*?)(?=")'
+    line_number_pattern = r'(?<=line )\d+'
+
+    date_match = re.search(date_pattern, line)
+    if date_match:
+        date_str = click.style(date_match.group(), fg='yellow')
+        line = line.replace(date_match.group(), date_str)
+
+    log_type_match = re.search(log_type_pattern, line)
+    if log_type_match:
+        log_type = log_type_match.group()
+        color = 'green' if log_type == 'INFO' else 'red' if log_type == 'ERROR' else 'blue'
+        log_type_str = click.style(log_type, fg=color, bold=True)
+        line = line.replace(log_type, log_type_str)
+
+    file_path_match = re.search(file_path_pattern, line)
+    if file_path_match:
+        file_path_str = click.style(file_path_match.group(), fg='cyan', bold=False)
+        line = line.replace(file_path_match.group(), file_path_str)
+
+    line_number_match = re.search(line_number_pattern, line)
+    if line_number_match:
+        line_number_str = click.style(line_number_match.group(), fg='magenta', bold=False)
+        line = line.replace(line_number_match.group(), line_number_str)
+
+    return line
+
+
+def list_logfile(ip: str, logfile_name: str) -> None:
+    """
+    Utility function for listing logfiles
+
+    :param ip: the ip of the node to list logfiles
+    :param logfile_name: the file name to retrieve
+
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            logfile_info = ClusterController.get_log_file(
+                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, log_file_name=logfile_name)
+            error_block = False
+            for key, value in logfile_info.items():
+                click.secho(key)
+                for i, line in enumerate(value):
+                    styled_line = style_log_line(line)
+
+                    if "ERROR" in line and not error_block:
+                        click.secho("\n" + "=" * 80, fg='red', bold=True)
+                        error_block = True
+
+                    next_line_starts_log = \
+                        (i + 1 < len(value) and re.match(
+                            r"\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2},\d{3} - (INFO|ERROR|WARNING|DEBUG)",
+                            value[i + 1]))
+                    if error_block and (next_line_starts_log or i == len(value) - 1):
+                        click.secho(styled_line)
+                        click.secho("=" * 80 + "\n", fg='red', bold=True)
+                        error_block = False
+                    else:
+                        click.secho(styled_line)
+
+                if error_block:
+                    click.secho("=" * 80 + "\n", fg='red', bold=True)
+                    error_block = False
+
+
+def list_filebeats(ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for listing filebeats
+
+    :param ip: the ip of the node to list filebeats
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            filebeats_info = ClusterController.get_host_managers_info(
+                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                ip_first_octet=ip_first_octet)
+            click.secho('+' + '-' * 60 + '+', fg='white')
+            click.secho(f'|{"Host IP":^30}|{"Filebeats running Status":^29}|', fg='white')
+            click.secho('+' + '-' * 60 + '+', fg='white')
+            for i in range(len(filebeats_info.hostManagersStatuses)):
+                status = "Running" if filebeats_info.hostManagersStatuses[i].filebeat_running else "Stopped"
+                status_color = 'green' if filebeats_info.hostManagersStatuses[i].filebeat_running else 'red'
+                click.secho('|', nl=False, fg='white')
+                click.secho(f'{filebeats_info.ips[i]:<30}', nl=False, fg='white')
+                click.secho('|', nl=False, fg='white')
+                click.secho(f'{status:^29}', nl=False, fg=status_color)
+                click.secho('|', fg='white')
+                click.secho('+' + '-' * 60 + '+', fg='white')
+
+
+def list_heartbeats(ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for listing heartbeats
+
+    :param ip: the ip of the node to list heartbeats
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            heartbeats_info = ClusterController.get_host_managers_info(
+                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                ip_first_octet=ip_first_octet)
+            click.secho('+' + '-' * 60 + '+', fg='white')
+            click.secho(f'|{"Host IP":^30}|{"Heartbeats running Status":^29}|', fg='white')
+            click.secho('+' + '-' * 60 + '+', fg='white')
+            for i in range(len(heartbeats_info.hostManagersStatuses)):
+                status = "Running" if heartbeats_info.hostManagersStatuses[i].heartbeat_running else "Stopped"
+                status_color = 'green' if heartbeats_info.hostManagersStatuses[i].heartbeat_running else 'red'
+                click.secho('|', nl=False, fg='white')
+                click.secho(f'{heartbeats_info.ips[i]:<30}', nl=False, fg='white')
+                click.secho('|', nl=False, fg='white')
+                click.secho(f'{status:^29}', nl=False, fg=status_color)
+                click.secho('|', fg='white')
+                click.secho('+' + '-' * 60 + '+', fg='white')
+                
+
+def list_packetbeats(ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for listing packetbeats
+
+    :param ip: the ip of the node to list packetbeats
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            packetbeats_info = ClusterController.get_host_managers_info(
+                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                ip_first_octet=ip_first_octet)
+            click.secho('+' + '-' * 60 + '+', fg='white')
+            click.secho(f'|{"Host IP":^30}|{"Packetbeats running Status":^29}|', fg='white')
+            click.secho('+' + '-' * 60 + '+', fg='white')
+            for i in range(len(packetbeats_info.hostManagersStatuses)):
+                status = "Running" if packetbeats_info.hostManagersStatuses[i].packetbeat_running else "Stopped"
+                status_color = 'green' if packetbeats_info.hostManagersStatuses[i].packetbeat_running else 'red'
+                click.secho('|', nl=False, fg='white')
+                click.secho(f'{packetbeats_info.ips[i]:<30}', nl=False, fg='white')
+                click.secho('|', nl=False, fg='white')
+                click.secho(f'{status:^29}', nl=False, fg=status_color)
+                click.secho('|', fg='white')
+                click.secho('+' + '-' * 60 + '+', fg='white')
+
+
+def list_metricbeats(ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for listing filebeats
+
+    :param ip: the ip of the node to list filebeats
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            metricbeats_info = ClusterController.get_host_managers_info(
+                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                ip_first_octet=ip_first_octet)
+            click.secho('+' + '-' * 60 + '+', fg='white')
+            click.secho(f'|{"Host IP":^30}|{"Metricbeats running Status":^29}|', fg='white')
+            click.secho('+' + '-' * 60 + '+', fg='white')
+            for i in range(len(metricbeats_info.hostManagersStatuses)):
+                status = "Running" if metricbeats_info.hostManagersStatuses[i].metricbeat_running else "Stopped"
+                status_color = 'green' if metricbeats_info.hostManagersStatuses[i].metricbeat_running else 'red'
+                click.secho('|', nl=False, fg='white')
+                click.secho(f'{metricbeats_info.ips[i]:<30}', nl=False, fg='white')
+                click.secho('|', nl=False, fg='white')
+                click.secho(f'{status:^29}', nl=False, fg=status_color)
+                click.secho('|', fg='white')
+                click.secho('+' + '-' * 60 + '+', fg='white')
+
+
+def list_ryu_manager(ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for listing ryu manager
+
+    :param ip: the ip of the node to list ryu manager
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    emulation_config = MetastoreFacade.get_emulation_by_name(name=emulation)
+    has_sdn = emulation_config.sdn_controller_config is not None
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            if has_sdn:
+                ryu_manager_info = ClusterController.get_ryu_managers_info(
+                    ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                    ip_first_octet=ip_first_octet)
+                click.secho(ryu_manager_info)
+            else:
+                click.secho(f"Emulation with name: {emulation} does not have SDN.", fg="red", bold=True)
+
+
+def list_host_managers(ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for listing host managers
+
+    :param ip: the ip of the node to list host manager
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            host_manager_info = ClusterController.get_host_managers_info(
+                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                ip_first_octet=ip_first_octet)
+            host_managers_running = host_manager_info.hostManagersRunning
+            host_managers_ips = host_manager_info.ips
+
+            click.secho('+' + '-' * 50 + '+', fg='white')
+            click.secho(f'|{"Host IP":^30}|{"Running Status":^19}|', fg='white')
+            click.secho('+' + '-' * 50 + '+', fg='white')
+            for i in range(len(host_managers_ips)):
+                status = "Running" if host_managers_running[i] else "Stopped"
+                status_color = 'green' if host_managers_running[i] else 'red'
+
+                click.secho('|', nl=False, fg='white')
+                click.secho(f'{host_managers_ips[i]:<30}', nl=False, fg='white')
+                click.secho('|', nl=False, fg='white')
+                click.secho(f'{status:<19}', nl=False, fg=status_color)
+                click.secho('|', fg='white')
+                click.secho('+' + '-' * 50 + '+', fg='white')
+
+
+def list_kafka_managers(ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for listing Kafka managers
+
+    :param ip: the ip of the node to list Kafka manager
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            kafka_manager_info = ClusterController.get_kafka_managers_info(
+                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                ip_first_octet=ip_first_octet)
+            for i in range(len(kafka_manager_info.ips)):
+                status_color = 'green' if kafka_manager_info.kafkaManagersRunning[i] else 'red'
+                manager_status = 'Running' if kafka_manager_info.kafkaManagersRunning[i] else 'Stopped'
+                click.secho('+' + '-' * 60 + '+', fg='white')
+                click.secho(f'|{"Kafka manager IP":^40}', nl=False, fg='white')
+                click.secho('|', nl=False, fg='white')
+                click.secho(f'{kafka_manager_info.ips[i]:<19}', nl=False, fg=status_color)
+                click.secho('|', fg='white')
+                click.secho('+' + '-' * 60 + '+', fg='white')
+                click.secho(f'|{"Kafka manager status":^40}', nl=False, fg='white')
+                click.secho('|', nl=False, fg='white')
+                click.secho(f'{manager_status:<19}', nl=False, fg=status_color)
+                click.secho('|', fg='white')
+                click.secho('+' + '-' * 60 + '+', fg='white')
+                if manager_status == "Running":
+                    click.secho(f'|{"Kafka topics":^60}|', fg='white')
+                    click.secho('+' + '-' * 60 + '+', fg='white')
+                    for topic in kafka_manager_info.kafkaManagersStatuses[0].topics:
+                        click.secho('|', nl=False, fg='white')
+                        click.secho(f'{topic:^60}', nl=False, fg='green')
+                        click.secho('|', fg='white')
+                        click.secho('+' + '-' * 60 + '+', fg='white')
+
+
+def list_traffic_managers(ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for listing traffic managers
+
+    :param ip: the ip of the node to list host manager
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            traffic_manager_info = ClusterController.get_traffic_managers_info(
+                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                ip_first_octet=ip_first_octet)
+            click.secho('+' + '-' * 60 + '+', fg='white')
+            click.secho(f'|{"Traffic manager IP":^30}', nl=False, fg='white')
+            click.secho(f'|{"Traffic manager status":^29}', nl=False, fg='white')
+            click.secho('|', fg='white')
+            click.secho('+' + '-' * 60 + '+', fg='white')
+            for i in range(len(traffic_manager_info.ips)):
+                status_color = 'green' if traffic_manager_info.trafficManagersRunning[i] else 'red'
+                manager_status = 'Running' if traffic_manager_info.trafficManagersRunning[i] else 'Stopped'
+                click.secho('|', nl=False, fg='white')
+                click.secho(f'{traffic_manager_info.ips[i]:^30}', nl=False, fg=status_color)
+                click.secho('|', nl=False, fg='white')
+                click.secho(f'{manager_status:^29}', nl=False, fg=status_color)
+                click.secho('|', fg='white')
+                click.secho('+' + '-' * 60 + '+', fg='white')
+
+
+def list_elk_manager(ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for listing elk manager
+
+    :param ip: the ip of the node to list elk manager
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            elk_manager_info = ClusterController.get_elk_managers_info(
+                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                ip_first_octet=ip_first_octet)
+            for i in range(len(elk_manager_info.ips)):
+                status_color = 'green' if elk_manager_info.elkManagersRunning[i] else 'red'
+                manager_status = 'Running' if elk_manager_info.elkManagersRunning[i] else 'Stopped'
+                click.secho('+' + '-' * 60 + '+', fg='white')
+                click.secho(f'|{"Elk manager IP":^40}', nl=False, fg='white')
+                click.secho('|', nl=False, fg='white')
+                click.secho(f'{elk_manager_info.ips[i]:<19}', nl=False, fg=status_color)
+                click.secho('|', fg='white')
+                click.secho('+' + '-' * 60 + '+', fg='white')
+                click.secho(f'|{"Elk manager status":^40}', nl=False, fg='white')
+                click.secho('|', nl=False, fg='white')
+                click.secho(f'{manager_status:<19}', nl=False, fg=status_color)
+                click.secho('|', fg='white')
+                click.secho('+' + '-' * 60 + '+', fg='white')
+                if manager_status == "Running":
+                    click.secho(f'|{"Elk manager elasticRunning":^40}', nl=False, fg='white')
+                    click.secho('|', nl=False, fg='white')
+                    elasticRunning = 'True' if elk_manager_info.elkManagersStatuses[0].elasticRunning else 'False'
+                    click.secho(f'{elasticRunning:<19}',
+                                nl=False, fg=status_color)
+                    click.secho('|', fg='white')
+                    click.secho('+' + '-' * 60 + '+', fg='white')
+
+                    click.secho(f'|{"Elk manager kibanaRunning":^40}', nl=False, fg='white')
+                    click.secho('|', nl=False, fg='white')
+                    kibanaRunning = 'True' if elk_manager_info.elkManagersStatuses[0].kibanaRunning else 'False'
+                    click.secho(f'{kibanaRunning:<19}',
+                                nl=False, fg=status_color)
+                    click.secho('|', fg='white')
+                    click.secho('+' + '-' * 60 + '+', fg='white')
+
+                    click.secho(f'|{"Elk manager logstashRunning":^40}', nl=False, fg='white')
+                    click.secho('|', nl=False, fg='white')
+                    logstashRunning = 'True' if elk_manager_info.elkManagersStatuses[0].logstashRunning else 'False'
+                    click.secho(f'{logstashRunning:<19}',
+                                nl=False, fg=status_color)
+                    click.secho('|', fg='white')
+                    click.secho('+' + '-' * 60 + '+', fg='white')
+
+
+def list_snort_ids_managers(ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for listing snort ids managers
+
+    :param ip: the ip of the node to list snort ids managers
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            snort_manager_info = ClusterController.get_snort_ids_managers_info(
+                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                ip_first_octet=ip_first_octet)
+
+            for i in range(len(snort_manager_info.ips)):
+                status = "Running" if snort_manager_info.snortIdsManagersRunning[i] else "Stopped"
+                status_color = 'green' if snort_manager_info.snortIdsManagersRunning[i] else 'red'
+
+                click.secho('+' + '-' * 60 + '+', fg='white')
+                click.secho(f'|{"Snort ids manager IP":^40}', nl=False, fg='white')
+                click.secho('|', nl=False, fg='white')
+                click.secho(f'{snort_manager_info.ips[i]:<19}', nl=False, fg=status_color)
+                click.secho('|', fg='white')
+
+                click.secho('+' + '-' * 60 + '+', fg='white')
+                click.secho(f'|{"Status":^40}', nl=False, fg='white')
+                click.secho('|', nl=False, fg='white')
+                click.secho(f'{status:<19}', nl=False, fg=status_color)
+                click.secho('|', fg='white')
+            click.secho('+' + '-' * 60 + '+', fg='white')
+
+
+def list_ossec_ids_managers(ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for listing ossec ids managers
+
+    :param ip: the ip of the node to list ossec ids managers
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            ossec_manager_info = ClusterController.get_ossec_ids_managers_info(
+                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                ip_first_octet=ip_first_octet)
+
+            click.secho('+' + '-' * 60 + '+', fg='white')
+            click.secho(f'|{"Ossec ids manager IP":^30}', nl=False, fg='white')
+            click.secho('|', nl=False, fg='white')
+            click.secho(f'{"Ossec ids status":^29}', nl=False, fg='white')
+            click.secho('|', fg='white')
+
+            for i in range(len(ossec_manager_info.ips)):
+                status = "Running" if ossec_manager_info.ossecIdsManagersRunning[i] else "Stopped"
+                status_color = 'green' if ossec_manager_info.ossecIdsManagersRunning[i] else 'red'
+
+                click.secho('+' + '-' * 60 + '+', fg='white')
+                click.secho(f'|{ossec_manager_info.ips[i]:^30}', nl=False, fg='white')
+                click.secho('|', nl=False, fg='white')
+                click.secho(f'{status:^29}', nl=False, fg=status_color)
+                click.secho('|', fg='white')
+            click.secho('+' + '-' * 60 + '+', fg='white')
+
+
+def list_client_manager(ip: str, emulation: str, ip_first_octet: int) -> None:
+    """
+    Utility function for listing client managers
+
+    :param ip: the ip of the node to list client manager
+    :param emulation: the emulation of the execution
+    :param ip_first_octet: the ID of the execution
+
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    config = MetastoreFacade.get_config(id=1)
+    for node in config.cluster_config.cluster_nodes:
+        if node.ip == ip or ip == "":
+            client_manager_info = ClusterController.get_client_managers_info(
+                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation,
+                ip_first_octet=ip_first_octet)
+            for i in range(len(client_manager_info.ips)):
+                status_color = 'green' if client_manager_info.clientManagersStatuses[i].num_clients > 0 else 'red'
+                manager_status = 'Running' if client_manager_info.clientManagersStatuses[i].num_clients > 0 \
+                    else 'Stopped'
+
+                click.secho('+' + '-' * 60 + '+', fg='white')
+                click.secho(f'|{"Host IP":^40}', nl=False, fg='white')
+                click.secho('|', nl=False, fg='white')
+                click.secho(f'{client_manager_info.ips[i]:<19}', nl=False, fg=status_color)
+                click.secho('|', fg='white')
+                click.secho('+' + '-' * 60 + '+', fg='white')
+
+                click.secho(f'|{"Status":^40}', nl=False, fg='white')
+                click.secho('|', nl=False, fg='white')
+                click.secho(f'{manager_status:<19}', nl=False, fg=status_color)
+                click.secho('|', fg='white')
+                click.secho('+' + '-' * 60 + '+', fg='white')
+
+                click.secho(f'|{"Clients number":^40}', nl=False, fg='white')
+                click.secho('|', nl=False, fg='white')
+                click.secho(f'{client_manager_info.clientManagersStatuses[i].num_clients:<19}', nl=False,
+                            fg=status_color)
+                click.secho('|', fg='white')
+                click.secho('+' + '-' * 60 + '+', fg='white')
+
+                click.secho(f'|{"Client process active":^40}', nl=False, fg='white')
+                click.secho('|', nl=False, fg='white')
+                click.secho(f'{bool(client_manager_info.clientManagersStatuses[i].client_process_active):<19}',
+                            nl=False, fg=status_color)
+                click.secho('|', fg='white')
+                click.secho('+' + '-' * 60 + '+', fg='white')
+
+                click.secho(f'|{"Procedure active":^40}', nl=False, fg='white')
+                click.secho('|', nl=False, fg='white')
+                click.secho(f'{bool(client_manager_info.clientManagersStatuses[i].producer_active):<19}',
+                            nl=False, fg=status_color)
+                click.secho('|', fg='white')
+                click.secho('+' + '-' * 60 + '+', fg='white')
+
+                click.secho(f'|{"Client time step length in seconds":^40}', nl=False, fg='white')
+                click.secho('|', nl=False, fg='white')
+                click.secho(f'{client_manager_info.clientManagersStatuses[i].clients_time_step_len_seconds:<19}',
+                            nl=False, fg=status_color)
+                click.secho('|', fg='white')
+                click.secho('+' + '-' * 60 + '+', fg='white')
+
+                click.secho(f'|{"Producer time step length in seconds":^40}', nl=False, fg='white')
+                click.secho('|', nl=False, fg='white')
+                click.secho(f'{client_manager_info.clientManagersStatuses[i].producer_time_step_len_seconds:<19}',
+                            nl=False, fg=status_color)
+                click.secho('|', fg='white')
+                click.secho('+' + '-' * 60 + '+', fg='white')
 
 
 def print_running_container(container: DockerContainerDTO) -> None:
@@ -1821,7 +4361,7 @@ def list_all(all: bool = False, running: bool = True, stopped: bool = False) -> 
 
 def list_statsmanager() -> None:
     """
-    List status of the docker host manager
+    List status of the docker stats manager
 
     :return: None
     """
@@ -2494,9 +5034,9 @@ def help() -> None:
     click.secho(f"{click.style('init', fg='magenta')} Initializes CSLE and sets up mgmt accounts ",
                 bold=False)
     click.secho(f"{click.style('ls', fg='magenta')} Lists information about CSLE ", bold=False)
-    click.secho(f"{click.style('start', fg='magenta')} Starts en emulation, a job,"
+    click.secho(f"{click.style('start', fg='magenta')} Starts an emulation, a job,"
                 f" or a container ", bold=False)
-    click.secho(f"{click.style('stop', fg='magenta')} Stops en entity, eg. emulation, a job,"
+    click.secho(f"{click.style('stop', fg='magenta')} Stops an entity, eg. emulation, a job,"
                 f" or a container ", bold=False)
     click.secho(f"{click.style('rm', fg='magenta')} Removes a container, a network, an image, "
                 f"all networks, all images, or all containers ", bold=False)

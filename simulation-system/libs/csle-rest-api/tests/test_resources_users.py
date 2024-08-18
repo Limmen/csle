@@ -325,7 +325,7 @@ class TestResourcesUsersSuite:
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
 
     def test_users_id_put(self, flask_app, mocker: pytest_mock.MockFixture, management_users, not_logged_in,
-                          logged_in, authorized, unauthorized, management_config) -> None:
+                          logged_in, authorized, unauthorized, management_config, update) -> None:
         """
         Testing the PUT HTTPS method for the /users/id resource
 
@@ -338,9 +338,12 @@ class TestResourcesUsersSuite:
         :param remove: the remove fixture
         :param logged_in: the logged_in fixture
         :param authorized: the athourized fixture
-        :param unauthorized: the unathourized fixture
+        :param unauthorized: the unauthorized fixture
+        :param update: the update fixture
         :return: None
         """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.update_management_user",
+                     side_effect=update)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_management_users",
                      side_effect=management_users)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_management_user_config",
@@ -490,6 +493,7 @@ class TestResourcesUsersSuite:
             nginx_log_dir="null",
             flask_log_file="null",
             cluster_manager_log_file="null",
+            version="0.6.0"
         )
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_management_users",
                      side_effect=management_users)

@@ -11,7 +11,7 @@ class IntrusionResponseGameStateLocal(JSONSerializable):
     with public observations)
     """
 
-    def __init__(self, d_b1: npt.NDArray[np.float_], a_b1: npt.NDArray[np.float_], s_1_idx: int,
+    def __init__(self, d_b1: npt.NDArray[np.float64], a_b1: npt.NDArray[np.float64], s_1_idx: int,
                  S: npt.NDArray[Any], S_A: npt.NDArray[Any], S_D: npt.NDArray[Any]) -> None:
         """
         Initializes the DTO

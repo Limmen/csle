@@ -48,7 +48,11 @@ class CONTAINER_IMAGES:
     String constants representing container images names
     """
     CSLE_PREFIX = "csle_"
+    BASE = "base"
+    DERIVED = "derived"
     DOCKERHUB_USERNAME = "kimham"
+    BLANK = "csle_blank"
+    BLANK_1 = "csle_blank_1"
     SSH_1 = "csle_ssh_1"
     ROUTER_2 = "csle_router_2"
     SAMBA_2 = "csle_samba_2"

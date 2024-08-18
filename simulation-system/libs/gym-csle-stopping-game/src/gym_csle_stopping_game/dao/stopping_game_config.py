@@ -14,7 +14,7 @@ class StoppingGameConfig(SimulationEnvInputConfig):
                  T: npt.NDArray[Any], O: npt.NDArray[np.int_], Z: npt.NDArray[Any],
                  R: npt.NDArray[Any], S: npt.NDArray[np.int_], A1: npt.NDArray[np.int_],
                  A2: npt.NDArray[np.int_], L: int, R_INT: int, R_COST: int, R_SLA: int, R_ST: int,
-                 b1: npt.NDArray[np.float_],
+                 b1: npt.NDArray[np.float64],
                  save_dir: str, checkpoint_traces_freq: int, gamma: float = 1, compute_beliefs: bool = True,
                  save_trace: bool = True) -> None:
         """

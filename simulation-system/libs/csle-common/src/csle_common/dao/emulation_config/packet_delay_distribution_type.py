@@ -11,4 +11,4 @@ class PacketDelayDistributionType(IntEnum):
     UNIFORM = 0
     NORMAL = 1
     PARETO = 2
-    PARETONORMAL = 2
+    PARETONORMAL = 3

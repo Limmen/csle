@@ -1,7 +1,6 @@
-from typing import List, Any, Generator
 import pytest
-import logging
 import docker
+import logging
 import grpc
 from unittest.mock import MagicMock
 from docker.types import IPAMConfig, IPAMPool
@@ -43,7 +42,7 @@ def network(docker_client) -> Generator:
     network.remove()
 
 
-def get_derived_containers(docker_client, excluded_tag=constants.CONTAINER_IMAGES.BLANK) -> List[Any]:
+def get_derived_containers(docker_client, excluded_tag="blank") -> None:
     """
     Get all the containers except the blank ones
 

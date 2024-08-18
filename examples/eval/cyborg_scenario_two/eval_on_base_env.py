@@ -13,22 +13,29 @@ if __name__ == '__main__':
         maximum_steps=100, red_agent_distribution=[1.0], reduced_action_space=True, decoy_state=True,
         scanned_state=True, decoy_optimization=False, cache_visited_states=False)
     csle_cyborg_env = CyborgScenarioTwoDefender(config=config)
-    num_evaluations = 10000
-    max_horizon = 100
+    num_evaluations = 1
+    max_horizon = 20
     returns = []
     seed = 215125
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
-    print("Starting policy evaluation")
+    # print(csle_cyborg_env.action_id_to_type_and_host)
+    # import sys
+    # sys.exit(0)
+    # print("Starting policy evaluation")
     for i in range(num_evaluations):
         o, _ = csle_cyborg_env.reset()
         R = 0
         t = 0
         while t < max_horizon:
-            a = ppo_policy.action(o=o)
+            # a = ppo_policy.action(o=o)
+            a = 4
             o, r, done, _, info = csle_cyborg_env.step(a)
+            table = csle_cyborg_env.get_true_table()
+            print(table)
+            print(r)
             R += r
             t += 1
         returns.append(R)
-        print(f"{i}/{num_evaluations}, avg R: {np.mean(returns)}, R: {R}")
+        # print(f"{i}/{num_evaluations}, avg R: {np.mean(returns)}, R: {R}")

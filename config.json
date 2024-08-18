@@ -71,5 +71,6 @@
       }
     ]
   },
-  "allow_registration": true
+  "allow_registration": true,
+  "version": "0.6.0"
 }

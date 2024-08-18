@@ -12,7 +12,7 @@ class AptGameUtil:
     """
 
     @staticmethod
-    def b1(N: int) -> npt.NDArray[np.float_]:
+    def b1(N: int) -> npt.NDArray[np.float64]:
         """
         Gets the initial belief
 
@@ -177,7 +177,7 @@ class AptGameUtil:
         return int(np.random.choice(np.arange(0, len(S)), p=state_probs))
 
     @staticmethod
-    def sample_initial_state(b1: npt.NDArray[np.float_]) -> int:
+    def sample_initial_state(b1: npt.NDArray[np.float64]) -> int:
         """
         Samples the initial state
 
@@ -202,7 +202,7 @@ class AptGameUtil:
         return int(o)
 
     @staticmethod
-    def bayes_filter(s_prime: int, o: int, a1: int, b: npt.NDArray[np.float_], pi2: npt.NDArray[Any],
+    def bayes_filter(s_prime: int, o: int, a1: int, b: npt.NDArray[np.float64], pi2: npt.NDArray[Any],
                      config: AptGameConfig) -> float:
         """
         A Bayesian filter to compute the belief of player 1
@@ -236,8 +236,8 @@ class AptGameUtil:
         return b_prime_s_prime
 
     @staticmethod
-    def next_belief(o: int, a1: int, b: npt.NDArray[np.float_], pi2: npt.NDArray[Any],
-                    config: AptGameConfig, a2: int = 0, s: int = 0) -> npt.NDArray[np.float_]:
+    def next_belief(o: int, a1: int, b: npt.NDArray[np.float64], pi2: npt.NDArray[Any],
+                    config: AptGameConfig, a2: int = 0, s: int = 0) -> npt.NDArray[np.float64]:
         """
         Computes the next belief using a Bayesian filter
 

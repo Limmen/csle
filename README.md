@@ -17,8 +17,7 @@
         <img src="https://img.shields.io/badge/Youtube-red.svg?logo=Youtube" /></a>
     <a href="https://arxiv.org/abs/2309.03292">
         <img src="https://img.shields.io/badge/arxiv-2309.03292-silver" alt="Paper">
-    </a>
-    <img src="https://badges.toozhao.com/badges/01HCESS7WXTT0T5ANET1CG9GDY/blue.svg" alt="Count">
+    </a> 
     <a href="https://github.com/limmen/csle">
      <img src="https://img.shields.io/badge/-github-teal?logo=github" alt="github">
     </a>
@@ -33,6 +32,9 @@
         <img src="https://codecov.io/gh/Limmen/csle/graph/badge.svg?token=YOV2SEDZWF"/> 
     </a>
 </p>
+<!---
+img src="https://badges.toozhao.com/badges/01HCESS7WXTT0T5ANET1CG9GDY/blue.svg" alt="Count">
+-->
 
 # The Cyber Security Learning Environment (CSLE)
 
@@ -91,7 +93,7 @@ A video walkthrough of the installation process is available [here](https://www.
 | Release                                                       | Last date of support |
 |---------------------------------------------------------------|----------------------|
 | [v.0.6.0](https://github.com/Limmen/csle/releases/tag/v0.6.0) | 2024-12-24           |
-| [v.0.5.0](https://github.com/Limmen/csle/releases/tag/v0.5.0) | 2024-06-02           |
+| [v.0.5.0](https://github.com/Limmen/csle/releases/tag/v0.5.0) | ~~2024-06-02~~       |
 | [v.0.4.0](https://github.com/Limmen/csle/releases/tag/v0.4.0) | ~~2024-02-07~~       |
 | [v.0.3.0](https://github.com/Limmen/csle/releases/tag/v0.3.0) | ~~2024-01-17~~       |
 | [v.0.2.0](https://github.com/Limmen/csle/releases/tag/v0.2.0) | ~~2023-10-30~~       |
@@ -128,6 +130,10 @@ features. We currently support each release for a window of 6 months.
 
 <img src="https://upload.wikimedia.org/wikipedia/commons/3/35/Tux.svg" width="7%" height="7%" style="margin-left:70px;"/>
 </p>
+
+## Datasets
+
+A dataset of 6400 intrusion traces can be found [here](https://zenodo.org/records/10234379).
 
 ## Maintainer
 
@@ -166,6 +172,7 @@ Thanks go to these people!
     </tr>
     <tr>
        <td align="center" valign="top" width="14.28%"><a href="https://github.com/kingxiaofire"><img src="https://github.com/kingxiaofire.png" width="100px;" alt="Yan Wang"/><br /><sub><b>Yan Wang</b></sub></a></td>
+       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Awsnaser"><img src="https://github.com/Awsnaser.png" width="100px;" alt="Aws Jaber"/><br /><sub><b>Aws Jaber</b></sub></a></td>
     </tr>
   </tbody>
 </table>

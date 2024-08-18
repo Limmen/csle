@@ -309,7 +309,7 @@ class TestResourcesEmulationTracesSuite:
         :param list_em_trac: the list_em_trac fixture
         :param remove: the remove fixture
         """
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_emulation_traces_ids",
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_trace",
                      side_effect=get_em_tr)
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.remove_emulation_trace",

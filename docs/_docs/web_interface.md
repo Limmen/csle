@@ -348,8 +348,10 @@ Table 22: REST API resources (3/4).
 | `/system-models-page`                                                        | `GET`        |
 | `/traces-page`                                                               | `GET`        |
 | `/training-page`                                                             | `GET`        |
+| `/create-emulation-page`                                                     | `GET`        |
 | `/container-terminal-page`                                                   | `GET`        |
 | `/container-terminal?token=<token>`                                          | `Websockets` |
+| `/create-emulation`                                                          | `POST`       |
 
 
 <p class="captionFig">

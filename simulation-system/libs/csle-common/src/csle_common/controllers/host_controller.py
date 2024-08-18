@@ -89,6 +89,9 @@ class HostController:
             o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd,
                                                     conn=emulation_env_config.get_connection(ip=ip))
             time.sleep(5)
+        else:
+            logger.info(f"Host manager is already running on: {ip}. Output of {cmd} was: {str(o)}, "
+                        f"err output was: {str(e)}")
 
     @staticmethod
     def stop_host_managers(emulation_env_config: EmulationEnvConfig, physical_host_ip: str) -> None:
@@ -1303,12 +1306,12 @@ class HostController:
                     port=emulation_env_config.host_manager_config.host_manager_port, ip=ip)
                 running = True
             except Exception as e:
-                logger.debug(f"Could not fetch Host manager status on IP:{ip}, error: {str(e)}, {repr(e)}")
+                logger.info(f"Could not fetch Host manager status on IP:{ip}, error: {str(e)}, {repr(e)}")
             if status is not None:
                 host_managers_statuses.append((status, ip))
             else:
                 host_managers_statuses.append(
-                    csle_collector.host_manager.host_manager_util.HostManagerUtil.host_monitor_dto_empty())
+                    (csle_collector.host_manager.host_manager_util.HostManagerUtil.host_monitor_dto_empty(), ip))
             host_managers_running.append(running)
         execution_id = emulation_env_config.execution_id
         emulation_name = emulation_env_config.name

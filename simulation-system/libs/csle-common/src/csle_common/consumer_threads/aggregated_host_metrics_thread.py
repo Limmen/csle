@@ -17,7 +17,7 @@ class AggregatedHostMetricsThread(threading.Thread):
         Initializes the thread
 
         :param host_metrics: the host metrics to update
-        :param machines: the list of machiens to update the host metrics with
+        :param machines: the list of machines to update the host metrics with
         """
         threading.Thread.__init__(self)
         self.machines = machines

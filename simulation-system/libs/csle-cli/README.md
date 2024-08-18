@@ -172,6 +172,125 @@ csle start | stop cadvisor
 csle start | stop nodeexporter
 ```
 
+- Start hostmanagers
+
+```bash
+csle start | stop hostmanagers
+```
+
+- Start hostmanager
+
+```bash
+csle start | stop hostmanager
+```
+
+- Start clientmanager
+
+```bash
+csle start | stop clientmanager
+```
+
+- Start snortmanagers
+
+```bash
+csle start | stop snortmanagers
+```
+
+- Start snortmanager
+
+```bash
+csle start | stop snortmanager
+```
+
+- Start elkmanager
+
+```bash
+csle start | stop elkmanager
+```
+
+- Start trafficmanagers
+
+```bash
+csle start | stop trafficmanagers
+```
+
+- Start trafficmanager
+
+```bash
+csle start | stop trafficmanager
+```
+
+- Start kafkamanager
+
+```bash
+csle start | stop kafkamanager
+```
+
+- Start ossecmanagers
+
+```bash
+csle start | stop ossecmanagers
+```
+
+- Start ossecmanager
+
+```bash
+csle start | stop ossecmanager
+```
+- Start ryumanager
+
+```bash
+csle start | stop ryumanager
+```
+
+- Start filebeats
+
+```bash
+csle start | stop filebeats
+```
+
+- Start filebeat
+
+```bash
+csle start | stop filebeat
+```
+
+- Start metricbeats
+
+```bash
+csle start | stop metricbeats
+```
+
+- Start metricbeat
+
+```bash
+csle start | stop metricbeat
+```
+
+- Start heartbeats
+
+```bash
+csle start | stop heartbeats
+```
+
+- Start heartbeat
+
+```bash
+csle start | stop heartbeat
+```
+
+- Start packetbeats
+
+```bash
+csle start | stop packetbeats
+```
+
+- Start packetbeat
+
+```bash
+csle start | stop packetbeat
+```
+
 ## Available Commands
 
 | command                   | description                                                                                                                                                                                          | argument 1                                                                                                                                                                                          | argument 2                                                                   | argument 3 | argument 4    | argument 5 | argument 6 | flags                                                                                                                                                                                                                                                                                                                                                                                 | 
@@ -181,13 +300,13 @@ csle start | stop nodeexporter
 | `em`                      | Extracts status information of a given emulation                                                                                                                                                     | `emulation_name`                                                                                                                                                                                    |                                                                              |            |               |            |            | `--host` (check status of host managers), `--stats` (check status of Docker stats manager), `--kafka` (check status of kafka), `--snortids` (check status of the Snort IDS), `--clients` (check status of client population) `--executions` (check status of executions)                                                                                                              |
 | `init`                    | Initializes CSLE and sets up management accounts                                                                                                                                                     |                                                                                                                                                                                                     |                                                                              |            |               |            |            |                                                                                                                                                                                                                                                                                                                                                                                       |
 | `install`                 | Installs emulations and simulations in the metastore and creates Docker images                                                                                                                       | `emulations`, `simulations`, `emulation_name`, `simulation_name`, `derived_images`, `base_images`, `metastore`, `all`                                                                               |                                                                              |            |               |            |            |                                                                                                                                                                                                                                                                                                                                                                                       |
-| `ls`                      | Lists the set of containers, networks, images, or emulations, or all                                                                                                                                 | `containers`, `networks`, `images`, `emulations`, `all`, `environments`, `prometheus`, `node_exporter`, `cadvisor`, `statsmanager`, `managementsystem`, `simulations`, `emulation_executions`       |                                                                              |            |               |            |            | `--all` (list extended information), `--running` (list running entities only (default)), `--stopped` (list stopped entities only)                                                                                                                                                                                                                                                     |
+| `ls`                      | Lists the set of containers, networks, images, or emulations, or all                                                                                                                                 | `containers`, `networks`, `images`, `emulations`, `all`, `environments`, `prometheus`, `node_exporter`, `cadvisor`, `statsmanager`, `managementsystem`, `simulations`, `emulation_executions`, `hostmanagers`, `clientmanager`, `snortmanagers`, `elkmanager`, `trafficmanagers`, `kafkamanager`, `ossecmanagers`, `ryumanager`, `filebeats`, `metricbeats`, `heartbeats`, `packetbeats`, `logfiles`, `logfile`, `emulation_description`       |                                                                              |            |               |            |            | `--all` (list extended information), `--running` (list running entities only (default)), `--stopped` (list stopped entities only)                                                                                                                                                                                                                                                     |
 | `rm`                      | Removes a container, a network, an image, all networks, all images, or all containers                                                                                                                | `network_name`, `container_name`, `image_name`, `networks`, `images`, `containers`                                                                                                                  |                                                                              |            |               |            |            |                                                                                                                                                                                                                                                                                                                                                                                       |                                                                                                                                                                                                                                                                         |
 | `shell`                   | Command for opening a shell inside a running container                                                                                                                                               | `container_name`                                                                                                                                                                                    |                                                                              |            |               |            |            |                                                                                                                                                                                                                                                                                                                                                                                       |    
-| `start`                   | Starts an entity, e.g. a container or the management system                                                                                                                                          | `prometheus`, `node_exporter`, `grafana`, `cadvisor`, `flask`, `nginx`, `docker`, `postgresql`, `container_name`, `emulation_name`, `all`, `statsmanager`, `training_job`, `system_id_job`, `image` | `container_name` (if the first argument corresponds to a container image),   |            |               |            |            | `--id` (execution id), `--no_clients` (skip starting client population), `--no_traffic` (skip starting traffic generators), `--no_beats` (skip starting/configuring beats)`, --no_network` (skip creating virtual networks) `--ip` (to start a service on a specific node)                                                                                                            |  
+| `start`                   | Starts an entity, e.g. a container or the management system                                                                                                                                          | `prometheus`, `node_exporter`, `grafana`, `cadvisor`, `flask`, `nginx`, `docker`, `postgresql`, `container_name`, `emulation_name`, `all`, `statsmanager`, `training_job`, `system_id_job`, `image`, `hostmanagers`, `hostmanager`, `clientmanager`, `snortmanagers`, `snortmanager`, `elkmanager`, `trafficmanagers`, `trafficmanager`, `kafkamanager`, `ossecmanagers`, `ossecmanager`, `ryumanager`, `filebeats`, `filebeat`, `metricbeats`, `metricbeat`, `heartbeats`, `heartbeat`, `packetbeats`, `packetbeat` | `container_name` (if the first argument corresponds to a container image),   |            |               |            |            | `--id` (execution id), `--no_clients` (skip starting client population), `--no_traffic` (skip starting traffic generators), `--no_beats` (skip starting/configuring beats)`, --no_network` (skip creating virtual networks) `--ip` (to start a service on a specific node)                                                                                                            |  
 | `start_traffic`           | Starts the traffic and client population on a given emulation                                                                                                                                        | `emulation_name`                                                                                                                                                                                    | `execution_id`                                                               |            |               |            |            | `--mu` (the mu paramter for the service time of the client arrivals), `--lamb` (the lambda parameter of the client arrival process), `--t` (time-step length to measure the arrival process), `--nc` (number of commands per client), `--tsf` (the time scaling factor for non-stationary Poisson processes),`--psf` (the period scaling factor for non-stationary Poisson processes) |
 | `statsmanager`            | Starts the statsmanager locally                                                                                                                                                                      | `port`                                                                                                                                                                                              | `log_dir`                                                                    | `log_file` | `max_workers` |            |            |                                                                                                                                                                                                                                                                                                                                                                                       |
-| `stop`                    | Stops an entity, e.g. an emulation execution or a container                                                                                                                                          | `emulation_name`, `prometheus`, `node_exporter`, `cadvisor`, `grafana`, `flask`, `nginx`, `docker`, `postgresql`, `container_name`, `statsmanager`, `emulation_executions`, `all`                   | `execution_id`                                                               |            |               |            |            | `--ip` (to stop a service on a specific node)                                                                                                                                                                                                                                                                                                                                         |
+| `stop`                    | Stops an entity, e.g. an emulation execution or a container                                                                                                                                          | `emulation_name`, `prometheus`, `node_exporter`, `cadvisor`, `grafana`, `flask`, `nginx`, `docker`, `postgresql`, `container_name`, `statsmanager`, `emulation_executions`, `all`, `hostmanagers`, `hostmanager`, `clientmanager`, `snortmanagers`, `snortmanager`, `elkmanager`, `trafficmanagers`, `trafficmanager`, `kafkamanager`, `ossecmanagers`, `ossecmanager`, `ryumanager`, `filebeats`, `filebeat`, `metricbeats`, `metricbeat`, `heartbeats`, `heartbeat`, `packetbeats`, `packetbeat`                   | `execution_id`                                                               |            |               |            |            | `--ip` (to stop a service on a specific node)                                                                                                                                                                                                                                                                                                                                         |
 | `stop_traffic`            | Stops the traffic and client population on a given emulation                                                                                                                                         | `emulation_name`                                                                                                                                                                                    | `execution_id`                                                               |            |               |            |            |                                                                                                                                                                                                                                                                                                                                                                                       |
 | `systemidentificationjob` | Starts a systemidentification job with the given id                                                                                                                                                  | `job_id`                                                                                                                                                                                            |                                                                              |            |               |            |            |                                                                                                                                                                                                                                                                                                                                                                                       |
 | `trainingjob`             | Starts a training job with the given id                                                                                                                                                              | `job_id`                                                                                                                                                                                            |                                                                              |            |               |            |            |                                                                                                                                                                                                                                                                                                                                                                                       |

@@ -191,6 +191,8 @@ A REST API for the CSLE management platform.
 | `/training-page`                                                                                      | Get the training page                                          | `GET`                                   |
 | `/container-terminal-page`                                                                            | Get the container-terminal page                                | `GET`                                   |
 | `/server-cluster?token=<valid_token>`                                                                 | Get details of the server cluster                              | `GET`                                   |
+| `/create-emulation?token=<valid_token>`                                                               | Create a new emulation configuration                           | `POST`                                  |
+| `/create-emulation-page`                                                                              | Get the create emulation page                                  | `GET`                                   |
 
 ## Requirements
 

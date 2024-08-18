@@ -30,6 +30,7 @@ import {
     DOWNLOADS_PAGE_RESOURCE,
     VERSION_RESOURCE,
     SERVER_CLUSTER_PAGE_RESOURCE,
+    CREATE_EMULATION_PAGE_RESOURCE,
     HTTP_PREFIX, HTTP_REST_GET, CONFIG_RESOURCE,
     REGISTRATION_ALLOWED_SUBRESOURCE, REGISTRATION_ALLOWED_PROPERTY
 } from "../../Common/constants";
@@ -49,7 +50,7 @@ const Header = (props) => {
         `/${POLICY_EXAMINATION_PAGE_RESOURCE}`, `/${IMAGES_PAGE_RESOURCE}`,
         `/${TRAINING_PAGE_RESOURCE}`, `/${POLICIES_PAGE_RESOURCE}`, `/${JOBS_PAGE_RESOURCE}`,
         `/${SDN_CONTROLLERS_PAGE_RESOURCE}`, `/${CONTROL_PLANE_PAGE_RESOURCE}`,
-        `/${CONTAINER_TERMINAL_PAGE_RESOURCE}`]
+        `/${CONTAINER_TERMINAL_PAGE_RESOURCE}`, `/${CREATE_EMULATION_PAGE_RESOURCE}`]
     const adminDropdownRoutes = [`/${USER_ADMIN_PAGE_RESOURCE}`, `/${SYSTEM_ADMIN_PAGE_RESOURCE}`,
         `/${LOGS_ADMIN_PAGE_RESOURCE}`]
 
@@ -282,6 +283,12 @@ const Header = (props) => {
         </Tooltip>
     );
 
+    const renderCreateEmulationTooltip = (props) => (
+      <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+          Creation of new emulations
+      </Tooltip>
+    );
+
     const renderContainerTerminalTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             Terminal access to containers of emulations
@@ -512,6 +519,14 @@ const Header = (props) => {
                                     renderContainerTerminalTooltip={renderContainerTerminalTooltip}
                                     sessionData={props.sessionData}
                                 />
+                                <OverlayTrigger
+                                  placement="right"
+                                  delay={{show: 0, hide: 0}}
+                                  overlay={renderCreateEmulationTooltip}>
+                                    <NavLink className="dropdown-item" to={CREATE_EMULATION_PAGE_RESOURCE}>
+                                        Create emulation <i className="fa fa-plus headerIcon" aria-hidden="true"></i>
+                                    </NavLink>
+                                </OverlayTrigger>
 
                             </div>
                         </li>
