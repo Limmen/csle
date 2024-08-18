@@ -64,7 +64,7 @@ def get_derived_containers(docker_client, excluded_tag=constants.CONTAINER_IMAGE
         and all(constants.CONTAINER_IMAGES.BASE not in tag for tag in image.tags)
         and all(excluded_tag not in tag for tag in image.tags)
     ]
-    return derived_images                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+    return derived_images                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
 
 
 @pytest.fixture(scope="module", params=get_derived_containers(docker.from_env()))
@@ -129,7 +129,7 @@ def test_start_snort_manager(container_setup) -> None:
         logging.info(f"Starting snort manager in container: {container_setup.id} "
                      f"with image: {container_setup.image.tags}")
         container_setup.exec_run(cmd, detach=True)
-        # Check if host_manager starts
+        # Check if snort_manager starts
         cmd = (
             f"sh -c '{constants.COMMANDS.PS_AUX} | {constants.COMMANDS.GREP} "
             f"{constants.COMMANDS.SPACE_DELIM}{constants.TRAFFIC_COMMANDS.SNORT_IDS_MANAGER_FILE_NAME}'"
