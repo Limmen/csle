@@ -64,7 +64,7 @@ def get_derived_containers(docker_client, excluded_tag=constants.CONTAINER_IMAGE
         and all(constants.CONTAINER_IMAGES.BASE not in tag for tag in image.tags)
         and all(excluded_tag not in tag for tag in image.tags)
     ]
-    return derived_images[:1]
+    return derived_images
 
 
 @pytest.fixture(scope="module", params=get_derived_containers(docker.from_env()))
