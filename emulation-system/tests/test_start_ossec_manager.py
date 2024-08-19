@@ -9,10 +9,9 @@ import time
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.util.emulation_util import EmulationUtil
 import csle_common.constants.constants as constants
-from csle_common.controllers.elk_controller import ELKController
-import csle_collector.elk_manager.elk_manager_pb2_grpc
-import csle_collector.elk_manager.elk_manager_pb2
-import csle_collector.elk_manager.query_elk_manager
+import csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc
+import csle_collector.ossec_ids_manager.ossec_ids_manager_pb2
+import csle_collector.ossec_ids_manager.query_ossec_ids_manager
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from IPython.lib.editorhooks import emacs
 
@@ -94,9 +93,9 @@ def container_setup(request, docker_client, network) -> Generator:
     container.remove()
 
 
-def test_start_elk_manager(container_setup) -> None:
+def test_start_ossec_manager(container_setup) -> None:
     """
-    Start elk_manager in a container
+    Start ossec_manager in a container
 
     :param container_setup: container_setup
 
@@ -109,45 +108,43 @@ def test_start_elk_manager(container_setup) -> None:
     # Mock emulation_env_config
     emulation_env_config = MagicMock(spec=EmulationEnvConfig)
     emulation_env_config.get_connection.return_value = MagicMock()
-    emulation_env_config.elk_config = MagicMock()
-    emulation_env_config.elk_config.container.docker_gw_bridge_ip = container_setup.attrs[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.IP_ADDRESS_INFO]
-    emulation_env_config.elk_config.get_connection.return_value = MagicMock()
-    emulation_env_config.elk_config.elk_manager_port = 50051
-    emulation_env_config.elk_config.elk_manager_log_dir = "/var/log/elk"
-    emulation_env_config.elk_config.elk_manager_log_file = "elk.log"
-    emulation_env_config.elk_config.elk_manager_max_workers = 4
-    
-    ip = emulation_env_config.elk_config.container.docker_gw_bridge_ip
-    port = emulation_env_config.elk_config.elk_manager_port
+    emulation_env_config.ossec_ids_manager_config = MagicMock()
+    emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port = 50051
+    emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_log_dir = "/var/log/ossec"
+    emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_log_file = "ossec.log"
+    emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_max_workers = 4
+
+    ip = container_setup.attrs[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.IP_ADDRESS_INFO]
+    port = emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port
     try:
         # Start host_manager command
         cmd = (
-            f"/root/miniconda3/bin/python3 /elk_manager.py " 
-            f"--port {emulation_env_config.elk_config.elk_manager_port} "
-            f"--logdir {emulation_env_config.elk_config.elk_manager_log_dir} "
-            f"--logfile {emulation_env_config.elk_config.elk_manager_log_file} "
-            f"--maxworkers {emulation_env_config.elk_config.elk_manager_max_workers}"
+            f"/root/miniconda3/bin/python3 /ossec_ids_manager.py "
+            f"--port {emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port} "
+            f"--logdir {emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_log_dir} "
+            f"--logfile {emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_log_file} "
+            f"--maxworkers {emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_max_workers}"
         )
         # Run cmd in the container
-        logging.info(f"Starting elk manager in container: {container_setup.id} "
+        logging.info(f"Starting ossec manager in container: {container_setup.id} "
                      f"with image: {container_setup.image.tags}")
         container_setup.exec_run(cmd, detach=True)
-        # Check if elk_manager starts
+        # Check if ossec_manager starts
         cmd = (
             f"sh -c '{constants.COMMANDS.PS_AUX} | {constants.COMMANDS.GREP} "
-            f"{constants.COMMANDS.SPACE_DELIM}{constants.TRAFFIC_COMMANDS.ELK_MANAGER_FILE_NAME}'"
+            f"{constants.COMMANDS.SPACE_DELIM}{constants.TRAFFIC_COMMANDS.OSSEC_IDS_MANAGER_FILE_NAME}'"
         )
-        logging.info(f"Verifying that elk manager is running in container: {container_setup.id} "
+        logging.info(f"Verifying that ossec manager is running in container: {container_setup.id} "
                      f"with image: {container_setup.image.tags}")
         result = container_setup.exec_run(cmd)
         output = result.output.decode("utf-8")
-        assert constants.COMMANDS.SEARCH_ELK_MANAGER in output, "Elk manager is not running in the container"
+        assert constants.COMMANDS.SEARCH_OSSEC_IDS_MANAGER in output, "ossec manager is not running in the container"
         time.sleep(5)
         # Call grpc
         with grpc.insecure_channel(f"{ip}:{port}", options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
-            stub = csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub(channel)
-            elk_dto = csle_collector.elk_manager.query_elk_manager.get_elk_status(stub)
-        assert elk_dto 
+            stub = csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc.OSSECIdsManagerStub(channel)
+            status = csle_collector.ossec_ids_manager.query_ossec_ids_manager.get_ossec_ids_monitor_status(stub=stub)
+        assert status 
     except Exception as e:
         print(f"Error occurred in container {container_setup.name}: {e}")
         failed_containers.append(container_setup.name)
@@ -160,6 +157,6 @@ def test_start_elk_manager(container_setup) -> None:
             }
         )
     if failed_containers:
-        logging.info("Containers that failed to start the elk manager:")
+        logging.info("Containers that failed to start the ossec manager:")
         logging.info(containers_info)
     assert not failed_containers, f"T{failed_containers} failed"
