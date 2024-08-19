@@ -65,7 +65,7 @@ def get_derived_containers(docker_client, excluded_tag=constants.CONTAINER_IMAGE
         and all(constants.CONTAINER_IMAGES.BASE not in tag for tag in image.tags)
         and all(excluded_tag not in tag for tag in image.tags)
     ]
-    return derived_images[:1]                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+    return derived_images[:1]
 
 
 @pytest.fixture(scope="module", params=get_derived_containers(docker.from_env()))
@@ -82,7 +82,7 @@ def container_setup(request, docker_client, network) -> Generator:
     # Create and start each derived container
     image = request.param
     container = docker_client.containers.create(
-        image.tags[0],  
+        image.tags[0],
         command="sh -c 'while true; do sleep 3600; done'",
         detach=True,
     )
@@ -110,35 +110,40 @@ def test_start_elk_manager(container_setup) -> None:
     emulation_env_config = MagicMock(spec=EmulationEnvConfig)
     emulation_env_config.get_connection.return_value = MagicMock()
     emulation_env_config.elk_config = MagicMock()
-    emulation_env_config.elk_config.container.docker_gw_bridge_ip = container_setup.attrs[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.IP_ADDRESS_INFO]
+    emulation_env_config.elk_config.container.docker_gw_bridge_ip = container_setup.attrs[
+        constants.DOCKER.NETWORK_SETTINGS
+    ][constants.DOCKER.IP_ADDRESS_INFO]
     emulation_env_config.elk_config.get_connection.return_value = MagicMock()
     emulation_env_config.elk_config.elk_manager_port = 50051
     emulation_env_config.elk_config.elk_manager_log_dir = "/var/log/elk"
     emulation_env_config.elk_config.elk_manager_log_file = "elk.log"
     emulation_env_config.elk_config.elk_manager_max_workers = 4
-    
+
     ip = emulation_env_config.elk_config.container.docker_gw_bridge_ip
     port = emulation_env_config.elk_config.elk_manager_port
     try:
-        # Start host_manager command
+        # Start elk_manager command
         cmd = (
-            f"/root/miniconda3/bin/python3 /elk_manager.py " 
+            f"/root/miniconda3/bin/python3 /elk_manager.py "
             f"--port {emulation_env_config.elk_config.elk_manager_port} "
             f"--logdir {emulation_env_config.elk_config.elk_manager_log_dir} "
             f"--logfile {emulation_env_config.elk_config.elk_manager_log_file} "
             f"--maxworkers {emulation_env_config.elk_config.elk_manager_max_workers}"
         )
         # Run cmd in the container
-        logging.info(f"Starting elk manager in container: {container_setup.id} "
-                     f"with image: {container_setup.image.tags}")
+        logging.info(
+            f"Starting elk manager in container: {container_setup.id} " f"with image: {container_setup.image.tags}"
+        )
         container_setup.exec_run(cmd, detach=True)
         # Check if elk_manager starts
         cmd = (
             f"sh -c '{constants.COMMANDS.PS_AUX} | {constants.COMMANDS.GREP} "
             f"{constants.COMMANDS.SPACE_DELIM}{constants.TRAFFIC_COMMANDS.ELK_MANAGER_FILE_NAME}'"
         )
-        logging.info(f"Verifying that elk manager is running in container: {container_setup.id} "
-                     f"with image: {container_setup.image.tags}")
+        logging.info(
+            f"Verifying that elk manager is running in container: {container_setup.id} "
+            f"with image: {container_setup.image.tags}"
+        )
         result = container_setup.exec_run(cmd)
         output = result.output.decode("utf-8")
         assert constants.COMMANDS.SEARCH_ELK_MANAGER in output, "Elk manager is not running in the container"
@@ -147,7 +152,7 @@ def test_start_elk_manager(container_setup) -> None:
         with grpc.insecure_channel(f"{ip}:{port}", options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub(channel)
             elk_dto = csle_collector.elk_manager.query_elk_manager.get_elk_status(stub)
-        assert elk_dto 
+        assert elk_dto
     except Exception as e:
         print(f"Error occurred in container {container_setup.name}: {e}")
         failed_containers.append(container_setup.name)
