@@ -1,4 +1,3 @@
-import logging
 from typing import List
 from click.testing import CliRunner
 from csle_cli.cli import ls
