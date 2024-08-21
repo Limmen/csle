@@ -11,6 +11,8 @@ import csle_collector.host_manager.host_manager_pb2_grpc
 import csle_collector.host_manager.host_manager_pb2
 import csle_collector.host_manager.query_host_manager
 from csle_common.metastore.metastore_facade import MetastoreFacade
+from typing import List
+from typing import Generator
 
 
 @pytest.fixture(scope="module")
@@ -42,13 +44,13 @@ def network(docker_client) -> Generator:
     network.remove()
 
 
-def get_derived_containers(docker_client, excluded_tag="blank") -> None:
+def get_derived_containers(docker_client, excluded_tag="blank") -> List:
     """
     Get all the containers except the blank ones
 
     :param docker_client: docker_client
 
-    :return: None
+    :return: List of Images
     """
     # Get all images except those with the excluded tag
     config = MetastoreFacade.get_config(id=1)
