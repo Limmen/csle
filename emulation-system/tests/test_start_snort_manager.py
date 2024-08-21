@@ -7,13 +7,11 @@ from unittest.mock import MagicMock
 from docker.types import IPAMConfig, IPAMPool
 import time
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
-from csle_common.util.emulation_util import EmulationUtil
 import csle_common.constants.constants as constants
-from csle_common.controllers.snort_ids_controller import SnortIDSController
 import csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc
 import csle_collector.snort_ids_manager.snort_ids_manager_pb2
 from csle_common.metastore.metastore_facade import MetastoreFacade
-from IPython.lib.editorhooks import emacs
+from typing import Generator
 
 
 @pytest.fixture(scope="module")
@@ -27,14 +25,14 @@ def docker_client() -> None:
 
 
 @pytest.fixture(scope="module")
-def network(docker_client) -> None:
+def network(docker_client) -> Generator:
     """
     Create a custom network with a specific subnet
 
     :param docker_client: docker_client
     :yield: network
 
-    :return: None
+    :return: Generator
     """
     subnet = "15.15.15.0/24"
     ipam_pool = IPAMPool(subnet=subnet)
@@ -64,7 +62,7 @@ def get_derived_containers(docker_client, excluded_tag=constants.CONTAINER_IMAGE
         and all(constants.CONTAINER_IMAGES.BASE not in tag for tag in image.tags)
         and all(excluded_tag not in tag for tag in image.tags)
     ]
-    return derived_images                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+    return derived_images
 
 
 @pytest.fixture(scope="module", params=get_derived_containers(docker.from_env()))
@@ -81,7 +79,7 @@ def container_setup(request, docker_client, network) -> Generator:
     # Create and start each derived container
     image = request.param
     container = docker_client.containers.create(
-        image.tags[0],  
+        image.tags[0],
         command="sh -c 'while true; do sleep 3600; done'",
         detach=True,
     )
@@ -144,7 +142,7 @@ def test_start_snort_manager(container_setup) -> None:
         with grpc.insecure_channel(f"{ip}:{port}", options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub(channel)
             status = csle_collector.snort_ids_manager.query_snort_ids_manager.get_snort_ids_monitor_status(stub=stub)
-        assert status 
+        assert status
     except Exception as e:
         print(f"Error occurred in container {container_setup.name}: {e}")
         failed_containers.append(container_setup.name)

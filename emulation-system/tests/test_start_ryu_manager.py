@@ -7,13 +7,12 @@ from unittest.mock import MagicMock
 from docker.types import IPAMConfig, IPAMPool
 import time
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
-from csle_common.util.emulation_util import EmulationUtil
 import csle_common.constants.constants as constants
 import csle_collector.ryu_manager.ryu_manager_pb2_grpc
 import csle_collector.ryu_manager.ryu_manager_pb2
 import csle_collector.ryu_manager.query_ryu_manager
 from csle_common.metastore.metastore_facade import MetastoreFacade
-from IPython.lib.editorhooks import emacs
+from typing import Generator
 
 
 @pytest.fixture(scope="module")
@@ -27,14 +26,14 @@ def docker_client() -> None:
 
 
 @pytest.fixture(scope="module")
-def network(docker_client) -> None:
+def network(docker_client) -> Generator:
     """
     Create a custom network with a specific subnet
 
     :param docker_client: docker_client
     :yield: network
 
-    :return: None
+    :return: Generator
     """
     subnet = "15.15.15.0/24"
     ipam_pool = IPAMPool(subnet=subnet)
