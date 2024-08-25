@@ -37,7 +37,7 @@ class TestCSLECliSuite:
 
     def test_ls_networks(self) -> None:
         """
-        Tests the ls command for containers
+        Tests the ls command for networks
 
         :return: None
         """
@@ -47,7 +47,7 @@ class TestCSLECliSuite:
 
     def test_ls_emulations(self) -> None:
         """
-        Tests the ls command for containers
+        Tests the ls command for emulations
 
         :return: None
         """
@@ -57,4 +57,54 @@ class TestCSLECliSuite:
 
         runner = CliRunner()
         result = runner.invoke(ls, ["emulations", "--stopped"])
+        assert result.exit_code == 0
+
+    def test_ls_environments(self) -> None:
+        """
+        Tests the ls command for environments
+
+        :return: None
+        """
+        runner = CliRunner()
+        result = runner.invoke(ls, ["environments"])
+        assert result.exit_code == 0
+
+    def test_ls_prometheus(self) -> None:
+        """
+        Tests the ls command for prometheus
+
+        :return: None
+        """
+        runner = CliRunner()
+        result = runner.invoke(ls, ["prometheus"])
+        assert result.exit_code == 0
+
+    def test_ls_node_exporter(self) -> None:
+        """
+        Tests the ls command for node_exporter
+
+        :return: None
+        """
+        runner = CliRunner()
+        result = runner.invoke(ls, ["node_exporter"])
+        assert result.exit_code == 0
+
+    def test_ls_cadvisor(self) -> None:
+        """
+        Tests the ls command for cadvisor
+
+        :return: None
+        """
+        runner = CliRunner()
+        result = runner.invoke(ls, ["cadvisor"])
+        assert result.exit_code == 0
+
+    def test_ls_nginx(self) -> None:
+        """
+        Tests the ls command for nginx
+
+        :return: None
+        """
+        runner = CliRunner()
+        result = runner.invoke(ls, ["nginx"])
         assert result.exit_code == 0
