@@ -108,3 +108,83 @@ class TestCSLECliSuite:
         runner = CliRunner()
         result = runner.invoke(ls, ["nginx"])
         assert result.exit_code == 0
+
+    def test_ls_postgresql(self) -> None:
+        """
+        Tests the ls command for postgresql
+
+        :return: None
+        """
+        runner = CliRunner()
+        result = runner.invoke(ls, ["postgresql"])
+        assert result.exit_code == 0
+
+    def test_ls_docker(self) -> None:
+        """
+        Tests the ls command for docker
+
+        :return: None
+        """
+        runner = CliRunner()
+        result = runner.invoke(ls, ["docker"])
+        assert result.exit_code == 0
+
+    def test_ls_pgadmin(self) -> None:
+        """
+        Tests the ls command for pgadmin
+
+        :return: None
+        """
+        runner = CliRunner()
+        result = runner.invoke(ls, ["pgadmin"])
+        assert result.exit_code == 0
+
+    def test_ls_grafana(self) -> None:
+        """
+        Tests the ls command for grafana
+
+        :return: None
+        """
+        runner = CliRunner()
+        result = runner.invoke(ls, ["grafana"])
+        assert result.exit_code == 0
+
+    def test_ls_flask(self) -> None:
+        """
+        Tests the ls command for flask
+
+        :return: None
+        """
+        runner = CliRunner()
+        result = runner.invoke(ls, ["flask"])
+        assert result.exit_code == 0
+
+    def test_ls_statsmanager(self) -> None:
+        """
+        Tests the ls command for statsmanager
+
+        :return: None
+        """
+        runner = CliRunner()
+        result = runner.invoke(ls, ["statsmanager"])
+        assert result.exit_code == 0
+
+    def test_ls_simulations(self) -> None:
+        """
+        Tests the ls command for simulations
+
+        :return: None
+        """
+        runner = CliRunner()
+        result = runner.invoke(ls, ["simulations"])
+        assert result.exit_code == 0
+
+    def test_ls_emulation_executions(self) -> None:
+        """
+        Tests the ls command for emulation_executions
+
+        :return: None
+        """
+        runner = CliRunner()
+        result = runner.invoke(ls, ["emulation_executions"])
+        assert result.exit_code == 0
