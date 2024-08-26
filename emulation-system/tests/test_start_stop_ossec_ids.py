@@ -44,7 +44,7 @@ def network(docker_client) -> Generator:
     network.remove()
 
 
-def get_derived_containers(docker_client, excluded_tag=constants.CONTAINER_IMAGES.BLANK) -> List[Any]:
+def get_containers(docker_client) -> List[Any]:
     """
     Get all the containers except the blank ones
 
@@ -52,21 +52,11 @@ def get_derived_containers(docker_client, excluded_tag=constants.CONTAINER_IMAGE
 
     :return: None
     """
-    # Get all images except those with the excluded tag
-    config = MetastoreFacade.get_config(id=1)
-    match_tag = config.version
-    all_images = docker_client.images.list()
-    derived_images = [
-        image
-        for image in all_images
-        if any(match_tag in tag for tag in image.tags)
-        and all(constants.CONTAINER_IMAGES.BASE not in tag for tag in image.tags)
-        and all(excluded_tag not in tag for tag in image.tags)
-    ]
-    return derived_images
+    all_images = constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES
+    return all_images
 
 
-@pytest.fixture(scope="module", params=get_derived_containers(docker.from_env()))
+@pytest.fixture(scope="module", params=get_containers(docker.from_env()))
 def container_setup(request, docker_client, network) -> Generator:
     """
     Starts a Docker container before running tests and ensures its stopped and removed after tests complete.
@@ -78,9 +68,11 @@ def container_setup(request, docker_client, network) -> Generator:
     :return: None
     """
     # Create and start each derived container
+    config = MetastoreFacade.get_config(id=1)
+    version = config.version
     image = request.param
     container = docker_client.containers.create(
-        image.tags[0],
+        f"{constants.CONTAINER_IMAGES.DOCKERHUB_USERNAME}/{image}:{version}",
         command="sh -c 'while true; do sleep 3600; done'",
         detach=True,
     )
@@ -162,3 +154,66 @@ def test_start_ossec_manager(container_setup) -> None:
         logging.info("Containers that failed to start the ossec manager:")
         logging.info(containers_info)
     assert not failed_containers, f"T{failed_containers} failed"
+    
+    
+def test_start_ossec_ids(container_setup) -> None:
+    """
+    Start ossec_ids in a container
+
+    :param container_setup: container_setup
+
+    :return: None
+    """
+    emulation_env_config = MagicMock()
+    emulation_env_config.ossec_ids_manager_config = MagicMock()
+    emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port = 50051
+    emulation_env_config.execution_id = "1"
+    emulation_env_config.level = "2"
+    
+    logger = logging.getLogger("test_logger")
+    ip = container_setup.attrs[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.IP_ADDRESS_INFO]
+    port = emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port
+    logger.debug(f"Attempting to connect to gRPC server at {ip}:{port}")
+    # gRPC call
+    try:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
+            stub = csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc.OSSECIdsManagerStub(channel)
+            response = csle_collector.ossec_ids_manager.query_ossec_ids_manager.start_ossec_ids(
+                stub=stub
+            )
+            logger.info(f"gRPC Response: {response}")
+            assert response, f"Failed to start ossec IDS on {ip}. Response: {response}"
+    except grpc.RpcError as e:
+        logger.error(f"gRPC Error: {e}")
+        assert False, f"gRPC call failed with error: {e}"
+        
+        
+def test_stop_ossec_ids(container_setup) -> None:
+    """
+    Stop ossec_ids in a container
+
+    :param container_setup: container_setup
+
+    :return: None
+    """
+    emulation_env_config = MagicMock()
+    emulation_env_config.ossec_ids_manager_config = MagicMock()
+    emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port = 50051
+    emulation_env_config.execution_id = "1"
+    emulation_env_config.level = "2"
+    logger = logging.getLogger("test_logger")
+    ip = container_setup.attrs[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.IP_ADDRESS_INFO]
+    port = emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port
+    logger.debug(f"Attempting to connect to gRPC server at {ip}:{port}")
+    # gRPC call
+    try:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
+            stub = csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc.OSSECIdsManagerStub(channel)
+            response = csle_collector.ossec_ids_manager.query_ossec_ids_manager.stop_ossec_ids(
+                stub=stub
+            )
+            logger.info(f"gRPC Response: {response}")
+            assert response, f"Failed to stop IDS on {ip}. Response: {response}"
+    except grpc.RpcError as e:
+        logger.error(f"gRPC Error: {e}")
+        assert False, f"gRPC call failed with error: {e}"

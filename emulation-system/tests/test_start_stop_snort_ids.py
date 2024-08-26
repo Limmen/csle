@@ -10,6 +10,8 @@ from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvCo
 import csle_common.constants.constants as constants
 import csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc
 import csle_collector.snort_ids_manager.snort_ids_manager_pb2
+import csle_collector.snort_ids_manager.query_snort_ids_manager
+import csle_collector.snort_ids_manager.snort_ids_manager_util
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from typing import Generator
 
@@ -43,29 +45,19 @@ def network(docker_client) -> Generator:
     network.remove()
 
 
-def get_derived_containers(docker_client, excluded_tag=constants.CONTAINER_IMAGES.BLANK) -> List[Any]:
+def get_containers(docker_client) -> List[Any]:
     """
-    Get all the containers except the blank ones
+    Get the containers
 
     :param docker_client: docker_client
 
     :return: None
     """
-    # Get all images except those with the excluded tag
-    config = MetastoreFacade.get_config(id=1)
-    match_tag = config.version
-    all_images = docker_client.images.list()
-    derived_images = [
-        image
-        for image in all_images
-        if any(match_tag in tag for tag in image.tags)
-        and all(constants.CONTAINER_IMAGES.BASE not in tag for tag in image.tags)
-        and all(excluded_tag not in tag for tag in image.tags)
-    ]
-    return derived_images
+    all_images = constants.CONTAINER_IMAGES.SNORT_IDS_IMAGES
+    return all_images
 
 
-@pytest.fixture(scope="module", params=get_derived_containers(docker.from_env()))
+@pytest.fixture(scope="module", params=get_containers(docker.from_env()))
 def container_setup(request, docker_client, network) -> Generator:
     """
     Starts a Docker container before running tests and ensures its stopped and removed after tests complete.
@@ -77,9 +69,11 @@ def container_setup(request, docker_client, network) -> Generator:
     :return: None
     """
     # Create and start each derived container
+    config = MetastoreFacade.get_config(id=1)
+    version = config.version
     image = request.param
     container = docker_client.containers.create(
-        image.tags[0],
+        f"{constants.CONTAINER_IMAGES.DOCKERHUB_USERNAME}/{image}:{version}",
         command="sh -c 'while true; do sleep 3600; done'",
         detach=True,
     )
@@ -158,3 +152,71 @@ def test_start_snort_manager(container_setup) -> None:
         logging.info("Containers that failed to start the snort manager:")
         logging.info(containers_info)
     assert not failed_containers, f"T{failed_containers} failed"
+    
+    
+def test_start_snort_ids(container_setup) -> None:
+    """
+    Start snort_ids in a container
+
+    :param container_setup: container_setup
+
+    :return: None
+    """
+    emulation_env_config = MagicMock()
+    emulation_env_config.snort_ids_manager_config = MagicMock()
+    emulation_env_config.snort_ids_manager_config.snort_ids_manager_port = 50051
+    emulation_env_config.execution_id = "1"
+    emulation_env_config.level = "2"
+    logger = logging.getLogger("test_logger")
+    ip = container_setup.attrs[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.IP_ADDRESS_INFO]
+    port = emulation_env_config.snort_ids_manager_config.snort_ids_manager_port
+    # Set up parameters
+    subnetmask = f"{emulation_env_config.execution_id}.{emulation_env_config.level}" \
+                 f"{constants.CSLE.CSLE_LEVEL_SUBNETMASK_SUFFIX}"
+    ingress_interface = constants.NETWORKING.ETH2
+    egress_interface = constants.NETWORKING.ETH0
+    logger.debug(f"Attempting to connect to gRPC server at {ip}:{port}")
+    # gRPC call
+    try:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
+            stub = csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub(channel)
+            response = csle_collector.snort_ids_manager.query_snort_ids_manager.start_snort_ids(
+                stub=stub, ingress_interface=ingress_interface, egress_interface=egress_interface,
+                subnetmask=subnetmask
+            )
+            logger.info(f"gRPC Response: {response}")
+            assert response, f"Failed to start Snort IDS on {ip}. Response: {response}"
+    except grpc.RpcError as e:
+        logger.error(f"gRPC Error: {e}")
+        assert False, f"gRPC call failed with error: {e}"
+        
+
+def test_stop_snort_ids(container_setup) -> None:
+    """
+    Stop snort_ids in a container
+
+    :param container_setup: container_setup
+
+    :return: None
+    """
+    emulation_env_config = MagicMock()
+    emulation_env_config.snort_ids_manager_config = MagicMock()
+    emulation_env_config.snort_ids_manager_config.snort_ids_manager_port = 50051
+    emulation_env_config.execution_id = "1"
+    emulation_env_config.level = "2"
+    logger = logging.getLogger("test_logger")
+    ip = container_setup.attrs[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.IP_ADDRESS_INFO]
+    port = emulation_env_config.snort_ids_manager_config.snort_ids_manager_port
+    logger.debug(f"Attempting to connect to gRPC server at {ip}:{port}")
+    # gRPC call
+    try:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
+            stub = csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub(channel)
+            response = csle_collector.snort_ids_manager.query_snort_ids_manager.stop_snort_ids(
+                stub=stub
+            )
+            logger.info(f"gRPC Response: {response}")
+            assert response, f"Failed to stop IDS on {ip}. Response: {response}"
+    except grpc.RpcError as e:
+        logger.error(f"gRPC Error: {e}")
+        assert False, f"gRPC call failed with error: {e}"

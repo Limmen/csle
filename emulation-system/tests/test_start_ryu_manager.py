@@ -1,4 +1,4 @@
-from typing import List, Any, Generator
+from typing import List, Any
 import pytest
 import docker
 import logging

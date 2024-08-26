@@ -1,4 +1,4 @@
-from typing import List, Any, Generator
+from typing import List, Any
 import pytest
 import docker
 import logging
@@ -13,6 +13,7 @@ import csle_collector.traffic_manager.traffic_manager_pb2
 import csle_collector.traffic_manager.query_traffic_manager
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from typing import Generator
+
 
 @pytest.fixture(scope="module")
 def docker_client() -> None:
