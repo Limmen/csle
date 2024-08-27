@@ -6,6 +6,7 @@ from unittest.mock import MagicMock
 from docker.types import IPAMConfig, IPAMPool
 import time
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
+from csle_common.controllers.kafka_controller import KafkaController
 import csle_common.constants.constants as constants
 import csle_collector.kafka_manager.kafka_manager_pb2_grpc
 import csle_collector.kafka_manager.kafka_manager_pb2
@@ -196,25 +197,37 @@ def test_create_topics(container_setup) -> None:
     emulation_env_config.kafka_config.kafka_manager_port = 50051
     emulation_env_config.kafka_config.topics = MagicMock()
     emulation_env_config.kafka_config.topics.name = "topic1"
+    emulation_env_config.kafka_config.topics.num_partitions = 2
+    emulation_env_config.kafka_config.topics.num_replicas = 2
+    emulation_env_config.kafka_config.topics.retention_time_hours = 1
     ip = emulation_env_config.kafka_config.container.docker_gw_bridge_ip
     port = emulation_env_config.kafka_config.kafka_manager_port
     logger = logging.getLogger("test_logger")
     try:
         with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub(channel)
-            kafka_dto = csle_collector.kafka_manager.query_kafka_server.start_kafka(stub)
-            logging.info(f"kafka_dto:{kafka_dto}")
+            kafka_dto = KafkaController.get_kafka_status_by_port_and_ip(
+            ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip,
+            port=emulation_env_config.kafka_config.kafka_manager_port)
+            logging.info(f"kafka_dto:{kafka_dto.topics}")
             assert kafka_dto.running, f"Failed to start kafka on {ip}."
             logger.info(f"kafka has been successfully started on {ip}.")
             time.sleep(10)
             # create topics
             topic = emulation_env_config.kafka_config.topics
-            logger.info(f"Creating topic: {topic.name}")
-            csle_collector.kafka_manager.query_kafka_server.create_topic(
+            logger.info(f"Creating topic name: {topic.name}")
+            response = csle_collector.kafka_manager.query_kafka_server.create_topic(
                 stub, name=topic.name, partitions=topic.num_partitions, replicas=topic.num_replicas,
                 retention_time_hours=topic.retention_time_hours
             )
-        # assert kafka_dto.name == topic
+            logger.info(f"Create topic response: {response}")
+            time.sleep(5)
+            # get kafka_dto again and verify
+            kafka_dto = KafkaController.get_kafka_status_by_port_and_ip(
+            ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip,
+            port=emulation_env_config.kafka_config.kafka_manager_port)
+            logger.info(f"kafka_dto.topics: {kafka_dto.topics}")
+            assert kafka_dto.topics
     except grpc.RpcError as e:
         logger.error(f"gRPC Error: {e}")
         assert False, f"gRPC call failed with error: {e}"
