@@ -1,6 +1,6 @@
 # OS
 # Debian 10.2
-FROM kimham/csle_debian_10_base:0.6.0
+FROM kimham/csle_debian_10_base:0.7.0
 USER root
 
 # Environment
