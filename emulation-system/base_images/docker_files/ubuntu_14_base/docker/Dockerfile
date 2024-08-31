@@ -111,6 +111,15 @@ RUN echo ". $CONDA_DIR/etc/profile.d/conda.sh" >> ~/.profile
 # make conda activate command available from /bin/bash --interative shells
 RUN conda init bash
 
+# Setup base environment with csle-collector
+SHELL ["conda", "run", "-n", "base", "/bin/bash", "-c"]
+RUN pip install flask &&\
+    pip install waitress &&\
+    pip install confluent-kafka===1.8.2 &&\
+    pip install csle-collector &&\
+    pip install pyspark &&\
+    pip install netifaces
+
 # Setup Samba
 ADD docker_files/common/samba_exploit.py /samba_exploit.py
 ADD docker_files/common/bindshell-samba.c /bindshell-samba.c
@@ -135,14 +144,6 @@ RUN mkdir -p /web/ &&\
     mkdir -p /web/static
 ADD docker_files/common/web_server.py /web/web_server.py
 ADD docker_files/common/index.html /web/static/index.html
-
-# Setup base environment with csle-collector
-SHELL ["conda", "run", "-n", "base", "/bin/bash", "-c"]
-RUN pip install flask &&\
-    pip install waitress &&\
-    pip install csle-collector &&\
-    pip install pyspark &&\
-    pip install netifaces
 
 # Back to normal shell
 SHELL ["/bin/bash", "--login", "-c"]
