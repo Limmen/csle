@@ -765,7 +765,7 @@ def stop_shell_complete(ctx, param, incomplete) -> List[str]:
                             "- \033[95mpacketbeat\033[0m: stops packetbeat for a container with the IP address "
                             "--container_ip, node specified by --ip, and emulation identified by --name and --id.\n\n"
                             "\b\n"
-                            "* \033[93mExample: csle stop filebeat csle-level4-060 15 --ip X.X.X.X "
+                            "* \033[93mExample: csle stop filebeat csle-level4-070 15 --ip X.X.X.X "
                             "--container_ip Y.Y.Y.Y \033[0m")
 def stop(entity: str, name: str, id: int = -1, ip: str = "", container_ip: str = "") -> None:
     """
@@ -2033,7 +2033,7 @@ def start_shell_complete(ctx, param, incomplete) -> List[str]:
                              "node with --ip, and emulation with --name and --id. Use --initial_start for the"
                              " initial start.\n\n"
                              "\b\n"
-                             "* \033[93mExample: csle start filebeat csle-level4-060 --id 15 --ip X.X.X.X "
+                             "* \033[93mExample: csle start filebeat csle-level4-070 --id 15 --ip X.X.X.X "
                              "--container_ip Y.Y.Y.Y \033[0m")
 def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, no_network: bool, ip: str,
           container_ip: str, no_beats: bool, initial_start: bool) -> None:
@@ -3429,7 +3429,7 @@ def ls_shell_complete(ctx, param, incomplete) -> List[str]:
                           "- \033[95memulation_description\033[0m: show detailed information about the containers"
                           " running in the emaultion with the given name and id.\n\n"
                           "\b\n"
-                          "* \033[93mExample: csle ls filebeats --name csle-level4-060 --id 15 --ip X.X.X.X \033[0m")
+                          "* \033[93mExample: csle ls filebeats --name csle-level4-070 --id 15 --ip X.X.X.X \033[0m")
 @click.argument('entity', default='all', type=str, shell_complete=ls_shell_complete)
 @click.option('--all', is_flag=True, help='list all')
 @click.option('--running', is_flag=True, help='list running only (default)')
