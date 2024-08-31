@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_attack_profiler package &mdash; csle-attack-profiler 0.6.0 documentation</title>
+  <title>csle_attack_profiler package &mdash; csle-attack-profiler 0.7.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,9 +14,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -41,9 +39,9 @@
               <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">csle_attack_profiler package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#csle-attack-profiler-attack-profiler-module">csle_attack_profiler.attack_profiler module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#csle-attack-profiler-hmm-profiling-module">csle_attack_profiler.hmm_profiling module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-contents">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_attack_profiler.attack_profiler">csle_attack_profiler.attack_profiler module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_attack_profiler.hmm_profiling">csle_attack_profiler.hmm_profiling module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_attack_profiler">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -61,8 +59,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a></li>
-      <li class="breadcrumb-item active">csle_attack_profiler package</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>csle_attack_profiler package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/csle_attack_profiler.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -73,18 +71,199 @@
            <div itemprop="articleBody">
              
   <section id="csle-attack-profiler-package">
-<h1>csle_attack_profiler package<a class="headerlink" href="#csle-attack-profiler-package" title="Permalink to this heading"></a></h1>
+<h1>csle_attack_profiler package<a class="headerlink" href="#csle-attack-profiler-package" title="Permalink to this headline"></a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
 </section>
-<section id="csle-attack-profiler-attack-profiler-module">
-<h2>csle_attack_profiler.attack_profiler module<a class="headerlink" href="#csle-attack-profiler-attack-profiler-module" title="Permalink to this heading"></a></h2>
+<section id="module-csle_attack_profiler.attack_profiler">
+<span id="csle-attack-profiler-attack-profiler-module"></span><h2>csle_attack_profiler.attack_profiler module<a class="headerlink" href="#module-csle_attack_profiler.attack_profiler" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_attack_profiler.attack_profiler.AttackProfiler">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_attack_profiler.attack_profiler.</span></span><span class="sig-name descname"><span class="pre">AttackProfiler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">techniques_tactics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mitigations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_sources</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subtechniques</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action_id.EmulationAttackerActionId</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_attack_profiler/attack_profiler.html#AttackProfiler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attack_profiler.attack_profiler.AttackProfiler" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class representing the attack profile based on the MITRE ATT&amp;CK framework for Enterprise.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attack_profiler.attack_profiler.AttackProfiler.get_attack_profile">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_attack_profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attacker_action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_attack_profiler.attack_profiler.AttackProfiler" title="csle_attack_profiler.attack_profiler.AttackProfiler"><span class="pre">csle_attack_profiler.attack_profiler.AttackProfiler</span></a></span></span><a class="reference internal" href="_modules/csle_attack_profiler/attack_profiler.html#AttackProfiler.get_attack_profile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attack_profiler.attack_profiler.AttackProfiler.get_attack_profile" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the attack profile of the actions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Params attacker_action</dt>
+<dd class="field-odd"><p>the attacker action</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the attack profile of the action</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attack_profiler.attack_profiler.AttackProfiler.get_attack_profile_sequence">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_attack_profile_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attacker_actions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attack_graph</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">csle_attack_profiler.dao.attack_graph.AttackGraph</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_attack_profiler.attack_profiler.AttackProfiler" title="csle_attack_profiler.attack_profiler.AttackProfiler"><span class="pre">csle_attack_profiler.attack_profiler.AttackProfiler</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_attack_profiler/attack_profiler.html#AttackProfiler.get_attack_profile_sequence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attack_profiler.attack_profiler.AttackProfiler.get_attack_profile_sequence" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the attack profile of the actions in a sequence</p>
+<dl class="field-list simple">
+<dt class="field-odd">Params attacker_action</dt>
+<dd class="field-odd"><p>a list of attacker actions</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a list of attack profiles of the actions</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="csle-attack-profiler-hmm-profiling-module">
-<h2>csle_attack_profiler.hmm_profiling module<a class="headerlink" href="#csle-attack-profiler-hmm-profiling-module" title="Permalink to this heading"></a></h2>
+<section id="module-csle_attack_profiler.hmm_profiling">
+<span id="csle-attack-profiler-hmm-profiling-module"></span><h2>csle_attack_profiler.hmm_profiling module<a class="headerlink" href="#module-csle_attack_profiler.hmm_profiling" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_attack_profiler.hmm_profiling.HMMProfiler">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_attack_profiler.hmm_profiling.</span></span><span class="sig-name descname"><span class="pre">HMMProfiler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">statistics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">csle_common.dao.system_identification.emulation_statistics.EmulationStatistics</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_attack_profiler/hmm_profiling.html#HMMProfiler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attack_profiler.hmm_profiling.HMMProfiler" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>The HMMProfiler class is used to profile a sequence of observations based on a Hidden Markov Model (HMM).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attack_profiler.hmm_profiling.HMMProfiler.calculate_initial_states">
+<span class="sig-name descname"><span class="pre">calculate_initial_states</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transition_matrix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_attack_profiler/hmm_profiling.html#HMMProfiler.calculate_initial_states"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attack_profiler.hmm_profiling.HMMProfiler.calculate_initial_states" title="Permalink to this definition"></a></dt>
+<dd><p>Calculates the initial states probabilities based on the transition matrix.</p>
+<p>1 / (# of states)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>transition_matrix</strong> – The transition matrix</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The start states probabilities</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attack_profiler.hmm_profiling.HMMProfiler.convert_states_to_profiles">
+<span class="sig-name descname"><span class="pre">convert_states_to_profiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">states</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_attack_profiler.attack_profiler.AttackProfiler" title="csle_attack_profiler.attack_profiler.AttackProfiler"><span class="pre">csle_attack_profiler.attack_profiler.AttackProfiler</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_attack_profiler/hmm_profiling.html#HMMProfiler.convert_states_to_profiles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attack_profiler.hmm_profiling.HMMProfiler.convert_states_to_profiles" title="Permalink to this definition"></a></dt>
+<dd><p>Converts a list of states to a list of AttackProfiles.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>states</strong> – The list of states to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The list of EmulationAttackerActionId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attack_profiler.hmm_profiling.HMMProfiler.create_model">
+<span class="sig-name descname"><span class="pre">create_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transition_matrix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_states</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'.'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_attack_profiler/hmm_profiling.html#HMMProfiler.create_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attack_profiler.hmm_profiling.HMMProfiler.create_model" title="Permalink to this definition"></a></dt>
+<dd><p>Creates the HMM model based on the given transition matrix, states and metrics.
+If save = True, matrices are saved to given location</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>transition_matrix</strong> – The transition matrix</p></li>
+<li><p><strong>states</strong> – The list of states of the HMM (format: ‘A:attack_name’ or
+‘no_intrusion’ based on emulation statistics file)</p></li>
+<li><p><strong>metrics</strong> – The list of metrics to profile</p></li>
+<li><p><strong>save</strong> – Whether to save the matrices to a file</p></li>
+<li><p><strong>location</strong> – The location to save the matrices, if save = True, e.g “./resources”,
+default is current directory</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attack_profiler.hmm_profiling.HMMProfiler.generate_sequence">
+<span class="sig-name descname"><span class="pre">generate_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">intrusion_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_state_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_attack_profiler/hmm_profiling.html#HMMProfiler.generate_sequence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attack_profiler.hmm_profiling.HMMProfiler.generate_sequence" title="Permalink to this definition"></a></dt>
+<dd><p>Generates a sequence of states and corresponding observations based on the given emission matrix,
+and transition matrix. First, a sequence of observation from ‘no intrusion’ is generated
+based on the geometric distribution of the initial state. Then, a sequence observations and states are
+generated based on emission matrix and transition matrix. The length of this intrusion
+sequence is given by the intrusion_length parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>intrusion_length</strong> – The length of the intrusion</p></li>
+<li><p><strong>initial_state_index</strong> – The index of the initial state</p></li>
+<li><p><strong>seed</strong> – The seed for the random number generator</p></li>
+</ul>
+</dd>
+</dl>
+<p>return: The sequence of states and observations</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attack_profiler.hmm_profiling.HMMProfiler.get_matrices_of_observation">
+<span class="sig-name descname"><span class="pre">get_matrices_of_observation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">statistics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">csle_common.dao.system_identification.emulation_statistics.EmulationStatistics</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">states</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_attack_profiler/hmm_profiling.html#HMMProfiler.get_matrices_of_observation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attack_profiler.hmm_profiling.HMMProfiler.get_matrices_of_observation" title="Permalink to this definition"></a></dt>
+<dd><p>Creates the emission matrix for a given metric based on the statistics from the EmulationStatistics objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>statistics</strong> – The list of EmulationStatistics objects</p></li>
+<li><p><strong>metric</strong> – The metric to get the emission matrix for</p></li>
+<li><p><strong>states</strong> – The list of states</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The emission matrix, the list of observations, the list of states</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attack_profiler.hmm_profiling.HMMProfiler.load_model">
+<span class="sig-name descname"><span class="pre">load_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_attack_profiler/hmm_profiling.html#HMMProfiler.load_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attack_profiler.hmm_profiling.HMMProfiler.load_model" title="Permalink to this definition"></a></dt>
+<dd><p>Loads the HMM model from the given location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>location</strong> – The location of the model files, default is current directory</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attack_profiler.hmm_profiling.HMMProfiler.profile_sequence">
+<span class="sig-name descname"><span class="pre">profile_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequence</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_attack_profiler/hmm_profiling.html#HMMProfiler.profile_sequence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attack_profiler.hmm_profiling.HMMProfiler.profile_sequence" title="Permalink to this definition"></a></dt>
+<dd><p>Profiles a sequence of observations based on the HMM model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sequence</strong> – The sequence of observations</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The most likely sequence of states</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_attack_profiler.hmm_profiling.HMMProfiler.viterbi">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">viterbi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hidden_states</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action_id.EmulationAttackerActionId</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_probs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trans_matrix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emission_matrix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emissions_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_attack_profiler/hmm_profiling.html#HMMProfiler.viterbi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_attack_profiler.hmm_profiling.HMMProfiler.viterbi" title="Permalink to this definition"></a></dt>
+<dd><p>Viterbi algorithm for Hidden Markov Models (HMM).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hidden_states</strong> – The hidden states</p></li>
+<li><p><strong>init_probs</strong> – The initial probabilities of the hidden states</p></li>
+<li><p><strong>trans_matrix</strong> – The transition matrix</p></li>
+<li><p><strong>emission_matrix</strong> – The emission matrix</p></li>
+<li><p><strong>obs</strong> – The observation sequence</p></li>
+<li><p><strong>emissions_list</strong> – The list of possible observations</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The most likely sequence of hidden states</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
+<section id="module-csle_attack_profiler">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_attack_profiler" title="Permalink to this headline"></a></h2>
 </section>
 </section>
 

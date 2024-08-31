@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>gym_csle_stopping_game.util.stopping_game_util &mdash; gym-csle-stopping-game 0.6.0 documentation</title>
+  <title>gym_csle_stopping_game.util.stopping_game_util &mdash; gym-csle-stopping-game 0.7.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,9 +13,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -56,9 +54,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">gym_csle_stopping_game.util.stopping_game_util</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>gym_csle_stopping_game.util.stopping_game_util</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -81,7 +79,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="StoppingGameUtil.b1"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.b1">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">b1</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">b1</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the initial belief</span>
 
@@ -303,7 +301,7 @@
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">S</span><span class="p">)),</span> <span class="n">p</span><span class="o">=</span><span class="n">state_probs</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="StoppingGameUtil.sample_initial_state"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.sample_initial_state">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">sample_initial_state</span><span class="p">(</span><span class="n">b1</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">sample_initial_state</span><span class="p">(</span><span class="n">b1</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Samples the initial state</span>
 
@@ -334,7 +332,7 @@
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">o</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="StoppingGameUtil.bayes_filter"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.bayes_filter">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">bayes_filter</span><span class="p">(</span><span class="n">s_prime</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">],</span> <span class="n">pi2</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">l</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">bayes_filter</span><span class="p">(</span><span class="n">s_prime</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">pi2</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">l</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                      <span class="n">config</span><span class="p">:</span> <span class="n">StoppingGameConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A Bayesian filter to compute the belief of player 1</span>
@@ -372,8 +370,8 @@
         <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">b_prime_s_prime</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="StoppingGameUtil.next_belief"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.next_belief">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">next_belief</span><span class="p">(</span><span class="n">o</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">],</span> <span class="n">pi2</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
-                    <span class="n">config</span><span class="p">:</span> <span class="n">StoppingGameConfig</span><span class="p">,</span> <span class="n">l</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a2</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">next_belief</span><span class="p">(</span><span class="n">o</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">pi2</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
+                    <span class="n">config</span><span class="p">:</span> <span class="n">StoppingGameConfig</span><span class="p">,</span> <span class="n">l</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a2</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes the next belief using a Bayesian filter</span>
 
@@ -406,7 +404,56 @@
 <span class="sd">        :param s: the game state</span>
 <span class="sd">        :return: a2 is the attacker action</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">pi2</span><span class="p">[</span><span class="n">s</span><span class="p">])),</span> <span class="n">p</span><span class="o">=</span><span class="n">pi2</span><span class="p">[</span><span class="n">s</span><span class="p">]))</span></div></div>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">pi2</span><span class="p">[</span><span class="n">s</span><span class="p">])),</span> <span class="n">p</span><span class="o">=</span><span class="n">pi2</span><span class="p">[</span><span class="n">s</span><span class="p">]))</span></div>
+
+<div class="viewcode-block" id="StoppingGameUtil.pomdp_solver_file"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.pomdp_solver_file">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">pomdp_solver_file</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">StoppingGameConfig</span><span class="p">,</span> <span class="n">discount_factor</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">pi2</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the POMDP environment specification based on the format at http://www.pomdp.org/code/index.html,</span>
+<span class="sd">        for the defender&#39;s local problem against a static attacker</span>
+
+<span class="sd">        :param config: the POMDP config</span>
+<span class="sd">        :param discount_factor: the discount factor</span>
+<span class="sd">        :param pi2: the attacker strategy</span>
+<span class="sd">        :return: the file content as a string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">file_str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">file_str</span> <span class="o">=</span> <span class="n">file_str</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;discount: </span><span class="si">{</span><span class="n">discount_factor</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="n">file_str</span> <span class="o">=</span> <span class="n">file_str</span> <span class="o">+</span> <span class="s2">&quot;values: reward</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="n">file_str</span> <span class="o">=</span> <span class="n">file_str</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;states: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">S</span><span class="p">)</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="n">file_str</span> <span class="o">=</span> <span class="n">file_str</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;actions: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">A1</span><span class="p">)</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="n">file_str</span> <span class="o">=</span> <span class="n">file_str</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;observations: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">O</span><span class="p">)</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="n">initial_belief_str</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">config</span><span class="o">.</span><span class="n">b1</span><span class="p">)))</span>
+        <span class="n">file_str</span> <span class="o">=</span> <span class="n">file_str</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;start: </span><span class="si">{</span><span class="n">initial_belief_str</span><span class="si">}</span><span class="se">\n\n\n</span><span class="s2">&quot;</span>
+        <span class="n">num_transitions</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">S</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">a1</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">A1</span><span class="p">:</span>
+                <span class="n">probs</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">s_prime</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">S</span><span class="p">)):</span>
+                    <span class="n">num_transitions</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">prob</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="k">for</span> <span class="n">a2</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">A2</span><span class="p">:</span>
+                        <span class="n">prob</span> <span class="o">+=</span> <span class="n">config</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">a1</span><span class="p">][</span><span class="n">a2</span><span class="p">][</span><span class="n">s</span><span class="p">][</span><span class="n">s_prime</span><span class="p">]</span> <span class="o">*</span> <span class="n">pi2</span><span class="p">[</span><span class="n">s</span><span class="p">][</span><span class="n">a2</span><span class="p">]</span>
+                    <span class="n">file_str</span> <span class="o">=</span> <span class="n">file_str</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;T: </span><span class="si">{</span><span class="n">a1</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="n">s_prime</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">prob</span><span class="si">:</span><span class="s2">.80f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="n">probs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">prob</span><span class="p">)</span>
+                <span class="k">assert</span> <span class="nb">round</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">probs</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="n">file_str</span> <span class="o">=</span> <span class="n">file_str</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="k">for</span> <span class="n">a1</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">A1</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">s_prime</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">S</span><span class="p">:</span>
+                <span class="n">probs</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">O</span><span class="p">)):</span>
+                    <span class="n">prob</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">Z</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">s_prime</span><span class="p">][</span><span class="n">o</span><span class="p">]</span>
+                    <span class="n">file_str</span> <span class="o">=</span> <span class="n">file_str</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;O : </span><span class="si">{</span><span class="n">a1</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="n">s_prime</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="n">o</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">prob</span><span class="si">:</span><span class="s2">.80f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="n">probs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">prob</span><span class="p">)</span>
+                <span class="k">assert</span> <span class="nb">round</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">probs</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="n">file_str</span> <span class="o">=</span> <span class="n">file_str</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">S</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">a1</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">A1</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">s_prime</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">S</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">O</span><span class="p">:</span>
+                        <span class="n">r</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">a1</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">s</span><span class="p">]</span>
+                        <span class="n">file_str</span> <span class="o">=</span> <span class="n">file_str</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;R: </span><span class="si">{</span><span class="n">a1</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="n">s_prime</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="n">o</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">r</span><span class="si">:</span><span class="s2">.80f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">file_str</span></div></div>
 </pre></div>
 
            </div>

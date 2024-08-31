@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_attack_profiler.attack_profiler &mdash; csle-attack-profiler 0.7.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> csle-attack-profiler
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../csle_attack_profiler.html">csle_attack_profiler package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">csle-attack-profiler</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>csle_attack_profiler.attack_profiler</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_attack_profiler.attack_profiler</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_action</span> \
+    <span class="kn">import</span> <span class="nn">EmulationAttackerAction</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_action_id</span> \
+    <span class="kn">import</span> <span class="nn">EmulationAttackerActionId</span>
+<span class="kn">from</span> <span class="nn">csle_attack_profiler.dao.tactics</span> <span class="kn">import</span> <span class="n">Tactics</span>
+<span class="kn">from</span> <span class="nn">csle_attack_profiler.dao.attack_mapping</span> <span class="kn">import</span> <span class="n">EmulationAttackerMapping</span>
+<span class="kn">from</span> <span class="nn">csle_attack_profiler.dao.attack_graph</span> <span class="kn">import</span> <span class="n">AttackGraph</span>
+<span class="kn">from</span> <span class="nn">mitreattack.stix20</span> <span class="kn">import</span> <span class="n">MitreAttackData</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<div class="viewcode-block" id="AttackProfiler"><a class="viewcode-back" href="../../csle_attack_profiler.html#csle_attack_profiler.attack_profiler.AttackProfiler">[docs]</a><span class="k">class</span> <span class="nc">AttackProfiler</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class representing the attack profile based on the MITRE ATT&amp;CK framework for Enterprise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">techniques_tactics</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">mitigations</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+                 <span class="n">data_sources</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">subtechniques</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+                 <span class="n">action_id</span><span class="p">:</span> <span class="n">EmulationAttackerActionId</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Class constructor</span>
+
+<span class="sd">        :params techniques_tactics: the techniques and tactics used by the attacker action.</span>
+<span class="sd">                                    The key is the technique and the value is the tactics</span>
+<span class="sd">        :params mitigations: the mitigations used by the attacker action. The key is the technique and the</span>
+<span class="sd">                             value is the mitigations</span>
+<span class="sd">        :params data_sources: the data sources used by the attacker action. The key is the technqiue and the value is</span>
+<span class="sd">                              the data sources</span>
+<span class="sd">        :params sub_techniques: the sub-techniques used by the attacker action. The key is the technique and</span>
+<span class="sd">                                the value is the sub-techniques</span>
+<span class="sd">        :params action_id: the id of the attacker action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">techniques_tactics</span> <span class="o">=</span> <span class="n">techniques_tactics</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mitigations</span> <span class="o">=</span> <span class="n">mitigations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_sources</span> <span class="o">=</span> <span class="n">data_sources</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subtechniques</span> <span class="o">=</span> <span class="n">subtechniques</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_id</span> <span class="o">=</span> <span class="n">action_id</span>
+
+<div class="viewcode-block" id="AttackProfiler.get_attack_profile"><a class="viewcode-back" href="../../csle_attack_profiler.html#csle_attack_profiler.attack_profiler.AttackProfiler.get_attack_profile">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_attack_profile</span><span class="p">(</span><span class="n">attacker_action</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;AttackProfiler&#39;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the attack profile of the actions</span>
+
+<span class="sd">        :params attacker_action: the attacker action</span>
+<span class="sd">        :return: the attack profile of the action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">current_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">current_dir</span><span class="p">,</span> <span class="s2">&quot;./dao/enterprise-attack.json&quot;</span><span class="p">)</span>
+        <span class="n">mitre_attack_data</span> <span class="o">=</span> <span class="n">MitreAttackData</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+        <span class="c1"># Retrieve the id from the attacker action</span>
+        <span class="n">attacker_id</span> <span class="o">=</span> <span class="n">attacker_action</span><span class="o">.</span><span class="n">id</span>
+        <span class="c1"># Get the defined tactics and techniques for the attack</span>
+        <span class="n">attack_mapping</span> <span class="o">=</span> <span class="n">EmulationAttackerMapping</span><span class="o">.</span><span class="n">get_attack_info</span><span class="p">(</span><span class="n">attacker_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">attack_mapping</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">AttackProfiler</span><span class="p">({},</span> <span class="p">{},</span> <span class="p">{},</span> <span class="p">{},</span> <span class="n">EmulationAttackerActionId</span><span class="o">.</span><span class="n">CONTINUE</span><span class="p">)</span>
+
+        <span class="n">attack_techniques_vals</span> <span class="o">=</span> <span class="p">[</span><span class="n">technique</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">technique</span> <span class="ow">in</span> <span class="n">attack_mapping</span><span class="p">[</span><span class="s1">&#39;techniques&#39;</span><span class="p">]]</span>
+        
+        <span class="n">attacker_action_id</span> <span class="o">=</span> <span class="n">attacker_action</span><span class="o">.</span><span class="n">id</span>
+        <span class="n">techniques_tactics</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">mitigations</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">data_sources</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">sub_techniques</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># Loop over the techniques associated with the attack</span>
+        <span class="k">for</span> <span class="n">technique_name</span> <span class="ow">in</span> <span class="n">attack_techniques_vals</span><span class="p">:</span>
+            <span class="c1"># Get technique from MitreAttackData, stix_id maps to technique in the library.</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">obj</span> <span class="o">=</span> <span class="n">mitre_attack_data</span><span class="o">.</span><span class="n">get_objects_by_name</span><span class="p">(</span><span class="n">technique_name</span><span class="p">,</span> <span class="s2">&quot;attack-pattern&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s2">&quot;echo &#39;Error in getting technique: </span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+                <span class="k">continue</span>
+            <span class="n">technique</span> <span class="o">=</span> <span class="n">obj</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">stix_id</span> <span class="o">=</span> <span class="n">technique</span><span class="o">.</span><span class="n">id</span>
+
+            <span class="c1"># Collect the tactics and add it to the dictionary</span>
+            <span class="n">tactics</span> <span class="o">=</span> <span class="p">[</span><span class="n">phase</span><span class="p">[</span><span class="s1">&#39;phase_name&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">phase</span> <span class="ow">in</span> <span class="n">technique</span><span class="o">.</span><span class="n">kill_chain_phases</span><span class="p">]</span>
+            <span class="n">techniques_tactics</span><span class="p">[</span><span class="n">technique_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">tactics</span>
+            
+            <span class="c1"># Add the data sources to the dictionary</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">technique</span><span class="p">,</span> <span class="s1">&#39;x_mitre_data_sources&#39;</span><span class="p">):</span>
+                <span class="n">data_sources</span><span class="p">[</span><span class="n">technique_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">technique</span><span class="o">.</span><span class="n">x_mitre_data_sources</span>
+            <span class="c1"># Fetch the mitigations from the technique and add it to the dictionary</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">mitigations_object</span> <span class="o">=</span> <span class="n">mitre_attack_data</span><span class="o">.</span><span class="n">get_mitigations_mitigating_technique</span><span class="p">(</span><span class="n">stix_id</span><span class="p">)</span>
+                <span class="n">mitigations_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">mitig</span><span class="p">[</span><span class="s1">&#39;object&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">mitig</span> <span class="ow">in</span> <span class="n">mitigations_object</span><span class="p">]</span>
+                <span class="n">mitigations</span><span class="p">[</span><span class="n">technique_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">mitigations_list</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s2">&quot;echo &#39;Error in getting mitigations: </span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+                <span class="k">continue</span>
+        
+        <span class="c1"># Add the sub-technique to the dictionary</span>
+        <span class="k">if</span> <span class="s1">&#39;subtechniques&#39;</span> <span class="ow">in</span> <span class="n">attack_mapping</span><span class="p">:</span>
+            <span class="n">sub_techniques_mapping</span> <span class="o">=</span> <span class="p">[</span><span class="n">sub_technique</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">sub_technique</span> <span class="ow">in</span> <span class="n">attack_mapping</span><span class="p">[</span><span class="s1">&#39;subtechniques&#39;</span><span class="p">]]</span>
+            <span class="k">for</span> <span class="n">st</span> <span class="ow">in</span> <span class="n">sub_techniques_mapping</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">sub_technique_obj</span> <span class="o">=</span> <span class="n">mitre_attack_data</span><span class="o">.</span><span class="n">get_objects_by_name</span><span class="p">(</span><span class="n">st</span><span class="p">,</span> <span class="s2">&quot;attack-pattern&quot;</span><span class="p">)</span>
+                    <span class="n">parent_technique_obj</span> <span class="o">=</span> <span class="n">mitre_attack_data</span><span class="o">.</span><span class="n">get_parent_technique_of_subtechnique</span><span class="p">(</span>
+                        <span class="n">sub_technique_obj</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+                    <span class="n">sub_techniques</span><span class="p">[</span><span class="n">parent_technique_obj</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;object&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">st</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s2">&quot;echo &#39;Error in getting sub-techniques: </span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+                    <span class="k">continue</span>
+
+        <span class="k">return</span> <span class="n">AttackProfiler</span><span class="p">(</span><span class="n">techniques_tactics</span><span class="p">,</span> <span class="n">mitigations</span><span class="p">,</span> <span class="n">data_sources</span><span class="p">,</span> <span class="n">sub_techniques</span><span class="p">,</span> <span class="n">attacker_action_id</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="AttackProfiler.get_attack_profile_sequence"><a class="viewcode-back" href="../../csle_attack_profiler.html#csle_attack_profiler.attack_profiler.AttackProfiler.get_attack_profile_sequence">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_attack_profile_sequence</span><span class="p">(</span><span class="n">attacker_actions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationAttackerAction</span><span class="p">],</span>
+                                    <span class="n">attack_graph</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">AttackGraph</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;AttackProfiler&#39;</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the attack profile of the actions in a sequence</span>
+
+<span class="sd">        :params attacker_action: a list of attacker actions</span>
+
+<span class="sd">        :return: a list of attack profiles of the actions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">attack_profiles</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">attacker_actions</span><span class="p">:</span>
+            <span class="n">attack_profiles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">AttackProfiler</span><span class="o">.</span><span class="n">get_attack_profile</span><span class="p">(</span><span class="n">action</span><span class="p">))</span>
+        
+        <span class="c1"># IF attack graph is provided</span>
+        <span class="k">if</span> <span class="n">attack_graph</span><span class="p">:</span>
+
+            <span class="n">node</span> <span class="o">=</span> <span class="n">attack_graph</span><span class="o">.</span><span class="n">get_root_node</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">profile</span> <span class="ow">in</span> <span class="n">attack_profiles</span><span class="p">:</span>
+                <span class="c1"># Get the mappings of the techniques and tactics</span>
+                <span class="n">techniques_tactics</span> <span class="o">=</span> <span class="n">profile</span><span class="o">.</span><span class="n">techniques_tactics</span>
+                <span class="n">techniques_to_keep</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">children</span> <span class="o">=</span> <span class="n">attack_graph</span><span class="o">.</span><span class="n">get_children</span><span class="p">(</span><span class="n">node</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">node</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+                <span class="n">possible_nodes</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="c1"># First we check the techniques in node we are currently at</span>
+                <span class="k">for</span> <span class="n">technique</span> <span class="ow">in</span> <span class="n">techniques_tactics</span><span class="p">:</span>
+                    <span class="c1"># If the node.name is in the techniques_tactics, add it to the techniques_to_keep</span>
+                    <span class="k">if</span> <span class="n">node</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="ow">in</span> <span class="n">techniques_tactics</span><span class="p">[</span><span class="n">technique</span><span class="p">]:</span>
+                        <span class="n">techniques_to_keep</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">technique</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">node</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">possible_nodes</span><span class="p">:</span>
+                            <span class="n">possible_nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">children</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">children</span><span class="p">:</span>
+                    <span class="c1"># Child is a list of tuples, where the first element is the node name,</span>
+                    <span class="c1"># and the second element is the node id</span>
+                    <span class="k">for</span> <span class="n">technique</span> <span class="ow">in</span> <span class="n">techniques_tactics</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">child</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="ow">in</span> <span class="n">techniques_tactics</span><span class="p">[</span><span class="n">technique</span><span class="p">]:</span>
+                            
+                            <span class="n">techniques_to_keep</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">technique</span><span class="p">)</span>
+                            <span class="c1"># If the child is not in the possible_children, add it to the list.</span>
+                            <span class="k">if</span> <span class="n">attack_graph</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="n">child</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">child</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">possible_nodes</span><span class="p">:</span>
+                                <span class="n">p_node</span> <span class="o">=</span> <span class="n">attack_graph</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="n">child</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">child</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                                <span class="k">if</span> <span class="n">p_node</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                                    <span class="n">possible_nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p_node</span><span class="p">)</span>
+
+                <span class="c1"># If the possible node is just one node, move to that node</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">possible_nodes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">node</span> <span class="o">=</span> <span class="n">possible_nodes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">techniques_to_keep</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="c1"># Remove the techniques and associated tactics, data sources,</span>
+                <span class="c1"># mitigations and sub-techniques that are not in the techniques_to_keep</span>
+                <span class="n">techniques_to_remove</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">profile</span><span class="o">.</span><span class="n">techniques_tactics</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">techniques_to_keep</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">technique</span> <span class="ow">in</span> <span class="n">techniques_to_remove</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="k">del</span> <span class="n">profile</span><span class="o">.</span><span class="n">techniques_tactics</span><span class="p">[</span><span class="n">technique</span><span class="p">]</span>
+                        <span class="k">del</span> <span class="n">profile</span><span class="o">.</span><span class="n">mitigations</span><span class="p">[</span><span class="n">technique</span><span class="p">]</span>
+                        <span class="k">del</span> <span class="n">profile</span><span class="o">.</span><span class="n">data_sources</span><span class="p">[</span><span class="n">technique</span><span class="p">]</span>
+                        <span class="k">del</span> <span class="n">profile</span><span class="o">.</span><span class="n">subtechniques</span><span class="p">[</span><span class="n">technique</span><span class="p">]</span>
+                    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s2">&quot;echo &#39;Error in removing techniques: </span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+                        <span class="k">continue</span>
+                            
+        <span class="c1"># ELSE Baseline conditions</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">initial_access</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">for</span> <span class="n">profile</span> <span class="ow">in</span> <span class="n">attack_profiles</span><span class="p">:</span>
+                <span class="n">techniques_tactics</span> <span class="o">=</span> <span class="n">profile</span><span class="o">.</span><span class="n">techniques_tactics</span>
+                <span class="n">techniques_to_remove</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+                <span class="c1"># Loop over the mappings of the techniques to tactics</span>
+                <span class="k">for</span> <span class="n">technique</span> <span class="ow">in</span> <span class="n">techniques_tactics</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">Tactics</span><span class="o">.</span><span class="n">DISCOVERY</span><span class="o">.</span><span class="n">value</span> <span class="ow">in</span> <span class="n">techniques_tactics</span><span class="p">[</span><span class="n">technique</span><span class="p">]</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">initial_access</span><span class="p">:</span>
+                        <span class="n">techniques_to_remove</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">technique</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">Tactics</span><span class="o">.</span><span class="n">RECONNAISSANCE</span><span class="o">.</span><span class="n">value</span> <span class="ow">in</span> <span class="n">techniques_tactics</span><span class="p">[</span><span class="n">technique</span><span class="p">]</span> <span class="ow">and</span> <span class="n">initial_access</span><span class="p">:</span>
+                        <span class="n">techniques_to_remove</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">technique</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">Tactics</span><span class="o">.</span><span class="n">INITIAL_ACCESS</span><span class="o">.</span><span class="n">value</span> <span class="ow">in</span> <span class="n">techniques_tactics</span><span class="p">[</span><span class="n">technique</span><span class="p">]</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">initial_access</span><span class="p">:</span>
+                        <span class="n">initial_access</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">elif</span> <span class="n">Tactics</span><span class="o">.</span><span class="n">INITIAL_ACCESS</span><span class="o">.</span><span class="n">value</span> <span class="ow">in</span> <span class="n">techniques_tactics</span><span class="p">[</span><span class="n">technique</span><span class="p">]</span> <span class="ow">and</span> <span class="n">initial_access</span><span class="p">:</span>
+                        <span class="n">techniques_to_remove</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">technique</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">Tactics</span><span class="o">.</span><span class="n">LATERAL_MOVEMENT</span><span class="o">.</span><span class="n">value</span> <span class="ow">in</span> <span class="n">techniques_tactics</span><span class="p">[</span><span class="n">technique</span><span class="p">]</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">initial_access</span><span class="p">:</span>
+                        <span class="n">techniques_to_remove</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">technique</span><span class="p">)</span>
+                
+                <span class="c1"># Remove the techniques and associated tactics, data sources, mitigations and sub-techniques</span>
+                <span class="k">for</span> <span class="n">technique</span> <span class="ow">in</span> <span class="n">techniques_to_remove</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="k">del</span> <span class="n">profile</span><span class="o">.</span><span class="n">techniques_tactics</span><span class="p">[</span><span class="n">technique</span><span class="p">]</span>
+                        <span class="k">del</span> <span class="n">profile</span><span class="o">.</span><span class="n">mitigations</span><span class="p">[</span><span class="n">technique</span><span class="p">]</span>
+                        <span class="k">del</span> <span class="n">profile</span><span class="o">.</span><span class="n">data_sources</span><span class="p">[</span><span class="n">technique</span><span class="p">]</span>
+                        <span class="k">del</span> <span class="n">profile</span><span class="o">.</span><span class="n">subtechniques</span><span class="p">[</span><span class="n">technique</span><span class="p">]</span>
+                    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s2">&quot;echo &#39;Error in removing techniques: </span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+                        <span class="k">continue</span>
+                
+        <span class="k">return</span> <span class="n">attack_profiles</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Bength Pappila.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

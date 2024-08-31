@@ -10,6 +10,7 @@ Subpackages
    csle_rest_api.pages.about
    csle_rest_api.pages.container_terminal
    csle_rest_api.pages.control_plane
+   csle_rest_api.pages.create_emulation
    csle_rest_api.pages.downloads
    csle_rest_api.pages.emulation_statistics
    csle_rest_api.pages.emulations

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_ryu.controllers package &mdash; csle-ryu 0.6.0 documentation</title>
+  <title>csle_ryu.controllers package &mdash; csle-ryu 0.7.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,9 +14,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -43,23 +41,8 @@
 <li class="toctree-l1"><a class="reference internal" href="csle_ryu.constants.html">csle_ryu.constants package</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">csle_ryu.controllers package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_ryu.controllers.learning_switch_controller">csle_ryu.controllers.learning_switch_controller module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#csle_ryu.controllers.learning_switch_controller.LearningSwitchController"><code class="docutils literal notranslate"><span class="pre">LearningSwitchController</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.controllers.learning_switch_controller.LearningSwitchController.add_flow"><code class="docutils literal notranslate"><span class="pre">LearningSwitchController.add_flow()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.controllers.learning_switch_controller.LearningSwitchController.switch_features_handler"><code class="docutils literal notranslate"><span class="pre">LearningSwitchController.switch_features_handler()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_ryu.controllers.learning_switch_stp_controller">csle_ryu.controllers.learning_switch_stp_controller module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#csle_ryu.controllers.learning_switch_stp_controller.LearningSwitchSTPController"><code class="docutils literal notranslate"><span class="pre">LearningSwitchSTPController</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.controllers.learning_switch_stp_controller.LearningSwitchSTPController.add_flow"><code class="docutils literal notranslate"><span class="pre">LearningSwitchSTPController.add_flow()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.controllers.learning_switch_stp_controller.LearningSwitchSTPController.delete_flow"><code class="docutils literal notranslate"><span class="pre">LearningSwitchSTPController.delete_flow()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.controllers.learning_switch_stp_controller.LearningSwitchSTPController.switch_features_handler"><code class="docutils literal notranslate"><span class="pre">LearningSwitchSTPController.switch_features_handler()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_ryu.controllers.learning_switch_controller">csle_ryu.controllers.learning_switch_controller module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_ryu.controllers.learning_switch_stp_controller">csle_ryu.controllers.learning_switch_stp_controller module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-csle_ryu.controllers">Module contents</a></li>
 </ul>
 </li>
@@ -80,8 +63,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a></li>
-      <li class="breadcrumb-item active">csle_ryu.controllers package</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>csle_ryu.controllers package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/csle_ryu.controllers.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -92,16 +75,16 @@
            <div itemprop="articleBody">
              
   <section id="csle-ryu-controllers-package">
-<h1>csle_ryu.controllers package<a class="headerlink" href="#csle-ryu-controllers-package" title="Permalink to this heading"></a></h1>
+<h1>csle_ryu.controllers package<a class="headerlink" href="#csle-ryu-controllers-package" title="Permalink to this headline"></a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
 </section>
 <section id="module-csle_ryu.controllers.learning_switch_controller">
-<span id="csle-ryu-controllers-learning-switch-controller-module"></span><h2>csle_ryu.controllers.learning_switch_controller module<a class="headerlink" href="#module-csle_ryu.controllers.learning_switch_controller" title="Permalink to this heading"></a></h2>
+<span id="csle-ryu-controllers-learning-switch-controller-module"></span><h2>csle_ryu.controllers.learning_switch_controller module<a class="headerlink" href="#module-csle_ryu.controllers.learning_switch_controller" title="Permalink to this headline"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_ryu.controllers.learning_switch_controller.LearningSwitchController">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_ryu.controllers.learning_switch_controller.</span></span><span class="sig-name descname"><span class="pre">LearningSwitchController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_ryu/controllers/learning_switch_controller.html#LearningSwitchController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_ryu.controllers.learning_switch_controller.LearningSwitchController" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="csle_ryu.monitor.html#csle_ryu.monitor.flow_and_port_stats_monitor.FlowAndPortStatsMonitor" title="csle_ryu.monitor.flow_and_port_stats_monitor.FlowAndPortStatsMonitor"><code class="xref py py-class docutils literal notranslate"><span class="pre">FlowAndPortStatsMonitor</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="csle_ryu.monitor.html#csle_ryu.monitor.flow_and_port_stats_monitor.FlowAndPortStatsMonitor" title="csle_ryu.monitor.flow_and_port_stats_monitor.FlowAndPortStatsMonitor"><code class="xref py py-class docutils literal notranslate"><span class="pre">csle_ryu.monitor.flow_and_port_stats_monitor.FlowAndPortStatsMonitor</span></code></a></p>
 <p>RYU Controller implementing a learning L2 switch for OpenFlow 1.3</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_ryu.controllers.learning_switch_controller.LearningSwitchController.add_flow">
@@ -143,11 +126,11 @@ controller</p>
 
 </section>
 <section id="module-csle_ryu.controllers.learning_switch_stp_controller">
-<span id="csle-ryu-controllers-learning-switch-stp-controller-module"></span><h2>csle_ryu.controllers.learning_switch_stp_controller module<a class="headerlink" href="#module-csle_ryu.controllers.learning_switch_stp_controller" title="Permalink to this heading"></a></h2>
+<span id="csle-ryu-controllers-learning-switch-stp-controller-module"></span><h2>csle_ryu.controllers.learning_switch_stp_controller module<a class="headerlink" href="#module-csle_ryu.controllers.learning_switch_stp_controller" title="Permalink to this headline"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_ryu.controllers.learning_switch_stp_controller.LearningSwitchSTPController">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_ryu.controllers.learning_switch_stp_controller.</span></span><span class="sig-name descname"><span class="pre">LearningSwitchSTPController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_ryu/controllers/learning_switch_stp_controller.html#LearningSwitchSTPController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_ryu.controllers.learning_switch_stp_controller.LearningSwitchSTPController" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="csle_ryu.monitor.html#csle_ryu.monitor.flow_and_port_stats_monitor.FlowAndPortStatsMonitor" title="csle_ryu.monitor.flow_and_port_stats_monitor.FlowAndPortStatsMonitor"><code class="xref py py-class docutils literal notranslate"><span class="pre">FlowAndPortStatsMonitor</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="csle_ryu.monitor.html#csle_ryu.monitor.flow_and_port_stats_monitor.FlowAndPortStatsMonitor" title="csle_ryu.monitor.flow_and_port_stats_monitor.FlowAndPortStatsMonitor"><code class="xref py py-class docutils literal notranslate"><span class="pre">csle_ryu.monitor.flow_and_port_stats_monitor.FlowAndPortStatsMonitor</span></code></a></p>
 <p>RYU Controller implementing a learning L2 switch for OpenFlow 1.3 with the STP spanning tree protocol</p>
 <p>To avoid the problems associated with redundant links in a switched LAN,
 STP is implemented on switches to monitor the network topology. Every link between switches,
@@ -212,7 +195,7 @@ controller</p>
 
 </section>
 <section id="module-csle_ryu.controllers">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_ryu.controllers" title="Permalink to this heading"></a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_ryu.controllers" title="Permalink to this headline"></a></h2>
 </section>
 </section>
 

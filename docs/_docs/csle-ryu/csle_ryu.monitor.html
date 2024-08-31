@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_ryu.monitor package &mdash; csle-ryu 0.6.0 documentation</title>
+  <title>csle_ryu.monitor package &mdash; csle-ryu 0.7.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,9 +14,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -44,19 +42,7 @@
 <li class="toctree-l1"><a class="reference internal" href="csle_ryu.dao.html">csle_ryu.dao package</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">csle_ryu.monitor package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_ryu.monitor.flow_and_port_stats_monitor">csle_ryu.monitor.flow_and_port_stats_monitor module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#csle_ryu.monitor.flow_and_port_stats_monitor.FlowAndPortStatsMonitor"><code class="docutils literal notranslate"><span class="pre">FlowAndPortStatsMonitor</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.monitor.flow_and_port_stats_monitor.FlowAndPortStatsMonitor.OFP_VERSIONS"><code class="docutils literal notranslate"><span class="pre">FlowAndPortStatsMonitor.OFP_VERSIONS</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#csle_ryu.monitor.flow_and_port_stats_monitor.NorthBoundRestAPIController"><code class="docutils literal notranslate"><span class="pre">NorthBoundRestAPIController</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.monitor.flow_and_port_stats_monitor.NorthBoundRestAPIController.producer_status"><code class="docutils literal notranslate"><span class="pre">NorthBoundRestAPIController.producer_status()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.monitor.flow_and_port_stats_monitor.NorthBoundRestAPIController.start_producer"><code class="docutils literal notranslate"><span class="pre">NorthBoundRestAPIController.start_producer()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.monitor.flow_and_port_stats_monitor.NorthBoundRestAPIController.stop_producer"><code class="docutils literal notranslate"><span class="pre">NorthBoundRestAPIController.stop_producer()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_ryu.monitor.flow_and_port_stats_monitor">csle_ryu.monitor.flow_and_port_stats_monitor module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-csle_ryu.monitor">Module contents</a></li>
 </ul>
 </li>
@@ -75,8 +61,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a></li>
-      <li class="breadcrumb-item active">csle_ryu.monitor package</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>csle_ryu.monitor package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/csle_ryu.monitor.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -87,16 +73,16 @@
            <div itemprop="articleBody">
              
   <section id="csle-ryu-monitor-package">
-<h1>csle_ryu.monitor package<a class="headerlink" href="#csle-ryu-monitor-package" title="Permalink to this heading"></a></h1>
+<h1>csle_ryu.monitor package<a class="headerlink" href="#csle-ryu-monitor-package" title="Permalink to this headline"></a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
 </section>
 <section id="module-csle_ryu.monitor.flow_and_port_stats_monitor">
-<span id="csle-ryu-monitor-flow-and-port-stats-monitor-module"></span><h2>csle_ryu.monitor.flow_and_port_stats_monitor module<a class="headerlink" href="#module-csle_ryu.monitor.flow_and_port_stats_monitor" title="Permalink to this heading"></a></h2>
+<span id="csle-ryu-monitor-flow-and-port-stats-monitor-module"></span><h2>csle_ryu.monitor.flow_and_port_stats_monitor module<a class="headerlink" href="#module-csle_ryu.monitor.flow_and_port_stats_monitor" title="Permalink to this headline"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_ryu.monitor.flow_and_port_stats_monitor.FlowAndPortStatsMonitor">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_ryu.monitor.flow_and_port_stats_monitor.</span></span><span class="sig-name descname"><span class="pre">FlowAndPortStatsMonitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_ryu/monitor/flow_and_port_stats_monitor.html#FlowAndPortStatsMonitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_ryu.monitor.flow_and_port_stats_monitor.FlowAndPortStatsMonitor" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RyuApp</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ryu.base.app_manager.RyuApp</span></code></p>
 <p>Contains general functionality to monitor of flow and port statistics</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="csle_ryu.monitor.flow_and_port_stats_monitor.FlowAndPortStatsMonitor.OFP_VERSIONS">
@@ -117,7 +103,7 @@ the intersection of their OFP_VERSIONS is used.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_ryu.monitor.flow_and_port_stats_monitor.NorthBoundRestAPIController">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_ryu.monitor.flow_and_port_stats_monitor.</span></span><span class="sig-name descname"><span class="pre">NorthBoundRestAPIController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">req</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_ryu/monitor/flow_and_port_stats_monitor.html#NorthBoundRestAPIController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_ryu.monitor.flow_and_port_stats_monitor.NorthBoundRestAPIController" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ControllerBase</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ryu.app.wsgi.ControllerBase</span></code></p>
 <p>Controller class for the Northbound REST API that accepts HTTP requests.</p>
 <p>Example requests:</p>
 <p>curl -X GET <a class="reference external" href="http://15.12.252.3:8080/cslenorthboundapi/producer/status">http://15.12.252.3:8080/cslenorthboundapi/producer/status</a>
@@ -179,7 +165,7 @@ curl -X POST <a class="reference external" href="http://15.12.252.3:8080/cslenor
 
 </section>
 <section id="module-csle_ryu.monitor">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_ryu.monitor" title="Permalink to this heading"></a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_ryu.monitor" title="Permalink to this headline"></a></h2>
 </section>
 </section>
 

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_rest_api.resources.data_collection_jobs package &mdash; csle-rest-api 0.6.0 documentation</title>
+  <title>csle_rest_api.resources.data_collection_jobs package &mdash; csle-rest-api 0.7.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,14 +14,12 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="csle_rest_api.resources.docker package" href="csle_rest_api.resources.docker.html" />
-    <link rel="prev" title="csle_rest_api.resources.config package" href="csle_rest_api.resources.config.html" /> 
+    <link rel="prev" title="csle_rest_api.resources.create_emulation package" href="csle_rest_api.resources.create_emulation.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -48,6 +46,7 @@
 <li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.cadvisor.html">csle_rest_api.resources.cadvisor package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.cluster_status.html">csle_rest_api.resources.cluster_status package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.config.html">csle_rest_api.resources.config package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.create_emulation.html">csle_rest_api.resources.create_emulation package</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">csle_rest_api.resources.data_collection_jobs package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-csle_rest_api.resources.data_collection_jobs.routes">csle_rest_api.resources.data_collection_jobs.routes module</a></li>
@@ -116,9 +115,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="csle_rest_api.resources.html">csle_rest_api.resources package</a></li>
-      <li class="breadcrumb-item active">csle_rest_api.resources.data_collection_jobs package</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="csle_rest_api.resources.html">csle_rest_api.resources package</a> &raquo;</li>
+      <li>csle_rest_api.resources.data_collection_jobs package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/csle_rest_api.resources.data_collection_jobs.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -129,16 +128,16 @@
            <div itemprop="articleBody">
              
   <section id="csle-rest-api-resources-data-collection-jobs-package">
-<h1>csle_rest_api.resources.data_collection_jobs package<a class="headerlink" href="#csle-rest-api-resources-data-collection-jobs-package" title="Permalink to this heading"></a></h1>
+<h1>csle_rest_api.resources.data_collection_jobs package<a class="headerlink" href="#csle-rest-api-resources-data-collection-jobs-package" title="Permalink to this headline"></a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
 </section>
 <section id="module-csle_rest_api.resources.data_collection_jobs.routes">
-<span id="csle-rest-api-resources-data-collection-jobs-routes-module"></span><h2>csle_rest_api.resources.data_collection_jobs.routes module<a class="headerlink" href="#module-csle_rest_api.resources.data_collection_jobs.routes" title="Permalink to this heading"></a></h2>
+<span id="csle-rest-api-resources-data-collection-jobs-routes-module"></span><h2>csle_rest_api.resources.data_collection_jobs.routes module<a class="headerlink" href="#module-csle_rest_api.resources.data_collection_jobs.routes" title="Permalink to this headline"></a></h2>
 <p>Routes and sub-resources for the /data-collection-jobs resource</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="csle_rest_api.resources.data_collection_jobs.routes.data_collection_job">
-<span class="sig-prename descclassname"><span class="pre">csle_rest_api.resources.data_collection_jobs.routes.</span></span><span class="sig-name descname"><span class="pre">data_collection_job</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">job_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Response</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_rest_api/resources/data_collection_jobs/routes.html#data_collection_job"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_rest_api.resources.data_collection_jobs.routes.data_collection_job" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">csle_rest_api.resources.data_collection_jobs.routes.</span></span><span class="sig-name descname"><span class="pre">data_collection_job</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">job_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">flask.wrappers.Response</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_rest_api/resources/data_collection_jobs/routes.html#data_collection_job"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_rest_api.resources.data_collection_jobs.routes.data_collection_job" title="Permalink to this definition"></a></dt>
 <dd><p>The /data-collection-jobs/id resource.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -152,7 +151,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="csle_rest_api.resources.data_collection_jobs.routes.data_collection_jobs">
-<span class="sig-prename descclassname"><span class="pre">csle_rest_api.resources.data_collection_jobs.routes.</span></span><span class="sig-name descname"><span class="pre">data_collection_jobs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Response</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_rest_api/resources/data_collection_jobs/routes.html#data_collection_jobs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_rest_api.resources.data_collection_jobs.routes.data_collection_jobs" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">csle_rest_api.resources.data_collection_jobs.routes.</span></span><span class="sig-name descname"><span class="pre">data_collection_jobs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">flask.wrappers.Response</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_rest_api/resources/data_collection_jobs/routes.html#data_collection_jobs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_rest_api.resources.data_collection_jobs.routes.data_collection_jobs" title="Permalink to this definition"></a></dt>
 <dd><p>The /data-collection-jobs resource.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -163,7 +162,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="csle_rest_api.resources.data_collection_jobs.routes.data_collection_jobs_ids">
-<span class="sig-prename descclassname"><span class="pre">csle_rest_api.resources.data_collection_jobs.routes.</span></span><span class="sig-name descname"><span class="pre">data_collection_jobs_ids</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Response</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_rest_api/resources/data_collection_jobs/routes.html#data_collection_jobs_ids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_rest_api.resources.data_collection_jobs.routes.data_collection_jobs_ids" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">csle_rest_api.resources.data_collection_jobs.routes.</span></span><span class="sig-name descname"><span class="pre">data_collection_jobs_ids</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">flask.wrappers.Response</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_rest_api/resources/data_collection_jobs/routes.html#data_collection_jobs_ids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_rest_api.resources.data_collection_jobs.routes.data_collection_jobs_ids" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>An HTTP response with all data-collection jobs ids</p>
@@ -173,7 +172,7 @@
 
 </section>
 <section id="module-csle_rest_api.resources.data_collection_jobs">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_rest_api.resources.data_collection_jobs" title="Permalink to this heading"></a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_rest_api.resources.data_collection_jobs" title="Permalink to this headline"></a></h2>
 </section>
 </section>
 
@@ -181,7 +180,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="csle_rest_api.resources.config.html" class="btn btn-neutral float-left" title="csle_rest_api.resources.config package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="csle_rest_api.resources.create_emulation.html" class="btn btn-neutral float-left" title="csle_rest_api.resources.create_emulation package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="csle_rest_api.resources.docker.html" class="btn btn-neutral float-right" title="csle_rest_api.resources.docker package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

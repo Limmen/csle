@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_system_identification.mcmc package &mdash; csle-system-identification 0.6.0 documentation</title>
+  <title>csle_system_identification.mcmc package &mdash; csle-system-identification 0.7.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,9 +14,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" /> 
@@ -59,8 +57,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a></li>
-      <li class="breadcrumb-item active">csle_system_identification.mcmc package</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>csle_system_identification.mcmc package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/csle_system_identification.mcmc.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -71,43 +69,15 @@
            <div itemprop="articleBody">
              
   <section id="csle-system-identification-mcmc-package">
-<h1>csle_system_identification.mcmc package<a class="headerlink" href="#csle-system-identification-mcmc-package" title="Permalink to this heading"></a></h1>
+<h1>csle_system_identification.mcmc package<a class="headerlink" href="#csle-system-identification-mcmc-package" title="Permalink to this headline"></a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
 </section>
-<section id="module-csle_system_identification.mcmc.mcmc">
-<span id="csle-system-identification-mcmc-mcmc-module"></span><h2>csle_system_identification.mcmc.mcmc module<a class="headerlink" href="#module-csle_system_identification.mcmc.mcmc" title="Permalink to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="csle_system_identification.mcmc.mcmc.MCMCAlgorithm">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_system_identification.mcmc.mcmc.</span></span><span class="sig-name descname"><span class="pre">MCMCAlgorithm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationEnvConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation_statistics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationStatistics</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system_identification_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SystemIdentificationConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bayesian_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system_identification_job</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">SystemIdentificationJobConfig</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_system_identification/mcmc/mcmc.html#MCMCAlgorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_system_identification.mcmc.mcmc.MCMCAlgorithm" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="csle_system_identification.base.html#csle_system_identification.base.base_system_identification_algorithm.BaseSystemIdentificationAlgorithm" title="csle_system_identification.base.base_system_identification_algorithm.BaseSystemIdentificationAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseSystemIdentificationAlgorithm</span></code></a></p>
-<p>Class that implements the system identification procedure using MCMC</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_system_identification.mcmc.mcmc.MCMCAlgorithm.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">MCMCSystemModel</span></span></span><a class="reference internal" href="_modules/csle_system_identification/mcmc/mcmc.html#MCMCAlgorithm.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_system_identification.mcmc.mcmc.MCMCAlgorithm.fit" title="Permalink to this definition"></a></dt>
-<dd><p>Fits a posterior model through Markov-Chain Monte-Carlo</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>the fitted model</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="csle_system_identification.mcmc.mcmc.MCMCAlgorithm.hparam_names">
-<span class="sig-name descname"><span class="pre">hparam_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_system_identification/mcmc/mcmc.html#MCMCAlgorithm.hparam_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_system_identification.mcmc.mcmc.MCMCAlgorithm.hparam_names" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>the names of the necessary hyperparameters</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
+<section id="csle-system-identification-mcmc-mcmc-module">
+<h2>csle_system_identification.mcmc.mcmc module<a class="headerlink" href="#csle-system-identification-mcmc-mcmc-module" title="Permalink to this headline"></a></h2>
 </section>
 <section id="module-csle_system_identification.mcmc">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_system_identification.mcmc" title="Permalink to this heading"></a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_system_identification.mcmc" title="Permalink to this headline"></a></h2>
 </section>
 </section>
 

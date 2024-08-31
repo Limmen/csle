@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_rest_api.resources.create_emulation.routes &mdash; csle-rest-api 0.7.0 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> csle-rest-api
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_rest_api.constants.html">csle_rest_api.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_rest_api.pages.html">csle_rest_api.pages package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_rest_api.resources.html">csle_rest_api.resources package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_rest_api.util.html">csle_rest_api.util package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_rest_api.web_sockets.html">csle_rest_api.web_sockets package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">csle-rest-api</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>csle_rest_api.resources.create_emulation.routes</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_rest_api.resources.create_emulation.routes</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Routes and sub-resources for the /create-emulation resource</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">Response</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">csle_rest_api.constants.constants</span> <span class="k">as</span> <span class="nn">api_constants</span>
+<span class="kn">import</span> <span class="nn">csle_rest_api.util.rest_api_util</span> <span class="k">as</span> <span class="nn">rest_api_util</span>
+<span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
+<span class="kn">import</span> <span class="nn">csle_collector.constants.constants</span> <span class="k">as</span> <span class="nn">collector_constants</span>
+<span class="kn">from</span> <span class="nn">csle_collector.client_manager.dao.constant_arrival_config</span> <span class="kn">import</span> <span class="n">ConstantArrivalConfig</span>
+<span class="kn">from</span> <span class="nn">csle_collector.client_manager.dao.workflows_config</span> <span class="kn">import</span> <span class="n">WorkflowsConfig</span>
+<span class="kn">from</span> <span class="nn">csle_collector.client_manager.dao.workflow_service</span> <span class="kn">import</span> <span class="n">WorkflowService</span>
+<span class="kn">from</span> <span class="nn">csle_collector.client_manager.dao.workflow_markov_chain</span> <span class="kn">import</span> <span class="n">WorkflowMarkovChain</span>
+<span class="kn">from</span> <span class="nn">csle_collector.client_manager.dao.client</span> <span class="kn">import</span> <span class="n">Client</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.topology_config</span> <span class="kn">import</span> <span class="n">TopologyConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.node_firewall_config</span> <span class="kn">import</span> <span class="n">NodeFirewallConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.default_network_firewall_config</span> <span class="kn">import</span> <span class="n">DefaultNetworkFirewallConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.containers_config</span> <span class="kn">import</span> <span class="n">ContainersConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.node_container_config</span> <span class="kn">import</span> <span class="n">NodeContainerConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.container_network</span> <span class="kn">import</span> <span class="n">ContainerNetwork</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.flags_config</span> <span class="kn">import</span> <span class="n">FlagsConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.node_flags_config</span> <span class="kn">import</span> <span class="n">NodeFlagsConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.resources_config</span> <span class="kn">import</span> <span class="n">ResourcesConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.node_resources_config</span> <span class="kn">import</span> <span class="n">NodeResourcesConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.node_network_config</span> <span class="kn">import</span> <span class="n">NodeNetworkConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.traffic_config</span> <span class="kn">import</span> <span class="n">TrafficConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.node_traffic_config</span> <span class="kn">import</span> <span class="n">NodeTrafficConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.users_config</span> <span class="kn">import</span> <span class="n">UsersConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.node_users_config</span> <span class="kn">import</span> <span class="n">NodeUsersConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.vulnerabilities_config</span> <span class="kn">import</span> <span class="n">VulnerabilitiesConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_env_config</span> <span class="kn">import</span> <span class="n">EmulationEnvConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.client_population_config</span> <span class="kn">import</span> <span class="n">ClientPopulationConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.kafka_config</span> <span class="kn">import</span> <span class="n">KafkaConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.kafka_topic</span> <span class="kn">import</span> <span class="n">KafkaTopic</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.flag</span> <span class="kn">import</span> <span class="n">Flag</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.node_vulnerability_config</span> <span class="kn">import</span> <span class="n">NodeVulnerabilityConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.transport_protocol</span> <span class="kn">import</span> <span class="n">TransportProtocol</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.node_services_config</span> <span class="kn">import</span> <span class="n">NodeServicesConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.services_config</span> <span class="kn">import</span> <span class="n">ServicesConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.network_service</span> <span class="kn">import</span> <span class="n">NetworkService</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.ovs_config</span> <span class="kn">import</span> <span class="n">OVSConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.sdn_controller_config</span> <span class="kn">import</span> <span class="n">SDNControllerConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.user</span> <span class="kn">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_action</span> <span class="kn">import</span> <span class="n">EmulationAttackerAction</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.host_manager_config</span> <span class="kn">import</span> <span class="n">HostManagerConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.snort_ids_manager_config</span> <span class="kn">import</span> <span class="n">SnortIDSManagerConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.ossec_ids_manager_config</span> <span class="kn">import</span> <span class="n">OSSECIDSManagerConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.docker_stats_manager_config</span> <span class="kn">import</span> <span class="n">DockerStatsManagerConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.elk_config</span> <span class="kn">import</span> <span class="n">ElkConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.beats_config</span> <span class="kn">import</span> <span class="n">BeatsConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.node_beats_config</span> <span class="kn">import</span> <span class="n">NodeBeatsConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.credential</span> <span class="kn">import</span> <span class="n">Credential</span>
+
+<span class="c1"># Creates a blueprint &quot;sub application&quot; of the main REST app</span>
+<span class="n">create_emulation_bp</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span>
+    <span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">CREATE_EMULATION_RESOURCE</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">,</span>
+    <span class="n">url_prefix</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">CREATE_EMULATION_RESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="create_emulation"><a class="viewcode-back" href="../../../../csle_rest_api.resources.create_emulation.html#csle_rest_api.resources.create_emulation.routes.create_emulation">[docs]</a><span class="nd">@create_emulation_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_POST</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">create_emulation</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Response</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The /create-emulation resource.</span>
+
+<span class="sd">    :return: The given policy or deletes the policy</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">requires_admin</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">authorized</span> <span class="o">=</span> <span class="n">rest_api_util</span><span class="o">.</span><span class="n">check_if_user_is_authorized</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span> <span class="n">requires_admin</span><span class="o">=</span><span class="n">requires_admin</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">authorized</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">authorized</span>
+    <span class="n">emulation_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">convert_json_data_to_emulation_config</span><span class="p">(</span><span class="n">emulation_data</span><span class="p">)</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
+    <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">ACCESS_CONTROL_ALLOW_ORIGIN_HEADER</span><span class="p">,</span> <span class="s2">&quot;*&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">response</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">OK_STATUS_CODE</span></div>
+
+
+<div class="viewcode-block" id="convert_json_data_to_emulation_config"><a class="viewcode-back" href="../../../../csle_rest_api.resources.create_emulation.html#csle_rest_api.resources.create_emulation.routes.convert_json_data_to_emulation_config">[docs]</a><span class="k">def</span> <span class="nf">convert_json_data_to_emulation_config</span><span class="p">(</span><span class="n">emulation_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">EmulationEnvConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts the json emulation data to an emulation environment configuration object.</span>
+
+<span class="sd">    :param emulation_data: the emulation data in JSON format received from front-end</span>
+<span class="sd">    :return: the emulation environment configuration</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="n">emulation_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">EMULATION_NAME</span><span class="p">]</span>
+    <span class="n">level</span> <span class="o">=</span> <span class="n">emulation_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">EMULATION_LEVEL</span><span class="p">]</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="n">emulation_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">EMULATION_VERSION</span><span class="p">]</span>
+    <span class="n">descr</span> <span class="o">=</span> <span class="n">emulation_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">EMULATION_DESCRIPTION</span><span class="p">]</span>
+    <span class="n">containers_cfg</span> <span class="o">=</span> <span class="n">convert_json_data_to_containers_config</span><span class="p">(</span><span class="n">emulation_data</span><span class="o">=</span><span class="n">emulation_data</span><span class="p">)</span>
+    <span class="n">flags_cfg</span> <span class="o">=</span> <span class="n">convert_json_data_to_flags_config</span><span class="p">(</span><span class="n">emulation_data</span><span class="o">=</span><span class="n">emulation_data</span><span class="p">)</span>
+    <span class="n">resources_cfg</span> <span class="o">=</span> <span class="n">convert_json_data_to_resource_constraints_config</span><span class="p">(</span><span class="n">emulation_data</span><span class="o">=</span><span class="n">emulation_data</span><span class="p">)</span>
+    <span class="n">topology_cfg</span> <span class="o">=</span> <span class="n">convert_json_data_to_topology_config</span><span class="p">(</span><span class="n">emulation_data</span><span class="o">=</span><span class="n">emulation_data</span><span class="p">)</span>
+    <span class="n">traffic_cfg</span> <span class="o">=</span> <span class="n">convert_json_data_to_traffic_config</span><span class="p">(</span><span class="n">emulation_data</span><span class="o">=</span><span class="n">emulation_data</span><span class="p">)</span>
+    <span class="n">users_cfg</span> <span class="o">=</span> <span class="n">convert_json_data_to_users_config</span><span class="p">(</span><span class="n">emulation_data</span><span class="o">=</span><span class="n">emulation_data</span><span class="p">)</span>
+    <span class="n">services_cfg</span> <span class="o">=</span> <span class="n">convert_json_data_to_services_config</span><span class="p">(</span><span class="n">emulation_data</span><span class="o">=</span><span class="n">emulation_data</span><span class="p">)</span>
+    <span class="n">vuln_cfg</span> <span class="o">=</span> <span class="n">convert_json_data_to_vulns_config</span><span class="p">(</span><span class="n">emulation_data</span><span class="o">=</span><span class="n">emulation_data</span><span class="p">)</span>
+    <span class="n">kafka_cfg</span> <span class="o">=</span> <span class="n">convert_json_data_to_kafka_config</span><span class="p">(</span><span class="n">emulation_data</span><span class="o">=</span><span class="n">emulation_data</span><span class="p">)</span>
+    <span class="n">static_attackers_cfg</span> <span class="o">=</span> <span class="n">convert_json_data_to_static_attacker_sequences</span><span class="p">(</span><span class="n">topology_cfg</span><span class="o">.</span><span class="n">subnetwork_masks</span><span class="p">)</span>
+    <span class="n">ovs_cfg</span> <span class="o">=</span> <span class="n">convert_json_data_to_ovs_config</span><span class="p">(</span><span class="n">emulation_data</span><span class="o">=</span><span class="n">emulation_data</span><span class="p">)</span>
+    <span class="n">sdn_controller_cfg</span> <span class="o">=</span> <span class="n">convert_json_data_to_sdn_controller_config</span><span class="p">(</span><span class="n">emulation_data</span><span class="o">=</span><span class="n">emulation_data</span><span class="p">)</span>
+    <span class="n">host_manager_cfg</span> <span class="o">=</span> <span class="n">convert_json_data_to_host_manager_config</span><span class="p">(</span><span class="n">emulation_data</span><span class="o">=</span><span class="n">emulation_data</span><span class="p">)</span>
+    <span class="n">snort_ids_manager_cfg</span> <span class="o">=</span> <span class="n">convert_json_data_to_snort_ids_manager_config</span><span class="p">(</span><span class="n">emulation_data</span><span class="o">=</span><span class="n">emulation_data</span><span class="p">)</span>
+    <span class="n">ossec_ids_manager_cfg</span> <span class="o">=</span> <span class="n">convert_json_data_to_ossec_ids_manager_config</span><span class="p">(</span><span class="n">emulation_data</span><span class="o">=</span><span class="n">emulation_data</span><span class="p">)</span>
+    <span class="n">docker_stats_manager_cfg</span> <span class="o">=</span> <span class="n">convert_json_data_to_docker_stats_manager_config</span><span class="p">(</span><span class="n">emulation_data</span><span class="o">=</span><span class="n">emulation_data</span><span class="p">)</span>
+    <span class="n">elk_cfg</span> <span class="o">=</span> <span class="n">convert_json_data_to_elk_config</span><span class="p">(</span><span class="n">emulation_data</span><span class="o">=</span><span class="n">emulation_data</span><span class="p">)</span>
+    <span class="n">beats_cfg</span> <span class="o">=</span> <span class="n">convert_json_data_to_beats_config</span><span class="p">(</span><span class="n">emulation_data</span><span class="o">=</span><span class="n">emulation_data</span><span class="p">)</span>
+    <span class="n">emulation_env_cfg</span> <span class="o">=</span> <span class="n">EmulationEnvConfig</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">containers_config</span><span class="o">=</span><span class="n">containers_cfg</span><span class="p">,</span> <span class="n">users_config</span><span class="o">=</span><span class="n">users_cfg</span><span class="p">,</span> <span class="n">flags_config</span><span class="o">=</span><span class="n">flags_cfg</span><span class="p">,</span>
+        <span class="n">vuln_config</span><span class="o">=</span><span class="n">vuln_cfg</span><span class="p">,</span> <span class="n">topology_config</span><span class="o">=</span><span class="n">topology_cfg</span><span class="p">,</span> <span class="n">traffic_config</span><span class="o">=</span><span class="n">traffic_cfg</span><span class="p">,</span> <span class="n">resources_config</span><span class="o">=</span><span class="n">resources_cfg</span><span class="p">,</span>
+        <span class="n">kafka_config</span><span class="o">=</span><span class="n">kafka_cfg</span><span class="p">,</span> <span class="n">services_config</span><span class="o">=</span><span class="n">services_cfg</span><span class="p">,</span>
+        <span class="n">descr</span><span class="o">=</span><span class="n">descr</span><span class="p">,</span> <span class="n">static_attacker_sequences</span><span class="o">=</span><span class="n">static_attackers_cfg</span><span class="p">,</span> <span class="n">ovs_config</span><span class="o">=</span><span class="n">ovs_cfg</span><span class="p">,</span>
+        <span class="n">sdn_controller_config</span><span class="o">=</span><span class="n">sdn_controller_cfg</span><span class="p">,</span> <span class="n">host_manager_config</span><span class="o">=</span><span class="n">host_manager_cfg</span><span class="p">,</span>
+        <span class="n">snort_ids_manager_config</span><span class="o">=</span><span class="n">snort_ids_manager_cfg</span><span class="p">,</span> <span class="n">ossec_ids_manager_config</span><span class="o">=</span><span class="n">ossec_ids_manager_cfg</span><span class="p">,</span>
+        <span class="n">docker_stats_manager_config</span><span class="o">=</span><span class="n">docker_stats_manager_cfg</span><span class="p">,</span> <span class="n">elk_config</span><span class="o">=</span><span class="n">elk_cfg</span><span class="p">,</span>
+        <span class="n">level</span><span class="o">=</span><span class="n">level</span><span class="p">,</span> <span class="n">execution_id</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">,</span> <span class="n">beats_config</span><span class="o">=</span><span class="n">beats_cfg</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">emulation_env_cfg</span></div>
+
+
+<div class="viewcode-block" id="convert_json_data_to_containers_config"><a class="viewcode-back" href="../../../../csle_rest_api.resources.create_emulation.html#csle_rest_api.resources.create_emulation.routes.convert_json_data_to_containers_config">[docs]</a><span class="k">def</span> <span class="nf">convert_json_data_to_containers_config</span><span class="p">(</span><span class="n">emulation_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ContainersConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts the json emulation data to a containers configuration object.</span>
+
+<span class="sd">    :param emulation_data: the emulation data in JSON format received from front-end</span>
+<span class="sd">    :return: the ContainersConfig of the emulation</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">containers</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">vulnerable_nodes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># *** We need to define the agent reachable nodes</span>
+    <span class="n">agent_reachable_nodes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># *** We need to check with Kim what is networks? Which interfaces are considered here?</span>
+    <span class="n">networks</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ContainerNetwork</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">agent_ip</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">router_ip</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">emulation_ids_enabled</span> <span class="o">=</span> <span class="n">emulation_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">EMULATION_IDS_ENABLED</span><span class="p">]</span>
+    <span class="n">emulation_containers</span> <span class="o">=</span> <span class="n">emulation_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">EMULATION_CONTAINER</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">container</span> <span class="ow">in</span> <span class="n">emulation_containers</span><span class="p">:</span>
+        <span class="n">container_name</span> <span class="o">=</span> <span class="n">container</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">NAME</span><span class="p">]</span>
+        <span class="n">container_os</span> <span class="o">=</span> <span class="n">container</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">OS</span><span class="p">]</span>
+        <span class="n">container_version</span> <span class="o">=</span> <span class="n">container</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">VERSION</span><span class="p">]</span>
+        <span class="n">containers_level</span> <span class="o">=</span> <span class="n">container</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">LEVEL</span><span class="p">]</span>
+        <span class="n">container_restart_policy</span> <span class="o">=</span> <span class="n">container</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">RESTART_POLICY</span><span class="p">]</span>
+        <span class="n">container_interfaces</span> <span class="o">=</span> <span class="n">container</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">INTERFACES</span><span class="p">]</span>
+        <span class="n">ips_and_networks</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">interfaces</span> <span class="ow">in</span> <span class="n">container_interfaces</span><span class="p">:</span>
+            <span class="n">interface_name</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">NAME</span><span class="p">]</span>
+            <span class="n">interface_ip</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">IP</span><span class="p">]</span>
+            <span class="n">interface_subnet_mask</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">SUBNET_MASK</span><span class="p">]</span>
+            <span class="n">interface_subnet_prefix</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">SUBNET_PREFIX</span><span class="p">]</span>
+            <span class="n">interface_physical_interface</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">PHYSICAL_INTERFACE</span><span class="p">]</span>
+            <span class="n">interface_bit_mask</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">BITMASK</span><span class="p">]</span>
+            <span class="n">ips_and_networks</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">interface_ip</span><span class="p">,</span>
+                                     <span class="n">ContainerNetwork</span><span class="p">(</span>
+                                         <span class="n">name</span><span class="o">=</span><span class="n">interface_name</span><span class="p">,</span>
+                                         <span class="n">subnet_mask</span><span class="o">=</span><span class="n">interface_subnet_mask</span><span class="p">,</span>
+                                         <span class="n">subnet_prefix</span><span class="o">=</span><span class="n">interface_subnet_prefix</span><span class="p">,</span>
+                                         <span class="n">interface</span><span class="o">=</span><span class="n">interface_physical_interface</span><span class="p">,</span>
+                                         <span class="n">bitmask</span><span class="o">=</span><span class="n">interface_bit_mask</span>
+                                     <span class="p">)))</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">HACKER</span> <span class="ow">in</span> <span class="n">container_name</span><span class="p">):</span>
+                <span class="n">agent_ip</span> <span class="o">=</span> <span class="n">interface_ip</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">ROUTER</span> <span class="ow">in</span> <span class="n">container_name</span><span class="p">):</span>
+                <span class="n">router_ip</span> <span class="o">=</span> <span class="n">interface_ip</span>
+        <span class="c1"># container_vulns = container[api_constants.CREATE_EMULATION_PAGE.VULNS]</span>
+        <span class="c1"># for vuln in container_vulns:</span>
+        <span class="c1">#     vuln_service = vuln[api_constants.CREATE_EMULATION_PAGE.VULN_SERVICE]</span>
+        <span class="c1">#     vuln_service_ip = vuln[api_constants.CREATE_EMULATION_PAGE.VULN_SERVICE][</span>
+        <span class="c1">#         api_constants.CREATE_EMULATION_PAGE.SERVICE_IP]</span>
+        <span class="c1">#     vulnerable_nodes.append(vuln_service_ip)</span>
+
+        <span class="n">node</span> <span class="o">=</span> <span class="n">NodeContainerConfig</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">container_name</span><span class="p">,</span>
+            <span class="n">os</span><span class="o">=</span><span class="n">container_os</span><span class="p">,</span>
+            <span class="n">ips_and_networks</span><span class="o">=</span><span class="n">ips_and_networks</span><span class="p">,</span>
+            <span class="n">version</span><span class="o">=</span><span class="n">container_version</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">containers_level</span><span class="p">,</span> <span class="n">restart_policy</span><span class="o">=</span><span class="n">container_restart_policy</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;_1&quot;</span><span class="p">)</span>
+        <span class="n">containers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+    <span class="n">containers_cfg</span> <span class="o">=</span> <span class="n">ContainersConfig</span><span class="p">(</span><span class="n">containers</span><span class="o">=</span><span class="n">containers</span><span class="p">,</span> <span class="n">agent_ip</span><span class="o">=</span><span class="n">agent_ip</span><span class="p">,</span> <span class="n">router_ip</span><span class="o">=</span><span class="n">router_ip</span><span class="p">,</span>
+                                      <span class="n">ids_enabled</span><span class="o">=</span><span class="n">emulation_ids_enabled</span><span class="p">,</span> <span class="n">vulnerable_nodes</span><span class="o">=</span><span class="n">vulnerable_nodes</span><span class="p">,</span>
+                                      <span class="n">agent_reachable_nodes</span><span class="o">=</span><span class="n">agent_reachable_nodes</span><span class="p">,</span> <span class="n">networks</span><span class="o">=</span><span class="n">networks</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">containers_cfg</span></div>
+
+
+<div class="viewcode-block" id="convert_json_data_to_flags_config"><a class="viewcode-back" href="../../../../csle_rest_api.resources.create_emulation.html#csle_rest_api.resources.create_emulation.routes.convert_json_data_to_flags_config">[docs]</a><span class="k">def</span> <span class="nf">convert_json_data_to_flags_config</span><span class="p">(</span><span class="n">emulation_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">FlagsConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts the json emulation data to a flags configuration object.</span>
+
+<span class="sd">    :param emulation_data: the emulation data in JSON format received from front-end</span>
+<span class="sd">    :return: The flags confguration</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">flags</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">NodeFlagsConfig</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">interface_ip</span> <span class="o">=</span> <span class="s2">&quot;0.0.0.0&quot;</span>
+    <span class="n">emulation_containers</span> <span class="o">=</span> <span class="n">emulation_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">EMULATION_CONTAINER</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">containers</span> <span class="ow">in</span> <span class="n">emulation_containers</span><span class="p">:</span>
+        <span class="n">container_falg_id</span> <span class="o">=</span> <span class="n">containers</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">FLAG_ID</span><span class="p">]</span>
+        <span class="n">container_flag_score</span> <span class="o">=</span> <span class="n">containers</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">FLAG_SCORE</span><span class="p">]</span>
+        <span class="n">container_flag_permission</span> <span class="o">=</span> <span class="n">containers</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">FLAG_PERMISSION</span><span class="p">]</span>
+        <span class="n">container_interfaces</span> <span class="o">=</span> <span class="n">containers</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">INTERFACES</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">interfaces</span> <span class="ow">in</span> <span class="n">container_interfaces</span><span class="p">:</span>
+            <span class="n">interface_ip</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">IP</span><span class="p">]</span>
+        <span class="n">flags_config</span> <span class="o">=</span> <span class="n">NodeFlagsConfig</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">interface_ip</span><span class="p">,</span>
+                                       <span class="n">flags</span><span class="o">=</span><span class="p">[</span><span class="n">Flag</span><span class="p">(</span>
+                                           <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">FLAG_FILENAME_PREFIX</span><span class="si">}{</span><span class="n">container_falg_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                                           <span class="n">path</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;/</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">TMP_DIR</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">FLAG_FILENAME_PREFIX</span><span class="si">}</span><span class="s2">&quot;</span>
+                                                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">container_falg_id</span><span class="si">}</span><span class="s2">&quot;</span>
+                                                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">FILE_PATTERNS</span><span class="o">.</span><span class="n">TXT_FILE_SUFFIX</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                                           <span class="nb">dir</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;/</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">TMP_DIR</span><span class="si">}</span><span class="s2">/&quot;</span><span class="p">,</span>
+                                           <span class="nb">id</span><span class="o">=</span><span class="n">container_falg_id</span><span class="p">,</span> <span class="n">requires_root</span><span class="o">=</span><span class="n">container_flag_permission</span><span class="p">,</span>
+                                           <span class="n">score</span><span class="o">=</span><span class="n">container_flag_score</span>
+                                       <span class="p">)])</span>
+        <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">flags_config</span><span class="p">)</span>
+    <span class="n">flags_config</span> <span class="o">=</span> <span class="n">FlagsConfig</span><span class="p">(</span><span class="n">node_flag_configs</span><span class="o">=</span><span class="n">flags</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">flags_config</span></div>
+
+
+<div class="viewcode-block" id="convert_json_data_to_static_attacker_sequences"><a class="viewcode-back" href="../../../../csle_rest_api.resources.create_emulation.html#csle_rest_api.resources.create_emulation.routes.convert_json_data_to_static_attacker_sequences">[docs]</a><span class="k">def</span> <span class="nf">convert_json_data_to_static_attacker_sequences</span><span class="p">(</span><span class="n">subnet_masks</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationAttackerAction</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates Converts the json emulation data to the attacker sequences config</span>
+
+<span class="sd">    :param subnetmasks: list of subnet masks for the emulation</span>
+<span class="sd">    :return: the default static attacker sequences configuration</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">{}</span></div>
+
+
+<div class="viewcode-block" id="convert_json_data_to_ovs_config"><a class="viewcode-back" href="../../../../csle_rest_api.resources.create_emulation.html#csle_rest_api.resources.create_emulation.routes.convert_json_data_to_ovs_config">[docs]</a><span class="k">def</span> <span class="nf">convert_json_data_to_ovs_config</span><span class="p">(</span><span class="n">emulation_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">OVSConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts the json emulation data to the OVS config</span>
+
+<span class="sd">    :param emulation_data: the emulation data in JSON format received from front-end</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">ovs_config</span> <span class="o">=</span> <span class="n">OVSConfig</span><span class="p">(</span><span class="n">switch_configs</span><span class="o">=</span><span class="p">[])</span>
+    <span class="k">return</span> <span class="n">ovs_config</span></div>
+
+
+<div class="viewcode-block" id="convert_json_data_to_sdn_controller_config"><a class="viewcode-back" href="../../../../csle_rest_api.resources.create_emulation.html#csle_rest_api.resources.create_emulation.routes.convert_json_data_to_sdn_controller_config">[docs]</a><span class="k">def</span> <span class="nf">convert_json_data_to_sdn_controller_config</span><span class="p">(</span><span class="n">emulation_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">SDNControllerConfig</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates the Converts the json emulation data to the SDN controller config</span>
+
+<span class="sd">    :param emulation_data: the emulation data in JSON format received from front-end</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="convert_json_data_to_host_manager_config"><a class="viewcode-back" href="../../../../csle_rest_api.resources.create_emulation.html#csle_rest_api.resources.create_emulation.routes.convert_json_data_to_host_manager_config">[docs]</a><span class="k">def</span> <span class="nf">convert_json_data_to_host_manager_config</span><span class="p">(</span><span class="n">emulation_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">HostManagerConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts the json emulation data to the host manager configuration</span>
+
+<span class="sd">    :param emulation_data: the emulation data in JSON format received from front-end</span>
+<span class="sd">    :return: the host manager configuration</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="n">emulation_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">EMULATION_VERSION</span><span class="p">]</span>
+    <span class="n">time_step_len_seconds</span> <span class="o">=</span> <span class="n">emulation_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">EMULATION_TIME_STEP_LENGTH</span><span class="p">]</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">HostManagerConfig</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">,</span> <span class="n">time_step_len_seconds</span><span class="o">=</span><span class="n">time_step_len_seconds</span><span class="p">,</span>
+                               <span class="n">host_manager_port</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">MANAGER_PORTS</span><span class="o">.</span><span class="n">HOST_MANAGER_DEFAULT_PORT</span><span class="p">,</span>
+                               <span class="n">host_manager_log_file</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">LOG_FILES</span><span class="o">.</span><span class="n">HOST_MANAGER_LOG_FILE</span><span class="p">,</span>
+                               <span class="n">host_manager_log_dir</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">LOG_FILES</span><span class="o">.</span><span class="n">HOST_MANAGER_LOG_DIR</span><span class="p">,</span>
+                               <span class="n">host_manager_max_workers</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">GRPC_WORKERS</span><span class="o">.</span><span class="n">DEFAULT_MAX_NUM_WORKERS</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">config</span></div>
+
+
+<div class="viewcode-block" id="convert_json_data_to_snort_ids_manager_config"><a class="viewcode-back" href="../../../../csle_rest_api.resources.create_emulation.html#csle_rest_api.resources.create_emulation.routes.convert_json_data_to_snort_ids_manager_config">[docs]</a><span class="k">def</span> <span class="nf">convert_json_data_to_snort_ids_manager_config</span><span class="p">(</span><span class="n">emulation_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">SnortIDSManagerConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts the json emulation data to the Snort IDS manager configuration</span>
+
+<span class="sd">    :param emulation_data: the emulation data in JSON format received from front-end</span>
+<span class="sd">    :return: the Snort IDS manager configuration</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">version</span> <span class="o">=</span> <span class="n">emulation_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">EMULATION_VERSION</span><span class="p">]</span>
+    <span class="n">time_step_len_seconds</span> <span class="o">=</span> <span class="n">emulation_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">EMULATION_TIME_STEP_LENGTH</span><span class="p">]</span>
+
+    <span class="n">config</span> <span class="o">=</span> <span class="n">SnortIDSManagerConfig</span><span class="p">(</span>
+        <span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">,</span> <span class="n">time_step_len_seconds</span><span class="o">=</span><span class="n">time_step_len_seconds</span><span class="p">,</span>
+        <span class="n">snort_ids_manager_port</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">MANAGER_PORTS</span><span class="o">.</span><span class="n">SNORT_IDS_MANAGER_DEFAULT_PORT</span><span class="p">,</span>
+        <span class="n">snort_ids_manager_log_dir</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">LOG_FILES</span><span class="o">.</span><span class="n">SNORT_IDS_MANAGER_LOG_DIR</span><span class="p">,</span>
+        <span class="n">snort_ids_manager_log_file</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">LOG_FILES</span><span class="o">.</span><span class="n">SNORT_IDS_MANAGER_LOG_FILE</span><span class="p">,</span>
+        <span class="n">snort_ids_manager_max_workers</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">GRPC_WORKERS</span><span class="o">.</span><span class="n">DEFAULT_MAX_NUM_WORKERS</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">config</span></div>
+
+
+<div class="viewcode-block" id="convert_json_data_to_ossec_ids_manager_config"><a class="viewcode-back" href="../../../../csle_rest_api.resources.create_emulation.html#csle_rest_api.resources.create_emulation.routes.convert_json_data_to_ossec_ids_manager_config">[docs]</a><span class="k">def</span> <span class="nf">convert_json_data_to_ossec_ids_manager_config</span><span class="p">(</span><span class="n">emulation_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">OSSECIDSManagerConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts the json emulation data to the OSSEC IDS manager configuration</span>
+
+<span class="sd">    :param emulation_data: the emulation data in JSON format received from front-end</span>
+<span class="sd">    :return: the OSSEC IDS manager configuration</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="n">emulation_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">EMULATION_VERSION</span><span class="p">]</span>
+    <span class="n">time_step_len_seconds</span> <span class="o">=</span> <span class="n">emulation_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">EMULATION_TIME_STEP_LENGTH</span><span class="p">]</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">OSSECIDSManagerConfig</span><span class="p">(</span>
+        <span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">,</span> <span class="n">time_step_len_seconds</span><span class="o">=</span><span class="n">time_step_len_seconds</span><span class="p">,</span>
+        <span class="n">ossec_ids_manager_port</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">MANAGER_PORTS</span><span class="o">.</span><span class="n">OSSEC_IDS_MANAGER_DEFAULT_PORT</span><span class="p">,</span>
+        <span class="n">ossec_ids_manager_log_file</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">LOG_FILES</span><span class="o">.</span><span class="n">OSSEC_IDS_MANAGER_LOG_FILE</span><span class="p">,</span>
+        <span class="n">ossec_ids_manager_log_dir</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">LOG_FILES</span><span class="o">.</span><span class="n">OSSEC_IDS_MANAGER_LOG_DIR</span><span class="p">,</span>
+        <span class="n">ossec_ids_manager_max_workers</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">GRPC_WORKERS</span><span class="o">.</span><span class="n">DEFAULT_MAX_NUM_WORKERS</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">config</span></div>
+
+
+<div class="viewcode-block" id="convert_json_data_to_docker_stats_manager_config"><a class="viewcode-back" href="../../../../csle_rest_api.resources.create_emulation.html#csle_rest_api.resources.create_emulation.routes.convert_json_data_to_docker_stats_manager_config">[docs]</a><span class="k">def</span> <span class="nf">convert_json_data_to_docker_stats_manager_config</span><span class="p">(</span><span class="n">emulation_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">DockerStatsManagerConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts the json emulation data to the docker stats manager configuration</span>
+
+<span class="sd">    :param emulation_data: the emulation data in JSON format received from front-end</span>
+<span class="sd">    :return: the docker stats manager configuration</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="n">emulation_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">EMULATION_VERSION</span><span class="p">]</span>
+    <span class="n">time_step_len_seconds</span> <span class="o">=</span> <span class="n">emulation_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">EMULATION_TIME_STEP_LENGTH</span><span class="p">]</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">DockerStatsManagerConfig</span><span class="p">(</span>
+        <span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">,</span> <span class="n">time_step_len_seconds</span><span class="o">=</span><span class="n">time_step_len_seconds</span><span class="p">,</span>
+        <span class="n">docker_stats_manager_port</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">MANAGER_PORTS</span><span class="o">.</span><span class="n">DOCKER_STATS_MANAGER_DEFAULT_PORT</span><span class="p">,</span>
+        <span class="n">docker_stats_manager_log_file</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">LOG_FILES</span><span class="o">.</span><span class="n">DOCKER_STATS_MANAGER_LOG_FILE</span><span class="p">,</span>
+        <span class="n">docker_stats_manager_log_dir</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">LOG_FILES</span><span class="o">.</span><span class="n">DOCKER_STATS_MANAGER_LOG_DIR</span><span class="p">,</span>
+        <span class="n">docker_stats_manager_max_workers</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">GRPC_WORKERS</span><span class="o">.</span><span class="n">DEFAULT_MAX_NUM_WORKERS</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">config</span></div>
+
+
+<div class="viewcode-block" id="convert_json_data_to_elk_config"><a class="viewcode-back" href="../../../../csle_rest_api.resources.create_emulation.html#csle_rest_api.resources.create_emulation.routes.convert_json_data_to_elk_config">[docs]</a><span class="k">def</span> <span class="nf">convert_json_data_to_elk_config</span><span class="p">(</span><span class="n">emulation_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ElkConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts the json emulation data to the default ELK configuration</span>
+
+<span class="sd">    :param emulation_data: the emulation data in JSON format received from front-end</span>
+<span class="sd">    :return: the ELK configuration</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># *** This function I am not sure if we have already collected all the paramters needed.</span>
+
+    <span class="n">network_id</span> <span class="o">=</span> <span class="n">emulation_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">EMULATION_NETWORK_ID</span><span class="p">]</span>
+    <span class="n">level</span> <span class="o">=</span> <span class="n">emulation_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">EMULATION_LEVEL</span><span class="p">]</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="n">emulation_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">EMULATION_VERSION</span><span class="p">]</span>
+    <span class="n">time_step_len_seconds</span> <span class="o">=</span> <span class="n">emulation_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">EMULATION_TIME_STEP_LENGTH</span><span class="p">]</span>
+    <span class="n">container</span> <span class="o">=</span> <span class="n">NodeContainerConfig</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CONTAINER_IMAGES</span><span class="o">.</span><span class="n">ELK_1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">os</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">CONTAINER_OS</span><span class="o">.</span><span class="n">ELK_1_OS</span><span class="p">,</span>
+        <span class="n">ips_and_networks</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">CSLE_SUBNETMASK_PREFIX</span><span class="si">}{</span><span class="n">network_id</span><span class="si">}</span><span class="s2">.&quot;</span>
+             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">ELK_CONFIG</span><span class="o">.</span><span class="n">NETWORK_ID_THIRD_OCTET</span><span class="si">}</span><span class="s2">.&quot;</span>
+             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">ELK_CONFIG</span><span class="o">.</span><span class="n">NETWORK_ID_FOURTH_OCTET</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+             <span class="n">ContainerNetwork</span><span class="p">(</span>
+                 <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">CSLE_NETWORK_PREFIX</span><span class="si">}{</span><span class="n">network_id</span><span class="si">}</span><span class="s2">_&quot;</span>
+                      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">ELK_CONFIG</span><span class="o">.</span><span class="n">NETWORK_ID_THIRD_OCTET</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                 <span class="n">subnet_mask</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">CSLE_SUBNETMASK_PREFIX</span><span class="si">}</span><span class="s2">&quot;</span>
+                             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">network_id</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">ELK_CONFIG</span><span class="o">.</span><span class="n">NETWORK_ID_THIRD_OCTET</span><span class="si">}</span><span class="s2">&quot;</span>
+                             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">CSLE_EDGE_SUBNETMASK_SUFFIX</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                 <span class="n">subnet_prefix</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">CSLE_SUBNETMASK_PREFIX</span><span class="si">}{</span><span class="n">network_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                 <span class="n">bitmask</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">CSLE_EDGE_BITMASK</span>
+             <span class="p">)),</span>
+        <span class="p">],</span>
+        <span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">level</span><span class="p">),</span>
+        <span class="n">restart_policy</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">ON_FAILURE_3</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">ELK_CONFIG</span><span class="o">.</span><span class="n">SUFFIX</span><span class="p">)</span>
+
+    <span class="n">resources</span> <span class="o">=</span> <span class="n">NodeResourcesConfig</span><span class="p">(</span>
+        <span class="n">container_name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">NAME</span><span class="si">}</span><span class="s2">-&quot;</span>
+                       <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CONTAINER_IMAGES</span><span class="o">.</span><span class="n">ELK_1</span><span class="si">}</span><span class="s2">_1-</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">LEVEL</span><span class="si">}{</span><span class="n">level</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">num_cpus</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">available_memory_gb</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
+        <span class="n">ips_and_network_configs</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">CSLE_SUBNETMASK_PREFIX</span><span class="si">}{</span><span class="n">network_id</span><span class="si">}</span><span class="s2">.&quot;</span>
+             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">ELK_CONFIG</span><span class="o">.</span><span class="n">NETWORK_ID_THIRD_OCTET</span><span class="si">}</span><span class="s2">.&quot;</span>
+             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">ELK_CONFIG</span><span class="o">.</span><span class="n">NETWORK_ID_FOURTH_OCTET</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+             <span class="kc">None</span><span class="p">)])</span>
+
+    <span class="n">firewall_config</span> <span class="o">=</span> <span class="n">NodeFirewallConfig</span><span class="p">(</span>
+        <span class="n">hostname</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CONTAINER_IMAGES</span><span class="o">.</span><span class="n">ELK_1</span><span class="si">}</span><span class="s2">_1&quot;</span><span class="p">,</span>
+        <span class="n">ips_gw_default_policy_networks</span><span class="o">=</span><span class="p">[</span>
+            <span class="n">DefaultNetworkFirewallConfig</span><span class="p">(</span>
+                <span class="n">ip</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">CSLE_SUBNETMASK_PREFIX</span><span class="si">}{</span><span class="n">network_id</span><span class="si">}</span><span class="s2">.&quot;</span>
+                   <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">ELK_CONFIG</span><span class="o">.</span><span class="n">NETWORK_ID_THIRD_OCTET</span><span class="si">}</span><span class="s2">.&quot;</span>
+                   <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">ELK_CONFIG</span><span class="o">.</span><span class="n">NETWORK_ID_FOURTH_OCTET</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">default_gw</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">default_input</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">FIREWALL</span><span class="o">.</span><span class="n">ACCEPT</span><span class="p">,</span>
+                <span class="n">default_output</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">FIREWALL</span><span class="o">.</span><span class="n">ACCEPT</span><span class="p">,</span>
+                <span class="n">default_forward</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">FIREWALL</span><span class="o">.</span><span class="n">ACCEPT</span><span class="p">,</span>
+                <span class="n">network</span><span class="o">=</span><span class="n">ContainerNetwork</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">CSLE_NETWORK_PREFIX</span><span class="si">}{</span><span class="n">network_id</span><span class="si">}</span><span class="s2">_&quot;</span>
+                         <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">ELK_CONFIG</span><span class="o">.</span><span class="n">NETWORK_ID_THIRD_OCTET</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">subnet_mask</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">CSLE_SUBNETMASK_PREFIX</span><span class="si">}</span><span class="s2">&quot;</span>
+                                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">network_id</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">ELK_CONFIG</span><span class="o">.</span><span class="n">NETWORK_ID_THIRD_OCTET</span><span class="si">}</span><span class="s2">&quot;</span>
+                                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">CSLE_EDGE_SUBNETMASK_SUFFIX</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">subnet_prefix</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">CSLE_SUBNETMASK_PREFIX</span><span class="si">}{</span><span class="n">network_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">bitmask</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">CSLE_EDGE_BITMASK</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="p">],</span>
+        <span class="n">output_accept</span><span class="o">=</span><span class="nb">set</span><span class="p">([]),</span>
+        <span class="n">input_accept</span><span class="o">=</span><span class="nb">set</span><span class="p">([]),</span>
+        <span class="n">forward_accept</span><span class="o">=</span><span class="nb">set</span><span class="p">([]),</span>
+        <span class="n">output_drop</span><span class="o">=</span><span class="nb">set</span><span class="p">(),</span> <span class="n">input_drop</span><span class="o">=</span><span class="nb">set</span><span class="p">(),</span> <span class="n">forward_drop</span><span class="o">=</span><span class="nb">set</span><span class="p">(),</span> <span class="n">routes</span><span class="o">=</span><span class="nb">set</span><span class="p">())</span>
+
+    <span class="n">config</span> <span class="o">=</span> <span class="n">ElkConfig</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">,</span> <span class="n">time_step_len_seconds</span><span class="o">=</span><span class="n">time_step_len_seconds</span><span class="p">,</span>
+                       <span class="n">elastic_port</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">ELK</span><span class="o">.</span><span class="n">ELASTIC_PORT</span><span class="p">,</span>
+                       <span class="n">kibana_port</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">ELK</span><span class="o">.</span><span class="n">KIBANA_PORT</span><span class="p">,</span>
+                       <span class="n">logstash_port</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">ELK</span><span class="o">.</span><span class="n">LOGSTASH_PORT</span><span class="p">,</span>
+                       <span class="n">elk_manager_port</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">MANAGER_PORTS</span><span class="o">.</span><span class="n">ELK_MANAGER_DEFAULT_PORT</span><span class="p">,</span>
+                       <span class="n">container</span><span class="o">=</span><span class="n">container</span><span class="p">,</span>
+                       <span class="n">resources</span><span class="o">=</span><span class="n">resources</span><span class="p">,</span> <span class="n">firewall_config</span><span class="o">=</span><span class="n">firewall_config</span><span class="p">,</span>
+                       <span class="n">elk_manager_log_file</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">LOG_FILES</span><span class="o">.</span><span class="n">ELK_MANAGER_LOG_FILE</span><span class="p">,</span>
+                       <span class="n">elk_manager_log_dir</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">LOG_FILES</span><span class="o">.</span><span class="n">ELK_MANAGER_LOG_DIR</span><span class="p">,</span>
+                       <span class="n">elk_manager_max_workers</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">GRPC_WORKERS</span><span class="o">.</span><span class="n">DEFAULT_MAX_NUM_WORKERS</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">config</span></div>
+
+
+<div class="viewcode-block" id="convert_json_data_to_beats_config"><a class="viewcode-back" href="../../../../csle_rest_api.resources.create_emulation.html#csle_rest_api.resources.create_emulation.routes.convert_json_data_to_beats_config">[docs]</a><span class="k">def</span> <span class="nf">convert_json_data_to_beats_config</span><span class="p">(</span><span class="n">emulation_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">BeatsConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts the json emulation data to the beats config</span>
+
+<span class="sd">    :param emulation_data: the emulation data in JSON format received from front-end</span>
+<span class="sd">    :return: the beats configuration</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># *** This file I am not very sure if all the parameters are set correctly</span>
+    <span class="c1"># *** Compared to other files this one seems incomplete.</span>
+    <span class="n">network_id</span> <span class="o">=</span> <span class="n">emulation_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">EMULATION_NETWORK_ID</span><span class="p">]</span>
+    <span class="n">node_beats_configs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">emulation_containers</span> <span class="o">=</span> <span class="n">emulation_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">EMULATION_CONTAINER</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">containers</span> <span class="ow">in</span> <span class="n">emulation_containers</span><span class="p">:</span>
+        <span class="n">container_interfaces</span> <span class="o">=</span> <span class="n">containers</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">INTERFACES</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">interfaces</span> <span class="ow">in</span> <span class="n">container_interfaces</span><span class="p">:</span>
+            <span class="n">interface_ip</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">IP</span><span class="p">]</span>
+        <span class="n">node_beats</span> <span class="o">=</span> <span class="n">NodeBeatsConfig</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">interface_ip</span><span class="p">,</span>
+                                     <span class="n">log_files_paths</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">LOG_FILES</span><span class="o">.</span><span class="n">DEFAULT_LOG_FILE_PATHS</span><span class="p">,</span>
+                                     <span class="n">filebeat_modules</span><span class="o">=</span><span class="p">[</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">FILEBEAT</span><span class="o">.</span><span class="n">SYSTEM_MODULE</span><span class="p">],</span>
+                                     <span class="n">kafka_input</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">start_filebeat_automatically</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                     <span class="n">start_packetbeat_automatically</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                     <span class="n">metricbeat_modules</span><span class="o">=</span><span class="p">[</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">METRICBEAT</span><span class="o">.</span><span class="n">SYSTEM_MODULE</span><span class="p">,</span>
+                                                         <span class="n">collector_constants</span><span class="o">.</span><span class="n">METRICBEAT</span><span class="o">.</span><span class="n">LINUX_MODULE</span><span class="p">],</span>
+                                     <span class="n">start_metricbeat_automatically</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                     <span class="n">start_heartbeat_automatically</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                     <span class="n">heartbeat_hosts_to_monitor</span><span class="o">=</span><span class="p">[</span>
+                                         <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">CSLE_SUBNETMASK_PREFIX</span><span class="si">}{</span><span class="n">network_id</span><span class="si">}</span><span class="s2">.&quot;</span>
+                                         <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">NETWORK_ID_THIRD_OCTET</span><span class="si">}</span><span class="s2">.&quot;</span>
+                                         <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">NETWORK_ID_FOURTH_OCTET</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                                         <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">CSLE_SUBNETMASK_PREFIX</span><span class="si">}{</span><span class="n">network_id</span><span class="si">}</span><span class="s2">.&quot;</span>
+                                         <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">ELK_CONFIG</span><span class="o">.</span><span class="n">NETWORK_ID_THIRD_OCTET</span><span class="si">}</span><span class="s2">.&quot;</span>
+                                         <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">ELK_CONFIG</span><span class="o">.</span><span class="n">NETWORK_ID_FOURTH_OCTET</span><span class="si">}</span><span class="s2">&quot;</span>
+                                     <span class="p">])</span>
+        <span class="n">node_beats_configs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node_beats</span><span class="p">)</span>
+    <span class="n">beats_conf</span> <span class="o">=</span> <span class="n">BeatsConfig</span><span class="p">(</span><span class="n">node_beats_configs</span><span class="o">=</span><span class="n">node_beats_configs</span><span class="p">,</span> <span class="n">num_elastic_shards</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">reload_enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">beats_conf</span></div>
+
+
+<div class="viewcode-block" id="convert_json_data_to_kafka_config"><a class="viewcode-back" href="../../../../csle_rest_api.resources.create_emulation.html#csle_rest_api.resources.create_emulation.routes.convert_json_data_to_kafka_config">[docs]</a><span class="k">def</span> <span class="nf">convert_json_data_to_kafka_config</span><span class="p">(</span><span class="n">emulation_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">KafkaConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts the json emulation data to the kafka configuration</span>
+
+<span class="sd">    :param emulation_data: the emulation data in JSON format received from front-end</span>
+<span class="sd">    :return: the kafka configuration</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">network_id</span> <span class="o">=</span> <span class="n">emulation_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">EMULATION_NETWORK_ID</span><span class="p">]</span>
+    <span class="n">level</span> <span class="o">=</span> <span class="n">emulation_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">EMULATION_LEVEL</span><span class="p">]</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="n">emulation_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">EMULATION_VERSION</span><span class="p">]</span>
+    <span class="n">time_step_len_seconds</span> <span class="o">=</span> <span class="n">emulation_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">EMULATION_TIME_STEP_LENGTH</span><span class="p">]</span>
+
+    <span class="n">container</span> <span class="o">=</span> <span class="n">NodeContainerConfig</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CONTAINER_IMAGES</span><span class="o">.</span><span class="n">KAFKA_1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">os</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">CONTAINER_OS</span><span class="o">.</span><span class="n">KAFKA_1_OS</span><span class="p">,</span>
+        <span class="n">ips_and_networks</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">CSLE_SUBNETMASK_PREFIX</span><span class="si">}{</span><span class="n">network_id</span><span class="si">}</span><span class="s2">.&quot;</span>
+             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">NETWORK_ID_THIRD_OCTET</span><span class="si">}</span><span class="s2">.&quot;</span>
+             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">NETWORK_ID_FOURTH_OCTET</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+             <span class="n">ContainerNetwork</span><span class="p">(</span>
+                 <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">CSLE_NETWORK_PREFIX</span><span class="si">}{</span><span class="n">network_id</span><span class="si">}</span><span class="s2">_&quot;</span>
+                      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">NETWORK_ID_THIRD_OCTET</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                 <span class="n">subnet_mask</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">CSLE_SUBNETMASK_PREFIX</span><span class="si">}</span><span class="s2">&quot;</span>
+                             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">network_id</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">NETWORK_ID_THIRD_OCTET</span><span class="si">}</span><span class="s2">&quot;</span>
+                             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">CSLE_EDGE_SUBNETMASK_SUFFIX</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                 <span class="n">subnet_prefix</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">CSLE_SUBNETMASK_PREFIX</span><span class="si">}{</span><span class="n">network_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                 <span class="n">bitmask</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">CSLE_EDGE_BITMASK</span>
+             <span class="p">)),</span>
+        <span class="p">],</span>
+        <span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">level</span><span class="p">),</span>
+        <span class="n">restart_policy</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">ON_FAILURE_3</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">SUFFIX</span><span class="p">)</span>
+
+    <span class="n">resources</span> <span class="o">=</span> <span class="n">NodeResourcesConfig</span><span class="p">(</span>
+        <span class="n">container_name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">NAME</span><span class="si">}</span><span class="s2">-&quot;</span>
+                       <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CONTAINER_IMAGES</span><span class="o">.</span><span class="n">KAFKA_1</span><span class="si">}</span><span class="s2">_1-</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">LEVEL</span><span class="si">}{</span><span class="n">level</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">num_cpus</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">available_memory_gb</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">ips_and_network_configs</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">CSLE_SUBNETMASK_PREFIX</span><span class="si">}{</span><span class="n">network_id</span><span class="si">}</span><span class="s2">.&quot;</span>
+             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">NETWORK_ID_THIRD_OCTET</span><span class="si">}</span><span class="s2">.&quot;</span>
+             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">NETWORK_ID_FOURTH_OCTET</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+             <span class="kc">None</span><span class="p">)])</span>
+
+    <span class="n">firewall_config</span> <span class="o">=</span> <span class="n">NodeFirewallConfig</span><span class="p">(</span>
+        <span class="n">hostname</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CONTAINER_IMAGES</span><span class="o">.</span><span class="n">KAFKA_1</span><span class="si">}</span><span class="s2">_1&quot;</span><span class="p">,</span>
+        <span class="n">ips_gw_default_policy_networks</span><span class="o">=</span><span class="p">[</span>
+            <span class="n">DefaultNetworkFirewallConfig</span><span class="p">(</span>
+                <span class="n">ip</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">CSLE_SUBNETMASK_PREFIX</span><span class="si">}{</span><span class="n">network_id</span><span class="si">}</span><span class="s2">.&quot;</span>
+                   <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">NETWORK_ID_THIRD_OCTET</span><span class="si">}</span><span class="s2">.&quot;</span>
+                   <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">NETWORK_ID_FOURTH_OCTET</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">default_gw</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">default_input</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">FIREWALL</span><span class="o">.</span><span class="n">ACCEPT</span><span class="p">,</span>
+                <span class="n">default_output</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">FIREWALL</span><span class="o">.</span><span class="n">ACCEPT</span><span class="p">,</span>
+                <span class="n">default_forward</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">FIREWALL</span><span class="o">.</span><span class="n">ACCEPT</span><span class="p">,</span>
+                <span class="n">network</span><span class="o">=</span><span class="n">ContainerNetwork</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">CSLE_NETWORK_PREFIX</span><span class="si">}{</span><span class="n">network_id</span><span class="si">}</span><span class="s2">_&quot;</span>
+                         <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">NETWORK_ID_THIRD_OCTET</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">subnet_mask</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">CSLE_SUBNETMASK_PREFIX</span><span class="si">}</span><span class="s2">&quot;</span>
+                                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">network_id</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">NETWORK_ID_THIRD_OCTET</span><span class="si">}</span><span class="s2">&quot;</span>
+                                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">CSLE_EDGE_SUBNETMASK_SUFFIX</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">subnet_prefix</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">CSLE_SUBNETMASK_PREFIX</span><span class="si">}{</span><span class="n">network_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">bitmask</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">CSLE_EDGE_BITMASK</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="p">],</span>
+        <span class="n">output_accept</span><span class="o">=</span><span class="nb">set</span><span class="p">([]),</span>
+        <span class="n">input_accept</span><span class="o">=</span><span class="nb">set</span><span class="p">([]),</span>
+        <span class="n">forward_accept</span><span class="o">=</span><span class="nb">set</span><span class="p">([]),</span>
+        <span class="n">output_drop</span><span class="o">=</span><span class="nb">set</span><span class="p">(),</span> <span class="n">input_drop</span><span class="o">=</span><span class="nb">set</span><span class="p">(),</span> <span class="n">forward_drop</span><span class="o">=</span><span class="nb">set</span><span class="p">(),</span> <span class="n">routes</span><span class="o">=</span><span class="nb">set</span><span class="p">())</span>
+
+    <span class="n">topics</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">KafkaTopic</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">CLIENT_POPULATION_TOPIC_NAME</span><span class="p">,</span>
+            <span class="n">num_replicas</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_NUM_REPLICAS</span><span class="p">,</span>
+            <span class="n">num_partitions</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_NUM_PARTITIONS</span><span class="p">,</span>
+            <span class="n">retention_time_hours</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_RETENTION_TIME_HOURS</span><span class="p">,</span>
+            <span class="n">attributes</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">CLIENT_POPULATION_TOPIC_ATTRIBUTES</span>
+        <span class="p">),</span>
+        <span class="n">KafkaTopic</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">SNORT_IDS_LOG_TOPIC_NAME</span><span class="p">,</span>
+            <span class="n">num_replicas</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_NUM_REPLICAS</span><span class="p">,</span>
+            <span class="n">num_partitions</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_NUM_PARTITIONS</span><span class="p">,</span>
+            <span class="n">retention_time_hours</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_RETENTION_TIME_HOURS</span><span class="p">,</span>
+            <span class="n">attributes</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">SNORT_IDS_LOG_TOPIC_ATTRIBUTES</span>
+        <span class="p">),</span>
+        <span class="n">KafkaTopic</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">OSSEC_IDS_LOG_TOPIC_NAME</span><span class="p">,</span>
+            <span class="n">num_replicas</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_NUM_REPLICAS</span><span class="p">,</span>
+            <span class="n">num_partitions</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_NUM_PARTITIONS</span><span class="p">,</span>
+            <span class="n">retention_time_hours</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_RETENTION_TIME_HOURS</span><span class="p">,</span>
+            <span class="n">attributes</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">OSSEC_IDS_LOG_TOPIC_ATTRIBUTES</span>
+        <span class="p">),</span>
+        <span class="n">KafkaTopic</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">HOST_METRICS_TOPIC_NAME</span><span class="p">,</span>
+            <span class="n">num_replicas</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_NUM_REPLICAS</span><span class="p">,</span>
+            <span class="n">num_partitions</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_NUM_PARTITIONS</span><span class="p">,</span>
+            <span class="n">retention_time_hours</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_RETENTION_TIME_HOURS</span><span class="p">,</span>
+            <span class="n">attributes</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">HOST_METRICS_TOPIC_ATTRIBUTES</span>
+        <span class="p">),</span>
+        <span class="n">KafkaTopic</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DOCKER_STATS_TOPIC_NAME</span><span class="p">,</span>
+            <span class="n">num_replicas</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_NUM_REPLICAS</span><span class="p">,</span>
+            <span class="n">num_partitions</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_NUM_PARTITIONS</span><span class="p">,</span>
+            <span class="n">retention_time_hours</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_RETENTION_TIME_HOURS</span><span class="p">,</span>
+            <span class="n">attributes</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DOCKER_STATS_TOPIC_ATTRIBUTES</span>
+        <span class="p">),</span>
+        <span class="n">KafkaTopic</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">ATTACKER_ACTIONS_TOPIC_NAME</span><span class="p">,</span>
+            <span class="n">num_replicas</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_NUM_REPLICAS</span><span class="p">,</span>
+            <span class="n">num_partitions</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_NUM_PARTITIONS</span><span class="p">,</span>
+            <span class="n">retention_time_hours</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_RETENTION_TIME_HOURS</span><span class="p">,</span>
+            <span class="n">attributes</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">ATTACKER_ACTIONS_ATTRIBUTES</span>
+        <span class="p">),</span>
+        <span class="n">KafkaTopic</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFENDER_ACTIONS_TOPIC_NAME</span><span class="p">,</span>
+            <span class="n">num_replicas</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_NUM_REPLICAS</span><span class="p">,</span>
+            <span class="n">num_partitions</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_NUM_PARTITIONS</span><span class="p">,</span>
+            <span class="n">retention_time_hours</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_RETENTION_TIME_HOURS</span><span class="p">,</span>
+            <span class="n">attributes</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFENDER_ACTIONS_ATTRIBUTES</span>
+        <span class="p">),</span>
+        <span class="n">KafkaTopic</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DOCKER_HOST_STATS_TOPIC_NAME</span><span class="p">,</span>
+            <span class="n">num_replicas</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_NUM_REPLICAS</span><span class="p">,</span>
+            <span class="n">num_partitions</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_NUM_PARTITIONS</span><span class="p">,</span>
+            <span class="n">retention_time_hours</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_RETENTION_TIME_HOURS</span><span class="p">,</span>
+            <span class="n">attributes</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DOCKER_STATS_TOPIC_ATTRIBUTES</span>
+        <span class="p">),</span>
+        <span class="n">KafkaTopic</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">OPENFLOW_FLOW_STATS_TOPIC_NAME</span><span class="p">,</span>
+            <span class="n">num_replicas</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_NUM_REPLICAS</span><span class="p">,</span>
+            <span class="n">num_partitions</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_NUM_PARTITIONS</span><span class="p">,</span>
+            <span class="n">retention_time_hours</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_RETENTION_TIME_HOURS</span><span class="p">,</span>
+            <span class="n">attributes</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">OPENFLOW_FLOW_STATS_TOPIC_ATTRIBUTES</span>
+        <span class="p">),</span>
+        <span class="n">KafkaTopic</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">OPENFLOW_PORT_STATS_TOPIC_NAME</span><span class="p">,</span>
+            <span class="n">num_replicas</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_NUM_REPLICAS</span><span class="p">,</span>
+            <span class="n">num_partitions</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_NUM_PARTITIONS</span><span class="p">,</span>
+            <span class="n">retention_time_hours</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_RETENTION_TIME_HOURS</span><span class="p">,</span>
+            <span class="n">attributes</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">OPENFLOW_PORT_STATS_TOPIC_ATTRIBUTES</span>
+        <span class="p">),</span>
+        <span class="n">KafkaTopic</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_NAME</span><span class="p">,</span>
+            <span class="n">num_replicas</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_NUM_REPLICAS</span><span class="p">,</span>
+            <span class="n">num_partitions</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_NUM_PARTITIONS</span><span class="p">,</span>
+            <span class="n">retention_time_hours</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_RETENTION_TIME_HOURS</span><span class="p">,</span>
+            <span class="n">attributes</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_ATTRIBUTES</span>
+        <span class="p">),</span>
+        <span class="n">KafkaTopic</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_NAME</span><span class="p">,</span>
+            <span class="n">num_replicas</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_NUM_REPLICAS</span><span class="p">,</span>
+            <span class="n">num_partitions</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_NUM_PARTITIONS</span><span class="p">,</span>
+            <span class="n">retention_time_hours</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_RETENTION_TIME_HOURS</span><span class="p">,</span>
+            <span class="n">attributes</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_ATTRIBUTES</span>
+        <span class="p">),</span>
+        <span class="n">KafkaTopic</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">OPENFLOW_AGG_FLOW_STATS_TOPIC_NAME</span><span class="p">,</span>
+            <span class="n">num_replicas</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_NUM_REPLICAS</span><span class="p">,</span>
+            <span class="n">num_partitions</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_NUM_PARTITIONS</span><span class="p">,</span>
+            <span class="n">retention_time_hours</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_RETENTION_TIME_HOURS</span><span class="p">,</span>
+            <span class="n">attributes</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">OPENFLOW_AGG_FLOW_STATS_TOPIC_ATTRIBUTES</span>
+        <span class="p">),</span>
+        <span class="n">KafkaTopic</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">SNORT_IDS_RULE_LOG_TOPIC_NAME</span><span class="p">,</span>
+            <span class="n">num_replicas</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_NUM_REPLICAS</span><span class="p">,</span>
+            <span class="n">num_partitions</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_NUM_PARTITIONS</span><span class="p">,</span>
+            <span class="n">retention_time_hours</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_RETENTION_TIME_HOURS</span><span class="p">,</span>
+            <span class="n">attributes</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">SNORT_IDS_RULE_LOG_ATTRIBUTES</span>
+        <span class="p">),</span>
+        <span class="n">KafkaTopic</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">SNORT_IDS_IP_LOG_TOPIC_NAME</span><span class="p">,</span>
+            <span class="n">num_replicas</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_NUM_REPLICAS</span><span class="p">,</span>
+            <span class="n">num_partitions</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_NUM_PARTITIONS</span><span class="p">,</span>
+            <span class="n">retention_time_hours</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DEFAULT_RETENTION_TIME_HOURS</span><span class="p">,</span>
+            <span class="n">attributes</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">SNORT_IDS_IP_LOG_ATTRIBUTES</span>
+        <span class="p">)</span>
+    <span class="p">]</span>
+
+    <span class="n">config</span> <span class="o">=</span> <span class="n">KafkaConfig</span><span class="p">(</span><span class="n">container</span><span class="o">=</span><span class="n">container</span><span class="p">,</span> <span class="n">resources</span><span class="o">=</span><span class="n">resources</span><span class="p">,</span> <span class="n">topics</span><span class="o">=</span><span class="n">topics</span><span class="p">,</span> <span class="n">firewall_config</span><span class="o">=</span><span class="n">firewall_config</span><span class="p">,</span>
+                         <span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">,</span>
+                         <span class="n">kafka_port</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">PORT</span><span class="p">,</span>
+                         <span class="n">kafka_port_external</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">EXTERNAL_PORT</span><span class="p">,</span>
+                         <span class="n">kafka_manager_port</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">MANAGER_PORTS</span><span class="o">.</span><span class="n">KAFKA_MANAGER_DEFAULT_PORT</span><span class="p">,</span>
+                         <span class="n">time_step_len_seconds</span><span class="o">=</span><span class="n">time_step_len_seconds</span><span class="p">,</span>
+                         <span class="n">kafka_manager_log_file</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">LOG_FILES</span><span class="o">.</span><span class="n">KAFKA_MANAGER_LOG_FILE</span><span class="p">,</span>
+                         <span class="n">kafka_manager_log_dir</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">LOG_FILES</span><span class="o">.</span><span class="n">KAFKA_MANAGER_LOG_DIR</span><span class="p">,</span>
+                         <span class="n">kafka_manager_max_workers</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">GRPC_WORKERS</span><span class="o">.</span><span class="n">DEFAULT_MAX_NUM_WORKERS</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">config</span></div>
+
+
+<div class="viewcode-block" id="convert_json_data_to_resource_constraints_config"><a class="viewcode-back" href="../../../../csle_rest_api.resources.create_emulation.html#csle_rest_api.resources.create_emulation.routes.convert_json_data_to_resource_constraints_config">[docs]</a><span class="k">def</span> <span class="nf">convert_json_data_to_resource_constraints_config</span><span class="p">(</span><span class="n">emulation_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ResourcesConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts the json emulation data to the resource constraints config</span>
+
+<span class="sd">    :param emulation_data: the emulation data in JSON format received from front-end</span>
+<span class="sd">    :return: generates the ResourcesConfig</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">node_resources_configurations</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">emulation_containers</span> <span class="o">=</span> <span class="n">emulation_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">EMULATION_CONTAINER</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">containers</span> <span class="ow">in</span> <span class="n">emulation_containers</span><span class="p">:</span>
+        <span class="n">container_name</span> <span class="o">=</span> <span class="n">containers</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">NAME</span><span class="p">]</span>
+        <span class="n">container_cpu</span> <span class="o">=</span> <span class="n">containers</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">CPU</span><span class="p">]</span>
+        <span class="n">container_memory</span> <span class="o">=</span> <span class="n">containers</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">MEM</span><span class="p">]</span>
+        <span class="n">container_interfaces</span> <span class="o">=</span> <span class="n">containers</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">INTERFACES</span><span class="p">]</span>
+        <span class="n">ips_and_network_configs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">interfaces</span> <span class="ow">in</span> <span class="n">container_interfaces</span><span class="p">:</span>
+            <span class="n">interface_ip</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">IP</span><span class="p">]</span>
+            <span class="n">interface_physical_interface</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">PHYSICAL_INTERFACE</span><span class="p">]</span>
+            <span class="n">interface_limit_packet_queue</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">LIMIT_PACKETS_QUEUE</span><span class="p">]</span>
+            <span class="n">interface_packet_delay_ms</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">PACKET_DELAY_MS</span><span class="p">]</span>
+            <span class="n">interface_packet_delay_jitter_ms</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">PACKET_DELAY_JITTER_MS</span><span class="p">]</span>
+            <span class="n">interface_packet_delay_correlation_percentage</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span>
+                <span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">PACKET_DELAY_CORRELATION_PERCENTAGE</span><span class="p">]</span>
+            <span class="n">interfaces_packet_delay_distribution</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span>
+                <span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">PACKET_DELAY_DISTRIBUTION</span><span class="p">]</span>
+            <span class="n">interface_packet_loss_type</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">PACKET_LOSS_TYPE</span><span class="p">]</span>
+            <span class="n">interface_loss_gmodel_p</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">LOSS_GE_MODEL_P</span><span class="p">]</span>
+            <span class="n">interface_loss_gmodel_r</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">LOSS_GE_MODEL_R</span><span class="p">]</span>
+            <span class="n">interface_loss_gmodel_k</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">LOSS_GE_MODEL_K</span><span class="p">]</span>
+            <span class="n">interface_loss_gmodel_h</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">LOSS_GE_MODEL_H</span><span class="p">]</span>
+            <span class="n">interface_packet_corruption_percentage</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span>
+                <span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">PACKET_CORRUPT_PERCENTAGE</span><span class="p">]</span>
+            <span class="n">interface_packet_corruption_correlation_percentage</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span>
+                <span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">PACKET_CORRUPT_CORRELATION_PERCENTAGE</span><span class="p">]</span>
+            <span class="n">interface_packet_duplication_percentage</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span>
+                <span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">PACKET_DUPLICATE_PERCENTAGE</span><span class="p">]</span>
+            <span class="n">interface_packet_duplicate_correlation_percentage</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span>
+                <span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">PACKET_DUPLICATE_CORRELATION_PERCENTAGE</span><span class="p">]</span>
+            <span class="n">interface_packet_reorder_percentage</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span>
+                <span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">PACKET_REORDER_PERCENTAGE</span><span class="p">]</span>
+            <span class="n">interface_packet_reorder_correlation_percentage</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span>
+                <span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">PACKET_REORDER_CORRELATION_PERCENTAGE</span><span class="p">]</span>
+            <span class="n">interface_packet_reorder_gap</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">PACKET_REORDER_GAP</span><span class="p">]</span>
+            <span class="n">interface_rate_limit_m_bit</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">RATE_LIMIT_MBIT</span><span class="p">]</span>
+            <span class="n">interface_packet_overhead_bytes</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">PACKET_OVERHEAD_BYTES</span><span class="p">]</span>
+            <span class="n">interface_cell_overhead_bytes</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">CELL_OVERHEAD_BYTES</span><span class="p">]</span>
+            <span class="n">ips_and_network_configs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">interface_ip</span><span class="p">,</span> <span class="n">NodeNetworkConfig</span><span class="p">(</span>
+                    <span class="n">interface</span><span class="o">=</span><span class="n">interface_physical_interface</span><span class="p">,</span>
+                    <span class="n">limit_packets_queue</span><span class="o">=</span><span class="n">interface_limit_packet_queue</span><span class="p">,</span> <span class="n">packet_delay_ms</span><span class="o">=</span><span class="n">interface_packet_delay_ms</span><span class="p">,</span>
+                    <span class="n">packet_delay_jitter_ms</span><span class="o">=</span><span class="n">interface_packet_delay_jitter_ms</span><span class="p">,</span>
+                    <span class="n">packet_delay_correlation_percentage</span><span class="o">=</span><span class="n">interface_packet_delay_correlation_percentage</span><span class="p">,</span>
+                    <span class="n">packet_delay_distribution</span><span class="o">=</span><span class="n">interfaces_packet_delay_distribution</span><span class="p">,</span>
+                    <span class="n">packet_loss_type</span><span class="o">=</span><span class="n">interface_packet_loss_type</span><span class="p">,</span>
+                    <span class="n">loss_gemodel_p</span><span class="o">=</span><span class="n">interface_loss_gmodel_p</span><span class="p">,</span>
+                    <span class="n">loss_gemodel_r</span><span class="o">=</span><span class="n">interface_loss_gmodel_r</span><span class="p">,</span>
+                    <span class="n">loss_gemodel_k</span><span class="o">=</span><span class="n">interface_loss_gmodel_k</span><span class="p">,</span>
+                    <span class="n">loss_gemodel_h</span><span class="o">=</span><span class="n">interface_loss_gmodel_h</span><span class="p">,</span>
+                    <span class="n">packet_corrupt_percentage</span><span class="o">=</span><span class="n">interface_packet_corruption_percentage</span><span class="p">,</span>
+                    <span class="n">packet_corrupt_correlation_percentage</span><span class="o">=</span><span class="n">interface_packet_corruption_correlation_percentage</span><span class="p">,</span>
+                    <span class="n">packet_duplicate_percentage</span><span class="o">=</span><span class="n">interface_packet_duplication_percentage</span><span class="p">,</span>
+                    <span class="n">packet_duplicate_correlation_percentage</span><span class="o">=</span><span class="n">interface_packet_duplicate_correlation_percentage</span><span class="p">,</span>
+                    <span class="n">packet_reorder_percentage</span><span class="o">=</span><span class="n">interface_packet_reorder_percentage</span><span class="p">,</span>
+                    <span class="n">packet_reorder_correlation_percentage</span><span class="o">=</span><span class="n">interface_packet_reorder_correlation_percentage</span><span class="p">,</span>
+                    <span class="n">packet_reorder_gap</span><span class="o">=</span><span class="n">interface_packet_reorder_gap</span><span class="p">,</span>
+                    <span class="n">rate_limit_mbit</span><span class="o">=</span><span class="n">interface_rate_limit_m_bit</span><span class="p">,</span>
+                    <span class="n">packet_overhead_bytes</span><span class="o">=</span><span class="n">interface_packet_overhead_bytes</span><span class="p">,</span>
+                    <span class="n">cell_overhead_bytes</span><span class="o">=</span><span class="n">interface_cell_overhead_bytes</span>
+                <span class="p">))</span>
+            <span class="p">)</span>
+
+        <span class="n">node_resource_config</span> <span class="o">=</span> <span class="n">NodeResourcesConfig</span><span class="p">(</span>
+            <span class="n">container_name</span><span class="o">=</span><span class="n">container_name</span><span class="p">,</span>
+            <span class="n">num_cpus</span><span class="o">=</span><span class="n">container_cpu</span><span class="p">,</span> <span class="n">available_memory_gb</span><span class="o">=</span><span class="n">container_memory</span><span class="p">,</span>
+            <span class="n">ips_and_network_configs</span><span class="o">=</span><span class="n">ips_and_network_configs</span><span class="p">)</span>
+        <span class="n">node_resources_configurations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node_resource_config</span><span class="p">)</span>
+    <span class="n">resources_config</span> <span class="o">=</span> <span class="n">ResourcesConfig</span><span class="p">(</span><span class="n">node_resources_configurations</span><span class="o">=</span><span class="n">node_resources_configurations</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">resources_config</span></div>
+
+
+<div class="viewcode-block" id="convert_json_data_to_topology_config"><a class="viewcode-back" href="../../../../csle_rest_api.resources.create_emulation.html#csle_rest_api.resources.create_emulation.routes.convert_json_data_to_topology_config">[docs]</a><span class="k">def</span> <span class="nf">convert_json_data_to_topology_config</span><span class="p">(</span><span class="n">emulation_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">TopologyConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts the json emulation data to the topology config</span>
+
+<span class="sd">    :param emulation_data: the emulation data in JSON format received from front-end</span>
+<span class="sd">    :return: the Topology configuration</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">node_configs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">emulation_containers</span> <span class="o">=</span> <span class="n">emulation_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">EMULATION_CONTAINER</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">containers</span> <span class="ow">in</span> <span class="n">emulation_containers</span><span class="p">:</span>
+        <span class="n">subnetwork_masks</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">container_name</span> <span class="o">=</span> <span class="n">containers</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">NAME</span><span class="p">]</span>
+        <span class="n">ips_gw_default_policy_networks</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">container_interfaces</span> <span class="o">=</span> <span class="n">containers</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">INTERFACES</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">interfaces</span> <span class="ow">in</span> <span class="n">container_interfaces</span><span class="p">:</span>
+            <span class="n">interface_default_gateway</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">DEFAULT_GATEWAY</span><span class="p">]</span>
+            <span class="n">interface_default_input</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">DEFAULT_INPUT</span><span class="p">]</span>
+            <span class="n">interface_default_output</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">DEFAULT_OUTPUT</span><span class="p">]</span>
+            <span class="n">interface_default_forward</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">DEFAULT_FORWARD</span><span class="p">]</span>
+            <span class="n">interface_ip</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">IP</span><span class="p">]</span>
+            <span class="n">interface_name</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">NAME</span><span class="p">]</span>
+            <span class="n">interface_subnet_mask</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">SUBNET_MASK</span><span class="p">]</span>
+            <span class="n">interface_subnet_prefix</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">SUBNET_PREFIX</span><span class="p">]</span>
+            <span class="n">interface_bit_mask</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">BITMASK</span><span class="p">]</span>
+            <span class="n">subnetwork_masks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">interface_subnet_mask</span><span class="p">)</span>
+            <span class="n">default_network_firewall_config</span> <span class="o">=</span> <span class="n">DefaultNetworkFirewallConfig</span><span class="p">(</span>
+                <span class="n">ip</span><span class="o">=</span><span class="n">interface_ip</span><span class="p">,</span>
+                <span class="n">default_gw</span><span class="o">=</span><span class="n">interface_default_gateway</span><span class="p">,</span>
+                <span class="n">default_input</span><span class="o">=</span><span class="n">interface_default_input</span><span class="p">,</span>
+                <span class="n">default_output</span><span class="o">=</span><span class="n">interface_default_output</span><span class="p">,</span>
+                <span class="n">default_forward</span><span class="o">=</span><span class="n">interface_default_forward</span><span class="p">,</span>
+                <span class="n">network</span><span class="o">=</span><span class="n">ContainerNetwork</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="n">interface_name</span><span class="p">,</span>
+                    <span class="n">subnet_mask</span><span class="o">=</span><span class="n">interface_subnet_mask</span><span class="p">,</span>
+                    <span class="n">subnet_prefix</span><span class="o">=</span><span class="n">interface_subnet_prefix</span><span class="p">,</span>
+                    <span class="n">bitmask</span><span class="o">=</span><span class="n">interface_bit_mask</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">ips_gw_default_policy_networks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">default_network_firewall_config</span><span class="p">)</span>
+        <span class="n">node_configs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">NodeFirewallConfig</span><span class="p">(</span>
+            <span class="n">hostname</span><span class="o">=</span><span class="n">container_name</span><span class="p">,</span>
+            <span class="n">ips_gw_default_policy_networks</span><span class="o">=</span><span class="n">ips_gw_default_policy_networks</span><span class="p">,</span>
+            <span class="n">output_accept</span><span class="o">=</span><span class="nb">set</span><span class="p">([]),</span>
+            <span class="n">input_accept</span><span class="o">=</span><span class="nb">set</span><span class="p">([]),</span>
+            <span class="n">forward_accept</span><span class="o">=</span><span class="nb">set</span><span class="p">([]),</span>
+            <span class="n">output_drop</span><span class="o">=</span><span class="nb">set</span><span class="p">(),</span> <span class="n">input_drop</span><span class="o">=</span><span class="nb">set</span><span class="p">(),</span> <span class="n">forward_drop</span><span class="o">=</span><span class="nb">set</span><span class="p">(),</span> <span class="n">routes</span><span class="o">=</span><span class="nb">set</span><span class="p">()))</span>
+
+        <span class="n">topology</span> <span class="o">=</span> <span class="n">TopologyConfig</span><span class="p">(</span><span class="n">node_configs</span><span class="o">=</span><span class="n">node_configs</span><span class="p">,</span>
+                                  <span class="n">subnetwork_masks</span><span class="o">=</span><span class="n">subnetwork_masks</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">topology</span></div>
+
+
+<div class="viewcode-block" id="convert_json_data_to_traffic_config"><a class="viewcode-back" href="../../../../csle_rest_api.resources.create_emulation.html#csle_rest_api.resources.create_emulation.routes.convert_json_data_to_traffic_config">[docs]</a><span class="k">def</span> <span class="nf">convert_json_data_to_traffic_config</span><span class="p">(</span><span class="n">emulation_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">TrafficConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts the json emulation data to the traffic config</span>
+
+<span class="sd">    :param emulation_data: the emulation data in JSON format received from front-end</span>
+<span class="sd">    :return: the traffic configuration</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">traffic_generators</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">emulation_containers</span> <span class="o">=</span> <span class="n">emulation_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">EMULATION_CONTAINER</span><span class="p">]</span>
+    <span class="n">emulation_time_step_length</span> <span class="o">=</span> <span class="n">emulation_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">EMULATION_TIME_STEP_LENGTH</span><span class="p">]</span>
+    <span class="n">client_ip</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">client_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">client_subnet_mask</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">client_subnet_prefix</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">client_bit_mask</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">containers</span> <span class="ow">in</span> <span class="n">emulation_containers</span><span class="p">:</span>
+        <span class="n">container_name</span> <span class="o">=</span> <span class="n">containers</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">NAME</span><span class="p">]</span>
+        <span class="n">container_interfaces</span> <span class="o">=</span> <span class="n">containers</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">INTERFACES</span><span class="p">]</span>
+        <span class="n">interface_ip</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">interface_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">interface_subnet_mask</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">interface_subnet_prefix</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">interface_bit_mask</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">interfaces</span> <span class="ow">in</span> <span class="n">container_interfaces</span><span class="p">:</span>
+            <span class="n">interface_ip</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">IP</span><span class="p">]</span>
+            <span class="n">interface_name</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">NAME</span><span class="p">]</span>
+            <span class="n">interface_subnet_prefix</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">SUBNET_PREFIX</span><span class="p">]</span>
+            <span class="n">interface_subnet_mask</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">SUBNET_MASK</span><span class="p">]</span>
+            <span class="n">interface_bit_mask</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">BITMASK</span><span class="p">]</span>
+
+        <span class="n">traffic_generators</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">NodeTrafficConfig</span><span class="p">(</span>
+            <span class="n">ip</span><span class="o">=</span><span class="n">interface_ip</span><span class="p">,</span> <span class="n">commands</span><span class="o">=</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">TRAFFIC_COMMANDS</span><span class="o">.</span><span class="n">DEFAULT_COMMANDS</span><span class="p">[</span><span class="n">container_name</span><span class="p">]</span>
+                                       <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">TRAFFIC_COMMANDS</span><span class="o">.</span><span class="n">DEFAULT_COMMANDS</span><span class="p">[</span>
+                                           <span class="n">constants</span><span class="o">.</span><span class="n">TRAFFIC_COMMANDS</span><span class="o">.</span><span class="n">GENERIC_COMMANDS</span><span class="p">]),</span>
+            <span class="n">traffic_manager_port</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">MANAGER_PORTS</span><span class="o">.</span><span class="n">TRAFFIC_MANAGER_DEFAULT_PORT</span><span class="p">,</span>
+            <span class="n">traffic_manager_log_file</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">LOG_FILES</span><span class="o">.</span><span class="n">TRAFFIC_MANAGER_LOG_FILE</span><span class="p">,</span>
+            <span class="n">traffic_manager_log_dir</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">LOG_FILES</span><span class="o">.</span><span class="n">TRAFFIC_MANAGER_LOG_DIR</span><span class="p">,</span>
+            <span class="n">traffic_manager_max_workers</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">GRPC_WORKERS</span><span class="o">.</span><span class="n">DEFAULT_MAX_NUM_WORKERS</span><span class="p">))</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">CLIENT</span> <span class="ow">in</span> <span class="n">container_name</span><span class="p">):</span>
+            <span class="n">client_ip</span> <span class="o">=</span> <span class="n">interface_ip</span>
+            <span class="n">client_name</span> <span class="o">=</span> <span class="n">interface_name</span>
+            <span class="n">client_subnet_mask</span> <span class="o">=</span> <span class="n">interface_subnet_mask</span>
+            <span class="n">client_subnet_prefix</span> <span class="o">=</span> <span class="n">interface_subnet_prefix</span>
+            <span class="n">client_bit_mask</span> <span class="o">=</span> <span class="n">interface_bit_mask</span>
+
+    <span class="n">all_ips_and_commands</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">traffic_generators</span><span class="p">)):</span>
+        <span class="n">all_ips_and_commands</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">traffic_generators</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">ip</span><span class="p">,</span> <span class="n">traffic_generators</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">commands</span><span class="p">))</span>
+    <span class="n">workflows_config</span> <span class="o">=</span> <span class="n">WorkflowsConfig</span><span class="p">(</span>
+        <span class="n">workflow_services</span><span class="o">=</span><span class="p">[</span>
+            <span class="n">WorkflowService</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ips_and_commands</span><span class="o">=</span><span class="n">all_ips_and_commands</span><span class="p">)</span>
+        <span class="p">],</span>
+        <span class="n">workflow_markov_chains</span><span class="o">=</span><span class="p">[</span>
+            <span class="n">WorkflowMarkovChain</span><span class="p">(</span>
+                <span class="n">transition_matrix</span><span class="o">=</span><span class="p">[</span>
+                    <span class="p">[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="p">],</span>
+                <span class="n">initial_state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                <span class="nb">id</span><span class="o">=</span><span class="mi">0</span>
+            <span class="p">)</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">client_population_config</span> <span class="o">=</span> <span class="n">ClientPopulationConfig</span><span class="p">(</span>
+        <span class="n">networks</span><span class="o">=</span><span class="p">[</span><span class="n">ContainerNetwork</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">client_name</span><span class="p">,</span>
+            <span class="n">subnet_mask</span><span class="o">=</span><span class="n">client_subnet_mask</span><span class="p">,</span>
+            <span class="n">subnet_prefix</span><span class="o">=</span><span class="n">client_subnet_prefix</span><span class="p">,</span>
+            <span class="n">bitmask</span><span class="o">=</span><span class="n">client_bit_mask</span>
+        <span class="p">)],</span>
+        <span class="n">ip</span><span class="o">=</span><span class="n">client_ip</span><span class="p">,</span>
+        <span class="n">client_manager_port</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">MANAGER_PORTS</span><span class="o">.</span><span class="n">CLIENT_MANAGER_DEFAULT_PORT</span><span class="p">,</span>
+        <span class="n">client_time_step_len_seconds</span><span class="o">=</span><span class="n">emulation_time_step_length</span><span class="p">,</span>
+        <span class="n">client_manager_log_dir</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">LOG_FILES</span><span class="o">.</span><span class="n">CLIENT_MANAGER_LOG_DIR</span><span class="p">,</span>
+        <span class="n">client_manager_log_file</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">LOG_FILES</span><span class="o">.</span><span class="n">CLIENT_MANAGER_LOG_FILE</span><span class="p">,</span>
+        <span class="n">client_manager_max_workers</span><span class="o">=</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">GRPC_WORKERS</span><span class="o">.</span><span class="n">DEFAULT_MAX_NUM_WORKERS</span><span class="p">,</span>
+        <span class="n">clients</span><span class="o">=</span><span class="p">[</span>
+            <span class="n">Client</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">workflow_distribution</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                   <span class="n">arrival_config</span><span class="o">=</span><span class="n">ConstantArrivalConfig</span><span class="p">(</span><span class="n">lamb</span><span class="o">=</span><span class="mi">20</span><span class="p">),</span> <span class="n">mu</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">exponential_service_time</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="p">],</span>
+        <span class="n">workflows_config</span><span class="o">=</span><span class="n">workflows_config</span><span class="p">)</span>
+    <span class="n">traffic_conf</span> <span class="o">=</span> <span class="n">TrafficConfig</span><span class="p">(</span><span class="n">node_traffic_configs</span><span class="o">=</span><span class="n">traffic_generators</span><span class="p">,</span>
+                                 <span class="n">client_population_config</span><span class="o">=</span><span class="n">client_population_config</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">traffic_conf</span></div>
+
+
+<div class="viewcode-block" id="convert_json_data_to_users_config"><a class="viewcode-back" href="../../../../csle_rest_api.resources.create_emulation.html#csle_rest_api.resources.create_emulation.routes.convert_json_data_to_users_config">[docs]</a><span class="k">def</span> <span class="nf">convert_json_data_to_users_config</span><span class="p">(</span><span class="n">emulation_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">UsersConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts the json emulation data to the users config</span>
+
+<span class="sd">    :param emulation_data: the emulation data in JSON format received from front-end</span>
+<span class="sd">    :return: generates the UsersConfig</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">emulation_containers</span> <span class="o">=</span> <span class="n">emulation_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">EMULATION_CONTAINER</span><span class="p">]</span>
+    <span class="n">users</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">interface_ip</span> <span class="o">=</span> <span class="s2">&quot;0.0.0.0&quot;</span>
+    <span class="k">for</span> <span class="n">containers</span> <span class="ow">in</span> <span class="n">emulation_containers</span><span class="p">:</span>
+        <span class="n">container_users</span> <span class="o">=</span> <span class="n">containers</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">USERS</span><span class="p">]</span>
+        <span class="n">container_interfaces</span> <span class="o">=</span> <span class="n">containers</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">INTERFACES</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">interfaces</span> <span class="ow">in</span> <span class="n">container_interfaces</span><span class="p">:</span>
+            <span class="c1"># interface_name = interfaces[api_constants.CREATE_EMULATION_PAGE.NAME]</span>
+            <span class="n">interface_ip</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">IP</span><span class="p">]</span>
+        <span class="n">all_users</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">container_users</span><span class="p">:</span>
+            <span class="n">user_name</span> <span class="o">=</span> <span class="n">user</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">USER_NAME</span><span class="p">]</span>
+            <span class="n">user_pw</span> <span class="o">=</span> <span class="n">user</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">PW</span><span class="p">]</span>
+            <span class="n">user_access</span> <span class="o">=</span> <span class="n">user</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">ROOT</span><span class="p">]</span>
+            <span class="n">all_users</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">User</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">user_name</span><span class="p">,</span> <span class="n">pw</span><span class="o">=</span><span class="n">user_pw</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="n">user_access</span><span class="p">))</span>
+        <span class="n">users</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">NodeUsersConfig</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">interface_ip</span><span class="p">,</span> <span class="n">users</span><span class="o">=</span><span class="n">all_users</span><span class="p">))</span>
+
+    <span class="n">users_conf</span> <span class="o">=</span> <span class="n">UsersConfig</span><span class="p">(</span><span class="n">users_configs</span><span class="o">=</span><span class="n">users</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">users_conf</span></div>
+
+
+<div class="viewcode-block" id="convert_json_data_to_vulns_config"><a class="viewcode-back" href="../../../../csle_rest_api.resources.create_emulation.html#csle_rest_api.resources.create_emulation.routes.convert_json_data_to_vulns_config">[docs]</a><span class="k">def</span> <span class="nf">convert_json_data_to_vulns_config</span><span class="p">(</span><span class="n">emulation_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">VulnerabilitiesConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts the json emulation data to the vulnerabilities config</span>
+
+<span class="sd">    :param emulation_data: the emulation data in JSON format received from front-end</span>
+<span class="sd">    :return: the vulnerability config</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">emulation_containers</span> <span class="o">=</span> <span class="n">emulation_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">EMULATION_CONTAINER</span><span class="p">]</span>
+    <span class="n">vulns</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">containers</span> <span class="ow">in</span> <span class="n">emulation_containers</span><span class="p">:</span>
+        <span class="n">container_vulns</span> <span class="o">=</span> <span class="n">containers</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">VULNS</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">vuln</span> <span class="ow">in</span> <span class="n">container_vulns</span><span class="p">:</span>
+            <span class="n">vuln_name</span> <span class="o">=</span> <span class="n">vuln</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">VULN_NAME</span><span class="p">]</span>
+            <span class="n">vuln_type</span> <span class="o">=</span> <span class="n">vuln</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">VULN_TYPE</span><span class="p">]</span>
+            <span class="n">vuln_service_name</span> <span class="o">=</span> <span class="n">vuln</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">VULN_SERVICE</span><span class="p">]</span>
+            <span class="c1"># vuln_service_protocol = vuln[api_constants.CREATE_EMULATION_PAGE.VULN_SERVICE][</span>
+            <span class="c1">#     api_constants.CREATE_EMULATION_PAGE.PROTOCOL]</span>
+            <span class="c1"># vuln_service_protocol = TransportProtocol(int(vuln_service_protocol))</span>
+            <span class="c1"># vuln_service_port = vuln[api_constants.CREATE_EMULATION_PAGE.VULN_SERVICE][</span>
+            <span class="c1">#     api_constants.CREATE_EMULATION_PAGE.PORT]</span>
+            <span class="c1"># vuln_service_ip = vuln[api_constants.CREATE_EMULATION_PAGE.VULN_SERVICE][</span>
+            <span class="c1">#     api_constants.CREATE_EMULATION_PAGE.SERVICE_IP]</span>
+            <span class="n">vuln_root_access</span> <span class="o">=</span> <span class="n">vuln</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">VULN_ROOT</span><span class="p">]</span>
+            <span class="n">vuln_credentials</span> <span class="o">=</span> <span class="n">vuln</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">VULN_CREDENTIALS</span><span class="p">]</span>
+            <span class="n">cred</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">credentials</span> <span class="ow">in</span> <span class="n">vuln_credentials</span><span class="p">:</span>
+                <span class="n">cred</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Credential</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">credentials</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">VULN_CRED_USERNAME</span><span class="p">],</span>
+                                       <span class="n">pw</span><span class="o">=</span><span class="n">credentials</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">VULN_CRED_PW</span><span class="p">],</span>
+                                       <span class="n">root</span><span class="o">=</span><span class="n">credentials</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">VULN_CRED_ROOT</span><span class="p">],</span>
+                                       <span class="n">service</span><span class="o">=</span><span class="n">vuln_service_name</span><span class="p">,</span>
+                                       <span class="n">protocol</span><span class="o">=</span><span class="n">TransportProtocol</span><span class="o">.</span><span class="n">TCP</span><span class="p">,</span>
+                                       <span class="n">port</span><span class="o">=</span><span class="mi">80</span><span class="p">))</span>
+
+            <span class="n">vulns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">NodeVulnerabilityConfig</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">vuln_name</span><span class="p">,</span>
+                <span class="c1"># *** I think we can also use service ip instead of interface ip, it will be the same.</span>
+                <span class="c1"># If it is not true we can use interface ip</span>
+                <span class="n">ip</span><span class="o">=</span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span>
+                <span class="n">vuln_type</span><span class="o">=</span><span class="n">vuln_type</span><span class="p">,</span>
+                <span class="c1"># *** We should define credentials in the front end</span>
+                <span class="n">credentials</span><span class="o">=</span><span class="n">cred</span><span class="p">,</span>
+                <span class="c1"># *** We should define cvss in the front end</span>
+                <span class="n">cvss</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">EXPLOIT_VULNERABILITES</span><span class="o">.</span><span class="n">WEAK_PASSWORD_CVSS</span><span class="p">,</span>
+                <span class="n">cve</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">root</span><span class="o">=</span><span class="n">vuln_root_access</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span>
+                <span class="n">protocol</span><span class="o">=</span><span class="n">TransportProtocol</span><span class="o">.</span><span class="n">TCP</span><span class="p">,</span> <span class="n">service</span><span class="o">=</span><span class="n">vuln_service_name</span><span class="p">))</span>
+    <span class="n">vulns_config</span> <span class="o">=</span> <span class="n">VulnerabilitiesConfig</span><span class="p">(</span><span class="n">node_vulnerability_configs</span><span class="o">=</span><span class="n">vulns</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">vulns_config</span></div>
+
+
+<div class="viewcode-block" id="convert_json_data_to_services_config"><a class="viewcode-back" href="../../../../csle_rest_api.resources.create_emulation.html#csle_rest_api.resources.create_emulation.routes.convert_json_data_to_services_config">[docs]</a><span class="k">def</span> <span class="nf">convert_json_data_to_services_config</span><span class="p">(</span><span class="n">emulation_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ServicesConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts the json emulation data to the services config</span>
+
+<span class="sd">    :param emulation_data: the emulation data in JSON format received from front-end</span>
+<span class="sd">    :return: The services configuration</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">emulation_containers</span> <span class="o">=</span> <span class="n">emulation_data</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">EMULATION_CONTAINER</span><span class="p">]</span>
+    <span class="n">services_configs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">service_ip</span> <span class="o">=</span> <span class="s2">&quot;0.0.0.0&quot;</span>
+    <span class="k">for</span> <span class="n">containers</span> <span class="ow">in</span> <span class="n">emulation_containers</span><span class="p">:</span>
+        <span class="n">container_services</span> <span class="o">=</span> <span class="n">containers</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">SERVICES</span><span class="p">]</span>
+        <span class="n">services</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">service</span> <span class="ow">in</span> <span class="n">container_services</span><span class="p">:</span>
+            <span class="n">service_name</span> <span class="o">=</span> <span class="n">service</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">NAME</span><span class="p">]</span>
+            <span class="n">service_protocol</span> <span class="o">=</span> <span class="n">service</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">PROTOCOL</span><span class="p">]</span>
+            <span class="n">service_port</span> <span class="o">=</span> <span class="n">service</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">PORT</span><span class="p">]</span>
+            <span class="n">service_ip</span> <span class="o">=</span> <span class="n">service</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE</span><span class="o">.</span><span class="n">SERVICE_IP</span><span class="p">]</span>
+            <span class="n">services</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">NetworkService</span><span class="p">(</span><span class="n">protocol</span><span class="o">=</span><span class="n">service_protocol</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">service_port</span><span class="p">,</span>
+                                           <span class="n">name</span><span class="o">=</span><span class="n">service_name</span><span class="p">,</span> <span class="n">credentials</span><span class="o">=</span><span class="p">[]))</span>
+    <span class="c1"># *** for NodeServicesConfig the ip can be also the interface ip. I think it should be the same unless the node</span>
+    <span class="c1"># has two or more interfaces</span>
+    <span class="n">services_configs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">NodeServicesConfig</span><span class="p">(</span>
+        <span class="n">ip</span><span class="o">=</span><span class="n">service_ip</span><span class="p">,</span>
+        <span class="n">services</span><span class="o">=</span><span class="p">[</span>
+            <span class="n">NetworkService</span><span class="p">(</span><span class="n">protocol</span><span class="o">=</span><span class="n">TransportProtocol</span><span class="o">.</span><span class="n">TCP</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">SSH</span><span class="o">.</span><span class="n">DEFAULT_PORT</span><span class="p">,</span>
+                           <span class="n">name</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">SSH</span><span class="o">.</span><span class="n">SERVICE_NAME</span><span class="p">,</span> <span class="n">credentials</span><span class="o">=</span><span class="p">[])</span>
+        <span class="p">]</span>
+    <span class="p">))</span>
+
+    <span class="n">service_cfg</span> <span class="o">=</span> <span class="n">ServicesConfig</span><span class="p">(</span>
+        <span class="n">services_configs</span><span class="o">=</span><span class="n">services_configs</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">service_cfg</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2024, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

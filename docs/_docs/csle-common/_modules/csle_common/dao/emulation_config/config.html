@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.dao.emulation_config.config &mdash; csle-common 0.6.0 documentation</title>
+  <title>csle_common.dao.emulation_config.config &mdash; csle-common 0.7.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,9 +13,7 @@
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -60,9 +58,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">csle_common.dao.emulation_config.config</li>
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>csle_common.dao.emulation_config.config</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -72,11 +70,10 @@
            <div itemprop="articleBody">
              
   <h1>Source code for csle_common.dao.emulation_config.config</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">io</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span> <span class="nn">io</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
-
 <span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
 <span class="kn">from</span> <span class="nn">csle_base.json_serializable</span> <span class="kn">import</span> <span class="n">JSONSerializable</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.cluster_config</span> <span class="kn">import</span> <span class="n">ClusterConfig</span>
@@ -138,6 +135,7 @@
             <span class="n">nginx_log_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
             <span class="n">flask_log_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
             <span class="n">cluster_manager_log_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+            <span class="n">version</span><span class="p">:</span> <span class="nb">str</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the DTO</span>
@@ -192,23 +190,20 @@
 <span class="sd">        :param nginx_log_dir: the log directory for Nginx</span>
 <span class="sd">        :param flask_log_file: the log file of Flask</span>
 <span class="sd">        :param cluster_manager_log_file: the log file of the cluster manager</span>
+<span class="sd">        :param version: the CSLE version in the format: &quot;major.minor.patch&quot;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">management_admin_username_default</span> <span class="o">=</span> <span class="n">management_admin_username_default</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">management_admin_password_default</span> <span class="o">=</span> <span class="n">management_admin_password_default</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">management_admin_first_name_default</span> <span class="o">=</span> <span class="n">management_admin_first_name_default</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">management_admin_last_name_default</span> <span class="o">=</span> <span class="n">management_admin_last_name_default</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">management_admin_email_default</span> <span class="o">=</span> <span class="n">management_admin_email_default</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">management_admin_organization_default</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">management_admin_organization_default</span>
-        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">management_admin_organization_default</span> <span class="o">=</span> <span class="n">management_admin_organization_default</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">management_guest_username_default</span> <span class="o">=</span> <span class="n">management_guest_username_default</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">management_guest_password_default</span> <span class="o">=</span> <span class="n">management_guest_password_default</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">management_guest_first_name_default</span> <span class="o">=</span> <span class="n">management_guest_first_name_default</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">management_guest_last_name_default</span> <span class="o">=</span> <span class="n">management_guest_last_name_default</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">management_guest_email_default</span> <span class="o">=</span> <span class="n">management_guest_email_default</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">management_guest_organization_default</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">management_guest_organization_default</span>
-        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">management_guest_organization_default</span> <span class="o">=</span> <span class="n">management_guest_organization_default</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ssh_admin_username</span> <span class="o">=</span> <span class="n">ssh_admin_username</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ssh_admin_password</span> <span class="o">=</span> <span class="n">ssh_admin_password</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ssh_agent_username</span> <span class="o">=</span> <span class="n">ssh_agent_username</span>
@@ -247,6 +242,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">flask_log_file</span> <span class="o">=</span> <span class="n">flask_log_file</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cluster_manager_log_file</span> <span class="o">=</span> <span class="n">cluster_manager_log_file</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">version</span>
 
 <div class="viewcode-block" id="Config.to_dict"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.config.Config.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -257,28 +253,16 @@
         <span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;management_admin_username_default&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">management_admin_username_default</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;management_admin_password_default&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">management_admin_password_default</span>
-        <span class="n">d</span><span class="p">[</span>
-            <span class="s2">&quot;management_admin_first_name_default&quot;</span>
-        <span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">management_admin_first_name_default</span>
-        <span class="n">d</span><span class="p">[</span>
-            <span class="s2">&quot;management_admin_last_name_default&quot;</span>
-        <span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">management_admin_last_name_default</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;management_admin_first_name_default&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">management_admin_first_name_default</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;management_admin_last_name_default&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">management_admin_last_name_default</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;management_admin_email_default&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">management_admin_email_default</span>
-        <span class="n">d</span><span class="p">[</span>
-            <span class="s2">&quot;management_admin_organization_default&quot;</span>
-        <span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">management_admin_organization_default</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;management_admin_organization_default&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">management_admin_organization_default</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;management_guest_username_default&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">management_guest_username_default</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;management_guest_password_default&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">management_guest_password_default</span>
-        <span class="n">d</span><span class="p">[</span>
-            <span class="s2">&quot;management_guest_first_name_default&quot;</span>
-        <span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">management_guest_first_name_default</span>
-        <span class="n">d</span><span class="p">[</span>
-            <span class="s2">&quot;management_guest_last_name_default&quot;</span>
-        <span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">management_guest_last_name_default</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;management_guest_first_name_default&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">management_guest_first_name_default</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;management_guest_last_name_default&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">management_guest_last_name_default</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;management_guest_email_default&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">management_guest_email_default</span>
-        <span class="n">d</span><span class="p">[</span>
-            <span class="s2">&quot;management_guest_organization_default&quot;</span>
-        <span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">management_guest_organization_default</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;management_guest_organization_default&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">management_guest_organization_default</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;ssh_admin_username&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ssh_admin_username</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;ssh_admin_password&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ssh_admin_password</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;ssh_agent_username&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ssh_agent_username</span>
@@ -316,6 +300,7 @@
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;nginx_log_dir&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nginx_log_dir</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;flask_log_file&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flask_log_file</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;cluster_manager_log_file&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cluster_manager_log_file</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="n">d</span></div>
 
@@ -409,24 +394,12 @@
                 <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">management_guest_organization_default</span><span class="p">,</span>
             <span class="p">}</span>
         <span class="p">)</span>
-        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;ssh_admin_username&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ssh_admin_username</span><span class="p">}</span>
-        <span class="p">)</span>
-        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">13</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;ssh_admin_password&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ssh_admin_password</span><span class="p">}</span>
-        <span class="p">)</span>
-        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;ssh_agent_username&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ssh_agent_username</span><span class="p">}</span>
-        <span class="p">)</span>
-        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;ssh_agent_password&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ssh_agent_password</span><span class="p">}</span>
-        <span class="p">)</span>
-        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;metastore_user&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">metastore_user</span><span class="p">}</span>
-        <span class="p">)</span>
-        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">17</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;metastore_password&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">metastore_password</span><span class="p">}</span>
-        <span class="p">)</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;ssh_admin_username&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ssh_admin_username</span><span class="p">})</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">13</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;ssh_admin_password&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ssh_admin_password</span><span class="p">})</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;ssh_agent_username&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ssh_agent_username</span><span class="p">})</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;ssh_agent_password&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ssh_agent_password</span><span class="p">})</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;metastore_user&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">metastore_user</span><span class="p">})</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">17</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;metastore_password&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">metastore_password</span><span class="p">})</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
             <span class="p">{</span>
                 <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">18</span><span class="p">,</span>
@@ -434,15 +407,9 @@
                 <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">metastore_database_name</span><span class="p">,</span>
             <span class="p">}</span>
         <span class="p">)</span>
-        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">19</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;metastore_ip&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">metastore_ip</span><span class="p">}</span>
-        <span class="p">)</span>
-        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;node_exporter_port&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_exporter_port</span><span class="p">}</span>
-        <span class="p">)</span>
-        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">21</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;grafana_port&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">grafana_port</span><span class="p">}</span>
-        <span class="p">)</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">19</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;metastore_ip&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">metastore_ip</span><span class="p">})</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;node_exporter_port&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_exporter_port</span><span class="p">})</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">21</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;grafana_port&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">grafana_port</span><span class="p">})</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
             <span class="p">{</span>
                 <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">23</span><span class="p">,</span>
@@ -450,12 +417,8 @@
                 <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">management_system_port</span><span class="p">,</span>
             <span class="p">}</span>
         <span class="p">)</span>
-        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;cadvisor_port&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cadvisor_port</span><span class="p">}</span>
-        <span class="p">)</span>
-        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;prometheus_port&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">prometheus_port</span><span class="p">}</span>
-        <span class="p">)</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;cadvisor_port&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cadvisor_port</span><span class="p">})</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;prometheus_port&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">prometheus_port</span><span class="p">})</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
             <span class="p">{</span>
                 <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">26</span><span class="p">,</span>
@@ -533,9 +496,7 @@
                 <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">prometheus_config_file</span><span class="p">,</span>
             <span class="p">}</span>
         <span class="p">)</span>
-        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">37</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;default_log_dir&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_log_dir</span><span class="p">}</span>
-        <span class="p">)</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">37</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;default_log_dir&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_log_dir</span><span class="p">})</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
             <span class="p">{</span>
                 <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">39</span><span class="p">,</span>
@@ -543,33 +504,15 @@
                 <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_exporter_log_file</span><span class="p">,</span>
             <span class="p">}</span>
         <span class="p">),</span>
-        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;allow_registration&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">allow_registration</span><span class="p">}</span>
-        <span class="p">)</span>
-        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">41</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;pgadmin_port&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">pgadmin_port</span><span class="p">}</span>
-        <span class="p">)</span>
-        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">42</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;pgadmin_username&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">pgadmin_username</span><span class="p">}</span>
-        <span class="p">)</span>
-        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">43</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;pgadmin_password&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">pgadmin_password</span><span class="p">}</span>
-        <span class="p">)</span>
-        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">44</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;grafana_username&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">grafana_username</span><span class="p">}</span>
-        <span class="p">)</span>
-        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">45</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;grafana_password&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">grafana_password</span><span class="p">}</span>
-        <span class="p">)</span>
-        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">46</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;postgresql_log_dir&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">postgresql_log_dir</span><span class="p">}</span>
-        <span class="p">)</span>
-        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">47</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;nginx_log_dir&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">nginx_log_dir</span><span class="p">}</span>
-        <span class="p">)</span>
-        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">48</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;flask_log_file&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">flask_log_file</span><span class="p">}</span>
-        <span class="p">)</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;allow_registration&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">allow_registration</span><span class="p">})</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">41</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;pgadmin_port&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">pgadmin_port</span><span class="p">})</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">42</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;pgadmin_username&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">pgadmin_username</span><span class="p">})</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">43</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;pgadmin_password&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">pgadmin_password</span><span class="p">})</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">44</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;grafana_username&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">grafana_username</span><span class="p">})</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">45</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;grafana_password&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">grafana_password</span><span class="p">})</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">46</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;postgresql_log_dir&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">postgresql_log_dir</span><span class="p">})</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">47</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;nginx_log_dir&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">nginx_log_dir</span><span class="p">})</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">48</span><span class="p">,</span> <span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;flask_log_file&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">flask_log_file</span><span class="p">})</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
             <span class="p">{</span>
                 <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">48</span><span class="p">,</span>
@@ -578,6 +521,7 @@
             <span class="p">}</span>
         <span class="p">)</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;cluster_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cluster_config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span>
         <span class="k">return</span> <span class="n">d</span></div>
 
 <div class="viewcode-block" id="Config.from_dict"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.config.Config.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
@@ -590,24 +534,16 @@
         <span class="n">dto</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span>
             <span class="n">management_admin_username_default</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;management_admin_username_default&quot;</span><span class="p">],</span>
             <span class="n">management_admin_password_default</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;management_admin_password_default&quot;</span><span class="p">],</span>
-            <span class="n">management_admin_first_name_default</span><span class="o">=</span><span class="n">d</span><span class="p">[</span>
-                <span class="s2">&quot;management_admin_first_name_default&quot;</span>
-            <span class="p">],</span>
+            <span class="n">management_admin_first_name_default</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;management_admin_first_name_default&quot;</span><span class="p">],</span>
             <span class="n">management_admin_last_name_default</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;management_admin_last_name_default&quot;</span><span class="p">],</span>
             <span class="n">management_admin_email_default</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;management_admin_email_default&quot;</span><span class="p">],</span>
-            <span class="n">management_admin_organization_default</span><span class="o">=</span><span class="n">d</span><span class="p">[</span>
-                <span class="s2">&quot;management_admin_organization_default&quot;</span>
-            <span class="p">],</span>
+            <span class="n">management_admin_organization_default</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;management_admin_organization_default&quot;</span><span class="p">],</span>
             <span class="n">management_guest_username_default</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;management_guest_username_default&quot;</span><span class="p">],</span>
             <span class="n">management_guest_password_default</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;management_guest_password_default&quot;</span><span class="p">],</span>
-            <span class="n">management_guest_first_name_default</span><span class="o">=</span><span class="n">d</span><span class="p">[</span>
-                <span class="s2">&quot;management_guest_first_name_default&quot;</span>
-            <span class="p">],</span>
+            <span class="n">management_guest_first_name_default</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;management_guest_first_name_default&quot;</span><span class="p">],</span>
             <span class="n">management_guest_last_name_default</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;management_guest_last_name_default&quot;</span><span class="p">],</span>
             <span class="n">management_guest_email_default</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;management_guest_email_default&quot;</span><span class="p">],</span>
-            <span class="n">management_guest_organization_default</span><span class="o">=</span><span class="n">d</span><span class="p">[</span>
-                <span class="s2">&quot;management_guest_organization_default&quot;</span>
-            <span class="p">],</span>
+            <span class="n">management_guest_organization_default</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;management_guest_organization_default&quot;</span><span class="p">],</span>
             <span class="n">ssh_admin_username</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;ssh_admin_username&quot;</span><span class="p">],</span>
             <span class="n">ssh_admin_password</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;ssh_admin_password&quot;</span><span class="p">],</span>
             <span class="n">ssh_agent_username</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;ssh_agent_username&quot;</span><span class="p">],</span>
@@ -645,6 +581,7 @@
             <span class="n">nginx_log_dir</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;nginx_log_dir&quot;</span><span class="p">],</span>
             <span class="n">flask_log_file</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;flask_log_file&quot;</span><span class="p">],</span>
             <span class="n">cluster_manager_log_file</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;cluster_manager_log_file&quot;</span><span class="p">],</span>
+            <span class="n">version</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">]</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;id&quot;</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span>
             <span class="n">dto</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
@@ -658,6 +595,7 @@
 <span class="sd">        :return: a dto representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">d2</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">]</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;cluster_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">d2</span><span class="p">[</span><span class="s2">&quot;cluster_config&quot;</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">param_value</span> <span class="ow">in</span> <span class="n">d2</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]:</span>
             <span class="n">d</span><span class="p">[</span><span class="n">param_value</span><span class="p">[</span><span class="s2">&quot;param&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">param_value</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
@@ -665,24 +603,16 @@
         <span class="n">dto</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span>
             <span class="n">management_admin_username_default</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;management_admin_username_default&quot;</span><span class="p">],</span>
             <span class="n">management_admin_password_default</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;management_admin_password_default&quot;</span><span class="p">],</span>
-            <span class="n">management_admin_first_name_default</span><span class="o">=</span><span class="n">d</span><span class="p">[</span>
-                <span class="s2">&quot;management_admin_first_name_default&quot;</span>
-            <span class="p">],</span>
+            <span class="n">management_admin_first_name_default</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;management_admin_first_name_default&quot;</span><span class="p">],</span>
             <span class="n">management_admin_last_name_default</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;management_admin_last_name_default&quot;</span><span class="p">],</span>
             <span class="n">management_admin_email_default</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;management_admin_email_default&quot;</span><span class="p">],</span>
-            <span class="n">management_admin_organization_default</span><span class="o">=</span><span class="n">d</span><span class="p">[</span>
-                <span class="s2">&quot;management_admin_organization_default&quot;</span>
-            <span class="p">],</span>
+            <span class="n">management_admin_organization_default</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;management_admin_organization_default&quot;</span><span class="p">],</span>
             <span class="n">management_guest_username_default</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;management_guest_username_default&quot;</span><span class="p">],</span>
             <span class="n">management_guest_password_default</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;management_guest_password_default&quot;</span><span class="p">],</span>
-            <span class="n">management_guest_first_name_default</span><span class="o">=</span><span class="n">d</span><span class="p">[</span>
-                <span class="s2">&quot;management_guest_first_name_default&quot;</span>
-            <span class="p">],</span>
+            <span class="n">management_guest_first_name_default</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;management_guest_first_name_default&quot;</span><span class="p">],</span>
             <span class="n">management_guest_last_name_default</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;management_guest_last_name_default&quot;</span><span class="p">],</span>
             <span class="n">management_guest_email_default</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;management_guest_email_default&quot;</span><span class="p">],</span>
-            <span class="n">management_guest_organization_default</span><span class="o">=</span><span class="n">d</span><span class="p">[</span>
-                <span class="s2">&quot;management_guest_organization_default&quot;</span>
-            <span class="p">],</span>
+            <span class="n">management_guest_organization_default</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;management_guest_organization_default&quot;</span><span class="p">],</span>
             <span class="n">ssh_admin_username</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;ssh_admin_username&quot;</span><span class="p">],</span>
             <span class="n">ssh_admin_password</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;ssh_admin_password&quot;</span><span class="p">],</span>
             <span class="n">ssh_agent_username</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;ssh_agent_username&quot;</span><span class="p">],</span>
@@ -720,6 +650,7 @@
             <span class="n">nginx_log_dir</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;nginx_log_dir&quot;</span><span class="p">],</span>
             <span class="n">flask_log_file</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;flask_log_file&quot;</span><span class="p">],</span>
             <span class="n">cluster_manager_log_file</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;cluster_manager_log_file&quot;</span><span class="p">],</span>
+            <span class="n">version</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">]</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;id&quot;</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span>
             <span class="n">dto</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
@@ -767,7 +698,8 @@
             <span class="sa">f</span><span class="s2">&quot;id:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">, grafana_username: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">grafana_username</span><span class="si">}</span><span class="s2">, grafana_password: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">grafana_password</span><span class="si">}</span><span class="s2">,&quot;</span>
             <span class="sa">f</span><span class="s2">&quot;pgadmin_username: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pgadmin_username</span><span class="si">}</span><span class="s2">, pgadmin_password: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pgadmin_password</span><span class="si">}</span><span class="s2">,&quot;</span>
             <span class="sa">f</span><span class="s2">&quot;postgresql_log_dir: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">postgresql_log_dir</span><span class="si">}</span><span class="s2">, nginx_log_dir: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nginx_log_dir</span><span class="si">}</span><span class="s2">,&quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;flask_log_file: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">flask_log_file</span><span class="si">}</span><span class="s2">, cluster_manager_log_file: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cluster_manager_log_file</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;flask_log_file: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">flask_log_file</span><span class="si">}</span><span class="s2">, cluster_manager_log_file: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cluster_manager_log_file</span><span class="si">}</span><span class="s2">,&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;version: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="p">)</span>
 
 <div class="viewcode-block" id="Config.from_json_file"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.config.Config.from_json_file">[docs]</a>    <span class="nd">@staticmethod</span>
@@ -801,13 +733,8 @@
         <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">CONFIG_FILE</span><span class="o">.</span><span class="n">CSLE_HOME_ENV_PARAM</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
             <span class="n">csle_home</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">CONFIG_FILE</span><span class="o">.</span><span class="n">CSLE_HOME_ENV_PARAM</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;The environment parameter </span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CONFIG_FILE</span><span class="o">.</span><span class="n">CSLE_HOME_ENV_PARAM</span><span class="si">}</span><span class="s2"> is not set&quot;</span>
-            <span class="p">)</span>
-        <span class="n">config_file_path</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">csle_home</span><span class="si">}{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CONFIG_FILE</span><span class="o">.</span><span class="n">CONFIG_FILE_NAME</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The environment parameter </span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CONFIG_FILE</span><span class="o">.</span><span class="n">CSLE_HOME_ENV_PARAM</span><span class="si">}</span><span class="s2"> is not set&quot;</span><span class="p">)</span>
+        <span class="n">config_file_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">csle_home</span><span class="si">}{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}{</span><span class="n">constants</span><span class="o">.</span><span class="n">CONFIG_FILE</span><span class="o">.</span><span class="n">CONFIG_FILE_NAME</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">config_file_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">json_str</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
             <span class="n">config_dict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_str</span><span class="p">)</span>
@@ -824,13 +751,8 @@
         <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">CONFIG_FILE</span><span class="o">.</span><span class="n">CSLE_HOME_ENV_PARAM</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
             <span class="n">csle_home</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">CONFIG_FILE</span><span class="o">.</span><span class="n">CSLE_HOME_ENV_PARAM</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;The environment parameter </span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CONFIG_FILE</span><span class="o">.</span><span class="n">CSLE_HOME_ENV_PARAM</span><span class="si">}</span><span class="s2"> is not set&quot;</span>
-            <span class="p">)</span>
-        <span class="n">config_file_path</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">csle_home</span><span class="si">}{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CONFIG_FILE</span><span class="o">.</span><span class="n">CONFIG_FILE_NAME</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The environment parameter </span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CONFIG_FILE</span><span class="o">.</span><span class="n">CSLE_HOME_ENV_PARAM</span><span class="si">}</span><span class="s2"> is not set&quot;</span><span class="p">)</span>
+        <span class="n">config_file_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">csle_home</span><span class="si">}{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}{</span><span class="n">constants</span><span class="o">.</span><span class="n">CONFIG_FILE</span><span class="o">.</span><span class="n">CONFIG_FILE_NAME</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">config_file_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">json_str</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json_str</span><span class="p">)</span></div>
@@ -895,7 +817,7 @@
             <span class="s2">&quot;grafana_password&quot;</span><span class="p">,</span>
             <span class="s2">&quot;postgresql_log_dir&quot;</span><span class="p">,</span>
             <span class="s2">&quot;nginx_log_dir&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;flask_log_file&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;flask_log_file&quot;</span>
         <span class="p">]</span>
         <span class="k">return</span> <span class="n">std_param_names</span></div></div>
 </pre></div>

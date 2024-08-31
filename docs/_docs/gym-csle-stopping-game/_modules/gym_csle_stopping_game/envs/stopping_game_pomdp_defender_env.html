@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env &mdash; gym-csle-stopping-game 0.6.0 documentation</title>
+  <title>gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env &mdash; gym-csle-stopping-game 0.7.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,9 +13,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -56,9 +54,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -74,12 +72,7 @@
 <span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.base_env</span> <span class="kn">import</span> <span class="n">BaseEnv</span>
 <span class="kn">from</span> <span class="nn">gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config</span> <span class="kn">import</span> <span class="n">StoppingGameDefenderPomdpConfig</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.simulation_trace</span> <span class="kn">import</span> <span class="n">SimulationTrace</span>
-<span class="kn">from</span> <span class="nn">csle_common.dao.training.policy</span> <span class="kn">import</span> <span class="n">Policy</span>
-<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_env_config</span> <span class="kn">import</span> <span class="n">EmulationEnvConfig</span>
-<span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.simulation_env_config</span> <span class="kn">import</span> <span class="n">SimulationEnvConfig</span>
-<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_simulation_trace</span> <span class="kn">import</span> <span class="n">EmulationSimulationTrace</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_trace</span> <span class="kn">import</span> <span class="n">EmulationTrace</span>
-<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_action</span> <span class="kn">import</span> <span class="n">EmulationAttackerAction</span>
 <span class="kn">from</span> <span class="nn">gym_csle_stopping_game.envs.stopping_game_env</span> <span class="kn">import</span> <span class="n">StoppingGameEnv</span>
 <span class="kn">from</span> <span class="nn">gym_csle_stopping_game.util.stopping_game_util</span> <span class="kn">import</span> <span class="n">StoppingGameUtil</span>
 
@@ -172,28 +165,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">latest_attacker_obs</span> <span class="o">=</span> <span class="n">o</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">defender_obs</span> <span class="o">=</span> <span class="n">o</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">defender_obs</span><span class="p">,</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">d</span><span class="p">,</span> <span class="n">info</span></div>
-
-<div class="viewcode-block" id="StoppingGamePomdpDefenderEnv.emulation_evaluation"><a class="viewcode-back" href="../../../gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.emulation_evaluation">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">emulation_evaluation</span><span class="p">(</span><span class="n">env</span><span class="p">:</span> <span class="s2">&quot;StoppingGamePomdpDefenderEnv&quot;</span><span class="p">,</span>
-                             <span class="n">n_episodes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">intrusion_seq</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationAttackerAction</span><span class="p">],</span>
-                             <span class="n">defender_policy</span><span class="p">:</span> <span class="n">Policy</span><span class="p">,</span>
-                             <span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">simulation_env_config</span><span class="p">:</span> <span class="n">SimulationEnvConfig</span><span class="p">)</span> \
-            <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationSimulationTrace</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Utility function for evaluating policies in the emulation environment</span>
-
-<span class="sd">        :param env: the environment to use for evaluation</span>
-<span class="sd">        :param n_episodes: the number of episodes to use for evaluation</span>
-<span class="sd">        :param intrusion_seq: the sequence of intrusion actions to use for evaluation</span>
-<span class="sd">        :param defender_policy: the defender policy to use for evaluation</span>
-<span class="sd">        :param emulation_env_config: the configuration of the emulation environment to use for evaluation</span>
-<span class="sd">        :param simulation_env_config: the configuration of the simulation environment to use for evaluation</span>
-<span class="sd">        :return: traces with the evaluation results</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">StoppingGameEnv</span><span class="o">.</span><span class="n">emulation_evaluation</span><span class="p">(</span>
-            <span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="o">.</span><span class="n">stopping_game_env</span><span class="p">,</span> <span class="n">n_episodes</span><span class="o">=</span><span class="n">n_episodes</span><span class="p">,</span> <span class="n">intrusion_seq</span><span class="o">=</span><span class="n">intrusion_seq</span><span class="p">,</span>
-            <span class="n">defender_policy</span><span class="o">=</span><span class="n">defender_policy</span><span class="p">,</span> <span class="n">attacker_policy</span><span class="o">=</span><span class="n">env</span><span class="o">.</span><span class="n">static_attacker_strategy</span><span class="p">,</span>
-            <span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">simulation_env_config</span><span class="o">=</span><span class="n">simulation_env_config</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="StoppingGamePomdpDefenderEnv.is_defense_action_legal"><a class="viewcode-back" href="../../../gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.is_defense_action_legal">[docs]</a>    <span class="k">def</span> <span class="nf">is_defense_action_legal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">defense_action_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>

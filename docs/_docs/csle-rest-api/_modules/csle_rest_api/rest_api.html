@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_rest_api.rest_api &mdash; csle-rest-api 0.3.0 documentation</title>
+  <title>csle_rest_api.rest_api &mdash; csle-rest-api 0.7.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,9 +13,7 @@
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -57,9 +55,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">csle_rest_api.rest_api</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>csle_rest_api.rest_api</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -96,6 +94,7 @@
 <span class="kn">from</span> <span class="nn">csle_rest_api.pages.system_admin.routes</span> <span class="kn">import</span> <span class="n">get_system_admin_page_bp</span>
 <span class="kn">from</span> <span class="nn">csle_rest_api.pages.logs_admin.routes</span> <span class="kn">import</span> <span class="n">get_logs_admin_page_bp</span>
 <span class="kn">from</span> <span class="nn">csle_rest_api.pages.server_cluster.routes</span> <span class="kn">import</span> <span class="n">get_server_cluster_page_bp</span>
+<span class="kn">from</span> <span class="nn">csle_rest_api.pages.create_emulation.routes</span> <span class="kn">import</span> <span class="n">get_new_emulation_page_bp</span>
 <span class="kn">from</span> <span class="nn">csle_rest_api.resources.node_exporter.routes</span> <span class="kn">import</span> <span class="n">node_exporter_bp</span>
 <span class="kn">from</span> <span class="nn">csle_rest_api.resources.prometheus.routes</span> <span class="kn">import</span> <span class="n">prometheus_bp</span>
 <span class="kn">from</span> <span class="nn">csle_rest_api.resources.cadvisor.routes</span> <span class="kn">import</span> <span class="n">cadvisor_bp</span>
@@ -141,6 +140,7 @@
 <span class="kn">from</span> <span class="nn">csle_rest_api.resources.server_cluster.routes</span> <span class="kn">import</span> <span class="n">server_cluster_bp</span>
 <span class="kn">from</span> <span class="nn">csle_rest_api.resources.version.routes</span> <span class="kn">import</span> <span class="n">version_bp</span>
 <span class="kn">from</span> <span class="nn">csle_rest_api.resources.logs.routes</span> <span class="kn">import</span> <span class="n">logs_bp</span>
+<span class="kn">from</span> <span class="nn">csle_rest_api.resources.create_emulation.routes</span> <span class="kn">import</span> <span class="n">create_emulation_bp</span>
 <span class="kn">from</span> <span class="nn">csle_rest_api.web_sockets.container_terminal.container_terminal</span> <span class="kn">import</span> <span class="n">get_container_terminal_bp</span>
 <span class="kn">import</span> <span class="nn">csle_rest_api.constants.constants</span> <span class="k">as</span> <span class="nn">api_constants</span>
 
@@ -184,6 +184,9 @@
     <span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">get_server_cluster_page_bp</span><span class="p">(</span><span class="n">static_folder</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;../../</span><span class="si">{</span><span class="n">static_folder</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">),</span>
                            <span class="n">url_prefix</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}</span><span class="s2">&quot;</span>
                                       <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">SERVER_CLUSTER_PAGE_RESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">get_new_emulation_page_bp</span><span class="p">(</span><span class="n">static_folder</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;../../</span><span class="si">{</span><span class="n">static_folder</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">),</span>
+                           <span class="n">url_prefix</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}</span><span class="s2">&quot;</span>
+                                      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">CREATE_EMULATION_PAGE_RESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">cadvisor_bp</span><span class="p">,</span>
                            <span class="n">url_prefix</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">CADVISOR_RESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">pgadmin_bp</span><span class="p">,</span>
@@ -347,6 +350,9 @@
     <span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">logs_bp</span><span class="p">,</span>
                            <span class="n">url_prefix</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}</span><span class="s2">&quot;</span>
                                       <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">LOGS_RESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">create_emulation_bp</span><span class="p">,</span>
+                           <span class="n">url_prefix</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}</span><span class="s2">&quot;</span>
+                                      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">CREATE_EMULATION_RESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="n">web_sockets_container_terminal_bp</span> <span class="o">=</span> <span class="n">get_container_terminal_bp</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
     <span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">web_sockets_container_terminal_bp</span><span class="p">)</span>
 
@@ -390,7 +396,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
+    <p>&#169; Copyright 2020-2024, Kim Hammar.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

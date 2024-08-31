@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>gym_csle_intrusion_response_game.util.intrusion_response_game_util &mdash; gym-csle-intrusion-response-game 0.3.0 documentation</title>
+  <title>gym_csle_intrusion_response_game.util.intrusion_response_game_util &mdash; gym-csle-intrusion-response-game 0.7.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,9 +13,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -56,9 +54,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">gym_csle_intrusion_response_game.util.intrusion_response_game_util</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>gym_csle_intrusion_response_game.util.intrusion_response_game_util</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -210,7 +208,7 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Initial state not recognized&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="IntrusionResponseGameUtil.local_initial_state_distribution"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_initial_state_distribution">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">local_initial_state_distribution</span><span class="p">(</span><span class="n">initial_state_idx</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">local_initial_state_distribution</span><span class="p">(</span><span class="n">initial_state_idx</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the initial state distribution</span>
 
@@ -223,7 +221,7 @@
         <span class="k">return</span> <span class="n">rho</span></div>
 
 <div class="viewcode-block" id="IntrusionResponseGameUtil.local_initial_defender_belief"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_initial_defender_belief">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">local_initial_defender_belief</span><span class="p">(</span><span class="n">S_A</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">local_initial_defender_belief</span><span class="p">(</span><span class="n">S_A</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the initial defender belief for a local version of the game</span>
 
@@ -235,7 +233,7 @@
         <span class="k">return</span> <span class="n">d_b1</span></div>
 
 <div class="viewcode-block" id="IntrusionResponseGameUtil.local_initial_attacker_belief"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_initial_attacker_belief">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">local_initial_attacker_belief</span><span class="p">(</span><span class="n">S_D</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">initial_zone</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">local_initial_attacker_belief</span><span class="p">(</span><span class="n">S_D</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">initial_zone</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the initial attacker belief for a local version of the game</span>
 
@@ -340,7 +338,7 @@
         <span class="k">return</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">impact</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="ow">not</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">is_local_state_shutdown_or_redirect</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="IntrusionResponseGameUtil.constant_defender_action_costs"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.constant_defender_action_costs">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">constant_defender_action_costs</span><span class="p">(</span><span class="n">A1</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int_</span><span class="p">],</span> <span class="n">constant_cost</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">constant_defender_action_costs</span><span class="p">(</span><span class="n">A1</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int_</span><span class="p">],</span> <span class="n">constant_cost</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a vector with the local defender action costs where each action has the same constant cost</span>
 
@@ -367,7 +365,7 @@
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_zones</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)))</span></div>
 
 <div class="viewcode-block" id="IntrusionResponseGameUtil.constant_zone_utilities"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.constant_zone_utilities">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">constant_zone_utilities</span><span class="p">(</span><span class="n">zones</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int_</span><span class="p">],</span> <span class="n">constant_utility</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">constant_zone_utilities</span><span class="p">(</span><span class="n">zones</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int_</span><span class="p">],</span> <span class="n">constant_utility</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a vector with the zone utilities where each zone has the same constant utility</span>
 
@@ -382,7 +380,7 @@
 
 <div class="viewcode-block" id="IntrusionResponseGameUtil.constant_zone_detection_probabilities"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.constant_zone_detection_probabilities">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">constant_zone_detection_probabilities</span><span class="p">(</span><span class="n">zones</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int_</span><span class="p">],</span> <span class="n">constant_detection_prob</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> \
-            <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">]:</span>
+            <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a vector with the zone detection probabilities where each zone as the same uniform detection</span>
 <span class="sd">        probability</span>
@@ -1278,7 +1276,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
+    <p>&#169; Copyright 2020-2024, Kim Hammar.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

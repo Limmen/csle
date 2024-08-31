@@ -10,6 +10,7 @@ Subpackages
    csle_system_identification.base
    csle_system_identification.constants
    csle_system_identification.empirical
+   csle_system_identification.environment_evaluations
    csle_system_identification.expectation_maximization
    csle_system_identification.gp
    csle_system_identification.job_controllers

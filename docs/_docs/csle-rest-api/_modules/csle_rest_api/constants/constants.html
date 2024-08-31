@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_rest_api.constants.constants &mdash; csle-rest-api 0.3.0 documentation</title>
+  <title>csle_rest_api.constants.constants &mdash; csle-rest-api 0.7.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,9 +13,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -57,9 +55,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">csle_rest_api.constants.constants</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>csle_rest_api.constants.constants</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -99,6 +97,7 @@
     <span class="n">REGISTER_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;register-page&quot;</span>
     <span class="n">EMULATION_STATISTICS_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;emulation-statistics-page&quot;</span>
     <span class="n">EMULATIONS_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;emulations-page&quot;</span>
+    <span class="n">CREATE_EMULATION_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;create-emulation-page&quot;</span>
     <span class="n">IMAGES_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;images-page&quot;</span>
     <span class="n">DOWNLOADS_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;downloads-page&quot;</span>
     <span class="n">SERVER_CLUSTER_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;server-cluster-page&quot;</span>
@@ -256,6 +255,7 @@
     <span class="n">NAME_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;name&quot;</span>
     <span class="n">SIZE_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;size&quot;</span>
     <span class="n">TRAINING_JOBS_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;training-jobs&quot;</span>
+    <span class="n">CREATE_EMULATION_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;create-emulation&quot;</span>
     <span class="n">DATA_COLLECTION_JOBS_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;data-collection-jobs&quot;</span>
     <span class="n">SYSTEM_IDENTIFICATION_JOBS_RESOUCE</span> <span class="o">=</span> <span class="s2">&quot;system-identification-jobs&quot;</span>
     <span class="n">LOGS_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;logs&quot;</span>
@@ -315,6 +315,81 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">EXPIRE_TIME_HOURS</span> <span class="o">=</span> <span class="mi">48</span></div>
+
+
+<div class="viewcode-block" id="CREATE_EMULATION_PAGE"><a class="viewcode-back" href="../../../csle_rest_api.constants.html#csle_rest_api.constants.constants.CREATE_EMULATION_PAGE">[docs]</a><span class="k">class</span> <span class="nc">CREATE_EMULATION_PAGE</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constants related to crete_emulation_page resource</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">EMULATION_NAME</span> <span class="o">=</span> <span class="s2">&quot;emulationName&quot;</span>
+    <span class="n">EMULATION_LEVEL</span> <span class="o">=</span> <span class="s2">&quot;emulationLevel&quot;</span>
+    <span class="n">EMULATION_VERSION</span> <span class="o">=</span> <span class="s2">&quot;emulationVersion&quot;</span>
+    <span class="n">EMULATION_DESCRIPTION</span> <span class="o">=</span> <span class="s2">&quot;emulationDescription&quot;</span>
+    <span class="n">EMULATION_IDS_ENABLED</span> <span class="o">=</span> <span class="s2">&quot;emulationIdsEnabled&quot;</span>
+    <span class="n">EMULATION_CONTAINER</span> <span class="o">=</span> <span class="s2">&quot;emulationContainer&quot;</span>
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s2">&quot;name&quot;</span>
+    <span class="n">OS</span> <span class="o">=</span> <span class="s2">&quot;os&quot;</span>
+    <span class="n">VERSION</span> <span class="o">=</span> <span class="s2">&quot;version&quot;</span>
+    <span class="n">LEVEL</span> <span class="o">=</span> <span class="s2">&quot;level&quot;</span>
+    <span class="n">RESTART_POLICY</span> <span class="o">=</span> <span class="s2">&quot;restartPolicy&quot;</span>
+    <span class="n">INTERFACES</span> <span class="o">=</span> <span class="s2">&quot;interfaces&quot;</span>
+    <span class="n">IP</span> <span class="o">=</span> <span class="s2">&quot;ip&quot;</span>
+    <span class="n">SUBNET_MASK</span> <span class="o">=</span> <span class="s2">&quot;subnetMask&quot;</span>
+    <span class="n">SUBNET_PREFIX</span> <span class="o">=</span> <span class="s2">&quot;subnetPrefix&quot;</span>
+    <span class="n">PHYSICAL_INTERFACE</span> <span class="o">=</span> <span class="s2">&quot;physicalInterface&quot;</span>
+    <span class="n">BITMASK</span> <span class="o">=</span> <span class="s2">&quot;bitmask&quot;</span>
+    <span class="n">HACKER</span> <span class="o">=</span> <span class="s2">&quot;hacker&quot;</span>
+    <span class="n">ROUTER</span> <span class="o">=</span> <span class="s2">&quot;router&quot;</span>
+    <span class="n">VULNS</span> <span class="o">=</span> <span class="s2">&quot;vulns&quot;</span>
+    <span class="n">VULN_SERVICE</span> <span class="o">=</span> <span class="s2">&quot;vulnService&quot;</span>
+    <span class="n">SERVICE_IP</span> <span class="o">=</span> <span class="s2">&quot;serviceIp&quot;</span>
+    <span class="n">FLAG_ID</span> <span class="o">=</span> <span class="s2">&quot;flagId&quot;</span>
+    <span class="n">FLAG_SCORE</span> <span class="o">=</span> <span class="s2">&quot;flagScore&quot;</span>
+    <span class="n">FLAG_PERMISSION</span> <span class="o">=</span> <span class="s2">&quot;flagPermission&quot;</span>
+    <span class="n">EMULATION_TIME_STEP_LENGTH</span> <span class="o">=</span> <span class="s2">&quot;emulationTimeStepLength&quot;</span>
+    <span class="n">EMULATION_NETWORK_ID</span> <span class="o">=</span> <span class="s2">&quot;emulationNetworkId&quot;</span>
+    <span class="n">CPU</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span>
+    <span class="n">MEM</span> <span class="o">=</span> <span class="s2">&quot;mem&quot;</span>
+    <span class="n">LIMIT_PACKETS_QUEUE</span> <span class="o">=</span> <span class="s2">&quot;limitPacketsQueue&quot;</span>
+    <span class="n">PACKET_DELAY_MS</span> <span class="o">=</span> <span class="s2">&quot;packetDelayMs&quot;</span>
+    <span class="n">PACKET_DELAY_JITTER_MS</span> <span class="o">=</span> <span class="s2">&quot;packetDelayJitterMs&quot;</span>
+    <span class="n">PACKET_DELAY_CORRELATION_PERCENTAGE</span> <span class="o">=</span> <span class="s2">&quot;packetDelayCorrelationPercentage&quot;</span>
+    <span class="n">PACKET_DELAY_DISTRIBUTION</span> <span class="o">=</span> <span class="s2">&quot;packetDelayDistribution&quot;</span>
+    <span class="n">PACKET_LOSS_TYPE</span> <span class="o">=</span> <span class="s2">&quot;packetLossType&quot;</span>
+    <span class="n">LOSS_GE_MODEL_P</span> <span class="o">=</span> <span class="s2">&quot;lossGemodelp&quot;</span>
+    <span class="n">LOSS_GE_MODEL_R</span> <span class="o">=</span> <span class="s2">&quot;lossGemodelr&quot;</span>
+    <span class="n">LOSS_GE_MODEL_K</span> <span class="o">=</span> <span class="s2">&quot;lossGemodelk&quot;</span>
+    <span class="n">LOSS_GE_MODEL_H</span> <span class="o">=</span> <span class="s2">&quot;lossGemodelh&quot;</span>
+    <span class="n">PACKET_CORRUPT_PERCENTAGE</span> <span class="o">=</span> <span class="s2">&quot;packetCorruptPercentage&quot;</span>
+    <span class="n">PACKET_CORRUPT_CORRELATION_PERCENTAGE</span> <span class="o">=</span> <span class="s2">&quot;packetCorruptCorrelationPercentage&quot;</span>
+    <span class="n">PACKET_DUPLICATE_PERCENTAGE</span> <span class="o">=</span> <span class="s2">&quot;packetDuplicatePercentage&quot;</span>
+    <span class="n">PACKET_DUPLICATE_CORRELATION_PERCENTAGE</span> <span class="o">=</span> <span class="s2">&quot;packetDuplicateCorrelationPercentage&quot;</span>
+    <span class="n">PACKET_REORDER_PERCENTAGE</span> <span class="o">=</span> <span class="s2">&quot;packetReorderPercentage&quot;</span>
+    <span class="n">PACKET_REORDER_CORRELATION_PERCENTAGE</span> <span class="o">=</span> <span class="s2">&quot;packetReorderCorrelationPercentage&quot;</span>
+    <span class="n">PACKET_REORDER_GAP</span> <span class="o">=</span> <span class="s2">&quot;packetReorderGap&quot;</span>
+    <span class="n">RATE_LIMIT_MBIT</span> <span class="o">=</span> <span class="s2">&quot;rateLimitMbit&quot;</span>
+    <span class="n">PACKET_OVERHEAD_BYTES</span> <span class="o">=</span> <span class="s2">&quot;packetOverheadBytes&quot;</span>
+    <span class="n">CELL_OVERHEAD_BYTES</span> <span class="o">=</span> <span class="s2">&quot;cellOverheadBytes&quot;</span>
+    <span class="n">DEFAULT_GATEWAY</span> <span class="o">=</span> <span class="s2">&quot;defaultGateway&quot;</span>
+    <span class="n">DEFAULT_INPUT</span> <span class="o">=</span> <span class="s2">&quot;defaultInput&quot;</span>
+    <span class="n">DEFAULT_OUTPUT</span> <span class="o">=</span> <span class="s2">&quot;defaultOutput&quot;</span>
+    <span class="n">DEFAULT_FORWARD</span> <span class="o">=</span> <span class="s2">&quot;defaultForward&quot;</span>
+    <span class="n">ROOT</span> <span class="o">=</span> <span class="s2">&quot;root&quot;</span>
+    <span class="n">PW</span> <span class="o">=</span> <span class="s2">&quot;pw&quot;</span>
+    <span class="n">USER_NAME</span> <span class="o">=</span> <span class="s2">&quot;userName&quot;</span>
+    <span class="n">VULN_NAME</span> <span class="o">=</span> <span class="s2">&quot;vulnName&quot;</span>
+    <span class="n">VULN_TYPE</span> <span class="o">=</span> <span class="s2">&quot;vulnType&quot;</span>
+    <span class="n">PROTOCOL</span> <span class="o">=</span> <span class="s2">&quot;protocol&quot;</span>
+    <span class="n">VULN_ROOT</span> <span class="o">=</span> <span class="s2">&quot;vulnRoot&quot;</span>
+    <span class="n">VULN_CREDENTIALS</span> <span class="o">=</span> <span class="s2">&quot;vulnCredentials&quot;</span>
+    <span class="n">VULN_CRED_USERNAME</span> <span class="o">=</span> <span class="s2">&quot;vulnCredUsername&quot;</span>
+    <span class="n">VULN_CRED_PW</span> <span class="o">=</span> <span class="s2">&quot;vulnCredPw&quot;</span>
+    <span class="n">VULN_CRED_ROOT</span> <span class="o">=</span> <span class="s2">&quot;vulnCredRoot&quot;</span>
+    <span class="n">CLIENT</span> <span class="o">=</span> <span class="s2">&quot;client&quot;</span>
+    <span class="n">USERS</span> <span class="o">=</span> <span class="s2">&quot;users&quot;</span>
+    <span class="n">PORT</span> <span class="o">=</span> <span class="s2">&quot;port&quot;</span>
+    <span class="n">SERVICES</span> <span class="o">=</span> <span class="s2">&quot;services&quot;</span></div>
 </pre></div>
 
            </div>
@@ -324,7 +399,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
+    <p>&#169; Copyright 2020-2024, Kim Hammar.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

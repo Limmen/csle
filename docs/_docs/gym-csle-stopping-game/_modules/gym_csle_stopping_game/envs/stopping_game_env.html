@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>gym_csle_stopping_game.envs.stopping_game_env &mdash; gym-csle-stopping-game 0.6.0 documentation</title>
+  <title>gym_csle_stopping_game.envs.stopping_game_env &mdash; gym-csle-stopping-game 0.7.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,9 +13,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -56,9 +54,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">gym_csle_stopping_game.envs.stopping_game_env</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>gym_csle_stopping_game.envs.stopping_game_env</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -77,24 +75,10 @@
 <span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.base_env</span> <span class="kn">import</span> <span class="n">BaseEnv</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.simulation_trace</span> <span class="kn">import</span> <span class="n">SimulationTrace</span>
-<span class="kn">from</span> <span class="nn">csle_common.dao.training.policy</span> <span class="kn">import</span> <span class="n">Policy</span>
-<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_env_state</span> <span class="kn">import</span> <span class="n">EmulationEnvState</span>
-<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_env_config</span> <span class="kn">import</span> <span class="n">EmulationEnvConfig</span>
-<span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.simulation_env_config</span> <span class="kn">import</span> <span class="n">SimulationEnvConfig</span>
-<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_simulation_trace</span> <span class="kn">import</span> <span class="n">EmulationSimulationTrace</span>
-<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_stopping_actions</span> \
-    <span class="kn">import</span> <span class="nn">EmulationAttackerStoppingActions</span>
-<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_action</span> <span class="kn">import</span> <span class="n">EmulationAttackerAction</span>
-<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.defender.emulation_defender_stopping_actions</span> \
-    <span class="kn">import</span> <span class="nn">EmulationDefenderStoppingActions</span>
-<span class="kn">from</span> <span class="nn">csle_common.metastore.metastore_facade</span> <span class="kn">import</span> <span class="n">MetastoreFacade</span>
-<span class="kn">from</span> <span class="nn">csle_common.logging.log</span> <span class="kn">import</span> <span class="n">Logger</span>
-<span class="kn">from</span> <span class="nn">csle_system_identification.emulator</span> <span class="kn">import</span> <span class="n">Emulator</span>
 <span class="kn">from</span> <span class="nn">gym_csle_stopping_game.util.stopping_game_util</span> <span class="kn">import</span> <span class="n">StoppingGameUtil</span>
 <span class="kn">from</span> <span class="nn">gym_csle_stopping_game.dao.stopping_game_config</span> <span class="kn">import</span> <span class="n">StoppingGameConfig</span>
 <span class="kn">from</span> <span class="nn">gym_csle_stopping_game.dao.stopping_game_state</span> <span class="kn">import</span> <span class="n">StoppingGameState</span>
 <span class="kn">import</span> <span class="nn">gym_csle_stopping_game.constants.constants</span> <span class="k">as</span> <span class="nn">env_constants</span>
-<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_trace</span> <span class="kn">import</span> <span class="n">EmulationTrace</span>
 
 
 <div class="viewcode-block" id="StoppingGameEnv"><a class="viewcode-back" href="../../../gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv">[docs]</a><span class="k">class</span> <span class="nc">StoppingGameEnv</span><span class="p">(</span><span class="n">BaseEnv</span><span class="p">):</span>
@@ -112,7 +96,6 @@
 
         <span class="c1"># Initialize environment state</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">StoppingGameState</span><span class="p">(</span><span class="n">b1</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">b1</span><span class="p">,</span> <span class="n">L</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">L</span><span class="p">)</span>
-
         <span class="c1"># Setup spaces</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">attacker_observation_space</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">attacker_observation_space</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">defender_observation_space</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">defender_observation_space</span><span class="p">()</span>
@@ -143,7 +126,7 @@
         <span class="n">a1</span><span class="p">,</span> <span class="n">a2_profile</span> <span class="o">=</span> <span class="n">action_profile</span>
         <span class="n">pi2</span><span class="p">,</span> <span class="n">a2</span> <span class="o">=</span> <span class="n">a2_profile</span>
         <span class="k">assert</span> <span class="n">pi2</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">S</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="n">pi2</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">A1</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">pi2</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">A2</span><span class="p">)</span>
         <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">info</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -154,8 +137,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># Compute r, s&#39;, b&#39;,o&#39;</span>
             <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">R</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">l</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="n">a1</span><span class="p">][</span><span class="n">a2</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">s</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="n">StoppingGameUtil</span><span class="o">.</span><span class="n">sample_next_state</span><span class="p">(</span><span class="n">l</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">l</span><span class="p">,</span> <span class="n">a1</span><span class="o">=</span><span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="o">=</span><span class="n">a2</span><span class="p">,</span>
-                                                              <span class="n">T</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="n">StoppingGameUtil</span><span class="o">.</span><span class="n">sample_next_state</span><span class="p">(</span><span class="n">l</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">l</span><span class="p">,</span> <span class="n">a1</span><span class="o">=</span><span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="o">=</span><span class="n">a2</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
                                                               <span class="n">S</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">S</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">s</span><span class="p">)</span>
             <span class="n">o</span> <span class="o">=</span> <span class="n">StoppingGameUtil</span><span class="o">.</span><span class="n">sample_next_observation</span><span class="p">(</span><span class="n">Z</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">Z</span><span class="p">,</span>
                                                          <span class="n">O</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">O</span><span class="p">,</span> <span class="n">s_prime</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">s</span><span class="p">)</span>
@@ -316,95 +298,6 @@
         <span class="n">info</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">TIME_STEP</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">t</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">defender_obs</span><span class="p">,</span> <span class="n">attacker_obs</span><span class="p">),</span> <span class="n">info</span></div>
 
-<div class="viewcode-block" id="StoppingGameEnv.emulation_evaluation"><a class="viewcode-back" href="../../../gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.emulation_evaluation">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">emulation_evaluation</span><span class="p">(</span><span class="n">env</span><span class="p">:</span> <span class="s2">&quot;StoppingGameEnv&quot;</span><span class="p">,</span> <span class="n">n_episodes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">intrusion_seq</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationAttackerAction</span><span class="p">],</span>
-                             <span class="n">defender_policy</span><span class="p">:</span> <span class="n">Policy</span><span class="p">,</span>
-                             <span class="n">attacker_policy</span><span class="p">:</span> <span class="n">Policy</span><span class="p">,</span>
-                             <span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span>
-                             <span class="n">simulation_env_config</span><span class="p">:</span> <span class="n">SimulationEnvConfig</span>
-                             <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationSimulationTrace</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Utility function for evaluating a strategy profile in the emulation environment</span>
-
-<span class="sd">        :param env: the environment to use for evaluation</span>
-<span class="sd">        :param n_episodes: the number of evaluation episodes</span>
-<span class="sd">        :param intrusion_seq: the intrusion sequence for the evaluation (sequence of attacker actions)</span>
-<span class="sd">        :param defender_policy: the defender policy for the evaluation</span>
-<span class="sd">        :param attacker_policy: the attacker policy for the evaluation</span>
-<span class="sd">        :param emulation_env_config: configuration of the emulation environment for the evaluation</span>
-<span class="sd">        :param simulation_env_config: configuration of the simulation environment for the evaluation</span>
-<span class="sd">        :return: traces with the evaluation results</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span>
-        <span class="n">traces</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">s</span> <span class="o">=</span> <span class="n">EmulationEnvState</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">)</span>
-        <span class="n">s</span><span class="o">.</span><span class="n">initialize_defender_machines</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_episodes</span><span class="p">):</span>
-            <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="n">defender_obs_space</span> <span class="o">=</span> <span class="n">simulation_env_config</span><span class="o">.</span><span class="n">joint_observation_space_config</span><span class="o">.</span><span class="n">observation_spaces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">b</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">b1</span>
-            <span class="n">o</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-            <span class="p">(</span><span class="n">d_obs</span><span class="p">,</span> <span class="n">a_obs</span><span class="p">)</span> <span class="o">=</span> <span class="n">o</span>
-            <span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="n">s</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-            <span class="n">emulation_trace</span> <span class="o">=</span> <span class="n">EmulationTrace</span><span class="p">(</span><span class="n">initial_attacker_observation_state</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="p">,</span>
-                                             <span class="n">initial_defender_observation_state</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">defender_obs_state</span><span class="p">,</span>
-                                             <span class="n">emulation_name</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-            <span class="n">simulation_trace</span> <span class="o">=</span> <span class="n">SimulationTrace</span><span class="p">(</span><span class="n">simulation_env</span><span class="o">=</span><span class="n">env</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">env_name</span><span class="p">)</span>
-            <span class="k">while</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>
-                <span class="n">a1</span> <span class="o">=</span> <span class="n">defender_policy</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="n">d_obs</span><span class="p">)</span>
-                <span class="n">a2</span> <span class="o">=</span> <span class="n">attacker_policy</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="n">a_obs</span><span class="p">)</span>
-                <span class="n">o</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">((</span><span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">))</span>
-                <span class="p">(</span><span class="n">d_obs</span><span class="p">,</span> <span class="n">a_obs</span><span class="p">)</span> <span class="o">=</span> <span class="n">o</span>
-                <span class="n">r_1</span><span class="p">,</span> <span class="n">r_2</span> <span class="o">=</span> <span class="n">r</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;a1:</span><span class="si">{</span><span class="n">a1</span><span class="si">}</span><span class="s2">, a2:</span><span class="si">{</span><span class="n">a2</span><span class="si">}</span><span class="s2">, d_obs:</span><span class="si">{</span><span class="n">d_obs</span><span class="si">}</span><span class="s2">, a_obs:</span><span class="si">{</span><span class="n">a_obs</span><span class="si">}</span><span class="s2">, r:</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">, done:</span><span class="si">{</span><span class="n">done</span><span class="si">}</span><span class="s2">, info: </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">a1</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="n">defender_action</span> <span class="o">=</span> <span class="n">EmulationDefenderStoppingActions</span><span class="o">.</span><span class="n">CONTINUE</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">defender_action</span> <span class="o">=</span> <span class="n">EmulationDefenderStoppingActions</span><span class="o">.</span><span class="n">CONTINUE</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">env</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">s</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">t</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">intrusion_seq</span><span class="p">):</span>
-                        <span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
-                    <span class="n">attacker_action</span> <span class="o">=</span> <span class="n">intrusion_seq</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">attacker_action</span> <span class="o">=</span> <span class="n">EmulationAttackerStoppingActions</span><span class="o">.</span><span class="n">CONTINUE</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
-                <span class="n">emulation_trace</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="n">Emulator</span><span class="o">.</span><span class="n">run_actions</span><span class="p">(</span>
-                    <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span>
-                    <span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">attacker_action</span><span class="o">=</span><span class="n">attacker_action</span><span class="p">,</span>
-                    <span class="n">defender_action</span><span class="o">=</span><span class="n">defender_action</span><span class="p">,</span> <span class="n">trace</span><span class="o">=</span><span class="n">emulation_trace</span><span class="p">,</span>
-                    <span class="n">sleep_time</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">time_step_len_seconds</span><span class="p">)</span>
-                <span class="n">o_components</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">defender_obs_state</span><span class="o">.</span><span class="n">snort_ids_alert_counters</span><span class="o">.</span><span class="n">severe_alerts</span><span class="p">,</span>
-                                <span class="n">s</span><span class="o">.</span><span class="n">defender_obs_state</span><span class="o">.</span><span class="n">snort_ids_alert_counters</span><span class="o">.</span><span class="n">warning_alerts</span><span class="p">,</span>
-                                <span class="n">s</span><span class="o">.</span><span class="n">defender_obs_state</span><span class="o">.</span><span class="n">aggregated_host_metrics</span><span class="o">.</span><span class="n">num_failed_login_attempts</span><span class="p">]</span>
-                <span class="n">o_components_str</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">o_components</span><span class="p">)))</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;o_components:</span><span class="si">{</span><span class="n">o_components</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;observation_id_to_observation_vector_inv:&quot;</span>
-                             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">defender_obs_space</span><span class="o">.</span><span class="n">observation_id_to_observation_vector_inv</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;observation_id_to_observation_vector_inv:&quot;</span>
-                             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">o_components_str</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">defender_obs_space</span><span class="o">.</span><span class="n">observation_id_to_observation_vector_inv</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="n">emulation_o</span> <span class="o">=</span> <span class="mi">0</span>
-                <span class="k">if</span> <span class="n">o_components_str</span> <span class="ow">in</span> <span class="n">defender_obs_space</span><span class="o">.</span><span class="n">observation_id_to_observation_vector_inv</span><span class="p">:</span>
-                    <span class="n">emulation_o</span> <span class="o">=</span> <span class="n">defender_obs_space</span><span class="o">.</span><span class="n">observation_id_to_observation_vector_inv</span><span class="p">[</span><span class="n">o_components_str</span><span class="p">]</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;o:</span><span class="si">{</span><span class="n">emulation_o</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="n">b</span> <span class="o">=</span> <span class="n">StoppingGameUtil</span><span class="o">.</span><span class="n">next_belief</span><span class="p">(</span><span class="n">o</span><span class="o">=</span><span class="n">emulation_o</span><span class="p">,</span> <span class="n">a1</span><span class="o">=</span><span class="n">a1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">,</span> <span class="n">pi2</span><span class="o">=</span><span class="n">a2</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">env</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
-                                                 <span class="n">l</span><span class="o">=</span><span class="n">env</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">l</span><span class="p">,</span> <span class="n">a2</span><span class="o">=</span><span class="n">a2</span><span class="p">)</span>
-                <span class="n">d_obs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-                <span class="n">a_obs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;b:</span><span class="si">{</span><span class="n">b</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="n">simulation_trace</span><span class="o">.</span><span class="n">defender_rewards</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r_1</span><span class="p">)</span>
-                <span class="n">simulation_trace</span><span class="o">.</span><span class="n">attacker_rewards</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r_2</span><span class="p">)</span>
-                <span class="n">simulation_trace</span><span class="o">.</span><span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a2</span><span class="p">)</span>
-                <span class="n">simulation_trace</span><span class="o">.</span><span class="n">defender_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a1</span><span class="p">)</span>
-                <span class="n">simulation_trace</span><span class="o">.</span><span class="n">infos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
-                <span class="n">simulation_trace</span><span class="o">.</span><span class="n">states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-                <span class="n">simulation_trace</span><span class="o">.</span><span class="n">beliefs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-                <span class="n">simulation_trace</span><span class="o">.</span><span class="n">infrastructure_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">emulation_o</span><span class="p">)</span>
-
-            <span class="n">em_sim_trace</span> <span class="o">=</span> <span class="n">EmulationSimulationTrace</span><span class="p">(</span><span class="n">emulation_trace</span><span class="o">=</span><span class="n">emulation_trace</span><span class="p">,</span> <span class="n">simulation_trace</span><span class="o">=</span><span class="n">simulation_trace</span><span class="p">)</span>
-            <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">save_emulation_simulation_trace</span><span class="p">(</span><span class="n">em_sim_trace</span><span class="p">)</span>
-            <span class="n">traces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">em_sim_trace</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">traces</span></div>
-
 <div class="viewcode-block" id="StoppingGameEnv.render"><a class="viewcode-back" href="../../../gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;human&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Renders the environment.  Supported rendering modes: (1) human; and (2) rgb_array</span>
@@ -507,6 +400,8 @@
 <span class="sd">        :param l: the number of stops remaining</span>
 <span class="sd">        :return: the observation</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">history</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;History must not be empty&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">history</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span></div>
 
 <div class="viewcode-block" id="StoppingGameEnv.generate_random_particles"><a class="viewcode-back" href="../../../gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.generate_random_particles">[docs]</a>    <span class="k">def</span> <span class="nf">generate_random_particles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_particles</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>

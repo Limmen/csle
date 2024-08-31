@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_cluster.cluster_manager.cluster_manager &mdash; csle-cluster 0.6.0 documentation</title>
+  <title>csle_cluster.cluster_manager.cluster_manager &mdash; csle-cluster 0.7.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,9 +13,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -54,9 +52,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">csle_cluster.cluster_manager.cluster_manager</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>csle_cluster.cluster_manager.cluster_manager</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -2493,6 +2491,8 @@
                                               <span class="n">ip</span><span class="o">=</span><span class="n">container_config</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">())</span>
             <span class="k">return</span> <span class="n">csle_cluster</span><span class="o">.</span><span class="n">cluster_manager</span><span class="o">.</span><span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">OperationOutcomeDTO</span><span class="p">(</span><span class="n">outcome</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Container with ip: </span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">containerIp</span><span class="si">}</span><span class="s2"> not found in execution &quot;</span>
+                         <span class="sa">f</span><span class="s2">&quot;with id: </span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">ipFirstOctet</span><span class="si">}</span><span class="s2"> of emulation </span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">emulation</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">csle_cluster</span><span class="o">.</span><span class="n">cluster_manager</span><span class="o">.</span><span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">OperationOutcomeDTO</span><span class="p">(</span><span class="n">outcome</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ClusterManagerServicer.stopHostManagers"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager.ClusterManagerServicer.stopHostManagers">[docs]</a>    <span class="k">def</span> <span class="nf">stopHostManagers</span><span class="p">(</span>

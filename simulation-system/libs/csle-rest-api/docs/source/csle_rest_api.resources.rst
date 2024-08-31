@@ -11,6 +11,7 @@ Subpackages
    csle_rest_api.resources.cadvisor
    csle_rest_api.resources.cluster_status
    csle_rest_api.resources.config
+   csle_rest_api.resources.create_emulation
    csle_rest_api.resources.data_collection_jobs
    csle_rest_api.resources.docker
    csle_rest_api.resources.dqn_policies
