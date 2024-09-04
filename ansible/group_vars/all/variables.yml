@@ -61,6 +61,7 @@ csle_config:
   metastore_user: "csle"
   metastore_password: "csle"
   metastore_database_name: "csle"
+  version: "0.7.0"
   cluster_config:
     cluster_nodes:
       - ip: "34.142.42.219"
