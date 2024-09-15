@@ -188,3 +188,23 @@ class TestCSLECliSuite:
         runner = CliRunner()
         result = runner.invoke(ls, ["emulation_executions"])
         assert result.exit_code == 0
+
+    def test_ls_cluster(self) -> None:
+        """
+        Tests the ls command for clsuter
+
+        :return: None
+        """
+        runner = CliRunner()
+        result = runner.invoke(ls, ["cluster"])
+        assert result.exit_code == 0
+
+    def test_ls_images(self) -> None:
+        """
+        Tests the ls command for images
+
+        :return: None
+        """
+        runner = CliRunner()
+        result = runner.invoke(ls, ["images"])
+        assert result.exit_code == 0
