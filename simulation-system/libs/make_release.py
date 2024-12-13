@@ -4,55 +4,55 @@ import subprocess
 
 RELEASE_CONFIG = {
     "csle-base": {
-        "new_version": "'0.7.0'"
+        "new_version": "'0.7.1'"
     },
     "csle-ryu": {
-        "new_version": "'0.7.0'"
+        "new_version": "'0.7.1'"
     },
     "csle-collector": {
-        "new_version": "'0.7.0'"
+        "new_version": "'0.7.1'"
     },
     "csle-common": {
-        "new_version": "'0.7.0'"
+        "new_version": "'0.7.1'"
     },
     "csle-attacker": {
-        "new_version": "'0.7.0'"
+        "new_version": "'0.7.1'"
     },
     "csle-defender": {
-        "new_version": "'0.7.0'"
+        "new_version": "'0.7.1'"
     },
     "csle-system-identification": {
-        "new_version": "'0.7.0'"
+        "new_version": "'0.7.1'"
     },
     "gym-csle-stopping-game": {
-        "new_version": "'0.7.0'"
+        "new_version": "'0.7.1'"
     },
     "gym-csle-intrusion-response-game": {
-        "new_version": "'0.7.0'"
+        "new_version": "'0.7.1'"
     },
     "csle-agents": {
-        "new_version": "'0.7.0'"
+        "new_version": "'0.7.1'"
     },
     "csle-rest-api": {
-        "new_version": "'0.7.0'"
+        "new_version": "'0.7.1'"
     },
     "csle-cli": {
-        "new_version": "'0.7.0'"
+        "new_version": "'0.7.1'"
     },
     "csle-cluster": {
-        "new_version": "'0.7.0'"
+        "new_version": "'0.7.1'"
     },
     "csle-tolerance": {
-        "new_version": "'0.7.0'"
+        "new_version": "'0.7.1'"
     },
     "gym-csle-apt-game": {
-        "new_version": "'0.7.0'"
+        "new_version": "'0.7.1'"
     },
     "gym-csle-cyborg": {
-        "new_version": "'0.7.0'"
+        "new_version": "'0.7.1'"
     },
     "csle-attack-profiler": {
-        "new_version": "'0.7.0'"
+        "new_version": "'0.7.1'"
     }
 }
 
@@ -135,7 +135,7 @@ if __name__ == '__main__':
     print("Push to PyPi")
     for lib, versions in RELEASE_CONFIG.items():
         print(f"Uploading {lib} to PyPi")
-        p = subprocess.Popen(f"cd {lib}; python3 -m twine upload dist/*",
+        p = subprocess.Popen(f"cd {lib}; python3 -m twine upload --config-file ~/.pypirc dist/*",
                              stdout=subprocess.PIPE, shell=True)
         (output, err) = p.communicate()
         exit_code = p.wait()

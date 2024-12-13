@@ -1,0 +1,4 @@
+csle-common==0.7.1
+csle-agents==0.7.1
+gym-csle-cyborg==0.7.1
+numpy==1.23.5
