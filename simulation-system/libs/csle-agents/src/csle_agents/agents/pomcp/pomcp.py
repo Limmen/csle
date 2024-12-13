@@ -24,7 +24,8 @@ class POMCP:
     def __init__(self, A: List[int], gamma: float, env: BaseEnv, c: float,
                  initial_particles: List[Any], planning_time: float = 0.5, max_particles: int = 350,
                  reinvigoration: bool = False,
-                 reinvigorated_particles_ratio: float = 0.1, rollout_policy: Union[Policy, None] = None,
+                 reinvigorated_particles_ratio: float = 0.1,
+                 rollout_policy: Union[Policy, None] = None,
                  value_function: Union[Callable[[Any], float], None] = None, verbose: bool = False,
                  default_node_value: float = 0, prior_weight: float = 1.0, prior_confidence: int = 0,
                  acquisition_function_type: POMCPAcquisitionFunctionType = POMCPAcquisitionFunctionType.UCB,
@@ -250,14 +251,16 @@ class POMCP:
         :param max_planning_depth: the max depth for planning
         :return: None
         """
-        Logger.__call__().get_logger().info(
-            f"Starting POMCP, max rollout depth: {max_rollout_depth}, max planning depth: {max_planning_depth}, "
-            f"c: {self.c}, planning time: {self.planning_time}, gamma: {self.gamma}, "
-            f"max particles: {self.max_particles}, "
-            f"reinvigorated_particles_ratio: {self.reinvigorated_particles_ratio}, prior weight: {self.prior_weight}, "
-            f"acquisiton: {self.acquisition_function_type.value}, c2: {self.c2}, prune: {self.prune_action_space}, "
-            f"prune size: {self.prune_size}, use_rollout_policy: {self.use_rollout_policy}, "
-            f"prior confidence: {self.prior_confidence}")
+        if self.verbose:
+            Logger.__call__().get_logger().info(
+                f"Starting POMCP, max rollout depth: {max_rollout_depth}, max planning depth: {max_planning_depth}, "
+                f"c: {self.c}, planning time: {self.planning_time}, gamma: {self.gamma}, "
+                f"max particles: {self.max_particles}, "
+                f"reinvigorated_particles_ratio: {self.reinvigorated_particles_ratio}, "
+                f"prior weight: {self.prior_weight}, "
+                f"acquisiton: {self.acquisition_function_type.value}, c2: {self.c2}, prune: {self.prune_action_space}, "
+                f"prune size: {self.prune_size}, use_rollout_policy: {self.use_rollout_policy}, "
+                f"prior confidence: {self.prior_confidence}")
         self.num_simulation_steps = 0
         begin = time.time()
         n = 0
@@ -289,7 +292,8 @@ class POMCP:
                     f"count: {self.tree.root.children[best_action_idx].visit_count}, "
                     f"planning depth: {depth}, counts: "
                     f"{sorted(counts, reverse=True)[0:5]}, values: {sorted(values, reverse=True)[0:5]}")
-        Logger.__call__().get_logger().info(f"Planning complete, num simulation steps: {self.num_simulation_steps}")
+        if self.verbose:
+            Logger.__call__().get_logger().info(f"Planning complete, num simulation steps: {self.num_simulation_steps}")
 
     def get_action(self) -> int:
         """
@@ -300,9 +304,10 @@ class POMCP:
         """
         root = self.tree.root
         action_vals = [(action.value - 10 / (action.visit_count + 1), action.action) for action in root.children]
-        for a in root.children:
-            Logger.__call__().get_logger().info(f"action: {a.action}, value: {a.value}, "
-                                                f"visit count: {a.visit_count}")
+        if self.verbose:
+            for a in root.children:
+                Logger.__call__().get_logger().info(f"action: {a.action}, value: {a.value}, "
+                                                    f"visit count: {a.visit_count}")
         return int(max(action_vals)[1])
 
     def update_tree_with_new_samples(self, action_sequence: List[int], observation: int, t: int) -> List[Any]:
@@ -358,7 +363,8 @@ class POMCP:
         else:
             raise ValueError("Invalid root node")
         if particle_slots > 0:
-            Logger.__call__().get_logger().info(f"Filling {particle_slots} particles")
+            if self.verbose:
+                Logger.__call__().get_logger().info(f"Filling {particle_slots} particles")
             particles = []
             # fill particles by Monte-Carlo using reject sampling
             count = 0
@@ -373,7 +379,7 @@ class POMCP:
                     count = 0
                 else:
                     count += 1
-                if count >= 80000:
+                if count >= 50000:
                     target = root.sample_state().red_agent_target
                     Logger.__call__().get_logger().info(
                         f"Invalid observation: {observation}, target: {target}, "
@@ -394,11 +400,13 @@ class POMCP:
         self.tree.root = new_root
 
         # Prune children
-        Logger.__call__().get_logger().info("Pruning children")
+        if self.verbose:
+            Logger.__call__().get_logger().info("Pruning children")
         feasible_actions = (
             self.env.get_actions_from_particles(particles=self.tree.root.particles, t=t, observation=observation,
                                                 verbose=True))
-        Logger.__call__().get_logger().info(f"feasible actions: {feasible_actions}")
+        if self.verbose:
+            Logger.__call__().get_logger().info(f"feasible actions: {feasible_actions}")
         children = []
         for ch in self.tree.root.children:
             if ch.action in feasible_actions:

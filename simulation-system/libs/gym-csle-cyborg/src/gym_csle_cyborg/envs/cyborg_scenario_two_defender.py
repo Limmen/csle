@@ -690,6 +690,7 @@ class CyborgScenarioTwoDefender(BaseEnv):
         obs_vector = CyborgEnvUtil.state_to_vector(state=CyborgScenarioTwoDefender.table(env=env).rows,
                                                    decoy_state=decoy_state,
                                                    host_ids=host_ids, scan_state=scan_state, observation=True)
+        print(obs_vector)
         obs_id = CyborgEnvUtil.state_vector_to_state_id(state_vector=obs_vector, observation=True)
         return obs_id
 

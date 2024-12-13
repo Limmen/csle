@@ -1,4 +1,4 @@
-# POMCP for defender planning in cyborg
+# POMCP for defender planning in RAMPART CASTLE environment
 
 ## Commands
 

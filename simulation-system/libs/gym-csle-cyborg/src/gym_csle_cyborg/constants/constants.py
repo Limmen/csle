@@ -62,6 +62,7 @@ class CYBORG:
     OBS_PER_HOST = "obs_per_host"
     ACTIVITY = "activity"
     SCANNED_STATE = "scanned_state"
+    DECOY_STATE = "decoy_state"
     COMPROMISED = "compromised"
     NOT_SCANNED = 0
     SCANNED = 1
