@@ -1,6 +1,8 @@
 .idea
 .vscode
 
+test_*
+
 */*.log
 
 *.log

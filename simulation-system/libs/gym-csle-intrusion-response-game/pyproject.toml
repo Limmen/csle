@@ -1,3 +1,6 @@
+[project]
+license = { file = "LICENSE.md" }
+
 [build-system]
 requires = ["setuptools==68.0.0", "gymnasium>=0.27.1"]
 build-backend = "setuptools.build_meta"
