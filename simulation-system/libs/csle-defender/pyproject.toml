@@ -1,5 +1,26 @@
 [project]
+name = "csle-defender"
+description = "Scripts for emulated defenses in CSLE"
+dynamic = ["version"]
 license = { file = "LICENSE.md" }
+readme = "README.md"
+keywords = ["Reinforcement-Learning", "Cyber-Security", "Markov-Games", "Markov-Decision-Processes"]
+maintainers = [
+    { name = "Kim Hammar", email = "kimham@kth.se" },
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Intended Audience :: Science/Research"
+]
+
+[project.urls]
+"Homepage" = "https://limmen.dev/csle"
+"Source" = "https://github.com/Limmen/csle"
 
 [build-system]
 requires = ["setuptools==75.7.0"]
