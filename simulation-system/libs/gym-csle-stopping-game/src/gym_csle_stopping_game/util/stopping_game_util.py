@@ -107,15 +107,15 @@ class StoppingGameUtil:
                     [
                         # Attacker continues
                         [
-                            [1, 0, 0],  # No intrusion
-                            [0, 1 - 1 / (2 * l), 1 / (2 * l)],  # Intrusion
-                            [0, 0, 1]  # Terminal
+                            [1.0, 0.0, 0.0],  # No intrusion
+                            [0.0, 1.0, 0.0],  # Intrusion
+                            [0.0, 0.0, 1.0]  # Terminal
                         ],
                         # Attacker stops
                         [
-                            [0, 1, 0],  # No intrusion
-                            [0, 0, 1],  # Intrusion
-                            [0, 0, 1]  # Terminal
+                            [0.0, 1.0, 0.0],  # No intrusion
+                            [0.0, 0.0, 1.0],  # Intrusion
+                            [0.0, 0.0, 1.0]  # Terminal
                         ]
                     ],
 
@@ -123,15 +123,15 @@ class StoppingGameUtil:
                     [
                         # Attacker continues
                         [
-                            [0, 0, 1],  # No intrusion
-                            [0, 0, 1],  # Intrusion
-                            [0, 0, 1]  # Terminal
+                            [0.0, 0.0, 1.0],  # No intrusion
+                            [0.0, 0.0, 1.0],  # Intrusion
+                            [0.0, 0.0, 1.0]  # Terminal
                         ],
                         # Attacker stops
                         [
-                            [0, 0, 1],  # No Intrusion
-                            [0, 0, 1],  # Intrusion
-                            [0, 0, 1]  # Terminal
+                            [0.0, 0.0, 1.0],  # No Intrusion
+                            [0.0, 0.0, 1.0],  # Intrusion
+                            [0.0, 0.0, 1.0]  # Terminal
                         ]
                     ]
                 ]
@@ -141,15 +141,15 @@ class StoppingGameUtil:
                     [
                         # Attacker continues
                         [
-                            [1, 0, 0],  # No intrusion
-                            [0, 1 - 1 / (2 * l), 1 / (2 * l)],  # Intrusion
-                            [0, 0, 1]  # Terminal
+                            [1.0, 0.0, 0.0],  # No intrusion
+                            [0.0, 1.0 - 1.0 / (2.0 * l), 1.0 / (2.0 * l)],  # Intrusion
+                            [0.0, 0.0, 1.0]  # Terminal
                         ],
                         # Attacker stops
                         [
-                            [0, 1, 0],  # No intrusion
-                            [0, 0, 1],  # Intrusion
-                            [0, 0, 1]  # Terminal
+                            [0.0, 1.0, 0.0],  # No intrusion
+                            [0.0, 0.0, 1.0],  # Intrusion
+                            [0.0, 0.0, 1.0]  # Terminal
                         ]
                     ],
 
@@ -157,15 +157,15 @@ class StoppingGameUtil:
                     [
                         # Attacker continues
                         [
-                            [1, 0, 0],  # No intrusion
-                            [0, 1 - 1 / (2 * l), 1 / (2 * l)],  # Intrusion
-                            [0, 0, 1]  # Terminal
+                            [1.0, 0.0, 0.0],  # No intrusion
+                            [0.0, 1.0 - 1.0 / (2.0 * l), 1.0 / (2.0 * l)],  # Intrusion
+                            [0.0, 0.0, 1.0]  # Terminal
                         ],
                         # Attacker stops
                         [
-                            [0, 1, 0],  # No Intrusion
-                            [0, 0, 1],  # Intrusion
-                            [0, 0, 1]  # Terminal
+                            [0.0, 1.0, 0.0],  # No Intrusion
+                            [0.0, 0.0, 1.0],  # Intrusion
+                            [0.0, 0.0, 1.0]  # Terminal
                         ]
                     ]
                 ]
@@ -404,12 +404,14 @@ class StoppingGameUtil:
         for i in range(T.shape[0]):
             for j in range(T.shape[2]):
                 for k in range(T.shape[3]):
-                    if j == 0:
-                        reduced_T[i][j][k] = T[i][0][j][k] * (1 - strategy.probability(j, 0)) + T[i][1][j][
-                            k] * strategy.probability(j, 1)
-                    else:
-                        reduced_T[i][j][k] = (T[i][0][j][k] * (1 - strategy.probability(j, 0)) + T[i][1][j][k] *
-                                              strategy.probability(j, 1))
+                    reduced_T[i][j][k] = T[i][0][j][k] * strategy.probability(j, 0) + T[i][1][j][
+                        k] * strategy.probability(j, 1)
+                    # if j == 0:
+                    #     reduced_T[i][j][k] = T[i][0][j][k] * strategy.probability(j, 0) + T[i][1][j][
+                    #         k] * strategy.probability(j, 1)
+                    # else:
+                    #     reduced_T[i][j][k] = (T[i][0][j][k] * (1 - strategy.probability(j, 0)) + T[i][1][j][k] *
+                    #                           strategy.probability(j, 1))
         return reduced_T
 
     @staticmethod
@@ -426,12 +428,8 @@ class StoppingGameUtil:
         reduced_R = np.zeros((R.shape[0], R.shape[2]))
         for i in range(R.shape[0]):
             for j in range(R.shape[2]):
-                if j == 0:
-                    reduced_R[i][j] = (R[i][0][j] * (1 - strategy.probability(j, 0)) + R[i][1][j] *
-                                       strategy.probability(j, 1))
-                else:
-                    reduced_R[i][j] = (R[i][0][j] * (1 - strategy.probability(j, 0)) + R[i][1][j] *
-                                       strategy.probability(j, 1))
+                reduced_R[i][j] = (R[i][0][j] * strategy.probability(j, 0) + R[i][1][j] *
+                                   strategy.probability(j, 1))
         return reduced_R
 
     @staticmethod
@@ -529,6 +527,9 @@ class StoppingGameUtil:
         # Convert integer allocations to belief points by dividing each k_i by n
         belief_points = [list(k_i / n for k_i in k) for k in combinations]
 
+        # Remove all beliefs that violate the stopping dynamics
+        belief_points = list(filter(lambda x: x[-1] == 1.0 or x[-1] == 0.0, belief_points))
+
         return np.array(belief_points)
 
     @staticmethod
@@ -545,12 +546,13 @@ class StoppingGameUtil:
         :return: the reward tensor of the aggregate belief MDP
         """
         belief_R = np.zeros((len(A), len(aggregate_belief_space)))
+        belief_space_list = aggregate_belief_space.tolist()
         for a in A:
             for b in aggregate_belief_space:
                 expected_reward = 0
                 for s in S:
-                    expected_reward += R[s][a] * b[s]
-                belief_R[a][b] = expected_reward
+                    expected_reward += R[a][s] * b[s]
+                belief_R[a][belief_space_list.index(b.tolist())] = expected_reward
         return belief_R
 
     @staticmethod
@@ -568,17 +570,20 @@ class StoppingGameUtil:
         :param Z: the observation tensor of the POMDP
         :return: the aggregate belief space operator
         """
+        belief_space_list = aggregate_belief_space.tolist()
         belief_T = np.zeros((len(A), len(aggregate_belief_space), len(aggregate_belief_space)))
         for a in A:
             for b1 in aggregate_belief_space:
                 for b2 in aggregate_belief_space:
-                    belief_T[a][b1][b2] = StoppingGameUtil.aggregate_belief_transition_probability(
-                        b1=b1, b2=b2, a=a, S=S, O=O, T=T, Z=Z, aggregate_belief_space=aggregate_belief_space)
+                    belief_T[a][belief_space_list.index(b1.tolist())][belief_space_list.index(b2.tolist())] \
+                        = StoppingGameUtil.aggregate_belief_transition_probability(
+                        b1=b1, b2=b2, a=a, S=S, O=O, T=T, Z=Z, aggregate_belief_space=aggregate_belief_space, A=A)
         return belief_T
 
     @staticmethod
     def aggregate_belief_transition_probability(b1: npt.NDArray[np.float_], b2: npt.NDArray[np.float_], a: int,
                                                 S: npt.NDArray[np.int_], O: npt.NDArray[np.int_],
+                                                A: npt.NDArray[np.int_],
                                                 T: npt.NDArray[np.float_], Z: npt.NDArray[np.float_],
                                                 aggregate_belief_space: npt.NDArray[np.float_]) -> float:
         """
@@ -589,6 +594,7 @@ class StoppingGameUtil:
         :param a: the action
         :param S: the state space of the POMDP
         :param O: the observation space of the POMDP
+        :param A: the action space of the POMDP
         :param T: the transition operator
         :param Z: the observation tensor
         :param aggregate_belief_space: the aggregate belief space
@@ -596,11 +602,13 @@ class StoppingGameUtil:
         """
         prob = 0
         for o in O:
+            if sum([Z[a][s_prime][o] * b1[s] * T[a][s][s_prime] for s in S for s_prime in S]) == 0:
+                continue
             b_prime = StoppingGameUtil.pomdp_next_belief(
                 o=o, a=a, b=b1, states=S, observations=O, observation_tensor=Z, transition_tensor=T)
             nearest_neighbor = StoppingGameUtil.find_nearest_neighbor_belief(belief_space=aggregate_belief_space,
                                                                              target_belief=b_prime)
-            if nearest_neighbor == b2:
+            if np.array_equal(nearest_neighbor, b2):
                 for s in S:
                     for s_prime in S:
                         prob += Z[a][s_prime][o] * b1[s] * T[a][s][s_prime]
@@ -609,7 +617,8 @@ class StoppingGameUtil:
     @staticmethod
     def pomdp_next_belief(o: int, a: int, b: npt.NDArray[np.float64], states: npt.NDArray[np.int_],
                           observations: npt.NDArray[np.int_], observation_tensor: npt.NDArray[np.float_],
-                          transition_tensor: npt.NDArray[np.float_]) -> npt.NDArray[np.float64]:
+                          transition_tensor: npt.NDArray[np.float_]) \
+            -> npt.NDArray[np.float64]:
         """
         Computes the next belief of the POMDP using a Bayesian filter
 
@@ -652,14 +661,15 @@ class StoppingGameUtil:
         norm = 0.0
         for s in states:
             for s_prime_1 in states:
-                prob_1 = observation_tensor[s_prime_1][o]
+                prob_1 = observation_tensor[a][s_prime_1][o]
                 norm += b[s] * prob_1 * transition_tensor[a][s][s_prime_1]
         if norm == 0.0:
+            print(f"zero norm, a: {a}, b: {b}, o: {o}")
             return 0.0
         temp = 0.0
 
         for s in states:
-            temp += observation_tensor[s_prime][o] * transition_tensor[a][s][s_prime] * b[s]
+            temp += observation_tensor[a][s_prime][o] * transition_tensor[a][s][s_prime] * b[s]
         b_prime_s_prime = temp / norm
         if round(b_prime_s_prime, 2) > 1:
             print(f"b_prime_s_prime >= 1: {b_prime_s_prime}, a1:{a}, s_prime:{s_prime}")

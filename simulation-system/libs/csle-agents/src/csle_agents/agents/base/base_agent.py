@@ -16,27 +16,30 @@ class BaseAgent(ABC):
     """
 
     def __init__(self, simulation_env_config: SimulationEnvConfig,
-                 emulation_env_config: Union[EmulationEnvConfig, None], experiment_config: ExperimentConfig) -> None:
+                 emulation_env_config: Union[EmulationEnvConfig, None], experiment_config: ExperimentConfig,
+                 create_log_dir: bool = True) -> None:
         """
         Initializes the agent
 
         :param simulation_env_config: the configuration of the simulation environment
         :param emulation_env_config: the configuration of the emulation environment
         :param experiment_config: the experiment configuration
+        :param create_log_dir: Boolean flag whether to create a log directory or not
         """
         GeneralUtil.register_envs()
         self.simulation_env_config = simulation_env_config
         self.emulation_env_config = emulation_env_config
         self.experiment_config = experiment_config
         ts = time.time()
-        if self.experiment_config.output_dir[-1] == "/":
-            self.experiment_config.output_dir = self.experiment_config.output_dir[0:-1]
-        self.experiment_config.output_dir = self.experiment_config.output_dir + f"_{ts}/"
-        try:
-            if not os.path.exists(self.experiment_config.output_dir):
-                os.makedirs(self.experiment_config.output_dir)
-        except Exception as e:
-            Logger.__call__().get_logger().info(f"There was an error creating log dirs: {str(e)}, {repr(e)}")
+        if create_log_dir:
+            if self.experiment_config.output_dir[-1] == "/":
+                self.experiment_config.output_dir = self.experiment_config.output_dir[0:-1]
+            self.experiment_config.output_dir = self.experiment_config.output_dir + f"_{ts}/"
+            try:
+                if not os.path.exists(self.experiment_config.output_dir):
+                    os.makedirs(self.experiment_config.output_dir)
+            except Exception as e:
+                Logger.__call__().get_logger().info(f"There was an error creating log dirs: {str(e)}, {repr(e)}")
 
     @abstractmethod
     def train(self) -> ExperimentExecution:

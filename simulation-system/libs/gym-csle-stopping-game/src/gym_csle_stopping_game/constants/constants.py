@@ -34,6 +34,7 @@ class ENV_METRICS:
     DEFENDER_ACTION = "a1"
     ATTACKER_ACTION = "a2"
     OBSERVATION = "o"
+    BELIEF = "b"
     TIME_STEP = "t"
     AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN = "average_defender_baseline_stop_on_first_alert_return"
     AVERAGE_UPPER_BOUND_RETURN = "average_upper_bound_return"

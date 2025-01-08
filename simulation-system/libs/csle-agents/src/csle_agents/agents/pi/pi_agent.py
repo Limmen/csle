@@ -29,7 +29,8 @@ class PIAgent(BaseAgent):
     def __init__(self, simulation_env_config: SimulationEnvConfig,
                  experiment_config: ExperimentConfig,
                  training_job: Optional[TrainingJobConfig] = None, save_to_metastore: bool = True,
-                 env: Optional[BaseEnv] = None):
+                 env: Optional[BaseEnv] = None, create_log_dir: bool = True, env_eval: bool = True,
+                 max_eval_length: int = 100, initial_eval_state: int = 0):
         """
         Initializes the value iteration agent
 
@@ -38,13 +39,20 @@ class PIAgent(BaseAgent):
         :param training_job: an existing training job to use (optional)
         :param save_to_metastore: boolean flag whether to save the execution to the metastore
         :param env: the gym environment for training
+        :param create_log_dir: Boolean flag whether to create a log directory or not
+        :param env_eval: Boolean flag whether to evaluate in a given environment
+        :param max_eval_length: maximum evaluation length
+        :param initial_eval_state: the initial state for the evaluation
         """
         super().__init__(simulation_env_config=simulation_env_config, emulation_env_config=None,
-                         experiment_config=experiment_config)
+                         experiment_config=experiment_config, create_log_dir=create_log_dir)
         assert experiment_config.agent_type == AgentType.POLICY_ITERATION
         self.training_job = training_job
         self.save_to_metastore = save_to_metastore
         self.env = env
+        self.env_eval = env_eval
+        self.max_eval_length = max_eval_length
+        self.initial_eval_state = initial_eval_state
 
     def train(self) -> ExperimentExecution:
         """
@@ -210,12 +218,12 @@ class PIAgent(BaseAgent):
         """
         P_pi = np.zeros((num_states, num_states))
         for i in range(0, num_states):
-            action = np.where(policy[i] == 1)[0]
-            P_pi[i] = P[action, i]
-            assert sum(P_pi[i]) == 1  # stochastic
+            action = np.where(policy[i] == 1)[0][0]
+            P_pi[i] = P[action][i]
+            assert round(sum(P_pi[i]), 2) == 1  # stochastic
         return P_pi
 
-    def expected_reward_under_policy(self, P: npt.NDArray[Any], R: npt.NDArray[Any], policy: npt.NDArray[Any],
+    def expected_reward_under_policy(self, R: npt.NDArray[Any], policy: npt.NDArray[Any],
                                      num_states: int, num_actions: int) -> npt.NDArray[Any]:
         """
         Utility function for computing the expected immediate reward for each state
@@ -233,10 +241,8 @@ class PIAgent(BaseAgent):
                :r: a vector of dimension <num_states> with the expected immediate reward for each state.
         """
         r = np.zeros((num_states))
-        for k in range(0, num_states):
-            r[k] = sum(
-                [policy[k][x] * sum([np.dot(P[x][y], [R[x][y]] * num_states)
-                                     for y in range(0, num_states)])for x in range(0, num_actions)])
+        for s in range(0, num_states):
+            r[s] = sum([policy[s][a] * R[a][s] for a in range(num_actions)])
         return r
 
     def policy_evaluation(self, P: npt.NDArray[Any], policy: npt.NDArray[Any], R: npt.NDArray[Any], gamma: float,
@@ -257,7 +263,7 @@ class PIAgent(BaseAgent):
                :v: the state values, a vector of dimension NUM_STATES
         """
         P_pi = self.transition_probability_under_policy(P, policy, num_states=num_states)
-        r_pi = self.expected_reward_under_policy(P, R, policy, num_states=num_states, num_actions=num_actions)
+        r_pi = self.expected_reward_under_policy(R, policy, num_states=num_states, num_actions=num_actions)
         I = np.identity(num_states)
         v = np.dot(np.linalg.inv(I - (np.dot(gamma, P_pi))), r_pi)
         return np.array(v)
@@ -286,11 +292,8 @@ class PIAgent(BaseAgent):
             for a in range(0, num_actions):
                 for s_prime in range(0, num_states):
                     action_values[a] += P[a][s][s_prime] * (R[a][s] + gamma * v[s_prime])
-            if max(action_values) == 0.0:
-                pi_prime[s, np.argmax(pi[s])] = 1
-            else:
-                best_action = np.argmax(action_values)
-                pi_prime[s][best_action] = 1
+            best_action = np.argmax(action_values)
+            pi_prime[s][best_action] = 1
         return pi_prime
 
     def pi(self, P: npt.NDArray[Any], policy: npt.NDArray[Any], N: int, gamma: float, R: npt.NDArray[Any],
@@ -314,40 +317,61 @@ class PIAgent(BaseAgent):
         average_returns = []
         running_average_returns = []
         for i in range(0, N):
-            v = self.policy_evaluation(P, policy, R, gamma, num_states=num_states, num_actions=num_actions)
-            policy = self.policy_improvement(P, R, gamma, v, policy, num_states=num_states, num_actions=num_actions)
-
             if i % self.experiment_config.hparams[agents_constants.COMMON.EVAL_EVERY].value == 0:
-                avg_return = self.evaluate_policy(policy=policy, eval_batch_size=self.experiment_config.hparams[
-                    agents_constants.COMMON.EVAL_BATCH_SIZE].value)
+                avg_return = self.evaluate_policy(
+                    policy=policy,
+                    eval_batch_size=self.experiment_config.hparams[agents_constants.COMMON.EVAL_BATCH_SIZE].value,
+                    R=R, P=P, num_states=num_states, num_actions=num_actions
+                )
                 average_returns.append(avg_return)
                 running_avg_J = ExperimentUtil.running_average(
                     average_returns, self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value)
                 running_average_returns.append(running_avg_J)
 
-            if i % self.experiment_config.log_every == 0 and i > 0:
+            if i % self.experiment_config.log_every == 0:
                 Logger.__call__().get_logger().info(f"[PI] i:{i}, avg_return: {avg_return}")
+
+            v = self.policy_evaluation(P, policy, R, gamma, num_states=num_states, num_actions=num_actions)
+            policy = self.policy_improvement(P, R, gamma, v, policy, num_states=num_states, num_actions=num_actions)
 
         return policy, v, average_returns, running_average_returns
 
-    def evaluate_policy(self, policy: npt.NDArray[Any], eval_batch_size: int) -> float:
+    def evaluate_policy(self, policy: npt.NDArray[Any], eval_batch_size: int,
+                        P: npt.NDArray[Any], R: npt.NDArray[Any], num_states: int, num_actions: int) -> float:
         """
-        Evalutes a tabular policy
+        Evaluates a tabular policy
 
         :param policy: the tabular policy to evaluate
         :param eval_batch_size: the batch size
-        :return: None
+        :param P: the transition tensor
+        :param R: the reward tensor
+        :param num_states: the number of states
+        :param num_actions: the number of actions
+        :return: the average return of the policy
         """
-        if self.env is None:
-            raise ValueError("Need to specify an environment to run the policy evaluation")
         returns = []
         for i in range(eval_batch_size):
             done = False
-            s, _ = self.env.reset()
-            R = 0
+            if self.env is not None and self.env_eval:
+                s, _ = self.env.reset()
+            else:
+                s = self.initial_eval_state
+            Ret = 0
+            t = 0
             while not done:
-                s, r, done, _, info = self.env.step(policy)
-                R += r
-            returns.append(R)
+                try:
+                    a = np.random.choice(np.arange(0, num_actions), p=policy[s])
+                except Exception:
+                    a = policy
+                if self.env is not None and self.env_eval:
+                    s, r, done, _, info = self.env.step(a)
+                else:
+                    r = R[a][s]
+                    s = int(np.random.choice(np.arange(0, num_states), p=P[a][s]))
+                Ret += r
+                t += 1
+                if t >= self.max_eval_length:
+                    done = True
+            returns.append(Ret)
         avg_return = np.mean(returns)
         return float(avg_return)
