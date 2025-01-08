@@ -119,7 +119,7 @@ class TestElkControllerSuite:
         result = ELKController.stop_elk_stack(emulation_env_config, logger)
         mock_insecure_channel.assert_called_once_with("172.17.0.1:5601", options=constants.GRPC_SERVERS.GRPC_OPTIONS)
         mock_ElkManagerStub.assert_called_once_with(mock_channel)
-        mock_stop_elk.asert_called_once_with(mock_stub)
+        mock_stop_elk.assert_called_once_with(mock_stub)
         assert result == expected_elk_dto
 
     @patch("csle_collector.elk_manager.query_elk_manager.start_elk")
@@ -154,7 +154,7 @@ class TestElkControllerSuite:
         result = ELKController.start_elk_stack(emulation_env_config, physical_server_ip, logger)
         mock_insecure_channel.assert_called_once_with("172.17.0.1:5601", options=constants.GRPC_SERVERS.GRPC_OPTIONS)
         mock_ElkManagerStub.assert_called_once_with(mock_channel)
-        mock_start_elk.asert_called_once_with(mock_stub)
+        mock_start_elk.assert_called_once_with(mock_stub)
         assert result == expected_elk_dto
 
     @patch("csle_collector.elk_manager.query_elk_manager.start_elastic")
@@ -187,7 +187,7 @@ class TestElkControllerSuite:
         result = ELKController.start_elastic(emulation_env_config, logger)
         mock_insecure_channel.assert_called_once_with("172.17.0.1:5601", options=constants.GRPC_SERVERS.GRPC_OPTIONS)
         mock_ElkManagerStub.assert_called_once_with(mock_channel)
-        mock_start_elastic.asert_called_once_with(mock_stub)
+        mock_start_elastic.assert_called_once_with(mock_stub)
         assert result == expected_elk_dto
 
     @patch("csle_collector.elk_manager.query_elk_manager.start_kibana")
@@ -220,7 +220,7 @@ class TestElkControllerSuite:
         result = ELKController.start_kibana(emulation_env_config, logger)
         mock_insecure_channel.assert_called_once_with("172.17.0.1:5601", options=constants.GRPC_SERVERS.GRPC_OPTIONS)
         mock_ElkManagerStub.assert_called_once_with(mock_channel)
-        mock_start_kibana.asert_called_once_with(mock_stub)
+        mock_start_kibana.assert_called_once_with(mock_stub)
         assert result == expected_elk_dto
 
     @patch("csle_collector.elk_manager.query_elk_manager.start_logstash")
@@ -253,7 +253,7 @@ class TestElkControllerSuite:
         result = ELKController.start_logstash(emulation_env_config, logger)
         mock_insecure_channel.assert_called_once_with("172.17.0.1:5601", options=constants.GRPC_SERVERS.GRPC_OPTIONS)
         mock_ElkManagerStub.assert_called_once_with(mock_channel)
-        mock_start_logstash.asert_called_once_with(mock_stub)
+        mock_start_logstash.assert_called_once_with(mock_stub)
         assert result == expected_elk_dto
 
     @patch("csle_collector.elk_manager.query_elk_manager.stop_elastic")
@@ -286,7 +286,7 @@ class TestElkControllerSuite:
         result = ELKController.stop_elastic(emulation_env_config, logger)
         mock_insecure_channel.assert_called_once_with("172.17.0.1:5601", options=constants.GRPC_SERVERS.GRPC_OPTIONS)
         mock_ElkManagerStub.assert_called_once_with(mock_channel)
-        mock_stop_elastic.asert_called_once_with(mock_stub)
+        mock_stop_elastic.assert_called_once_with(mock_stub)
         assert result == expected_elk_dto
 
     @patch("csle_collector.elk_manager.query_elk_manager.stop_kibana")
@@ -319,7 +319,7 @@ class TestElkControllerSuite:
         result = ELKController.stop_kibana(emulation_env_config, logger)
         mock_insecure_channel.assert_called_once_with("172.17.0.1:5601", options=constants.GRPC_SERVERS.GRPC_OPTIONS)
         mock_ElkManagerStub.assert_called_once_with(mock_channel)
-        mock_stop_kibana.asert_called_once_with(mock_stub)
+        mock_stop_kibana.assert_called_once_with(mock_stub)
         assert result == expected_elk_dto
 
     @patch("csle_collector.elk_manager.query_elk_manager.stop_logstash")
@@ -352,7 +352,7 @@ class TestElkControllerSuite:
         result = ELKController.stop_logstash(emulation_env_config, logger)
         mock_insecure_channel.assert_called_once_with("172.17.0.1:5601", options=constants.GRPC_SERVERS.GRPC_OPTIONS)
         mock_ElkManagerStub.assert_called_once_with(mock_channel)
-        mock_stop_logstash.asert_called_once_with(mock_stub)
+        mock_stop_logstash.assert_called_once_with(mock_stub)
         assert result == expected_elk_dto
 
     def test_get_elk_managers_ips(self) -> None:
