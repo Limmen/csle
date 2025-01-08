@@ -7,5 +7,5 @@ gym-csle-apt-game==0.7.1
 gym-csle-cyborg==0.7.1
 gym-csle-intrusion-response-game==0.7.1
 csle-tolerance==0.7.1
-grpcio==1.57.0
-grpcio-tools==1.57.0
+grpcio==1.69.0
+grpcio-tools==1.69.0
