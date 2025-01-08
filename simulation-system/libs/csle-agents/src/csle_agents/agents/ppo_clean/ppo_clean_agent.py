@@ -4,11 +4,11 @@ MIT License
 Copyright (c) 2019 CleanRL developers https://github.com/vwxyzjn/cleanrl
 """
 
-from typing import Union, List, Optional, Callable, Tuple
+from typing import Union, List, Optional, Callable, Tuple, Any
 import random
 import time
 import gymnasium as gym
-from gymnasium.wrappers.record_episode_statistics import RecordEpisodeStatistics
+from gymnasium.wrappers.common import RecordEpisodeStatistics
 from gymnasium.spaces.discrete import Discrete
 import os
 import numpy as np
@@ -256,8 +256,7 @@ class PPOCleanAgent(BaseAgent):
         # Initialize the environment and optimizers
         global_step = 0
         start_time = time.time()
-        next_obs, _ = envs.reset(seed=seed)
-        next_obs = torch.Tensor(next_obs).to(device)
+        next_obs = torch.Tensor(envs.reset(seed=seed)[0]).to(device)
         next_done = torch.zeros(self.num_envs).to(device)
         optimizer = optim.Adam(model.parameters(), lr=self.learning_rate, eps=1e-5)
 
@@ -376,14 +375,14 @@ class PPOCleanAgent(BaseAgent):
         base_env: BaseEnv = envs.envs[0].env.env.env  # type: ignore
         return exp_result, base_env, model
 
-    def make_env(self) -> Callable[[], RecordEpisodeStatistics]:
+    def make_env(self) -> Callable[[], RecordEpisodeStatistics[Any, Any]]:
         """
         Helper function for creating the environment to use for training
 
         :return: a function that creates the environment
         """
 
-        def thunk() -> RecordEpisodeStatistics:
+        def thunk() -> RecordEpisodeStatistics[Any, Any]:
             """
             Function for creating a new environment
 
@@ -436,7 +435,7 @@ class PPOCleanAgent(BaseAgent):
             logprobs[step] = logprob
 
             # Step the environment
-            next_obs, reward, terminations, truncations, infos = envs.step(action.cpu().numpy())
+            next_obs, reward, terminations, truncations, infos = envs.step(action.cpu().numpy()) # type: ignore
             next_done_np = np.logical_or(terminations, truncations)
             rewards[step] = torch.tensor(reward).to(device).view(-1)
             next_obs, next_done = torch.Tensor(next_obs).to(device), torch.Tensor(next_done_np).to(device)

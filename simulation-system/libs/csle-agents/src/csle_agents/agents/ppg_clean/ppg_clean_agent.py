@@ -4,11 +4,11 @@ MIT License
 Copyright (c) 2019 CleanRL developers https://github.com/vwxyzjn/cleanrl
 """
 
-from typing import Union, List, Optional, Callable, Tuple
+from typing import Union, List, Optional, Callable, Tuple, Any
 import random
 import time
 import gymnasium as gym
-from gymnasium.wrappers.record_episode_statistics import RecordEpisodeStatistics
+from gymnasium.wrappers.common import RecordEpisodeStatistics
 from gymnasium.spaces.discrete import Discrete
 import os
 import numpy as np
@@ -286,7 +286,7 @@ class PPGCleanAgent(BaseAgent):
                     logprobs[step] = logprob
 
                     # execute the game and log data.
-                    next_obs, reward, done, info, info_d = envs.step(action.cpu().numpy())
+                    next_obs, reward, done, info, info_d = envs.step(action.cpu().numpy()) # type: ignore
                     if done[0]:
                         horizons.append(info_d["final_info"][0][agents_constants.ENV_METRICS.TIME_HORIZON])
                         info_returns.append(info_d["final_info"][0][agents_constants.ENV_METRICS.RETURN])
@@ -454,14 +454,14 @@ class PPGCleanAgent(BaseAgent):
         base_env: BaseEnv = envs.envs[0].env.env.env  # type: ignore
         return exp_result, base_env, agent
 
-    def make_env(self) -> Callable[[], RecordEpisodeStatistics]:
+    def make_env(self) -> Callable[[], RecordEpisodeStatistics[Any, Any]]:
         """
         Helper function for creating the environment to use for training
 
         :return: a function that creates the environment
         """
 
-        def thunk() -> RecordEpisodeStatistics:
+        def thunk() -> RecordEpisodeStatistics[Any, Any]:
             """
             Function for creating a new environment
 

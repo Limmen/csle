@@ -16,7 +16,7 @@ import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 from csle_common.dao.training.experiment_config import ExperimentConfig
-from gymnasium.wrappers.record_episode_statistics import RecordEpisodeStatistics
+from gymnasium.wrappers.common import RecordEpisodeStatistics
 from csle_common.dao.training.experiment_execution import ExperimentExecution
 from csle_common.models.q_network import QNetwork
 from csle_common.dao.training.experiment_result import ExperimentResult
@@ -281,7 +281,7 @@ class C51CleanAgent(BaseAgent):
         rb = ReplayBuffer(self.buffer_size, envs.single_observation_space, envs.single_action_space, device,
                           handle_timeout_termination=False)
         start_time = time.time()
-        obs, _ = envs.reset(seed=seed)
+        obs: List[float] = envs.reset(seed=seed)[0]
         R: List[Any] = []
         T = []
         i = 0
@@ -295,7 +295,7 @@ class C51CleanAgent(BaseAgent):
                 actions_tensor, pmf = q_network.get_action(torch.Tensor(obs).to(device))
                 actions = actions_tensor.cpu().numpy()
 
-            next_obs, rewards, terminations, truncations, infos = envs.step(actions)
+            next_obs, rewards, terminations, truncations, infos = envs.step(actions) # type: ignore
 
             if "final_info" in infos:
                 R_sum = 0

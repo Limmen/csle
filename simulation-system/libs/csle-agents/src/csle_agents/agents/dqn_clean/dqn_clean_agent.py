@@ -17,7 +17,7 @@ import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 from csle_common.dao.training.experiment_config import ExperimentConfig
-from gymnasium.wrappers.record_episode_statistics import RecordEpisodeStatistics
+from gymnasium.wrappers.common import RecordEpisodeStatistics
 from csle_common.dao.training.experiment_execution import ExperimentExecution
 from csle_common.models.q_network import QNetwork
 from csle_common.dao.training.experiment_result import ExperimentResult
@@ -92,14 +92,14 @@ class DQNCleanAgent(BaseAgent):
         slope = (self.end_e - self.start_e) / duration
         return max(slope * t + self.start_e, self.end_e)
 
-    def make_env(self) -> Callable[[], RecordEpisodeStatistics]:
+    def make_env(self) -> Callable[[], RecordEpisodeStatistics[Any, Any]]:
         """
         Helper function for creating an environment in training of the agent
 
         :return: environment creating function
         """
 
-        def thunk() -> RecordEpisodeStatistics:
+        def thunk() -> RecordEpisodeStatistics[Any, Any]:
             """
             The environment creating function
             """
@@ -276,7 +276,7 @@ class DQNCleanAgent(BaseAgent):
         )
         start_time = time.time()
 
-        obs, _ = envs.reset(seed=seed)
+        obs: List[float] = envs.reset(seed=seed)[0]
         R: List[Any] = []
         T = []
         i = 0
@@ -295,7 +295,7 @@ class DQNCleanAgent(BaseAgent):
                     actions[0] = random.randrange(0, 2)
 
             # Take a step in the environment
-            next_obs, rewards, terminations, truncations, infos = envs.step(actions)
+            next_obs, rewards, terminations, truncations, infos = envs.step(actions) # type: ignore
 
             # Record rewards for logging purposes
             if "final_info" in infos:
