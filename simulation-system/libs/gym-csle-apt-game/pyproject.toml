@@ -1,7 +1,7 @@
 [project]
 name = "gym-csle-apt-game"
 description = "OpenAI gym reinforcement learning environment of a Dynkin (Optimal stopping) APT game in CSLE"
-dynamic = ["version"]
+dynamic = ["version", "authors", "requires-python"]
 license = { file = "LICENSE.md" }
 readme = "README.md"
 keywords = ["Reinforcement-Learning", "Cyber-Security", "Markov-Games", "Markov-Decision-Processes"]

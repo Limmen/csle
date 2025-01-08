@@ -1,7 +1,7 @@
 [project]
 name = "gym-csle-intrusion-response-game"
 description = "OpenAI gym reinforcement learning environment of an intrusion response game in CSLE"
-dynamic = ["version"]
+dynamic = ["version", "authors", "requires-python"]
 license = { file = "LICENSE.md" }
 readme = "README.md"
 keywords = ["Reinforcement-Learning", "Cyber-Security", "Markov-Games", "Markov-Decision-Processes"]
