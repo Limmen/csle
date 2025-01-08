@@ -180,7 +180,7 @@ class PPOAgent(BaseAgent):
             )
             if self.experiment_config.player_type == PlayerType.ATTACKER \
                     and "stopping" in self.simulation_env_config.gym_env_name:
-                orig_env.set_model(model)
+                orig_env.unwrapped.set_model(model)
 
             # Train
             model.learn(total_timesteps=self.experiment_config.hparams[
@@ -206,9 +206,9 @@ class PPOAgent(BaseAgent):
                 os.chmod(save_path, 0o777)
 
             # Save latest trace
-            if self.save_to_metastore and len(orig_env.get_traces()) > 0:
-                MetastoreFacade.save_simulation_trace(orig_env.get_traces()[-1])
-            orig_env.reset_traces()
+            if self.save_to_metastore and len(orig_env.unwrapped.get_traces()) > 0:
+                MetastoreFacade.save_simulation_trace(orig_env.unwrapped.get_traces()[-1])
+            orig_env.unwrapped.reset_traces()
 
         # Calculate average and std metrics
         exp_result.avg_metrics = {}
@@ -233,7 +233,7 @@ class PPOAgent(BaseAgent):
             exp_result.avg_metrics[metric] = avg_metrics
             exp_result.std_metrics[metric] = std_metrics
 
-        traces = orig_env.get_traces()
+        traces = orig_env.unwrapped.get_traces()
         if len(traces) > 0 and self.save_to_metastore:
             MetastoreFacade.save_simulation_trace(traces[-1])
         return self.exp_execution
@@ -340,7 +340,7 @@ class PPOTrainingCallback(BaseCallback):
         """
         if self.experiment_config.player_type == PlayerType.ATTACKER \
                 and "stopping" in self.simulation_name:
-            self.env.set_model(self.model)
+            self.env.unwrapped.set_model(self.model)
         return True
 
     def _on_training_end(self) -> None:
@@ -376,7 +376,7 @@ class PPOTrainingCallback(BaseCallback):
         # Eval model
         if self.iter % self.eval_every == 0:
             if self.player_type == PlayerType.ATTACKER and "stopping" in self.simulation_name:
-                self.env.set_model(self.model)
+                self.env.unwrapped.set_model(self.model)
             policy = PPOPolicy(
                 model=self.model, simulation_name=self.simulation_name, save_path=save_path,
                 states=self.states, player_type=self.player_type, actions=self.actions,
@@ -468,8 +468,8 @@ class PPOTrainingCallback(BaseCallback):
             progress = round(steps_done / total_steps_done, 2)
             self.training_job.progress_percentage = progress
             self.training_job.experiment_result = self.exp_result
-            if len(self.env.get_traces()) > 0:
-                self.training_job.simulation_traces.append(self.env.get_traces()[-1])
+            if len(self.env.unwrapped.get_traces()) > 0:
+                self.training_job.simulation_traces.append(self.env.unwrapped.get_traces()[-1])
             if len(self.training_job.simulation_traces) > self.training_job.num_cached_traces:
                 self.training_job.simulation_traces = self.training_job.simulation_traces[1:]
             if self.save_to_metastore:

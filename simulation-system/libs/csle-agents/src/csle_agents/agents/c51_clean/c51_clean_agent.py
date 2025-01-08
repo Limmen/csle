@@ -308,7 +308,7 @@ class C51CleanAgent(BaseAgent):
 
             real_next_obs = next_obs.copy()
             for idx, trunc in enumerate(truncations):
-                if trunc:
+                if trunc and "final_observation" in infos:
                     real_next_obs[idx] = infos["final_observation"][idx]
             rb.add(obs, real_next_obs, actions, rewards, terminations, infos)  # type: ignore
 

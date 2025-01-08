@@ -287,7 +287,7 @@ class PPGCleanAgent(BaseAgent):
 
                     # execute the game and log data.
                     next_obs, reward, done, info, info_d = envs.step(action.cpu().numpy()) # type: ignore
-                    if done[0]:
+                    if done[0] and "final_info" in info_d:
                         horizons.append(info_d["final_info"][0][agents_constants.ENV_METRICS.TIME_HORIZON])
                         info_returns.append(info_d["final_info"][0][agents_constants.ENV_METRICS.RETURN])
                     rewards[step] = torch.tensor(reward).to(device).view(-1)

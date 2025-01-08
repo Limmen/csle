@@ -580,7 +580,7 @@ class PolicyEvaluationThread(threading.Thread):
             while not done and t <= max_steps:
                 Logger.__call__().get_logger().debug(f"t:{t}, a: {a}, b1:{b1}, r:{r}, l:{l}, info:{info}")
                 a = defender_policy.action(o=o)
-                o, r, done, info = self.env.step_trace(trace=trace, a1=a)
+                o, r, done, info = self.env.unwrapped.step_trace(trace=trace, a1=a)
                 l = int(o[0])
                 b1 = o[1]
                 t += 1
@@ -1090,8 +1090,8 @@ class DynaSecAgent(BaseAgent):
                 progress = round(iterations_done / total_iterations, 2)
                 self.training_job.progress_percentage = progress
                 self.training_job.experiment_result = policy_evaluation_thread.exp_result
-                if len(self.env.get_traces()) > 0:
-                    self.training_job.simulation_traces.append(self.env.get_traces()[-1])
+                if len(self.env.unwrapped.get_traces()) > 0:
+                    self.training_job.simulation_traces.append(self.env.unwrapped.get_traces()[-1])
                 if len(self.training_job.simulation_traces) > self.training_job.num_cached_traces:
                     self.training_job.simulation_traces = self.training_job.simulation_traces[1:]
                 if self.save_to_metastore:

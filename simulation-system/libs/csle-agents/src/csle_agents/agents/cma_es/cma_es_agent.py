@@ -157,8 +157,8 @@ class CMAESAgent(BaseAgent):
 
             # Save latest trace
             if self.save_to_metastore:
-                MetastoreFacade.save_simulation_trace(self.env.get_traces()[-1])
-            self.env.reset_traces()
+                MetastoreFacade.save_simulation_trace(self.env.unwrapped.get_traces()[-1])
+            self.env.unwrapped.reset_traces()
 
         # Calculate average and std metrics
         exp_result.avg_metrics = {}
@@ -195,7 +195,7 @@ class CMAESAgent(BaseAgent):
                 exp_result.avg_metrics[metric] = avg_metrics
                 exp_result.std_metrics[metric] = std_metrics
 
-        traces = self.env.get_traces()
+        traces = self.env.unwrapped.get_traces()
         if len(traces) > 0 and self.save_to_metastore:
             MetastoreFacade.save_simulation_trace(traces[-1])
         ts = time.time()
@@ -251,9 +251,9 @@ class CMAESAgent(BaseAgent):
         policy = self.get_policy(theta=list(theta), L=L)
         if self.env is not None:
             if self.experiment_config.player_type == PlayerType.DEFENDER:
-                self.env.static_defender_strategy = policy
+                self.env.unwrapped.static_defender_strategy = policy
             if self.experiment_config.player_type == PlayerType.ATTACKER:
-                self.env.static_attacker_strategy = policy
+                self.env.unwrapped.static_attacker_strategy = policy
         J = self.J(theta, objetive_type=objective_type)
         policy.avg_R = J
         exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
@@ -357,8 +357,8 @@ class CMAESAgent(BaseAgent):
                 progress = round(iterations_done / total_iterations, 2)
                 training_job.progress_percentage = progress
                 training_job.experiment_result = exp_result
-                if self.env is not None and len(self.env.get_traces()) > 0:
-                    training_job.simulation_traces.append(self.env.get_traces()[-1])
+                if self.env is not None and len(self.env.unwrapped.get_traces()) > 0:
+                    training_job.simulation_traces.append(self.env.unwrapped.get_traces()[-1])
                 if len(training_job.simulation_traces) > training_job.num_cached_traces:
                     training_job.simulation_traces = training_job.simulation_traces[1:]
                 if self.save_to_metastore:
@@ -441,7 +441,7 @@ class CMAESAgent(BaseAgent):
             while not done and t <= max_steps:
                 Logger.__call__().get_logger().debug(f"t:{t}, a: {a}, b1:{b1}, r:{r}, l:{l}, info:{info}")
                 if self.experiment_config.player_type == PlayerType.ATTACKER:
-                    policy.opponent_strategy = self.env.static_defender_strategy
+                    policy.opponent_strategy = self.env.unwrapped.static_defender_strategy
                     a = policy.action(o=o)
                 else:
                     a = policy.action(o=o)

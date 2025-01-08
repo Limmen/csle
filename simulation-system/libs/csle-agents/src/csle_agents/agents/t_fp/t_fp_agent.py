@@ -185,7 +185,7 @@ class TFPAgent(BaseAgent):
         exp_execution = ExperimentExecution(result=exp_result, config=self.experiment_config, timestamp=ts,
                                             emulation_name=emulation_name, simulation_name=simulation_name,
                                             descr=descr, log_file_path=self.training_job.log_file_path)
-        traces = env.get_traces()
+        traces = env.unwrapped.get_traces()
         if len(traces) > 0:
             MetastoreFacade.save_simulation_trace(traces[-1])
         MetastoreFacade.remove_training_job(self.training_job)
@@ -410,8 +410,8 @@ class TFPAgent(BaseAgent):
         self.attacker_simulation_env_config.simulation_env_input_config.defender_strategy = defender_strategy
         env: BaseEnv = gym.make(self.attacker_simulation_env_config.gym_env_name,
                                 config=self.attacker_simulation_env_config.simulation_env_input_config)
-        env.set_model(attacker_strategy)
-        attacker_strategy.opponent_strategy = env.static_defender_strategy
+        env.unwrapped.set_model(attacker_strategy)
+        attacker_strategy.opponent_strategy = env.unwrapped.static_defender_strategy
         return self._eval_env(
             env=env, policy=attacker_strategy,
             num_iterations=self.experiment_config.hparams[
@@ -439,8 +439,8 @@ class TFPAgent(BaseAgent):
         self.attacker_simulation_env_config.simulation_env_input_config.defender_strategy = defender_strategy
         env: BaseEnv = gym.make(self.attacker_simulation_env_config.gym_env_name,
                                 config=self.attacker_simulation_env_config.simulation_env_input_config)
-        env.set_model(attacker_strategy)
-        attacker_policy.opponent_strategy = env.static_defender_strategy
+        env.unwrapped.set_model(attacker_strategy)
+        attacker_policy.opponent_strategy = env.unwrapped.static_defender_strategy
         return self._eval_env(
             env=env, policy=attacker_policy,
             num_iterations=self.experiment_config.hparams[
@@ -541,7 +541,7 @@ class TFPAgent(BaseAgent):
         self.attacker_simulation_env_config.simulation_env_input_config.defender_strategy = defender_strategy
         env: BaseEnv = gym.make(self.attacker_simulation_env_config.gym_env_name,
                                 config=self.attacker_simulation_env_config.simulation_env_input_config)
-        env.set_model(attacker_strategy)
+        env.unwrapped.set_model(attacker_strategy)
         agent = TSPSAAgent(emulation_env_config=self.emulation_env_config,
                            simulation_env_config=self.attacker_simulation_env_config,
                            experiment_config=self.attacker_experiment_config,
