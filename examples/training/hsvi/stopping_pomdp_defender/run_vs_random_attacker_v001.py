@@ -1,5 +1,4 @@
 import numpy as np
-import numpy.typing as npt
 import csle_common.constants.constants as constants
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -7,7 +6,6 @@ from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.hparam import HParam
 from csle_common.dao.training.player_type import PlayerType
 from csle_agents.agents.hsvi.hsvi_agent import HSVIAgent
-from csle_common.dao.training.policy import Policy
 from csle_common.dao.training.random_policy import RandomPolicy
 import csle_agents.constants.constants as agents_constants
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
@@ -26,18 +24,12 @@ if __name__ == '__main__':
             [0.5, 0.5]
         ])
     T = np.array(simulation_env_config.transition_operator_config.transition_tensor)
-    if len(T.shape) == 5:
-        T = T[0]
     num_states = len(simulation_env_config.state_space_config.states)
     simulation_env_config.reward_function_config.reward_tensor = list(StoppingGameUtil.reward_tensor(
         R_INT=-10, R_COST=-10, R_SLA=0, R_ST=100, L=1))
     R = np.array(simulation_env_config.reward_function_config.reward_tensor)
-    if len(R.shape) == 4:
-        R = R[0]
     num_observations = 50
     Z = StoppingGameUtil.observation_tensor(len(range(0, num_observations)))
-    if len(R.shape) == 5:
-        Z = Z[0]
     num_actions = len(simulation_env_config.joint_action_space_config.action_spaces[0].actions)
     T = StoppingGameUtil.reduce_T_attacker(T, simulation_env_config.simulation_env_input_config.attacker_strategy)
     R = StoppingGameUtil.reduce_R_attacker(R, simulation_env_config.simulation_env_input_config.attacker_strategy)

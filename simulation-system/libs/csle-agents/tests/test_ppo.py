@@ -113,7 +113,6 @@ class TestPPOAgentSuite:
         R_COST = -5
         R_SLA = 1
         R_ST = 5
-        p = 0.1
         n = 100
 
         attacker_stage_strategy = np.zeros((3, 2))

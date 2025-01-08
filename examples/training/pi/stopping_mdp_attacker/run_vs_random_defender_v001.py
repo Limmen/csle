@@ -9,6 +9,7 @@ from csle_common.dao.training.player_type import PlayerType
 from csle_agents.agents.pi.pi_agent import PIAgent
 from csle_common.dao.training.random_policy import RandomPolicy
 import csle_agents.constants.constants as agents_constants
+from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 
 
 if __name__ == '__main__':
@@ -19,19 +20,12 @@ if __name__ == '__main__':
     simulation_env_config.simulation_env_input_config.defender_strategy = RandomPolicy(
         actions=simulation_env_config.joint_action_space_config.action_spaces[0].actions,
         player_type=PlayerType.DEFENDER, stage_policy_tensor=None)
-
     T = np.array(simulation_env_config.transition_operator_config.transition_tensor)
-    if len(T.shape) == 5:
-        T = T[0]
     num_states = len(simulation_env_config.state_space_config.states)
     R = np.array(simulation_env_config.reward_function_config.reward_tensor)
-    if len(R.shape) == 4:
-        R = R[0]
     num_actions = len(simulation_env_config.joint_action_space_config.action_spaces[1].actions)
-
-    T = reduce_T(T, simulation_env_config.simulation_env_input_config.defender_strategy)
-    R = -reduce_R(R, simulation_env_config.simulation_env_input_config.defender_strategy)
-
+    T = StoppingGameUtil.reduce_T_defender(T, simulation_env_config.simulation_env_input_config.defender_strategy)
+    R = -StoppingGameUtil.reduce_R_defender(R, simulation_env_config.simulation_env_input_config.defender_strategy)
     initial_pi = np.zeros((num_states, num_actions))
     for s in range(num_states):
         a = random.choice(list(range(num_actions)))
