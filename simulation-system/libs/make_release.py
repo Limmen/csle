@@ -110,6 +110,21 @@ if __name__ == '__main__':
                                                                           f"{lib}=>{versions['new_version']}")
                 f.write(setup_cfg_file_contents)
 
+    # Update setup.cfg files
+    print("Updating pyproject.toml files")
+    for lib, versions in RELEASE_CONFIG.items():
+        for lib2, versions2 in RELEASE_CONFIG.items():
+            with io.open(f"{lib2}/pyproject.toml", 'r', encoding='utf-8') as f:
+                setup_cfg_file_contents = f.read()
+            with io.open(f"{lib2}/pyproject.toml", 'w', encoding='utf-8') as f:
+                setup_cfg_file_contents = setup_cfg_file_contents.replace(f"{lib}=={versions['old_version']}",
+                                                                          f"{lib}=={versions['new_version']}")
+                setup_cfg_file_contents = setup_cfg_file_contents.replace(f"{lib}>={versions['old_version']}",
+                                                                          f"{lib}>={versions['new_version']}")
+                setup_cfg_file_contents = setup_cfg_file_contents.replace(f"{lib}=>{versions['old_version']}",
+                                                                          f"{lib}=>{versions['new_version']}")
+                f.write(setup_cfg_file_contents)
+
     # Delete old build directories
     print("Delete old build directories")
     for lib, versions in RELEASE_CONFIG.items():
