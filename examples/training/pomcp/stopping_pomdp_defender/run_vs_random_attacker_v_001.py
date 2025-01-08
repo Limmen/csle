@@ -26,7 +26,7 @@ if __name__ == '__main__':
         raise ValueError(f"Could not find a simulation with name: {simulation_name}")
 
     stopping_game_config = StoppingGameConfig(
-        T=StoppingGameUtil.transition_tensor(L=1, p=0),
+        T=StoppingGameUtil.transition_tensor(L=1),
         O=StoppingGameUtil.observation_space(n=10),
         Z=StoppingGameUtil.observation_tensor(n=10),
         R=StoppingGameUtil.reward_tensor(R_INT=-5, R_COST=-10, R_SLA=0, R_ST=20, L=1),

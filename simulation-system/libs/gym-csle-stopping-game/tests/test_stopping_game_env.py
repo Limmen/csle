@@ -24,7 +24,7 @@ class TestStoppingGameEnvSuite:
         :return: None
         """
         env_name = "test_env"
-        T = StoppingGameUtil.transition_tensor(L=3, p=0)
+        T = StoppingGameUtil.transition_tensor(L=3)
         O = StoppingGameUtil.observation_space(n=100)
         Z = StoppingGameUtil.observation_tensor(n=100)
         R = np.zeros((2, 3, 3, 3))
@@ -70,7 +70,7 @@ class TestStoppingGameEnvSuite:
 
         :return: None
         """
-        T = StoppingGameUtil.transition_tensor(L=3, p=0)
+        T = StoppingGameUtil.transition_tensor(L=3)
         O = StoppingGameUtil.observation_space(n=100)
         A1 = StoppingGameUtil.defender_actions()
         A2 = StoppingGameUtil.attacker_actions()

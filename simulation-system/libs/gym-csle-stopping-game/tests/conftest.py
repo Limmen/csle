@@ -30,7 +30,7 @@ def example_stopping_game_config(example_stopping_game_util: StoppingGameUtil) -
 
     :return: an example StoppingGameConfig object
     """
-    return StoppingGameConfig(env_name="test_env", T=example_stopping_game_util.transition_tensor(L=1, p=0.2),
+    return StoppingGameConfig(env_name="test_env", T=example_stopping_game_util.transition_tensor(L=1),
                               O=example_stopping_game_util.observation_space(5),
                               Z=example_stopping_game_util.observation_tensor(5),
                               R=example_stopping_game_util.reward_tensor(R_SLA=1, R_INT=3, R_COST=4, L=1, R_ST=4),

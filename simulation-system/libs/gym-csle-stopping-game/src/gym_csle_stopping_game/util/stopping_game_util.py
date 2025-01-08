@@ -3,6 +3,7 @@ import numpy as np
 import numpy.typing as npt
 from scipy.stats import betabinom
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
+from csle_common.dao.training.policy import Policy
 
 
 class StoppingGameUtil:
@@ -90,7 +91,7 @@ class StoppingGameUtil:
         return np.array(R_l)
 
     @staticmethod
-    def transition_tensor(L: int, p: float) -> npt.NDArray[Any]:
+    def transition_tensor(L: int) -> npt.NDArray[Any]:
         """
         Gets the transition tensor
 
@@ -386,3 +387,94 @@ class StoppingGameUtil:
                         r = config.R[0][a1][0][s]
                         file_str = file_str + f"R: {a1} : {s} : {s_prime} : {o} {r:.80f}\n"
         return file_str
+
+    @staticmethod
+    def reduce_T_attacker(T: npt.NDArray[np.float_], strategy: Policy) -> npt.NDArray[np.float_]:
+        """
+        Reduces the transition tensor based on a given attacker strategy
+
+        :param T: the tensor to reduce
+        :param strategy: the strategy to use for the reduction
+        :return: the reduced tensor
+        """
+        reduced_T = np.zeros((T.shape[0], T.shape[2], T.shape[3]))
+        for i in range(T.shape[0]):
+            for j in range(T.shape[2]):
+                for k in range(T.shape[3]):
+                    if j == 0:
+                        reduced_T[i][j][k] = T[i][0][j][k] * (1 - strategy.probability(i, 0)) + T[i][1][j][
+                            k] * strategy.probability(i, 1)
+                    else:
+                        reduced_T[i][j][k] = (T[i][0][j][k] * (1 - strategy.probability(i, 0)) + T[i][1][j][k] *
+                                              strategy.probability(i, 1))
+        return reduced_T
+
+    @staticmethod
+    def reduce_R_attacker(R: npt.NDArray[np.float_], strategy: Policy) -> npt.NDArray[np.float_]:
+        """
+        Reduces the reward tensor based on a given attacker strategy
+
+        :param R: the reward tensor to reduce
+        :param strategy: the strategy to use for the reduction
+        :return: the reduced reward tensor
+        """
+        reduced_R = np.zeros((R.shape[0], R.shape[2]))
+        for i in range(R.shape[0]):
+            for j in range(R.shape[2]):
+                if j == 0:
+                    reduced_R[i][j] = (R[i][0][j] * (1 - strategy.probability(i, 0)) + R[i][1][j] *
+                                       strategy.probability(i, 1))
+                else:
+                    reduced_R[i][j] = (R[i][0][j] * (1 - strategy.probability(i, 0)) + R[i][1][j] *
+                                       strategy.probability(i, 1))
+        return reduced_R
+
+    @staticmethod
+    def reduce_Z_attacker(Z: npt.NDArray[np.float_], strategy: Policy) -> npt.NDArray[np.float_]:
+        """
+        Reduces the observation tensor based on a given attacker strategy
+
+        :param Z: the observation tensor to reduce
+        :param strategy: the strategy to use for the reduction
+        :return: the reduced observation tensor
+        """
+        reduced_Z = np.zeros((Z.shape[0], Z.shape[2], Z.shape[3]))
+        for i in range(Z.shape[0]):
+            for j in range(Z.shape[2]):
+                for k in range(Z.shape[3]):
+                    reduced_Z[i][j][k] = Z[i][0][j][k] * strategy.probability(i, 0) + Z[i][1][j][
+                        k] * strategy.probability(
+                        i, 1)
+        return reduced_Z
+
+    @staticmethod
+    def reduce_T_defender(T, strategy: Policy):
+        """
+        Reduces the transition tensor based on a given defender strategy
+
+        :param T: the tensor to reduce
+        :param strategy: the strategy to use for the reduction
+        :return: the reduced tensor
+        """
+        reduced_T = np.zeros((T.shape[1], T.shape[2], T.shape[3]))
+        for i in range(T.shape[1]):
+            for j in range(T.shape[2]):
+                for k in range(T.shape[3]):
+                    reduced_T[i][j][k] = T[0][i][j][k] * strategy.probability(j, 0) + T[1][i][j][k] * strategy.probability(
+                        j, 1)
+        return reduced_T
+
+    @staticmethod
+    def reduce_R_defender(R, strategy: Policy):
+        """
+        Reduces the reward tensor based on a given defender strategy
+
+        :param R: the reward tensor to reduce
+        :param strategy: the strategy to use for the reduction
+        :return: the reduced reward tensor
+        """
+        reduced_R = np.zeros((R.shape[1], R.shape[2]))
+        for i in range(R.shape[1]):
+            for j in range(R.shape[2]):
+                reduced_R[i][j] = R[0][i][j] * strategy.probability(i, 0) + R[1][i][j] * strategy.probability(i, 1)
+        return reduced_R

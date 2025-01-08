@@ -337,7 +337,7 @@ class TestResourcesSimulationsSuite:
         :return: the default transition tensor configuration
         """
         transition_operator_config = TransitionOperatorConfig(
-            transition_tensor=list(StoppingGameUtil.transition_tensor(L=3, p=0.01)))
+            transition_tensor=list(StoppingGameUtil.transition_tensor(L=3)))
         return transition_operator_config
 
     @staticmethod

@@ -11,38 +11,6 @@ from csle_common.dao.training.random_policy import RandomPolicy
 import csle_agents.constants.constants as agents_constants
 
 
-def reduce_T(T, strategy):
-    """
-    Reduces the transition tensor based on a given strategy
-
-    :param T: the tensor to reduce
-    :param strategy: the strategy to use for the reduction
-    :return: the reduced tensor
-    """
-    reduced_T = np.zeros((T.shape[1], T.shape[2], T.shape[3]))
-    for i in range(T.shape[1]):
-        for j in range(T.shape[2]):
-            for k in range(T.shape[3]):
-                reduced_T[i][j][k] = T[0][i][j][k] * strategy.probability(j, 0) + T[1][i][j][k] * strategy.probability(
-                    j, 1)
-    return reduced_T
-
-
-def reduce_R(R, strategy):
-    """
-    Reduces the reward tensor based on a given strategy
-
-    :param R: the reward tensor to reduce
-    :param strategy: the strategy to use for the reduction
-    :return: the reduced reward tensor
-    """
-    reduced_R = np.zeros((R.shape[1], R.shape[2]))
-    for i in range(R.shape[1]):
-        for j in range(R.shape[2]):
-            reduced_R[i][j] = R[0][i][j] * strategy.probability(i, 0) + R[1][i][j] * strategy.probability(i, 1)
-    return reduced_R
-
-
 if __name__ == '__main__':
     simulation_name = "csle-stopping-mdp-attacker-002"
     simulation_env_config = MetastoreFacade.get_simulation_by_name(simulation_name)

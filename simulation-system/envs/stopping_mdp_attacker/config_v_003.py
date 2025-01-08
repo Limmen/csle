@@ -229,7 +229,7 @@ def default_transition_operator_config() -> TransitionOperatorConfig:
     :return: the default transition tensor configuration
     """
     transition_operator_config = TransitionOperatorConfig(
-        transition_tensor=list(StoppingGameUtil.transition_tensor(L=7, p=0.01)))
+        transition_tensor=list(StoppingGameUtil.transition_tensor(L=7)))
     return transition_operator_config
 
 

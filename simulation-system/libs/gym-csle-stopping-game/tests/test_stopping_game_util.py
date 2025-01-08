@@ -73,7 +73,7 @@ class TestStoppingGameUtilSuite(object):
         :return: None
         """
         l = 6
-        example_transition_tensor = StoppingGameUtil.transition_tensor(L=l, p=0.1)
+        example_transition_tensor = StoppingGameUtil.transition_tensor(L=l)
         for i in range(l):
             for j in range(2):
                 for k in range(2):
@@ -105,7 +105,7 @@ class TestStoppingGameUtilSuite(object):
         :return: None
         """
         example_sample_next_state = StoppingGameUtil.sample_next_state(
-            T=example_stopping_game_util.transition_tensor(L=3, p=0.1), l=3, s=2, a1=1, a2=1,
+            T=example_stopping_game_util.transition_tensor(L=3), l=3, s=2, a1=1, a2=1,
             S=example_stopping_game_util.state_space())
         assert example_sample_next_state in example_stopping_game_util.state_space()
 

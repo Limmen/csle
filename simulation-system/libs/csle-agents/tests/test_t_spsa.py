@@ -109,7 +109,7 @@ class TestTSPSASuite:
             R_COST=R_COST,
             R_SLA=R_SLA, R_ST=R_ST, b1=np.array(list(StoppingGameUtil.b1())),
             save_dir="./results",
-            T=StoppingGameUtil.transition_tensor(L=L, p=p),
+            T=StoppingGameUtil.transition_tensor(L=L),
             O=StoppingGameUtil.observation_space(n=n),
             Z=StoppingGameUtil.observation_tensor(n=n),
             R=StoppingGameUtil.reward_tensor(R_SLA=R_SLA, R_INT=R_INT, R_COST=R_COST, L=L, R_ST=R_ST),
