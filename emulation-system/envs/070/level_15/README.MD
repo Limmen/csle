@@ -44,4 +44,4 @@ Forough Shahab <foro@kth.se>
 
 Creative Commons
 
-(C) 2020-2024, Kim Hammar
+(C) 2020-2025, Kim Hammar

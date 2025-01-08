@@ -172,5 +172,5 @@ Creative Commons
 
 [LICENSE](../../LICENSE.md)
 
-(C) 2020-2024, Kim Hammar
+(C) 2020-2025, Kim Hammar
 
