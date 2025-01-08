@@ -1,4 +1,5 @@
-from typing import Any
+from typing import Any, Tuple
+import itertools
 import numpy as np
 import numpy.typing as npt
 from scipy.stats import betabinom
@@ -451,7 +452,7 @@ class StoppingGameUtil:
         return reduced_Z
 
     @staticmethod
-    def reduce_T_defender(T: npt.NDArray[np.float_], strategy: Policy):
+    def reduce_T_defender(T: npt.NDArray[np.float_], strategy: Policy) -> npt.NDArray[np.float_]:
         """
         Reduces the transition tensor based on a given defender strategy
 
@@ -470,7 +471,7 @@ class StoppingGameUtil:
         return reduced_T
 
     @staticmethod
-    def reduce_R_defender(R: npt.NDArray[np.float_], strategy: Policy):
+    def reduce_R_defender(R: npt.NDArray[np.float_], strategy: Policy) -> npt.NDArray[np.float_]:
         """
         Reduces the reward tensor based on a given defender strategy
 
@@ -486,3 +487,202 @@ class StoppingGameUtil:
                 reduced_R[i][j] = (R[0][i][j] * strategy.probability(j, 0) + R[1][i][j] *
                                    strategy.probability(j, 1))
         return reduced_R
+
+    @staticmethod
+    def aggregate_belief_mdp_defender(aggregation_resolution: int, T: npt.NDArray[np.float_],
+                                      R: npt.NDArray[np.float_], Z: npt.NDArray[np.float_],
+                                      S: npt.NDArray[np.int_], A: npt.NDArray[np.int_], O: npt.NDArray[np.int_]) \
+            -> Tuple[npt.NDArray[np.float_], npt.NDArray[np.int_], npt.NDArray[np.float_], npt.NDArray[np.float_]]:
+        """
+        Generates an aggregate belief MDP from a given POMDP specification and aggregation resolution
+
+        :param aggregation_resolution: the belief aggregation resolution
+        :param T: the transition tensor of the POMDP
+        :param R: the reward tensor of the POMDP
+        :param Z: the observation tensor of the POMDP
+        :param S: the state space of the POMDP
+        :param A: the action space of the POMDP
+        :param O: the observation space of the POMDP
+        :return: the state space, action space, transition operator, and belief operator of the belief MDP
+        """
+        aggregate_belief_space = StoppingGameUtil.generate_aggregate_belief_space(
+            n=aggregation_resolution, belief_space_dimension=len(S))
+        belief_T = StoppingGameUtil.generate_aggregate_belief_transition_operator(
+            aggregate_belief_space=aggregate_belief_space, S=S, A=A, O=O, T=T, Z=Z)
+        belief_R = StoppingGameUtil.generate_aggregate_belief_reward_tensor(
+            aggregate_belief_space=aggregate_belief_space, S=S, A=A, R=R)
+        return aggregate_belief_space, A, belief_T, belief_R
+
+    @staticmethod
+    def generate_aggregate_belief_space(n: int, belief_space_dimension: int) -> npt.NDArray[np.float_]:
+        """
+        Generate an aggregate belief space B_n.
+
+        :param n: the aggregation resolution
+        :param belief_space_dimension: the belief space dimension
+        :return: the aggregate belief space
+        """
+
+        # Generate all combinations of integer allocations k_i such that sum(k_i) = n
+        combinations = [k for k in itertools.product(range(n + 1), repeat=belief_space_dimension) if sum(k) == n]
+
+        # Convert integer allocations to belief points by dividing each k_i by n
+        belief_points = [list(k_i / n for k_i in k) for k in combinations]
+
+        return np.array(belief_points)
+
+    @staticmethod
+    def generate_aggregate_belief_reward_tensor(
+            aggregate_belief_space: npt.NDArray[np.float_], S: npt.NDArray[np.int_], A: npt.NDArray[np.int_],
+            R: npt.NDArray[np.float_]) -> npt.NDArray[np.float_]:
+        """
+        Generates an aggregate reward tensor for the aggregate belief MDP
+
+        :param aggregate_belief_space: the aggregate belief space
+        :param S: the state space of the POMDP
+        :param A: the action space of the POMDP
+        :param R: the reward tensor of the POMDP
+        :return: the reward tensor of the aggregate belief MDP
+        """
+        belief_R = np.zeros((len(A), len(aggregate_belief_space)))
+        for a in A:
+            for b in aggregate_belief_space:
+                expected_reward = 0
+                for s in S:
+                    expected_reward += R[s][a] * b[s]
+                belief_R[a][b] = expected_reward
+        return belief_R
+
+    @staticmethod
+    def generate_aggregate_belief_transition_operator(
+            aggregate_belief_space: npt.NDArray[np.float_], S: npt.NDArray[np.int_], A: npt.NDArray[np.int_],
+            O: npt.NDArray[np.int_], T: npt.NDArray[np.float_], Z: npt.NDArray[np.float_]) -> npt.NDArray[np.float_]:
+        """
+        Generates an aggregate belief space transition operator
+
+        :param aggregate_belief_space: the aggregate belief space
+        :param O: the observation space of the POMDP
+        :param S: the state space of the POMDP
+        :param A: the action space of the POMDP
+        :param T: the transition operator of the POMDP
+        :param Z: the observation tensor of the POMDP
+        :return: the aggregate belief space operator
+        """
+        belief_T = np.zeros((len(A), len(aggregate_belief_space), len(aggregate_belief_space)))
+        for a in A:
+            for b1 in aggregate_belief_space:
+                for b2 in aggregate_belief_space:
+                    belief_T[a][b1][b2] = StoppingGameUtil.aggregate_belief_transition_probability(
+                        b1=b1, b2=b2, a=a, S=S, O=O, T=T, Z=Z, aggregate_belief_space=aggregate_belief_space)
+        return belief_T
+
+    @staticmethod
+    def aggregate_belief_transition_probability(b1: npt.NDArray[np.float_], b2: npt.NDArray[np.float_], a: int,
+                                                S: npt.NDArray[np.int_], O: npt.NDArray[np.int_],
+                                                T: npt.NDArray[np.float_], Z: npt.NDArray[np.float_],
+                                                aggregate_belief_space: npt.NDArray[np.float_]) -> float:
+        """
+        Calculates the probability of transitioning from belief b1 to belief b2 when taking action a
+
+        :param b1: the source belief
+        :param b2: the target belief
+        :param a: the action
+        :param S: the state space of the POMDP
+        :param O: the observation space of the POMDP
+        :param T: the transition operator
+        :param Z: the observation tensor
+        :param aggregate_belief_space: the aggregate belief space
+        :return: the probability P(b2 | b1, a)
+        """
+        prob = 0
+        for o in O:
+            b_prime = StoppingGameUtil.pomdp_next_belief(
+                o=o, a=a, b=b1, states=S, observations=O, observation_tensor=Z, transition_tensor=T)
+            nearest_neighbor = StoppingGameUtil.find_nearest_neighbor_belief(belief_space=aggregate_belief_space,
+                                                                             target_belief=b_prime)
+            if nearest_neighbor == b2:
+                for s in S:
+                    for s_prime in S:
+                        prob += Z[a][s_prime][o] * b1[s] * T[a][s][s_prime]
+        return prob
+
+    @staticmethod
+    def pomdp_next_belief(o: int, a: int, b: npt.NDArray[np.float64], states: npt.NDArray[np.int_],
+                          observations: npt.NDArray[np.int_], observation_tensor: npt.NDArray[np.float_],
+                          transition_tensor: npt.NDArray[np.float_]) -> npt.NDArray[np.float64]:
+        """
+        Computes the next belief of the POMDP using a Bayesian filter
+
+        :param o: the latest observation
+        :param a: the latest action of player 1
+        :param b: the current belief
+        :param states: the list of states
+        :param observations: the list of observations
+        :param observation_tensor: the observation tensor
+        :param transition_tensor: the transition tensor
+        :return: the new belief
+        """
+        b_prime = [0.0] * len(states)
+        for s_prime in states:
+            b_prime[s_prime] = StoppingGameUtil.pomdp_bayes_filter(
+                s_prime=s_prime, o=o, a=a, b=b, states=states, observations=observations,
+                transition_tensor=transition_tensor, observation_tensor=observation_tensor)
+        if round(sum(b_prime), 2) != 1:
+            print(f"error, b_prime:{b_prime}, o:{o}, a:{a}, b:{b}")
+        assert round(sum(b_prime), 2) == 1
+        return np.array(b_prime)
+
+    @staticmethod
+    def pomdp_bayes_filter(s_prime: int, o: int, a: int, b: npt.NDArray[np.float64], states: npt.NDArray[np.int_],
+                           observations: npt.NDArray[np.int_], observation_tensor: npt.NDArray[np.float_],
+                           transition_tensor: npt.NDArray[np.float_]) -> float:
+        """
+        A Bayesian filter to compute b[s_prime] of the POMDP
+
+        :param s_prime: the state to compute the belief for
+        :param o: the latest observation
+        :param a: the latest action
+        :param b: the current belief
+        :param states: the list of states
+        :param observations: the list of observations
+        :param observation_tensor: the observation tensor
+        :param transition_tensor: the transition tensor of the POMDP
+        :return: b[s_prime]
+        """
+        norm = 0.0
+        for s in states:
+            for s_prime_1 in states:
+                prob_1 = observation_tensor[s_prime_1][o]
+                norm += b[s] * prob_1 * transition_tensor[a][s][s_prime_1]
+        if norm == 0.0:
+            return 0.0
+        temp = 0.0
+
+        for s in states:
+            temp += observation_tensor[s_prime][o] * transition_tensor[a][s][s_prime] * b[s]
+        b_prime_s_prime = temp / norm
+        if round(b_prime_s_prime, 2) > 1:
+            print(f"b_prime_s_prime >= 1: {b_prime_s_prime}, a1:{a}, s_prime:{s_prime}")
+        assert round(b_prime_s_prime, 2) <= 1
+        if s_prime == 2 and o != observations[-1]:
+            assert round(b_prime_s_prime, 2) <= 0.01
+        return b_prime_s_prime
+
+    @staticmethod
+    def find_nearest_neighbor_belief(belief_space: npt.NDArray[np.float_], target_belief: npt.NDArray[np.float_]) \
+            -> npt.NDArray[np.float_]:
+        """
+        Finds the nearest neighbor (in the Euclidean sense) of a given belief in a certain belief space
+
+        :param belief_space: the belief to search from
+        :param target_belief: the belief to find the nearest neighbor of
+        :return: the nearest neighbor belief from the belief space
+        """
+
+        # Compute Euclidean distances between the target belief and all points in the belief space
+        distances = np.linalg.norm(belief_space - target_belief, axis=1)
+
+        # Find the index of the minimum distance (break ties consistently by choosing the smallest index)
+        nearest_index = int(np.argmin(distances))
+
+        return np.array(belief_space[nearest_index])

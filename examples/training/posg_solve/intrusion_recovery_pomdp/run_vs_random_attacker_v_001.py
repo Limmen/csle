@@ -26,7 +26,7 @@ if __name__ == '__main__':
         actions=IntrusionRecoveryPomdpUtil.action_space(),
         observations=IntrusionRecoveryPomdpUtil.observation_space(num_observations=num_observations),
         cost_tensor=cost_tensor, observation_tensor=observation_tensor, transition_tensor=transition_tensor,
-        b1=IntrusionRecoveryPomdpUtil.initial_belief(p_a=p_a), T=BTR,
+        b1=IntrusionRecoveryPomdpUtil.initial_belief(), T=BTR,
         simulation_env_name=simulation_name, gym_env_name="csle-tolerance-intrusion-recovery-pomdp-v1"
     )
 

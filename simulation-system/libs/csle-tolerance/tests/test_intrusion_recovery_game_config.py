@@ -223,7 +223,7 @@ class TestIntrusionRecoveryGameConfigSuite:
             cost_tensor=cost_tensor,
             observation_tensor=observation_tensor,
             transition_tensor=transition_tensor,
-            b1=IntrusionRecoveryPomdpUtil.initial_belief(p_a=p_a),
+            b1=IntrusionRecoveryPomdpUtil.initial_belief(),
             T=int(BTR),
             simulation_env_name=simulation_name,
             gym_env_name="csle-tolerance-intrusion-recovery-pomdp-v1",

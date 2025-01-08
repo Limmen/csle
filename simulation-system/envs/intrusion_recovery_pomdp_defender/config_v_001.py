@@ -262,8 +262,7 @@ def default_initial_state_distribution_config(p_a: float) -> InitialStateDistrib
     :return: the default initial state distribution configuration
     """
     initial_state_distribution_config = InitialStateDistributionConfig(
-        initial_state_distribution=IntrusionRecoveryPomdpUtil.initial_belief(p_a=p_a)
-    )
+        initial_state_distribution=IntrusionRecoveryPomdpUtil.initial_belief())
     return initial_state_distribution_config
 
 
@@ -301,7 +300,7 @@ def default_input_config(eta: float, p_a: float, p_c_1: float, p_c_2: float, p_u
         actions=IntrusionRecoveryPomdpUtil.action_space(),
         observations=IntrusionRecoveryPomdpUtil.observation_space(num_observations=num_observations),
         cost_tensor=cost_tensor, observation_tensor=observation_tensor, transition_tensor=transition_tensor,
-        b1=IntrusionRecoveryPomdpUtil.initial_belief(p_a=p_a), T=BTR,
+        b1=IntrusionRecoveryPomdpUtil.initial_belief(), T=BTR,
         simulation_env_name=simulation_env_name, gym_env_name="csle-tolerance-intrusion-recovery-pomdp-v1"
     )
     return config

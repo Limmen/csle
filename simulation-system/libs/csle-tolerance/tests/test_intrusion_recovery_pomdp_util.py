@@ -30,7 +30,7 @@ class TestIntrusionTolerancePomdpSuite:
 
         :return: None
         """
-        assert sum(IntrusionRecoveryPomdpUtil.initial_belief(p_a=0.5)) == 1
+        assert sum(IntrusionRecoveryPomdpUtil.initial_belief()) == 1
 
     def test_action_space(self) -> None:
         """
