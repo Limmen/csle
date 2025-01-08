@@ -2,7 +2,7 @@
 license = { file = "LICENSE.md" }
 
 [build-system]
-requires = ["setuptools==68.0.0"]
+requires = ["setuptools==75.7.0"]
 build-backend = "setuptools.build_meta"
 
 [tool.pytest.ini_options]
