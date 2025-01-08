@@ -17,6 +17,52 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Intended Audience :: Science/Research"
 ]
+dependencies = [
+    "csle-base>=0.7.1",
+    "csle-common>=0.7.1",
+    "csle-agents>=0.7.1",
+    "csle-cluster>=0.7.1",
+    "csle-system-identification>=0.7.1",
+    "csle-ryu>=0.7.1",
+    "flask>=2.2.2",
+    "waitress>=2.1.2",
+    "flask-socketio>=5.3.2",
+    "bcrypt>=4.0.1",
+    "pyopenssl>=22.1.0",
+    "eventlet>=0.33.2",
+    "dnspython==2.2.1",
+    "gevent>=22.1.2",
+    "paramiko>=3.2.0",
+    "types-paramiko>=3.2.0.0",
+    "requests>=2.31.0",
+    "types-requests>=2.31.0.1"
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=6.0",
+    "pytest-cov>=2.0",
+    "pytest-mock>=3.6.0",
+    "pytest-grpc>=0.8.0",
+    "grpcio>=1.69.0",
+    "grpcio-tools>=1.69.0",
+    "mypy>=1.4.1",
+    "mypy-extensions>=1.0.0",
+    "mypy-protobuf>=3.5.0",
+    "types-PyYAML>=6.0.12.11",
+    "types-paramiko>=3.2.0.0",
+    "types-protobuf>=4.23.0.3",
+    "types-requests>=2.31.0.1",
+    "types-urllib3>=1.26.25.13",
+    "flake8>=6.1.0",
+    "flake8-rst-docstrings>=0.3.0",
+    "tox>=3.24",
+    "sphinx>=5.3.0",
+    "sphinxcontrib-napoleon>=0.7",
+    "sphinx-rtd-theme>=1.1.1",
+    "twine>=4.0.2",
+    "build>=0.10.0"
+]
 
 [project.urls]
 "Homepage" = "https://limmen.dev/csle"
