@@ -410,6 +410,9 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         info[env_constants.ENV_METRICS.OBSERVATION] = CyborgEnvUtil.state_vector_to_state_id(
             state_vector=obs, observation=True)
         info[env_constants.ENV_METRICS.OBSERVATION_VECTOR] = obs
+        info[env_constants.ENV_METRICS.REWARD] = \
+            self.reward_function(defender_action_type=defender_action_type, red_action_type=current_red_action_type,
+                                 red_success=(is_red_action_feasible and exploit_successful))
         self.scan_state = copy.deepcopy(scan_state)
         self.s = s_prime
         self.last_obs = copy.deepcopy(obs)
