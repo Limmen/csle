@@ -442,9 +442,7 @@ class IntrusionRecoveryPomdpUtil:
                 for s_prime in config.states:
                     for o in config.observations:
                         c = config.cost_tensor[a][s]
-                        file_str = (
-                                file_str + f"R: {a} : {s} : {s_prime} : {o} {c:.80f}\n"
-                        )
+                        file_str = file_str + f"R: {a} : {s} : {s_prime} : {o} {c:.80f}\n"
         return file_str
 
     @staticmethod
