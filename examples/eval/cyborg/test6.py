@@ -35,13 +35,14 @@ if __name__ == '__main__':
 
     N = 10000
     max_env_steps = 100
-    mu = np.loadtxt("./mu6.txt")
-    J = np.loadtxt("./J6.txt")
+    mu = np.loadtxt("mu6.txt")
+    J = np.loadtxt("J6.txt")
     import io, json
-    with io.open("./state_to_id_6.json", 'r') as f:
+    with io.open("state_to_id_6.json", 'r') as f:
         state_to_id = json.loads(f.read())
+    returns = []
     for i in range(N):
-        print(f"{i}/{N}")
+        # print(f"{i}/{N}")
         done = False
         _, info = env.reset()
         s = info["s"]
@@ -60,15 +61,6 @@ if __name__ == '__main__':
             if s.s[7][2] == 2:
                 a = 3 # Opserver
 
-            #Remove
-            # if s.s[1][1] == 1:
-            #     a = 8 # Ent0
-            # if s.s[2][2] == 1:
-            #     a = 9 # Ent 1
-            # if s.s[3][2] == 1:
-            #     a = 10 # Ent 2
-            # if s.s[7][2] == 1:
-            #     a = 11 # Opserver
             if s.s[9][2] == 1:
                 a = 22 # User1
             if s.s[10][2] == 1:
@@ -82,15 +74,10 @@ if __name__ == '__main__':
                 a = 31
 
             if a == -1:
-                if np.argmax(mu[state_id]) > 5:
-                    a = 27
-                else:
-                    a = action_to_id[np.argmax(mu[state_id])]
-            # print(a)
-            # import sys
-            # sys.exit()
+                a = action_to_id[np.argmax(mu[state_id])]
             o, r, done, _, info = env.step(a)
             s = info["s"]
             t+= 1
             R+= r
-            print(f"t:{t}, r: {r}, a: {action_id_to_type_and_host[a]}, R: {R}")
+        returns.append(R)
+        print(np.mean(returns))

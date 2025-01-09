@@ -16,13 +16,13 @@ if __name__ == '__main__':
     # import sys
     # sys.exit()
 
-    with io.open("./id_to_state_6.json", 'r') as f:
+    with io.open("../cyborg/id_to_state_6.json", 'r') as f:
         id_to_state = json.loads(f.read())
 
-    with io.open("./state_to_id_6.json", 'r') as f:
+    with io.open("../cyborg/state_to_id_6.json", 'r') as f:
         state_to_id = json.loads(f.read())
 
-    with io.open("./transitions_6.json", 'r') as f:
+    with io.open("../cyborg/transitions_6.json", 'r') as f:
         transitions = json.loads(f.read())
 
     X = list(range(len(id_to_state.keys())))
@@ -36,7 +36,7 @@ if __name__ == '__main__':
                     total = sum(transitions[str(x)][str(u)].values())
                     P[u][x][x_prime] = float(transitions[str(x)][str(u)][str(x_prime)]/total)
 
-    with io.open("./costs_6.json", 'r') as f:
+    with io.open("../cyborg/costs_6.json", 'r') as f:
         costs = json.loads(f.read())
 
     C = np.zeros((len(X),len(U)))

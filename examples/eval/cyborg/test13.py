@@ -10,19 +10,6 @@ def get_decoy_str(state):
     decoy_state = state.get_decoy_state()
     return f"{min(1, decoy_state[1])},{min(1, decoy_state[2])},{min(1,decoy_state[3])},{min(1,decoy_state[9])},{min(1,decoy_state[10])},{min(1,decoy_state[11])}"
 
-# def get_active_decoys(state):
-#     decoy_state = state.get_decoy_state()
-#     reachable_hosts = []
-#     if 1 not in state.red_action_targets:
-#         reachable_hosts = [12,11,10,9]
-#     else:
-#         reachable_hosts = [12,11,10,9,1,2,3]
-#     active_decoys = 0
-#     for h in range(len(decoy_state)):
-#         if h in reachable_hosts:
-#             active_decoys += decoy_state[h]
-#     return active_decoys
-
 
 if __name__ == '__main__':
     config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="",
@@ -45,12 +32,9 @@ if __name__ == '__main__':
         2: 29,
         3: 30,
         4: 31,
-        5: 32,
-        6: 33,
-        7: 34,
-        8: 35
+        5: 32
     }
-    A = list(range(9))
+    A = list(range(6))
 
     for i in range(N):
         print(f"{i}/{N}")
@@ -98,17 +82,17 @@ if __name__ == '__main__':
     import json, io
 
     json_str = json.dumps(state_to_id, indent=4, sort_keys=True, cls=NpEncoder)
-    with io.open("../cyborg/state_to_id_6.json", 'w', encoding='utf-8') as f:
+    with io.open("../cyborg/state_to_id_7.json", 'w', encoding='utf-8') as f:
         f.write(json_str)
 
     json_str = json.dumps(id_to_state, indent=4, sort_keys=True, cls=NpEncoder)
-    with io.open("../cyborg/id_to_state_6.json", 'w', encoding='utf-8') as f:
+    with io.open("../cyborg/id_to_state_7.json", 'w', encoding='utf-8') as f:
         f.write(json_str)
 
     json_str = json.dumps(costs, indent=4, sort_keys=True, cls=NpEncoder)
-    with io.open("../cyborg/costs_6.json", 'w', encoding='utf-8') as f:
+    with io.open("../cyborg/costs_7.json", 'w', encoding='utf-8') as f:
         f.write(json_str)
 
     json_str = json.dumps(transitions, indent=4, sort_keys=True, cls=NpEncoder)
-    with io.open("../cyborg/transitions_6.json", 'w', encoding='utf-8') as f:
+    with io.open("../cyborg/transitions_7.json", 'w', encoding='utf-8') as f:
         f.write(json_str)

@@ -16,22 +16,13 @@ if __name__ == '__main__':
     # import sys
     # sys.exit()
 
-    action_to_id = {
-        0: 27,
-        1: 28,
-        2: 29,
-        3: 30,
-        4: 31,
-        5: 32
-    }
-
-    with io.open("./id_to_state_7.json", 'r') as f:
+    with io.open("../cyborg/id_to_state_7.json", 'r') as f:
         id_to_state = json.loads(f.read())
 
-    with io.open("./state_to_id_7.json", 'r') as f:
+    with io.open("../cyborg/state_to_id_7.json", 'r') as f:
         state_to_id = json.loads(f.read())
 
-    with io.open("./transitions_7.json", 'r') as f:
+    with io.open("../cyborg/transitions_7.json", 'r') as f:
         transitions = json.loads(f.read())
 
     X = list(range(len(id_to_state.keys())))
@@ -45,7 +36,7 @@ if __name__ == '__main__':
                     total = sum(transitions[str(x)][str(u)].values())
                     P[u][x][x_prime] = float(transitions[str(x)][str(u)][str(x_prime)]/total)
 
-    with io.open("./costs_7.json", 'r') as f:
+    with io.open("../cyborg/costs_7.json", 'r') as f:
         costs = json.loads(f.read())
 
     C = np.zeros((len(X),len(U)))
@@ -60,15 +51,13 @@ if __name__ == '__main__':
     from value_iteration import VI
     gamma = 0.99
     mu, J = VI.vi(X=X, U=U, P=P, gamma=gamma, C=C, epsilon=0.1, verbose=True)
-
-    np.savetxt("mu7.txt", mu)
-    np.savetxt("J7.txt", J)
-
     for x in X:
-        print(f"mu({x})={action_id_to_type_and_host[action_to_id[int(np.argmax(mu[x]))]]}")
+        print(f"mu({x})={action_id_to_type_and_host[int(np.argmax(mu[x]))]}")
     print(f"J(0): {J[0]}")
 
     print(J)
+    np.savetxt("mu7.txt", mu)
+    np.savetxt("J7.txt", J)
 
 
 
