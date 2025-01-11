@@ -339,9 +339,7 @@ class IntrusionRecoveryPomdpUtil:
         temp = 0.0
 
         for s in states:
-            temp += (
-                    observation_tensor[s_prime][o] * transition_tensor[a][s][s_prime] * b[s]
-            )
+            temp += observation_tensor[s_prime][o] * transition_tensor[a][s][s_prime] * b[s]
         b_prime_s_prime = temp / norm
         if round(b_prime_s_prime, 2) > 1:
             print(f"b_prime_s_prime >= 1: {b_prime_s_prime}, a1:{a}, s_prime:{s_prime}")
@@ -367,11 +365,7 @@ class IntrusionRecoveryPomdpUtil:
         prob = 0.0
         for s in states:
             for s_prime in states:
-                prob += (
-                        b[s]
-                        * transition_tensor[a][s][s_prime]
-                        * observation_tensor[s_prime][o]
-                )
+                prob += b[s] * transition_tensor[a][s][s_prime] * observation_tensor[s_prime][o]
         assert prob < 1
         return prob
 

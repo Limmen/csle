@@ -152,21 +152,23 @@ class CyborgWrapperState(JSONSerializable):
         :return: True if equal, else False
         """
         if isinstance(other, CyborgWrapperState):
-            return (GeneralUtil.list_to_tuple(self.s), GeneralUtil.list_to_tuple(self.scan_state),
-                    self.op_server_restored, frozenset(self.red_action_targets),
-                    self.privilege_escalation_detected, self.red_agent_state, self.red_agent_target,
-                    GeneralUtil.list_to_tuple(self.attacker_observed_decoy), GeneralUtil.list_to_tuple(self.detected),
-                    GeneralUtil.list_to_tuple(self.malware_state), GeneralUtil.list_to_tuple(self.ssh_access),
-                    GeneralUtil.list_to_tuple(self.escalated), GeneralUtil.list_to_tuple(self.exploited),
-                    self.bline_base_jump, GeneralUtil.list_to_tuple(self.scanned_subnets)) \
-                   == (GeneralUtil.list_to_tuple(other.s), GeneralUtil.list_to_tuple(other.scan_state),
-                       other.op_server_restored, frozenset(other.red_action_targets),
-                       other.privilege_escalation_detected, other.red_agent_state, other.red_agent_target,
-                       GeneralUtil.list_to_tuple(other.attacker_observed_decoy),
-                       GeneralUtil.list_to_tuple(other.detected),
-                       GeneralUtil.list_to_tuple(other.malware_state), GeneralUtil.list_to_tuple(other.ssh_access),
-                       GeneralUtil.list_to_tuple(other.escalated), GeneralUtil.list_to_tuple(other.exploited),
-                       other.bline_base_jump, GeneralUtil.list_to_tuple(other.scanned_subnets))
+            state_tuple = (GeneralUtil.list_to_tuple(self.s), GeneralUtil.list_to_tuple(self.scan_state),
+                           self.op_server_restored, frozenset(self.red_action_targets),
+                           self.privilege_escalation_detected, self.red_agent_state, self.red_agent_target,
+                           GeneralUtil.list_to_tuple(self.attacker_observed_decoy),
+                           GeneralUtil.list_to_tuple(self.detected),
+                           GeneralUtil.list_to_tuple(self.malware_state), GeneralUtil.list_to_tuple(self.ssh_access),
+                           GeneralUtil.list_to_tuple(self.escalated), GeneralUtil.list_to_tuple(self.exploited),
+                           self.bline_base_jump, GeneralUtil.list_to_tuple(self.scanned_subnets))
+            other_tuple = (GeneralUtil.list_to_tuple(other.s), GeneralUtil.list_to_tuple(other.scan_state),
+                           other.op_server_restored, frozenset(other.red_action_targets),
+                           other.privilege_escalation_detected, other.red_agent_state, other.red_agent_target,
+                           GeneralUtil.list_to_tuple(other.attacker_observed_decoy),
+                           GeneralUtil.list_to_tuple(other.detected),
+                           GeneralUtil.list_to_tuple(other.malware_state), GeneralUtil.list_to_tuple(other.ssh_access),
+                           GeneralUtil.list_to_tuple(other.escalated), GeneralUtil.list_to_tuple(other.exploited),
+                           other.bline_base_jump, GeneralUtil.list_to_tuple(other.scanned_subnets))
+            return state_tuple == other_tuple
         return False
 
     def __hash__(self) -> int:
