@@ -1,5 +1,6 @@
 from typing import List, Dict, Any, Union
 from csle_base.json_serializable import JSONSerializable
+import gym_csle_cyborg.constants.constants as env_constants
 
 
 class CyborgWrapperState(JSONSerializable):
@@ -75,7 +76,7 @@ class CyborgWrapperState(JSONSerializable):
         obj = CyborgWrapperState(
             s=d["s"], scan_state=d["scan_state"], op_server_restored=d["op_server_restored"], obs=d["obs"],
             red_action_targets=d["red_action_targets"],
-            privilege_escalation_detected=d["privilege_escalation_deteceted"], red_agent_state=d["red_agent_state"],
+            privilege_escalation_detected=d["privilege_escalation_detected"], red_agent_state=d["red_agent_state"],
             red_agent_target=d["red_agent_target"], attacker_observed_decoy=d["attacker_observed_decoy"],
             detected=d["detected"], malware_state=d["malware_state"], ssh_access=d["ssh_access"],
             escalated=d["escalated"], exploited=d["exploited"], bline_base_jump=d["bline_base_jump"],
@@ -133,3 +134,11 @@ class CyborgWrapperState(JSONSerializable):
             json_str = f.read()
             dto = CyborgWrapperState.from_json_str(json_str=json_str)
             return dto
+
+    def get_decoy_state(self):
+        """
+        Extracts the decoy state
+
+        :return: a list with the decoy state of each host
+        """
+        return [host_state[env_constants.CYBORG.HOST_STATE_DECOY_IDX] for host_state in self.s]
