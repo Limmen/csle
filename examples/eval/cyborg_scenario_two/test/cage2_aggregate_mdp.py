@@ -18,7 +18,7 @@ class Cage2AggregateMDP:
         u = int(np.argmax(mu[aggregate_state]))
         decoys_per_host = CyborgEnvUtil.get_decoy_actions_per_host(scenario=2)
         state = id_to_state[aggregate_state]
-        decoy_state = state[4:]
+        decoy_state = state[2:]
         if decoy_state[u] >= len(decoys_per_host[Cage2AggregateMDP.aggregate_control_to_original_target(u)]):
             possible_targets = [2, 6]
             if state[3] != -1:
@@ -45,32 +45,38 @@ class Cage2AggregateMDP:
         return 0
 
     @staticmethod
+    def target(target_1, red_state):
+        """
+        Gets the current bline target based on the first target and the state
+        """
+        if red_state == 0:
+            return -1
+        if red_state in [1,2]:
+            return target_1
+        if red_state in [3,4,5]:
+            if target_1 in [3,4]:
+                return 1
+            else:
+                return 0
+        if red_state in [6,7,8,9]:
+            return 2
+        if red_state in [10, 11, 12, 13, 14]:
+            return 7
+
+    @staticmethod
     def get_aggregate_state(s: CyborgWrapperState, state_to_id):
         """
         Converts the cyborg state into the aggregate state
         """
         decoy_state = Cage2AggregateMDP.get_aggregate_decoy_state(s.get_decoy_state())
         red_state = s.red_agent_state
-        target = -1
         target_1 = -1
         if red_state == 1:
             target_1 = Cage2AggregateMDP.red_target_to_aggregate_target(s.red_agent_target)
-            target = target_1
         elif red_state >= 1:
             target_1 = Cage2AggregateMDP.red_target_to_aggregate_target(s.red_action_targets[1])
-            if red_state == 2:
-                target = target_1
-            if red_state in [3, 4, 5]:
-                if target_1 in [3, 4]:
-                    target = 1
-                else:
-                    target = 0
-            if red_state in [6, 7, 8, 9]:
-                target = 2
-            if red_state in [10, 11, 12, 13, 14]:
-                target = 7
         decoy_state_str = ",".join(list(map(lambda x: str(x), decoy_state)))
-        state_str = f"{red_state},{target},{target_1},{decoy_state_str}"
+        state_str = f"{red_state},{target_1},{decoy_state_str}"
         return state_to_id[state_str]
 
     @staticmethod
@@ -88,9 +94,8 @@ class Cage2AggregateMDP:
         B_LINE_AGENT_JUMPS = [0, 1, 2, 2, 2, 2, 5, 5, 5, 5, 9, 9, 9, 12, 13]
         state = id_to_state[state_id]
         red_state = state[0]
-        target = state[1]
-        target_1 = state[2]
-        decoy_state = state[3:]
+        target_1 = state[1]
+        decoy_state = state[2:]
         feasible_next_red_states = []
         if red_state in [0, 1, 3, 4, 6, 7, 8, 10, 11, 13]:
             feasible_next_red_states = [red_state + 1]
@@ -100,21 +105,6 @@ class Cage2AggregateMDP:
             feasible_next_red_states = [red_state, red_state + 1]
         if red_state in [5, 9, 12]:
             feasible_next_red_states = [red_state + 1, B_LINE_AGENT_JUMPS[red_state]]
-        feasible_next_targets = []
-        if target == -1 and red_state == 0:
-            feasible_next_targets = [3, 4, 5, 6]
-        if red_state in [1, 3, 4, 6, 7, 8, 10, 11, 13]:
-            feasible_next_targets = [target]
-        if target in [3, 4] and red_state == 2:
-            feasible_next_targets = [target] + [1]
-        elif target in [5, 6] and red_state == 2:
-            feasible_next_targets = [target] + [0]
-        elif target in [0, 1] and red_state == 5:
-            feasible_next_targets = [2, target_1]
-        elif target == 2 and red_state == 9:
-            feasible_next_targets = [7, Cage2AggregateMDP.target_2(target_1)]
-        elif target == 7 and red_state == 12:
-            feasible_next_targets = [2, target]
 
         next_decoy_state = decoy_state.copy()
         if u == 0:
@@ -138,45 +128,22 @@ class Cage2AggregateMDP:
             feasible_next_target_1.append(4)
             feasible_next_target_1.append(5)
             feasible_next_target_1.append(6)
-        elif red_state == 1:
-            feasible_next_target_1 = [target]
         else:
             feasible_next_target_1 = [target_1]
 
         feasible_next_states = []
         for feasible_target_1 in feasible_next_target_1:
             for feasible_red_state in feasible_next_red_states:
-                for feasible_target in feasible_next_targets:
-                    if feasible_red_state == 1 and (feasible_target != feasible_target_1):
-                        continue
-                    if red_state == 5 and feasible_red_state == 2 and feasible_target != target_1:
-                        continue
-                    if red_state == 9 and feasible_red_state == 5 \
-                            and feasible_target != Cage2AggregateMDP.target_2(target_1):
-                        continue
-                    if red_state == 12 and feasible_red_state == 9 and feasible_target != 2:
-                        continue
-                    if feasible_red_state == 6 and feasible_target == target_1:
-                        continue
-                    if feasible_red_state == 10 and feasible_target == Cage2AggregateMDP.target_2(target_1):
-                        continue
-                    if feasible_red_state == 13 and feasible_target == 2:
-                        continue
-                    if feasible_target != target and (feasible_red_state == red_state):
-                        continue
-                    if red_state in [2, 5, 9] and feasible_red_state != red_state and feasible_target == target:
-                        continue
-                    f_state = f"{feasible_red_state},{feasible_target},{feasible_target_1}," \
-                              f"{','.join(list(map(lambda x: str(x), next_decoy_state)))}"
-                    try:
-                        feasible_next_states.append(state_to_id[f_state])
-                    except Exception as e:
-                        print(type(e))
-                        print(f"curr state: {state}, next state: {f_state}, control: {u}")
-                        print(feasible_next_targets)
-                        print(feasible_next_target_1)
-                        import sys
-                        sys.exit()
+                f_state = f"{feasible_red_state},{feasible_target_1}," \
+                          f"{','.join(list(map(lambda x: str(x), next_decoy_state)))}"
+                try:
+                    feasible_next_states.append(state_to_id[f_state])
+                except Exception as e:
+                    print(type(e))
+                    print(f"curr state: {state}, next state: {f_state}, control: {u}")
+                    print(feasible_next_target_1)
+                    import sys
+                    sys.exit()
         return feasible_next_states
 
     @staticmethod
@@ -213,7 +180,8 @@ class Cage2AggregateMDP:
         state = id_to_state[x]
         state_prime = id_to_state[x_prime]
         red_state = state[0]
-        decoy_state = state[3:]
+        target_1 = state[1]
+        decoy_state = state[2:]
 
         if red_state == 0:
             return 0.25
@@ -221,24 +189,16 @@ class Cage2AggregateMDP:
             return 1
         if red_state in [1, 3, 4, 6, 7, 8, 10, 11, 13]:
             return 1
-        target = state[1]
-        next_target = state_prime[1]
+        target = Cage2AggregateMDP.target(target_1=target_1, red_state=red_state)
         next_red_state = state_prime[0]
-        next_target_1 = state_prime[2]
-        if next_target in [3, 4, 5, 6] and next_target_1 != next_target:
-            return 0
         if target == 6:
-            ds = -1
+            ds = 0
         elif target == 7:
             ds = decoy_state[6]
         else:
             ds = decoy_state[target]
         exploit_success_prob = Cage2AggregateMDP.exploit_success_probability(target=target, decoy_state=ds)
-        if red_state == 12 and next_red_state == 13:
-            return exploit_success_prob
-        if red_state == 12 and next_red_state == 12:
-            return 1 - exploit_success_prob
-        if (next_red_state == red_state + 1) and next_target != target:
+        if (next_red_state == red_state + 1) and red_state in [2, 5, 9, 12]:
             return exploit_success_prob
         else:
             return 1 - exploit_success_prob
@@ -295,47 +255,19 @@ class Cage2AggregateMDP:
         id_to_state = {}
         X = []
         state_id = 0
-        targets = [-1] + list(range(8))
         target_1s = [-1, 3, 4, 5, 6]
         for red_state in range(15):
             for target_1 in target_1s:
-                for target in targets:
-                    if target == -1 and target_1 != -1:
-                        continue
-                    if target != -1 and target_1 == -1:
-                        continue
-                    if red_state in [1, 2] and target not in [3, 4, 5, 6]:
-                        continue
-                    if red_state in [3, 4, 5] and target not in [0, 1]:
-                        continue
-                    if red_state in [3, 4, 5] and target_1 in [3, 4] and target != 1:
-                        continue
-                    if red_state in [3, 4, 5] and target_1 in [5, 6] and target != 0:
-                        continue
-                    if red_state in [6, 7, 8, 9] and target != 2:
-                        continue
-                    if red_state in [10, 11, 12, 13] and target != 7:
-                        continue
-                    if target in [3, 4, 5, 6] and target_1 != target:
-                        continue
-                    if target in [3, 4, 5, 6] and red_state not in [0, 1, 2]:
-                        continue
-                    if target in [0, 1] and red_state not in [3, 4, 5]:
-                        continue
-                    if target == 2 and red_state not in [6, 7, 8, 9]:
-                        continue
-                    if target == 7 and red_state not in [10, 11, 12, 13, 14]:
-                        continue
-                    if red_state == 0 and (target != -1 or target_1 != -1):
-                        continue
-                    if red_state >= 1 and (target_1 == -1 or target == -1):
-                        continue
-                    for decoy_state in decoy_states:
-                        state_to_id[f"{red_state},{target},{target_1}," \
-                                    f"{','.join(list(map(lambda x: str(x), list(decoy_state))))}"] = state_id
-                        id_to_state[state_id] = [red_state, target, target_1] + list(decoy_state)
-                        X.append(state_id)
-                        state_id += 1
+                if red_state == 0 and target_1 != -1:
+                    continue
+                if red_state >= 1 and target_1 == -1:
+                    continue
+                for decoy_state in decoy_states:
+                    state_to_id[f"{red_state},{target_1}," \
+                                f"{','.join(list(map(lambda x: str(x), list(decoy_state))))}"] = state_id
+                    id_to_state[state_id] = [red_state, target_1] + list(decoy_state)
+                    X.append(state_id)
+                    state_id += 1
         return X, state_to_id, id_to_state
 
     @staticmethod
@@ -363,12 +295,12 @@ class Cage2AggregateMDP:
         """
         cost = 0
         red_state = id_to_state[x][0]
-        target_1 = id_to_state[x][2]
-        decoy_state = id_to_state[x][3:]
+        target_1 = id_to_state[x][1]
+        decoy_state = id_to_state[x][2:]
         if u not in Cage2AggregateMDP.meaningful_decoys(red_state=red_state, target_1=target_1):
-            cost += 0.05
+            cost += 0.05 # Unnecessary decoy
         if decoy_state[u] == Cage2AggregateMDP.max_decoy(u):
-            decoys_left = sum(list(map(lambda x: int(x != Cage2AggregateMDP.max_decoy(x)),
+            decoys_left = sum(list(map(lambda x: int(decoy_state[x] != Cage2AggregateMDP.max_decoy(x)),
                                        Cage2AggregateMDP.meaningful_decoys(red_state=red_state, target_1=target_1))))
             if decoys_left > 0:
                 cost += 0.05 # Unnecessary decoy
@@ -404,14 +336,14 @@ class Cage2AggregateMDP:
             iteration += 1
             if verbose:
                 print(f"VI iteration: {iteration}, delta: {delta}, epsilon: {epsilon}")
-                ssx = [state_to_id[f"0,-1,-1,0,0,0,0,0,0,0"], state_to_id[f"1,3,3,0,0,0,0,0,0,0"],
-                       state_to_id[f"2,3,3,0,0,0,0,0,0,0"],
-                       state_to_id[f"3,1,3,0,1,0,0,0,0,0"], state_to_id[f"4,1,3,0,1,0,0,0,0,0"],
-                       state_to_id[f"5,1,3,0,1,0,0,0,0,0"], state_to_id[f"6,2,3,0,1,0,0,0,0,0"],
-                       state_to_id[f"7,2,3,0,1,0,0,0,0,0"], state_to_id[f"8,2,3,0,1,0,0,0,0,0"],
-                       state_to_id[f"9,2,3,0,1,0,0,0,0,0"], state_to_id[f"10,7,3,0,1,0,0,0,0,0"],
-                       state_to_id[f"11,7,3,0,1,0,0,0,0,0"], state_to_id[f"12,7,3,0,1,0,0,0,0,0"],
-                       state_to_id[f"13,7,3,0,1,0,0,0,0,0"], state_to_id[f"14,7,3,0,1,0,0,0,0,0"]]
+                ssx = [state_to_id[f"0,-1,0,0,0,0,0,0,0"], state_to_id[f"1,3,0,0,0,0,0,0,0"],
+                       state_to_id[f"2,3,0,0,0,0,0,0,0"],
+                       state_to_id[f"3,3,0,1,0,0,0,0,0"], state_to_id[f"4,3,0,1,0,0,0,0,0"],
+                       state_to_id[f"5,3,0,1,0,0,0,0,0"], state_to_id[f"6,3,0,1,0,0,0,0,0"],
+                       state_to_id[f"7,3,0,1,0,0,0,0,0"], state_to_id[f"8,3,0,1,0,0,0,0,0"],
+                       state_to_id[f"9,3,0,1,0,0,0,0,0"], state_to_id[f"10,3,0,1,0,0,0,0,0"],
+                       state_to_id[f"11,3,0,1,0,0,0,0,0"], state_to_id[f"12,3,0,1,0,0,0,0,0"],
+                       state_to_id[f"13,3,0,1,0,0,0,0,0"], state_to_id[f"14,3,0,1,0,0,0,0,0"]]
                 for sx in ssx:
                     u = Cage2AggregateMDP.TJx(x=sx, J=J, U=U, gamma=gamma, state_to_id=state_to_id,
                                               id_to_state=id_to_state)[0]
@@ -452,29 +384,27 @@ class Cage2AggregateMDP:
         return mu
 
     @staticmethod
-    def run_vi():
+    def run_vi(epsilon=0.1, gamma=0.99):
         """
         Runs value iteration and saves the results to disk
         """
         X, state_to_id, id_to_state = Cage2AggregateMDP.X()
         U = Cage2AggregateMDP.U()
-        gamma = 0.99
-        epsilon = 0.1
         mu, J = Cage2AggregateMDP.vi(X=X, U=U, gamma=gamma, epsilon=epsilon, verbose=True, state_to_id=state_to_id,
                                      id_to_state=id_to_state)
-        np.savetxt("mu2.txt", mu)
-        np.savetxt("J2.txt", J)
+        np.savetxt("mu3.txt", mu)
+        np.savetxt("J3.txt", J)
 
     @staticmethod
-    def test():
+    def test(N):
         """
         Simulates N test trajectories of the aggregate MDP
         """
         X, state_to_id, id_to_state = Cage2AggregateMDP.X()
+        print(len(X))
         U = Cage2AggregateMDP.U()
-        N = 1000
         for k in range(N):
-            x = state_to_id[f"0,-1,-1,0,0,0,0,0,0,0"]
+            x = state_to_id[f"0,-1,0,0,0,0,0,0,0"]
             while id_to_state[x][0] != 14:
                 u = random.choice(U)
                 feasible_states = Cage2AggregateMDP.feasible_next_states(state_id=x, state_to_id=state_to_id,
@@ -486,4 +416,5 @@ class Cage2AggregateMDP:
 
 
 if __name__ == '__main__':
-    Cage2AggregateMDP.run_vi()
+    # Cage2AggregateMDP.test(N=1)
+    Cage2AggregateMDP.run_vi(epsilon=0.3, gamma=0.99)
