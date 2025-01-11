@@ -7,7 +7,7 @@ from gym_csle_cyborg.dao.red_agent_type import RedAgentType
 from gym_csle_cyborg.dao.csle_cyborg_wrapper_config import CSLECyborgWrapperConfig
 
 def get_decoy_str(state):
-    decoy_state = state.get_decoy_state()
+    decoy_state = state.get_aggregate_decoy_state()
     return f"{min(1, decoy_state[1])},{min(1, decoy_state[2])},{min(1,decoy_state[3])},{min(1,decoy_state[9])},{min(1,decoy_state[10])},{min(1,decoy_state[11])}"
 
 

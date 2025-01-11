@@ -7,7 +7,7 @@ from gym_csle_cyborg.dao.red_agent_type import RedAgentType
 from gym_csle_cyborg.dao.csle_cyborg_wrapper_config import CSLECyborgWrapperConfig
 
 def get_active_decoys(state):
-    decoy_state = state.get_decoy_state()
+    decoy_state = state.get_aggregate_decoy_state()
     reachable_hosts = []
     if 1 not in state.red_action_targets:
         reachable_hosts = [12,11,10,9]

@@ -37,7 +37,7 @@ def particle_filter(particles, max_num_particles, train_env, action, obs):
 
 
 def get_decoy_str(state):
-    decoy_state = state.get_decoy_state()
+    decoy_state = state.get_aggregate_decoy_state()
     return f"{min(2, decoy_state[1])},{min(1, decoy_state[2])},{min(1,decoy_state[3])},{min(2,decoy_state[9])},{min(2,decoy_state[10])},{min(1,decoy_state[11])}"
 
 if __name__ == '__main__':

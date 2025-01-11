@@ -21,8 +21,8 @@ if __name__ == '__main__':
         = CyborgEnvUtil.get_action_dicts(scenario=2, reduced_action_space=True, decoy_state=True, decoy_optimization=False)
     print(action_id_to_type_and_host)
     print(CyborgEnvUtil.get_cyborg_hosts())
-    import sys
-    sys.exit(0)
+    # import sys
+    # sys.exit(0)
 
     action_to_id = {
         0: 27,
