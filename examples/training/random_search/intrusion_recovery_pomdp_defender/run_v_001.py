@@ -12,7 +12,7 @@ from csle_tolerance.dao.intrusion_recovery_pomdp_config import IntrusionRecovery
 from csle_tolerance.util.intrusion_recovery_pomdp_util import IntrusionRecoveryPomdpUtil
 
 if __name__ == '__main__':
-    emulation_name = "csle-level9-030"
+    emulation_name = "csle-level9-070"
     emulation_env_config = MetastoreFacade.get_emulation_by_name(emulation_name)
     if emulation_env_config is None:
         raise ValueError(f"Could not find an emulation environment with the name: {emulation_name}")

@@ -119,7 +119,7 @@ def get_obs_tensor():
 
 
 if __name__ == '__main__':
-    emulation_env_name = "csle-level9-030"
+    emulation_env_name = "csle-level9-070"
     emulation_env_config = MetastoreFacade.get_emulation_by_name(emulation_env_name)
     if emulation_env_config is None:
         raise ValueError(f"Could not find an emulation with name: {emulation_env_name}")

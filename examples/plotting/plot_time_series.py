@@ -90,7 +90,7 @@ def plot(time_series: EmulationMetricsTimeSeries, time_step_len_seconds: int = 3
 
 
 if __name__ == '__main__':
-    emulation_name = "csle-level4-030"
+    emulation_name = "csle-level4-070"
     execution_id = 15
     execution = MetastoreFacade.get_emulation_execution(emulation_name=emulation_name, ip_first_octet=execution_id)
     time_series = ClusterController.get_execution_time_series_data(ip='172.31.212.92', port=50041, minutes=60 * 24,

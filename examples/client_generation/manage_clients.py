@@ -102,7 +102,7 @@ def start_client_producer(execution: EmulationExecution) -> csle_collector.clien
 
 
 if __name__ == '__main__':
-    emulation = "csle-level4-030"
+    emulation = "csle-level4-070"
     execution_id = 15
     execution = MetastoreFacade.get_emulation_execution(emulation_name=emulation, ip_first_octet=execution_id)
     # clients = [

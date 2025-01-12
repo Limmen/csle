@@ -10,7 +10,7 @@ import csle_agents.constants.constants as agents_constants
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 
 if __name__ == '__main__':
-    emulation_name = "csle-level9-030"
+    emulation_name = "csle-level9-070"
     emulation_env_config = MetastoreFacade.get_emulation_by_name(emulation_name)
     if emulation_env_config is None:
         raise ValueError(f"Could not find an emulation environment with the name: {emulation_name}")

@@ -11,7 +11,7 @@ from gym_csle_cyborg.dao.red_agent_type import RedAgentType
 from gym_csle_cyborg.envs.cyborg_scenario_two_defender import CyborgScenarioTwoDefender
 
 if __name__ == '__main__':
-    emulation_name = "csle-level9-040"
+    emulation_name = "csle-level9-070"
     emulation_env_config = MetastoreFacade.get_emulation_by_name(emulation_name)
     if emulation_env_config is None:
         raise ValueError(f"Could not find an emulation environment with the name: {emulation_name}")

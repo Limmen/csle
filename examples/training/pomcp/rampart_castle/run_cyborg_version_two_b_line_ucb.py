@@ -33,7 +33,7 @@ def heuristic_value(o: List[List[int]]) -> float:
 
 
 if __name__ == '__main__':
-    emulation_name = "csle-level9-040"
+    emulation_name = "csle-level9-070"
     emulation_env_config = None
     simulation_name = "csle-cyborg-001"
     simulation_env_config = SimulationEnvConfig(name="", version="", gym_env_name="", simulation_env_input_config="",

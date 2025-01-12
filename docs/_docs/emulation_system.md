@@ -51,7 +51,7 @@ Table 2: Properties of an emulation configuration.
 
 Users of CSLE can create new emulation configurations and insert them into the metastore. CSLE also includes a set of
 pre-installed configurations
-(see Table 3). One of these pre-installed configurations is `csle-level9-020` (as an example), whose topology is shown
+(see Table 3). One of these pre-installed configurations is `csle-level9-070` (as an example), whose topology is shown
 in Fig. 6 and whose configuration is listed in Table 4.
 
 
@@ -80,7 +80,7 @@ Table 3: Pre-installed emulation configurations.
 <p align="center">
 <img src="./../../img/example_topology.png" width="30%">
 <p class="captionFig">
-Figure 6: Topology of the emulation configuration `csle-level9-020`
+Figure 6: Topology of the emulation configuration `csle-level9-070`
 </p>
 </p>
 

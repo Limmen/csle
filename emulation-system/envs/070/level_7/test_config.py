@@ -12,7 +12,7 @@ class TestEmulationConfigSuite:
 
         :return: None
         """
-        config = default_config(name="csle-level7-050", network_id=7, level=7, version="0.5.0",
+        config = default_config(name="csle-level7-070", network_id=7, level=7, version="0.5.0",
                                 time_step_len_seconds=15)
         assert config.vuln_config is not None
         assert config.containers_config is not None
