@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 from . import socketio
 import csle_common.constants.constants as constants
 from csle_common.logging.log import Logger
@@ -84,6 +85,8 @@ def create_app(static_folder: str):
     :return: the flask app
     """
     app = Flask(__name__, static_url_path='', static_folder=static_folder)
+    CORS(app) # allow CORS for all domains on all routes.
+    app.config[api_constants.MGMT_WEBAPP.CORS_HEADERS] = api_constants.MGMT_WEBAPP.CONTENT_TYPE
 
     app.register_blueprint(get_emulations_page_bp(static_folder=f"../../{static_folder}"),
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"

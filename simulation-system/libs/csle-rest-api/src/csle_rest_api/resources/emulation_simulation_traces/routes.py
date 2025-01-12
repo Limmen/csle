@@ -3,7 +3,6 @@ Routes and sub-resources for the /emulation-simulation-traces resource
 """
 from typing import Tuple
 from flask import Blueprint, jsonify, request, Response
-import json
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -35,9 +34,60 @@ def emulation_simulation_traces() -> Tuple[Response, int]:
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
             return emulation_simulation_traces_ids()
-        f = open('/var/log/csle/one_tau.json')
-        d = json.load(f)
-        response = jsonify(d[api_constants.MGMT_WEBAPP.TRAJECTORIES_PROPERTY])
+        demo_traces = [
+            {
+                "attacker_found_nodes": [[], [], [], [], [],
+                                         ["n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", ],
+                                         ["n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11"],
+                                         ["n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12",
+                                          "switch1"],
+                                         ["n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12",
+                                          "switch1"],
+                                         ["n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12",
+                                          "switch1",
+                                          "n13", "n14", "n15", "n16"],
+                                         ["n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12",
+                                          "switch1",
+                                          "n13", "n14", "n15", "n16"],
+                                         ["n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12",
+                                          "switch1",
+                                          "n13", "n14", "n15", "n16", "switch2", "n17", "n18"],
+                                         ["n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12",
+                                          "switch1",
+                                          "n13", "n14", "n15", "n16", "switch2", "n17", "n18"],
+                                         ["n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12",
+                                          "switch1",
+                                          "n13", "n14", "n15", "n16", "switch2", "n17", "n18", "switch3", "n19",
+                                          "n20", "n21", "n22", "n23", "n24"],
+                                         ["n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12",
+                                          "switch1",
+                                          "n13", "n14", "n15", "n16", "switch2", "n17", "n18", "switch3", "n19",
+                                          "n20", "n21", "n22", "n23", "n24"],
+                                         ["n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12",
+                                          "switch1",
+                                          "n13", "n14", "n15", "n16", "switch2", "n17", "n18", "switch3", "n19",
+                                          "n20", "n21", "n22", "n23", "n24", "n25", "n26", "switch4"]],
+                "attacker_compromised_nodes": [[], [], [], [], [], [],
+                                               ["n2"], ["n2"], ["n2", "n12"], ["n2", "n12"], ["n2", "n12", "n4"],
+                                               ["n2", "n12", "n4"], ["n2", "n12", "n4", "n17"],
+                                               ["n2", "n12", "n4", "n17"], ["n2", "n12", "n4", "n17", "n18"],
+                                               ["n2", "n12", "n4", "n17", "n18"]],
+                "attacker_actions": [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                "defender_actions": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                "defender_stop_probabilities": [0, 0.02, 0.05, 0.06, 0.05, 0.06, 0.08, 0.25, 0.55, 0.79, 0.95, 0.99,
+                                                0.99, 0.99, 0.99, 0.99, 0.99, 0.99],
+                "defender_beliefs": [0, 0.02, 0.05, 0.06, 0.05, 0.06, 0.08, 0.25, 0.33, 0.45, 0.48, 0.51,
+                                     0.55, 0.6, 0.62, 0.73, 0.78, 0.86],
+                "defender_observations": [[39, 48, 52], [101, 2, 4], [30, 51, 28], [9, 12, 3], [45, 10, 19],
+                                          [61, 20, 12],
+                                          [41, 59, 61], [161, 80, 122], [120, 60, 59], [190, 40, 90], [121, 29, 56],
+                                          [100, 31, 45], [161, 80, 20], [119, 67, 5], [67, 51, 9], [167, 105, 98],
+                                          [147, 51, 78]],
+                "intrusion_start_index": 7,
+                "name": "demo"
+            }
+        ]
+        response = jsonify(demo_traces)
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:

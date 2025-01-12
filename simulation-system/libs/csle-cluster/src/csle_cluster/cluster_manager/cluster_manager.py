@@ -387,12 +387,15 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         """
         logging.info(f"Getting log file: {request.name}")
         data = []
-        if os.path.exists(request.name):
-            try:
-                with open(request.name, 'r') as fp:
-                    data = ClusterManagerUtil.tail(fp, window=100).split("\n")
-            except Exception as e:
-                logging.info(f"Exception reading log file: {request.name}. Stacktrace: {str(e)}, {repr(e)}")
+        try:
+            if os.path.exists(request.name):
+                try:
+                    with open(request.name, 'r') as fp:
+                        data = ClusterManagerUtil.tail(fp, window=100).split("\n")
+                except Exception as e:
+                    logging.info(f"Exception reading log file: {request.name}. Stacktrace: {str(e)}, {repr(e)}")
+        except Exception as e:
+            logging.info(f"Exception finding log file: {request.name}. Stacktrace: {str(e)}, {repr(e)}")
         logs = data
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
@@ -410,13 +413,16 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         config = Config.get_current_config()
         path = config.flask_log_file
         logs = []
-        if os.path.exists(path):
-            try:
-                with open(path, 'r') as fp:
-                    data = ClusterManagerUtil.tail(fp, window=100).split("\n")
-                    logs = data
-            except Exception as e:
-                logging.info(f"Exception reading log file: {path}. Stacktrace: {str(e)}, {repr(e)}")
+        try:
+            if os.path.exists(path):
+                try:
+                    with open(path, 'r') as fp:
+                        data = ClusterManagerUtil.tail(fp, window=100).split("\n")
+                        logs = data
+                except Exception as e:
+                    logging.info(f"Exception reading log file: {path}. Stacktrace: {str(e)}, {repr(e)}")
+        except Exception as e:
+            logging.info(f"Exception reading flask logs. Stacktrace: {str(e)}, {repr(e)}")
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
     def getPostrgreSQLLogs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetPostgreSQLLogsMsg,
@@ -433,16 +439,19 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         config = Config.get_current_config()
         path = config.postgresql_log_dir
         logs = []
-        for f in os.listdir(path):
-            item = os.path.join(path, f)
-            if os.path.isfile(item) and constants.FILE_PATTERNS.LOG_SUFFIX in item and \
-                    constants.FILE_PATTERNS.GZ_SUFFIX not in item:
-                try:
-                    with open(item, 'r') as fp:
-                        data = ClusterManagerUtil.tail(fp, window=100).split("\n")
-                        logs = data
-                except Exception as e:
-                    logging.info(f"Exception reading log file: {item}. Stacktrace: {str(e)}, {repr(e)}")
+        try:
+            for f in os.listdir(path):
+                item = os.path.join(path, f)
+                if os.path.isfile(item) and constants.FILE_PATTERNS.LOG_SUFFIX in item and \
+                        constants.FILE_PATTERNS.GZ_SUFFIX not in item:
+                    try:
+                        with open(item, 'r') as fp:
+                            data = ClusterManagerUtil.tail(fp, window=100).split("\n")
+                            logs = data
+                    except Exception as e:
+                        logging.info(f"Exception reading log file: {item}. Stacktrace: {str(e)}, {repr(e)}")
+        except Exception as e:
+            logging.info(f"Exception reading postgresql logs. Stacktrace: {str(e)}, {repr(e)}")
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
     def getDockerLogs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetDockerLogsMsg,
@@ -456,19 +465,23 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with logs
         """
         logging.info("Getting the Docker logs")
-        cmd = constants.COMMANDS.DOCKER_ENGINE_LOGS
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-        (output_bytes, err) = p.communicate()
-        output_str = output_bytes.decode("utf-8")
-        output = output_str.split("\n")[-100:]
-        logs = output
-        if logs == ['']:
-            alt_cmd = constants.COMMANDS.DOCKER_ENGINE_LOGS_ALTERNATIVE
-            p = subprocess.Popen(alt_cmd, stdout=subprocess.PIPE, shell=True)
+        logs = []
+        try:
+            cmd = constants.COMMANDS.DOCKER_ENGINE_LOGS
+            p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True, stdin=subprocess.DEVNULL)
             (output_bytes, err) = p.communicate()
             output_str = output_bytes.decode("utf-8")
             output = output_str.split("\n")[-100:]
             logs = output
+            if logs == ['']:
+                alt_cmd = constants.COMMANDS.DOCKER_ENGINE_LOGS_ALTERNATIVE
+                p = subprocess.Popen(alt_cmd, stdout=subprocess.PIPE, shell=True, stdin=subprocess.DEVNULL)
+                (output_bytes, err) = p.communicate()
+                output_str = output_bytes.decode("utf-8")
+                output = output_str.split("\n")[-100:]
+                logs = output
+        except Exception as e:
+            logging.info(f"Exception reading docker logs. Stacktrace: {str(e)}, {repr(e)}")
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
     def getNginxLogs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetNginxLogsMsg,
@@ -485,16 +498,19 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         config = Config.get_current_config()
         path = config.nginx_log_dir
         logs = []
-        for f in os.listdir(path):
-            item = os.path.join(path, f)
-            if os.path.isfile(item) and constants.FILE_PATTERNS.LOG_SUFFIX in item \
-                    and constants.FILE_PATTERNS.GZ_SUFFIX not in item:
-                try:
-                    with open(item, 'r') as fp:
-                        data = ClusterManagerUtil.tail(fp, window=100).split("\n")
-                        logs = logs + data
-                except Exception as e:
-                    logging.info(f"Exception reading log file: {item}. Stacktrace: {str(e)}, {repr(e)}")
+        try:
+            for f in os.listdir(path):
+                item = os.path.join(path, f)
+                if os.path.isfile(item) and constants.FILE_PATTERNS.LOG_SUFFIX in item \
+                        and constants.FILE_PATTERNS.GZ_SUFFIX not in item:
+                    try:
+                        with open(item, 'r') as fp:
+                            data = ClusterManagerUtil.tail(fp, window=100).split("\n")
+                            logs = logs + data
+                    except Exception as e:
+                        logging.info(f"Exception reading log file: {item}. Stacktrace: {str(e)}, {repr(e)}")
+        except Exception as e:
+            logging.info(f"Exception reading nginx logs. Stacktrace: {str(e)}, {repr(e)}")
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
     def getGrafanaLogs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetGrafanaLogsMsg,
@@ -508,12 +524,16 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with logs
         """
         logging.info("Getting the Grafana logs")
-        cmd = constants.COMMANDS.GRAFANA_LOGS
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-        (output_bytes, err) = p.communicate()
-        output_str = output_bytes.decode("utf-8")
-        output = output_str.split("\n")[-100:]
-        logs = output
+        logs = []
+        try:
+            cmd = constants.COMMANDS.GRAFANA_LOGS
+            p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+            (output_bytes, err) = p.communicate()
+            output_str = output_bytes.decode("utf-8")
+            output = output_str.split("\n")[-100:]
+            logs = output
+        except Exception as e:
+            logging.info(f"Exception reading grafana logs. Stacktrace: {str(e)}, {repr(e)}")
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
     def getPgAdminLogs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetPgAdminLogsMsg,
@@ -527,12 +547,16 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with logs
         """
         logging.info("Getting the pgAdmin logs")
-        cmd = constants.COMMANDS.PGADMIN_LOGS
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-        (output_bytes, err) = p.communicate()
-        output_str = output_bytes.decode("utf-8")
-        output = output_str.split("\n")[-100:]
-        logs = output
+        logs = []
+        try:
+            cmd = constants.COMMANDS.PGADMIN_LOGS
+            p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+            (output_bytes, err) = p.communicate()
+            output_str = output_bytes.decode("utf-8")
+            output = output_str.split("\n")[-100:]
+            logs = output
+        except Exception as e:
+            logging.info(f"Exception reading nginx logs. Stacktrace: {str(e)}, {repr(e)}")
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
     def getCadvisorLogs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetCAdvisorLogsMsg,
@@ -546,12 +570,16 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with logs
         """
         logging.info("Getting the cAdvisor logs")
-        cmd = constants.COMMANDS.CADVISOR_LOGS
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-        (output_bytes, err) = p.communicate()
-        output_str = output_bytes.decode("utf-8")
-        output = output_str.split("\n")[-100:]
-        logs = output
+        logs = []
+        try:
+            cmd = constants.COMMANDS.CADVISOR_LOGS
+            p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+            (output_bytes, err) = p.communicate()
+            output_str = output_bytes.decode("utf-8")
+            output = output_str.split("\n")[-100:]
+            logs = output
+        except Exception as e:
+            logging.info(f"Exception reading cadvisor logs. Stacktrace: {str(e)}, {repr(e)}")
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
     def getNodeExporterLogs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetNodeExporterLogsMsg,
@@ -568,13 +596,16 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         config = Config.get_current_config()
         path = config.node_exporter_log_file
         logs = []
-        if os.path.exists(path):
-            try:
-                with open(path, 'r') as fp:
-                    data = ClusterManagerUtil.tail(fp, window=100).split("\n")
-                    logs = data
-            except Exception as e:
-                logging.info(f"Exception reading log file: {path}. Stacktrace: {str(e)}, {repr(e)}")
+        try:
+            if os.path.exists(path):
+                try:
+                    with open(path, 'r') as fp:
+                        data = ClusterManagerUtil.tail(fp, window=100).split("\n")
+                        logs = data
+                except Exception as e:
+                    logging.info(f"Exception reading log file: {path}. Stacktrace: {str(e)}, {repr(e)}")
+        except Exception as e:
+            logging.info(f"Exception reading node exporter logs. Stacktrace: {str(e)}, {repr(e)}")
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
     def getPrometheusLogs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetPrometheusLogsMsg,
@@ -591,13 +622,16 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         config = Config.get_current_config()
         path = config.prometheus_log_file
         logs = []
-        if os.path.exists(path):
-            try:
-                with open(path, 'r') as fp:
-                    data = ClusterManagerUtil.tail(fp, window=100).split("\n")
-                    logs = data
-            except Exception as e:
-                logging.info(f"Exception reading log file: {path}. Stacktrace: {str(e)}, {repr(e)}")
+        try:
+            if os.path.exists(path):
+                try:
+                    with open(path, 'r') as fp:
+                        data = ClusterManagerUtil.tail(fp, window=100).split("\n")
+                        logs = data
+                except Exception as e:
+                    logging.info(f"Exception reading log file: {path}. Stacktrace: {str(e)}, {repr(e)}")
+        except Exception as e:
+            logging.info(f"Exception reading prometheus logs. Stacktrace: {str(e)}, {repr(e)}")
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
     def getDockerStatsManagerLogs(
@@ -614,13 +648,16 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         config = Config.get_current_config()
         path = config.docker_stats_manager_log_dir + config.docker_stats_manager_log_file
         logs = []
-        if os.path.exists(path):
-            try:
-                with open(path, 'r') as fp:
-                    data = ClusterManagerUtil.tail(fp, window=100).split("\n")
-                    logs = data
-            except Exception as e:
-                logging.info(f"Exception reading log file: {path}. Stacktrace: {str(e)}, {repr(e)}")
+        try:
+            if os.path.exists(path):
+                try:
+                    with open(path, 'r') as fp:
+                        data = ClusterManagerUtil.tail(fp, window=100).split("\n")
+                        logs = data
+                except Exception as e:
+                    logging.info(f"Exception reading log file: {path}. Stacktrace: {str(e)}, {repr(e)}")
+        except Exception as e:
+            logging.info(f"Exception reading docker statsmanager logs. Stacktrace: {str(e)}, {repr(e)}")
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
     def getCsleLogFiles(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetCsleLogFilesMsg,
@@ -637,12 +674,15 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         config = Config.get_current_config()
         path = config.default_log_dir
         log_files = []
-        for f in os.listdir(path):
-            item = os.path.join(path, f)
-            if os.path.isfile(item):
-                log_files.append(item)
-        if len(log_files) > 20:
-            log_files = log_files[0:20]
+        try:
+            for f in os.listdir(path):
+                item = os.path.join(path, f)
+                if os.path.isfile(item):
+                    log_files.append(item)
+            if len(log_files) > 20:
+                log_files = log_files[0:20]
+        except Exception as e:
+            logging.info(f"Exception reading csle log files. Stacktrace: {str(e)}, {repr(e)}")
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=log_files)
 
     def startContainersInExecution(
@@ -1651,7 +1691,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                                                                    logger=logging.getLogger())
             return ClusterManagerUtil.convert_client_dto_to_get_num_clients_dto(clients_dto=clients_dto)
         else:
-   
+
             return ClusterManagerUtil.get_empty_get_num_clients_dto()
 
     def stopTrafficGenerators(
@@ -2165,8 +2205,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             return ClusterManagerUtil.convert_elk_dto(elk_dto=elk_dto)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.ElkStatusDTO(
-                kibanaRunning=False, elasticRunning=False, logstashRunning=False
-            )
+                kibanaRunning=False, elasticRunning=False, logstashRunning=False)
 
     def stopElkStack(
             self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopElkStackMsg,

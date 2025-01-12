@@ -63,7 +63,8 @@ class Config(JSONSerializable):
             nginx_log_dir: str,
             flask_log_file: str,
             cluster_manager_log_file: str,
-            version: str
+            version: str,
+            localhost: bool
     ):
         """
         Initializes the DTO
@@ -119,6 +120,7 @@ class Config(JSONSerializable):
         :param flask_log_file: the log file of Flask
         :param cluster_manager_log_file: the log file of the cluster manager
         :param version: the CSLE version in the format: "major.minor.patch"
+        :param localhost: whether to use localhost ips or the public ips
         """
         self.management_admin_username_default = management_admin_username_default
         self.management_admin_password_default = management_admin_password_default
@@ -171,6 +173,7 @@ class Config(JSONSerializable):
         self.cluster_manager_log_file = cluster_manager_log_file
         self.id = 1
         self.version = version
+        self.localhost = localhost
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -230,6 +233,7 @@ class Config(JSONSerializable):
         d["cluster_manager_log_file"] = self.cluster_manager_log_file
         d["version"] = self.version
         d["id"] = 1
+        d["localhost"] = self.localhost
         return d
 
     def to_param_dict(self) -> Dict[str, Any]:
@@ -450,6 +454,7 @@ class Config(JSONSerializable):
         )
         d["cluster_config"] = self.cluster_config.to_dict()
         d["version"] = self.version
+        d["localhost"] = self.localhost
         return d
 
     @staticmethod
@@ -509,7 +514,8 @@ class Config(JSONSerializable):
             nginx_log_dir=d["nginx_log_dir"],
             flask_log_file=d["flask_log_file"],
             cluster_manager_log_file=d["cluster_manager_log_file"],
-            version=d["version"]
+            version=d["version"],
+            localhost=d["localhost"]
         )
         if "id" in d:
             dto.id = d["id"]
@@ -524,6 +530,7 @@ class Config(JSONSerializable):
         """
         d = {}
         d["version"] = d2["version"]
+        d["localhost"] = d2["localhost"]
         d["cluster_config"] = d2["cluster_config"]
         for param_value in d2["parameters"]:
             d[param_value["param"]] = param_value["value"]
@@ -578,7 +585,8 @@ class Config(JSONSerializable):
             nginx_log_dir=d["nginx_log_dir"],
             flask_log_file=d["flask_log_file"],
             cluster_manager_log_file=d["cluster_manager_log_file"],
-            version=d["version"]
+            version=d["version"],
+            localhost=d["localhost"]
         )
         if "id" in d:
             dto.id = d["id"]
@@ -627,7 +635,7 @@ class Config(JSONSerializable):
             f"pgadmin_username: {self.pgadmin_username}, pgadmin_password: {self.pgadmin_password},"
             f"postgresql_log_dir: {self.postgresql_log_dir}, nginx_log_dir: {self.nginx_log_dir},"
             f"flask_log_file: {self.flask_log_file}, cluster_manager_log_file: {self.cluster_manager_log_file},"
-            f"version: {self.version}"
+            f"version: {self.version}, localhost: {self.localhost}"
         )
 
     @staticmethod
@@ -697,7 +705,6 @@ class Config(JSONSerializable):
         """
         :return: The names ought to be included in a config class
         """
-
         std_param_names = [
             "management_admin_username_default",
             "management_admin_password_default",

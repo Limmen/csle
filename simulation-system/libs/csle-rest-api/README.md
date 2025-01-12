@@ -198,6 +198,8 @@ A REST API for the CSLE management platform.
 
 - Python 3.8+
 - `flask` (for HTTP server)
+- `flask-cors`
+- `flask-socketio`
 - `csle-base`
 - `csle-common`
 - `csle-agents`

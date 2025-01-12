@@ -108,9 +108,9 @@ const PolicyExamination = (props) => {
         var attacker_found_nodes = []
         var attacker_compromised_nodes = []
         if (trace !== null) {
-            attacker_found_nodes = trace.attacker_found_nodes[t]
-            attacker_compromised_nodes = trace.attacker_compromised_nodes[t]
-            if (trace.attacker_actions[t] !== trace.attacker_continue_action && trace.attacker_actions[t] !== -1) {
+            attacker_found_nodes = trace.attacker_found_nodes[t-1]
+            attacker_compromised_nodes = trace.attacker_compromised_nodes[t-1]
+            if (trace.attacker_actions[t-1] !== 0) {
                 if (!attacker_found_nodes.includes("attacker")) {
                     attacker_found_nodes.push("attacker")
                 }
@@ -227,9 +227,6 @@ const PolicyExamination = (props) => {
 
     const incrementT = () => {
         if (traces.length > 0 && activeTrace !== null) {
-            if (activeTrace.value.defender_actions[t + 1] === 0 && l > 0) {
-                setL(l - 1)
-            }
             if (t >= activeTrace.value.defender_actions.length - 1) {
                 setT(activeTrace.value.defender_actions.length - 1)
             } else {
@@ -273,7 +270,7 @@ const PolicyExamination = (props) => {
     }
 
     const decrementT = () => {
-        if (activeTrace !== null && activeTrace.value.defender_actions[t] === 0) {
+        if (activeTrace !== null && activeTrace.value.defender_actions[t-1] === 0) {
             setL(l + 1)
         }
         if (t > 0) {

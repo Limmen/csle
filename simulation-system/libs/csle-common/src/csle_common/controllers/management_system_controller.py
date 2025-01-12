@@ -70,8 +70,12 @@ class ManagementSystemController:
 
         :return: True if nginx is running, false otherwise
         """
-        output = subprocess.run(constants.COMMANDS.NGINX_STATUS.split(" "), capture_output=True, text=True)
-        nginx_running = "active (running)" in output.stdout or "active (exited)" in output.stdout
+        output = ""
+        try:
+            output = subprocess.run(constants.COMMANDS.NGINX_STATUS.split(" "), capture_output=True, text=True).stdout
+        except Exception:
+            pass
+        nginx_running = "active (running)" in output or "active (exited)" in output
         return nginx_running
 
     @staticmethod
@@ -81,12 +85,22 @@ class ManagementSystemController:
 
         :return: True if PostgreSQL is running, false otherwise
         """
-        output = subprocess.run(constants.COMMANDS.POSTGRESQL_STATUS.split(" "), capture_output=True, text=True)
-        postgresql_running = "active (running)" in output.stdout or "active (exited)" in output.stdout
+        output = ""
+        try:
+            output = subprocess.run(constants.COMMANDS.POSTGRESQL_STATUS.split(" "), capture_output=True,
+                                    text=True).stdout
+        except Exception:
+            pass
+        postgresql_running = "active (running)" in output or "active (exited)" in output
         if postgresql_running:
             return postgresql_running
-        output = subprocess.run(constants.COMMANDS.POSTGRESQL_STATUS_VERSION.split(" "), capture_output=True, text=True)
-        postgresql_running = "active (running)" in output.stdout or "active (exited)" in output.stdout
+        output = ""
+        try:
+            output = subprocess.run(constants.COMMANDS.POSTGRESQL_STATUS_VERSION.split(" "), capture_output=True,
+                                    text=True).stdout
+        except Exception:
+            pass
+        postgresql_running = "active (running)" in output or "active (exited)" in output
         return postgresql_running
 
     @staticmethod
@@ -96,8 +110,13 @@ class ManagementSystemController:
 
         :return: True if Docker engine is running, false otherwise
         """
-        output = subprocess.run(constants.COMMANDS.DOCKER_ENGINE_STATUS.split(" "), capture_output=True, text=True)
-        docker_engine_running = "active (running)" in output.stdout or "active (exited)" in output.stdout
+        output = ""
+        try:
+            output = subprocess.run(constants.COMMANDS.DOCKER_ENGINE_STATUS.split(" "), capture_output=True,
+                                    text=True).stdout
+        except Exception:
+            pass
+        docker_engine_running = "active (running)" in output or "active (exited)" in output
         return docker_engine_running
 
     @staticmethod

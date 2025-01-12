@@ -493,7 +493,8 @@ class TestResourcesUsersSuite:
             nginx_log_dir="null",
             flask_log_file="null",
             cluster_manager_log_file="null",
-            version="0.7.0"
+            version="0.7.0",
+            localhost=False
         )
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_management_users",
                      side_effect=management_users)

@@ -44,7 +44,10 @@ def init() -> None:
     """
     from csle_common.util.management_util import ManagementUtil
     import csle_common.constants.constants as constants
-    host_ip = GeneralUtil.get_host_ip()
+    config = ClusterUtil.get_config()
+    host_ip = constants.COMMON.LOCALHOST_127_0_0_1
+    if not config.localhost:
+        host_ip = GeneralUtil.get_host_ip()
     start_cluster_manager(host_ip=host_ip)
     leader = ClusterUtil.am_i_leader(ip=host_ip, config=constants.CONFIG_FILE.PARSED_CONFIG)
     if leader:

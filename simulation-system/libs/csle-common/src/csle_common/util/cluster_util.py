@@ -36,7 +36,10 @@ class ClusterUtil:
         config = MetastoreFacade.get_config(id=1)
         if config is None:
             config = Config.read_config_file()
-        ip = GeneralUtil.get_host_ip()
+        if config.localhost:
+            ip = constants.COMMON.LOCALHOST_127_0_0_1
+        else:
+            ip = GeneralUtil.get_host_ip()
         constants.METADATA_STORE.HOST = ip
         constants.CLUSTER_CONFIG.IP = ip
         leader = ClusterUtil.am_i_leader(ip=ip, config=config)

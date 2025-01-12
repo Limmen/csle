@@ -7,7 +7,8 @@ class MGMT_WEBAPP:
     """
     Constants related to the management webapp
     """
-
+    CORS_HEADERS = "CORS_HEADERS"
+    CONTENT_TYPE = "Content-Type"
     ACCESS_CONTROL_ALLOW_ORIGIN_HEADER = "Access-Control-Allow-Origin"
     IDS_QUERY_PARAM = "ids"
     DOWNLOAD_QUERY_PARAM = "download"

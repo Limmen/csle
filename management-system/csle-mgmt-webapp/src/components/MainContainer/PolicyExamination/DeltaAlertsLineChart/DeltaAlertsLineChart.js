@@ -36,11 +36,6 @@ const DeltaAlertsLineChart = React.memo((props) => {
                 var deltaX = filteredData[i][0]
                 var deltaY = filteredData[i][1]
                 var deltaZ = filteredData[i][2]
-                if (i > 0) {
-                    deltaX = filteredData[i][0] - filteredData[i - 1][0]
-                    deltaY = filteredData[i][1] - filteredData[i - 1][1]
-                    deltaZ = filteredData[i][2] - filteredData[i - 1][2]
-                }
                 data.push(
                     {
                         t: i + 1,

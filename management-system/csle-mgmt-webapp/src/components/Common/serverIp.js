@@ -1,7 +1,7 @@
 /**
  * IP constants
  */
-const serverIp = "172.31.212.92";
+const serverIp = "127.0.0.1";
 // const serverIp = "localhost"
 
 export default serverIp;

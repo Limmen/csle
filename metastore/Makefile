@@ -1,6 +1,3 @@
-PROJECT=csle
-VERSION=0.0.1
-
 all: db cluster tables
 
 # Drops the csle citus db

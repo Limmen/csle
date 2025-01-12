@@ -42,32 +42,19 @@
   "postgresql_log_dir": "/var/log/postgresql/",
   "nginx_log_dir": "/var/log/nginx/",
   "default_log_dir": "/tmp/csle/",
-  "metastore_ip": "172.31.212.92",
+  "metastore_ip": "127.0.0.1",
+  "localhost": true,
   "metastore_user": "csle",
   "metastore_password": "csle",
   "metastore_database_name": "csle",
   "cluster_config": {
     "cluster_nodes": [
       {
-        "ip": "172.31.212.92",
+        "ip": "127.0.0.1",
         "leader": true,
-        "cpus": 96,
-        "gpus": 4,
-        "RAM": 768
-      },
-      {
-        "ip": "172.31.212.91",
-        "leader": false,
-        "cpus": 15,
-        "gpus": 2,
-        "RAM": 126
-      },
-      {
-        "ip": "172.31.212.93",
-        "leader": false,
-        "cpus": 40,
+        "cpus": 24,
         "gpus": 0,
-        "RAM": 32
+        "RAM": 192
       }
     ]
   },

@@ -951,8 +951,8 @@ class COMMANDS:
     CADVISOR_LOGS = "docker logs cadvisor"
     PGADMIN_LOGS = "docker logs pgadmin"
     GRAFANA_LOGS = "docker logs grafana"
-    DOCKER_ENGINE_LOGS = "sudo /usr/bin/journalctl -u docker.service -n 100 --no-pager -e"
-    DOCKER_ENGINE_LOGS_ALTERNATIVE = "sudo /bin/journalctl -u docker.service -n 100 --no-pager -e"
+    DOCKER_ENGINE_LOGS = "sudo -n /usr/bin/journalctl -u docker.service -n 100 --no-pager -e"
+    DOCKER_ENGINE_LOGS_ALTERNATIVE = "sudo -n /bin/journalctl -u docker.service -n 100 --no-pager -e"
     NODE_EXPORTER_PID_FILE = "/var/log/csle/node_exporter.pid"
     CSLE_MGMT_WEBAPP_PID_FILE = "/var/log/csle/csle_mgmt_webapp.pid"
     NODE_EXPORTER_LOG_FILE = "/var/log/csle/node_exporter.log"
@@ -975,12 +975,12 @@ class COMMANDS:
     POSTGRESQL_STATUS = "service postgresql status"
     POSTGRESQL_STATUS_VERSION = "service postgresql@15-main status"
     DOCKER_ENGINE_STATUS = "service docker status"
-    POSTGRESQL_START = "sudo service postgresql start"
-    POSTGRESQL_STOP = "sudo service postgresql stop"
-    NGINX_START = "sudo service nginx start"
-    NGINX_STOP = "sudo service nginx stop"
-    DOCKER_ENGINE_START = "sudo service docker start"
-    DOCKER_ENGINE_STOP = "sudo service docker stop"
+    POSTGRESQL_START = "sudo -n service postgresql start"
+    POSTGRESQL_STOP = "sudo -n service postgresql stop"
+    NGINX_START = "sudo -n service nginx start"
+    NGINX_STOP = "sudo -n service nginx stop"
+    DOCKER_ENGINE_START = "sudo -n service docker start"
+    DOCKER_ENGINE_STOP = "sudo -n service docker stop"
 
 
 class OVS:
@@ -1012,7 +1012,7 @@ class ETC_HOSTS:
     DEFAULT_HOST_LINE_4 = "'ff00::0 ip6-mcastprefix'"
     DEFAULT_HOST_LINE_5 = "'ff02::1 ip6-allnodes'"
     DEFAULT_HOST_LINE_6 = "''ff02::2 ip6-allrouters''"
-    APPEND_TO_ETC_HOSTS = "sudo tee -a /etc/hosts"
+    APPEND_TO_ETC_HOSTS = "sudo -n tee -a /etc/hosts"
 
 
 class FILE_PATTERNS:
@@ -1618,7 +1618,7 @@ class METADATA_STORE:
     DBNAME = "csle"
     USER = "csle"
     PASSWORD = "csle"
-    HOST = "172.31.212.92"
+    HOST = "127.0.0.1"
     TRACES_PROPERTY = "traces"
     DB_NAME_PROPERTY = "dbname"
     PW_PROPERTY = "password"
