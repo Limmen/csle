@@ -26,18 +26,18 @@ def monte_carlo_most_frequent_particle(particles: List[CyborgWrapperState], N: i
 
 
 def particle_filter(particles: List[CyborgWrapperState], max_num_particles: int, train_env: CyborgScenarioTwoWrapper,
-                    u: int, obs: int, x_s: CyborgWrapperState) -> List[CyborgWrapperState]:
+                    obs: int, control_sequence: List[int]) -> List[CyborgWrapperState]:
     """
     Implements a particle filter
 
     :param particles: the list of particles
     :param max_num_particles: the maximum number of particles
     :param train_env: the environment used for sampling
-    :param u: the latest control
     :param obs: the latest observation
-    :param x_s: the true cyborg state
+    :param control_sequence: the control sequence up to the current observation
     :return: the list of updated particles
     """
+    u = control_sequence[-1]
     new_particles = []
     failed_samples = 0
     while len(new_particles) < max_num_particles:
@@ -51,9 +51,19 @@ def particle_filter(particles: List[CyborgWrapperState], max_num_particles: int,
             new_particles.append(x_prime)
         failed_samples += 1
         if failed_samples > 500:
+            # Particle deprivation
             if len(new_particles) == 0:
-                return [x_s]
-            return new_particles
+                while True:
+                    t = 0
+                    train_env.reset()
+                    while t < len(control_sequence):
+                        _, _, _, _, info = train_env.step(control_sequence[t])
+                        o = info[agents_constants.COMMON.OBSERVATION]
+                        if int(o) == int(obs):
+                            return [info[agents_constants.COMMON.STATE]]
+                        t += 1
+            else:
+                return new_particles
     return new_particles
 
 
@@ -133,7 +143,8 @@ def rollout_policy(train_env: CyborgScenarioTwoWrapper, J: List[float], state_to
     u_star = int(np.argmin(Q_n))
     J_star = float(Q_n[u_star])
     u_star = U[u_star]
-    u_r = restore_policy(x=x, train_env=train_env, particles=particles)
+    monte_carlo_state = monte_carlo_most_frequent_particle(particles=particles, N=100)
+    u_r = restore_policy(x=monte_carlo_state, train_env=train_env, particles=particles)
     if u_r != -1:
         u_star = u_r
     return u_star, J_star
@@ -163,8 +174,8 @@ if __name__ == '__main__':
                                          decoy_optimization=False)
     N = 10000
     max_env_steps = 100
-    mu = np.loadtxt("test/mu2.txt")
-    J = np.loadtxt("test/J2.txt")
+    mu = np.loadtxt("./mu2.txt")
+    J = np.loadtxt("./J2.txt")
     X, state_to_id, id_to_state = Cage2AggregateMDP.X()
     gamma = 0.99
     l = 1
@@ -173,6 +184,7 @@ if __name__ == '__main__':
         done = False
         _, info = env.reset()
         x = info[agents_constants.COMMON.STATE]
+        control_sequence = []
         t = 1
         C = 0
         particles = env.initial_particles
@@ -186,9 +198,10 @@ if __name__ == '__main__':
                 u = rollout_policy(state_to_id=state_to_id, id_to_state=id_to_state, train_env=train_env, J=J, mu=mu,
                                    gamma=gamma, l=l, particles=particles, mc_samples=20)[0]
             _, _, _, _, info = env.step(u)
+            control_sequence.append(u)
             particles = particle_filter(particles=particles, max_num_particles=50,
-                                        train_env=train_env, u=u, obs=info[agents_constants.COMMON.OBSERVATION],
-                                        x_s=info[agents_constants.COMMON.STATE])
+                                        train_env=train_env, obs=info[agents_constants.COMMON.OBSERVATION],
+                                        control_sequence=control_sequence)
             c = -info[agents_constants.COMMON.REWARD]
             C += c
             # aggstate = id_to_state[Cage2AggregateMDP.get_aggregate_state(s=monte_carlo_state,
