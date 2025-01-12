@@ -31,6 +31,7 @@ class ENV_METRICS:
     ATTACKER_ACTION = "a2"
     OBSERVATION = "o"
     OBSERVATION_VECTOR = "obs_vec"
+    REWARD = "r"
     OBSERVATION_ID = "obs_id"
     TIME_STEP = "t"
     AVERAGE_UPPER_BOUND_RETURN = "average_upper_bound_return"

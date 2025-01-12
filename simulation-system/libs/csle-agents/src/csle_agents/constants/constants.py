@@ -57,6 +57,7 @@ class COMMON:
     EVALUATE_WITH_DISCOUNT = "evaluate_with_discount"
     STATE = "s"
     OBSERVATION = "o"
+    REWARD = "r"
 
 
 class PPO:

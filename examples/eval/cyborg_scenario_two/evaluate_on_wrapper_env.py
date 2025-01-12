@@ -19,7 +19,6 @@ if __name__ == '__main__':
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
-    print("Starting policy evaluation")
     for i in range(num_evaluations):
         o, _ = env.reset()
         R = 0

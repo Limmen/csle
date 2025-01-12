@@ -20,17 +20,12 @@ if __name__ == '__main__':
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
-    # print(csle_cyborg_env.action_id_to_type_and_host)
-    # import sys
-    # sys.exit(0)
-    # print("Starting policy evaluation")
     for i in range(num_evaluations):
         o, _ = csle_cyborg_env.reset()
         R = 0
         t = 0
         while t < max_horizon:
-            # a = ppo_policy.action(o=o)
-            a = 4
+            a = ppo_policy.action(o=o)
             o, r, done, _, info = csle_cyborg_env.step(a)
             table = csle_cyborg_env.get_true_table()
             print(table)
@@ -38,4 +33,4 @@ if __name__ == '__main__':
             R += r
             t += 1
         returns.append(R)
-        # print(f"{i}/{num_evaluations}, avg R: {np.mean(returns)}, R: {R}")
+        print(f"{i}/{num_evaluations}, avg R: {np.mean(returns)}, R: {R}")

@@ -60,3 +60,12 @@ class GeneralUtil:
         if len(ids) > 0:
             id = max(list(map(lambda x: x[0], ids))) + 1
         return id
+
+    @staticmethod
+    def list_to_tuple(L):
+        """
+        Converts a nested list to a tuple
+        """
+        if isinstance(L, list):
+            return tuple(GeneralUtil.list_to_tuple(item) for item in L)  # Recursively convert lists to tuples
+        return L

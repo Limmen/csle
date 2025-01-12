@@ -1,12 +1,8 @@
 from typing import List
 from scipy.stats import betabinom
 import numpy as np
-from csle_tolerance.dao.intrusion_recovery_pomdp_config import (
-    IntrusionRecoveryPomdpConfig,
-)
-from csle_tolerance.dao.intrusion_recovery_game_config import (
-    IntrusionRecoveryGameConfig,
-)
+from csle_tolerance.dao.intrusion_recovery_pomdp_config import IntrusionRecoveryPomdpConfig
+from csle_tolerance.dao.intrusion_recovery_game_config import IntrusionRecoveryGameConfig
 
 
 class IntrusionRecoveryPomdpUtil:
@@ -197,9 +193,9 @@ class IntrusionRecoveryPomdpUtil:
         elif s_prime == 0 and a1 == 0 and a2 == 1 and s == 0:
             return (1 - p_a) * (1 - p_c_1)
         elif (
-            (s_prime == 0 and a2 == 0 and s == 0)
-            or (s_prime == 0 and s == 1 and a1 == 1)
-            or (s_prime == 1 and s == 1 and a1 == 0)
+                (s_prime == 0 and a2 == 0 and s == 0)
+                or (s_prime == 0 and s == 1 and a1 == 1)
+                or (s_prime == 1 and s == 1 and a1 == 0)
         ):
             return 1 - p_c_1
         elif s_prime == 1 and s == 0 and a2 == 1:
@@ -343,9 +339,7 @@ class IntrusionRecoveryPomdpUtil:
         temp = 0.0
 
         for s in states:
-            temp += (
-                observation_tensor[s_prime][o] * transition_tensor[a][s][s_prime] * b[s]
-            )
+            temp += observation_tensor[s_prime][o] * transition_tensor[a][s][s_prime] * b[s]
         b_prime_s_prime = temp / norm
         if round(b_prime_s_prime, 2) > 1:
             print(f"b_prime_s_prime >= 1: {b_prime_s_prime}, a1:{a}, s_prime:{s_prime}")
@@ -371,11 +365,7 @@ class IntrusionRecoveryPomdpUtil:
         prob = 0.0
         for s in states:
             for s_prime in states:
-                prob += (
-                    b[s]
-                    * transition_tensor[a][s][s_prime]
-                    * observation_tensor[s_prime][o]
-                )
+                prob += b[s] * transition_tensor[a][s][s_prime] * observation_tensor[s_prime][o]
         assert prob < 1
         return prob
 
@@ -446,9 +436,7 @@ class IntrusionRecoveryPomdpUtil:
                 for s_prime in config.states:
                     for o in config.observations:
                         c = config.cost_tensor[a][s]
-                        file_str = (
-                            file_str + f"R: {a} : {s} : {s_prime} : {o} {c:.80f}\n"
-                        )
+                        file_str = file_str + f"R: {a} : {s} : {s_prime} : {o} {c:.80f}\n"
         return file_str
 
     @staticmethod
@@ -501,15 +489,13 @@ class IntrusionRecoveryPomdpUtil:
         """
         num_partitions = 1
         transitions = IntrusionRecoveryPomdpUtil.generate_transitions(
-            game_config=game_config
-        )
+            game_config=game_config)
         rewards = IntrusionRecoveryPomdpUtil.generate_rewards(game_config=game_config)
         game_description = (
             f"{len(game_config.states)} {num_partitions} {len(game_config.actions)} "
             f"{len(game_config.actions)} "
             f"{len(game_config.observations)} {len(transitions)} "
-            f"{len(rewards)} {game_config.discount_factor}"
-        )
+            f"{len(rewards)} {game_config.discount_factor}")
         state_desriptions = []
         for s in game_config.states:
             state_desriptions.append(f"{s} {0}")
@@ -518,22 +504,16 @@ class IntrusionRecoveryPomdpUtil:
 
         player_2_legal_actions = []
         for _ in game_config.states:
-            player_2_legal_actions.append(
-                " ".join(list(map(lambda x: str(x), game_config.actions)))
-            )
+            player_2_legal_actions.append(" ".join(list(map(lambda x: str(x), game_config.actions))))
 
         player_1_legal_actions = []
-        player_1_legal_actions.append(
-            " ".join(list(map(lambda x: str(x), game_config.actions)))
-        )
+        player_1_legal_actions.append(" ".join(list(map(lambda x: str(x), game_config.actions))))
 
         obs_desriptions = []
         for i, o in enumerate(game_config.observations):
             obs_desriptions.append(f"o_{o}")
 
-        initial_belief_str = (
-            f"{0} {' '.join(list(map(lambda x: str(x), game_config.b1)))}"
-        )
+        initial_belief_str = f"{0} {' '.join(list(map(lambda x: str(x), game_config.b1)))}"
         game_file_str = ""
         game_file_str = game_file_str + game_description + "\n"
         game_file_str = game_file_str + "\n".join(state_desriptions) + "\n"
