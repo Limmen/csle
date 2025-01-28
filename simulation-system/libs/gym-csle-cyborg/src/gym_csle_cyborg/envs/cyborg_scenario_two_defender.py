@@ -302,6 +302,23 @@ class CyborgScenarioTwoDefender(BaseEnv):
         """
         return CyborgScenarioTwoDefender.table(env=self.cyborg_challenge_env)
 
+    def get_access_list(self) -> List[int]:
+        """
+        Gets the true access list
+
+        :return: a list with the access states
+        """
+        return CyborgScenarioTwoDefender.access_list(env=self.cyborg_challenge_env)
+
+    def get_bline_state(self) -> int:
+        """
+        Gets the state of the bline agent
+
+        :param env: the cyborg environment
+        :return: the bline state
+        """
+        return CyborgScenarioTwoDefender.bline_state(env=self.cyborg_challenge_env)
+
     @staticmethod
     def table(env: ChallengeWrapper) -> PrettyTable:
         """
@@ -360,6 +377,25 @@ class CyborgScenarioTwoDefender(BaseEnv):
         """
         true_table: PrettyTable = env.env.env.env.env.get_table()
         return true_table
+
+    @staticmethod
+    def access_list(env: ChallengeWrapper) -> List[int]:
+        """
+        Gets the true access list
+
+        :return: a list with the access states
+        """
+        return env.env.env.env.env._create_numeric_access_table()
+
+    @staticmethod
+    def bline_state(env: ChallengeWrapper) -> int:
+        """
+        Gets the state of the bline agent
+
+        :param env: the cyborg environment
+        :return: the bline state
+        """
+        return env.env.env.env.env.env.environment_controller.get_bline_state()
 
     def get_ip_map(self) -> Dict[str, Any]:
         """
