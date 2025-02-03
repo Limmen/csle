@@ -34,8 +34,7 @@ class CyborgEnvUtil:
                                        f"{env_constants.CYBORG.SCENARIO_CONFIG_PREFIX}{config.scenario}"
                                        f"{env_constants.CYBORG.SCENARIO_CONFIG_SUFFIX}")
         agents_dict, red_agent_type = config.get_agents_dict(agent=red_agent_type)
-        cyborg = Main(cyborg_scenario_config_path, env_constants.CYBORG.SIMULATION,
-                      agents=agents_dict)
+        cyborg = Main(env_constants.CYBORG.CYBORG_SCENARIO_2_DICT, env_constants.CYBORG.SIMULATION, agents=agents_dict)
         cyborg_challenge_env = ChallengeWrapper(env=cyborg, agent_name=env_constants.CYBORG.BLUE,
                                                 max_steps=config.maximum_steps)
         return cyborg_challenge_env, red_agent_type, cyborg_scenario_config_path
