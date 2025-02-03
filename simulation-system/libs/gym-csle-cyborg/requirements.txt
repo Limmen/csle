@@ -1,4 +1,4 @@
-csle-cyborg==0.0.2
+csle-cyborg==0.0.3
 csle-base==0.7.4
 csle-common==0.7.4
 csle-collector==0.7.4
