@@ -1361,6 +1361,10 @@ class CyborgScenarioTwoWrapper(BaseEnv):
         :param verbose: boolean flag indicating whether logging should be verbose or not
         :return: the list of pruned actions
         """
+        if t <= 2:
+            return [31]
+        if t == 3:
+            return [27]
         if self.config.red_agent_type == RedAgentType.B_LINE_AGENT:
             feasible_hosts = self.get_reachable_hosts_bline(particles=particles)
             pruned_actions = CyborgScenarioTwoWrapper.get_actions_bline(
@@ -1370,8 +1374,6 @@ class CyborgScenarioTwoWrapper(BaseEnv):
             feasible_hosts, scanned_hosts, user_compromised_hosts, root_compromised_hosts, known_hosts, decoy_hosts = \
                 self.get_reachable_hosts_meander(particles=particles, t=t,
                                                  decoy_actions_per_host=self.decoy_actions_per_host)
-            if verbose:
-                print(f"Root comp: {root_compromised_hosts}, obs vector: {obs_vector}")
             pruned_actions = CyborgScenarioTwoWrapper.get_actions_meander(
                 host_ids=feasible_hosts, action_id_to_type_and_host=self.action_id_to_type_and_host, hosts=self.hosts,
                 scanned_hosts=scanned_hosts, user_compromised_hosts=user_compromised_hosts,

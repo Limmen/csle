@@ -11,6 +11,7 @@ from gym_csle_cyborg.dao.red_agent_type import RedAgentType
 from gym_csle_cyborg.dao.activity_type import ActivityType
 from gym_csle_cyborg.dao.compromised_type import CompromisedType
 from gym_csle_cyborg.dao.exploit_type import ExploitType
+from gym_csle_cyborg.dao.cyborg_wrapper_state import CyborgWrapperState
 
 
 class CyborgEnvUtil:
@@ -636,3 +637,100 @@ class CyborgEnvUtil:
             ExploitType.SSH_BRUTE_FORCE, ExploitType.SQL_INJECTION, ExploitType.HARAKA_RCE,
             ExploitType.FTP_DIRECTORY_TRAVERSAL
         ]
+
+    @staticmethod
+    def get_wrapper_state_from_cyborg(obs_vector: List[List[int]], t: int, scan_state: List[int],
+                                      access_list: List[int], decoy_state: List[List[int]], cyborg_hosts: List[str],
+                                      red_agent_state: int) -> CyborgWrapperState:
+        """
+        A best-effort construction of the wrapper state a cyborg observation
+
+        :param obs_vector: the observation vector
+        :param t: the time step
+        :param scan_state: the scan state
+        :param access_list: the access list
+        :param decoy_state: the decoy state
+        :param cyborg_hosts: the list of cyborg hosts
+        :param red_agent_state: the red agent state
+        :return: the wrapper state
+        """
+        op_server_restored = False
+        privilege_escalation_detected = False
+        bline_base_jump = False
+        scanned_subnets = [0, 0, 0]
+        for i in range(len(scan_state)):
+            if i in [9, 10, 11, 12] and scan_state[i] > 0:
+                scanned_subnets[0] = 1
+            if i in [3, 4, 5, 6, 7] and scan_state[i] > 0:
+                scanned_subnets[1] = 1
+            if i in [4, 5, 6, 7] and scan_state[i] > 0:
+                scanned_subnets[2] = 1
+        red_action_targets = {}
+        red_action_targets[0] = 0
+        if scan_state[9] > 0:
+            red_action_targets[1] = 9
+            red_action_targets[2] = 9
+            red_action_targets[3] = 9
+            red_action_targets[4] = 2
+            red_action_targets[5] = 2
+            red_action_targets[6] = 2
+        elif scan_state[10] > 0:
+            red_action_targets[1] = 10
+            red_action_targets[2] = 10
+            red_action_targets[3] = 10
+            red_action_targets[4] = 2
+            red_action_targets[5] = 2
+            red_action_targets[6] = 2
+        elif scan_state[11] > 0:
+            red_action_targets[1] = 11
+            red_action_targets[2] = 11
+            red_action_targets[3] = 11
+            red_action_targets[4] = 1
+            red_action_targets[5] = 1
+            red_action_targets[6] = 1
+        elif scan_state[12] > 0:
+            red_action_targets[1] = 12
+            red_action_targets[2] = 12
+            red_action_targets[3] = 12
+            red_action_targets[4] = 1
+            red_action_targets[5] = 1
+            red_action_targets[6] = 1
+        red_action_targets[7] = 1
+        red_action_targets[8] = 3
+        red_action_targets[9] = 3
+        red_action_targets[10] = 7
+        red_action_targets[11] = 7
+        red_action_targets[12] = 7
+        s = []
+        for i in range(len(cyborg_hosts)):
+            known = 0
+            scanned = min(scan_state[i], 1)
+            if scanned:
+                known = 1
+            if t > 0 and i in [9, 10, 11, 12]:
+                known = 1
+            if red_agent_state >= 6 and i in [0, 1, 2, 3]:
+                known = 1
+            if red_agent_state >= 8 and i in [4, 5, 6, 7]:
+                known = 1
+            access = access_list[i]
+            decoy = len(decoy_state[i])
+            host_state = [known, scanned, access, decoy]
+            s.append(host_state)
+        malware_state = [0 for _ in range(len(scan_state))]
+        ssh_access = [0 for _ in range(len(scan_state))]
+        escalated = [0 for _ in range(len(scan_state))]
+        exploited = [0 for _ in range(len(scan_state))]
+        detected = [0 for _ in range(len(scan_state))]
+        attacker_observed_decoy = [len(decoy_state[i]) for i in range(len(decoy_state))]
+        red_agent_target = red_action_targets[red_agent_state]
+        wrapper_state = CyborgWrapperState(s=s, scan_state=scan_state, op_server_restored=op_server_restored,
+                                           obs=obs_vector,
+                                           red_action_targets=red_action_targets,
+                                           privilege_escalation_detected=privilege_escalation_detected,
+                                           red_agent_state=red_agent_state, red_agent_target=red_agent_target,
+                                           malware_state=malware_state,
+                                           ssh_access=ssh_access, escalated=escalated, exploited=exploited,
+                                           bline_base_jump=bline_base_jump, scanned_subnets=scanned_subnets,
+                                           attacker_observed_decoy=attacker_observed_decoy, detected=detected)
+        return wrapper_state
