@@ -18,8 +18,8 @@ classifiers = [
     "Intended Audience :: Science/Research"
 ]
 dependencies = [
-    "csle-base>=0.7.4",
-    "csle-collector>=0.7.4",
+    "csle-base>=0.7.5",
+    "csle-collector>=0.7.5",
     "csle-ryu-fork>=4.37.0.dev3357",
     "dnspython==2.2.1",
     "eventlet>=0.33.2",
