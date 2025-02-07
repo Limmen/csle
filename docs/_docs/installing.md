@@ -228,15 +228,15 @@ The simulation system consists of a set of Python libraries and a set of configu
 To install the simulation system, the Python libraries need to be installed and
 the configuration files need to be inserted into the metastore.
 
-If you do not have Python >3.9 in your base environment, start with installing Python 3.9 by running the commands:
+If you do not have Python >3.9 in your base environment, start with installing Python 3.11 by running the commands:
 
 ```bash
-conda create -n py39 python=3.9
-conda activate py39 # alternatively, "source activate py39" for old versions of conda
+conda create -n py311 python=3.11
+conda activate py311 # alternatively, "source activate py39" for old versions of conda
 ```
 
 <p class="captionFig">
-Listing 24: Command to install Python 3.9 using Anaconda.
+Listing 24: Command to install Python 3.11 using Anaconda.
 </p>
 
 The simulation system includes 17 Python libraries: 
