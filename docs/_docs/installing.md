@@ -134,10 +134,12 @@ The metastore is based on PostgreSQL and Citus. Installing the metastore thus co
 To install PostgreSQL v15 and the Citus extension v11.2, run the following commands:
 
 ```bash
-curl https://install.citusdata.com/community/deb.sh | sudo bash
-sudo apt-get -y install postgresql-15-citus-11.2
-sudo pg_conftool 15 main set shared_preload_libraries citus
-sudo pg_conftool 15 main set listen_addresses '*'
+sudo apt install postgresql-17    
+curl https://install.citusdata.com/community/deb.sh > add-citus-repo.sh
+sudo bash add-citus-repo.sh
+sudo apt-get -y install postgresql-17-citus-13.0
+sudo pg_conftool 17 main set shared_preload_libraries citus
+sudo pg_conftool 17 main set listen_addresses '*'
 ```
 
 <p class="captionFig">
