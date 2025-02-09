@@ -51,7 +51,7 @@ The `twine` tool (a tool for publishing Python packages to PyPi)
 can be installed by running the command:
 
 ```bash
-python3 -m pip install --upgrade twine
+python -m pip install --upgrade twine
 ```
 
 <p class="captionFig">
@@ -71,7 +71,7 @@ Listing 127: Command to install `flake8`.
 The `mypy` static type checker and associated type libraries for Python can be installed by running the command:
 
 ```bash
-python3 -m pip install -U mypy mypy-extensions mypy-protobuf types-PyYAML types-protobuf types-paramiko types-requests types-urllib3
+python -m pip install -U mypy mypy-extensions mypy-protobuf types-PyYAML types-protobuf types-paramiko types-requests types-urllib3
 ```
 
 <p class="captionFig">

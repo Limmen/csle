@@ -23,10 +23,10 @@ install:
 	pip install -e .
 
 build:
-	python3 -m build
+	python -m build
 
 push:
-	python3 -m twine upload dist/*
+	python -m twine upload dist/*
 
 clean:
 	rm -r dist

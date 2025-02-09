@@ -420,7 +420,7 @@ make tests
 First build the package by executing:
 
 ```bash
-python3 -m build
+python -m build
 # or (equivalently)
 make build
 ```
@@ -430,7 +430,7 @@ After running the command above, the built package is available at `./dist`.
 Push the built package to PyPi by running:
 
 ```bash
-python3 -m twine upload dist/*
+python -m twine upload dist/*
 # or (equivalently)
 make push
 ```

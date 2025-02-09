@@ -18,5 +18,5 @@ sphinx-rtd-theme==1.1.1
 grpcio==1.69.0
 grpcio-tools==1.69.0
 pytest-grpc==0.8.0
-twine==4.0.2
+twine==6.1.0
 build==0.10.0
