@@ -13,7 +13,7 @@ def test_env() -> None:
 
     :return: None
     """
-    emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-070")
+    emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-080")
     simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-pomdp-defender-002")
     config = simulation_env_config.simulation_env_input_config
     env = gym.make(simulation_env_config.gym_env_name, config=config)

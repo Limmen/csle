@@ -16,7 +16,7 @@ from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import StoppingGameDefenderPomdpConfig
 
 if __name__ == '__main__':
-    emulation_name = "csle-level9-070"
+    emulation_name = "csle-level9-080"
     emulation_env_config = MetastoreFacade.get_emulation_by_name(emulation_name)
     if emulation_env_config is None:
         raise ValueError(f"Could not find an emulation environment with the name: {emulation_name}")

@@ -16,7 +16,7 @@ from gym_csle_apt_game.util.apt_game_util import AptGameUtil
 from gym_csle_apt_game.envs.apt_game_mdp_attacker_env import AptGameMdpAttackerEnv
 
 if __name__ == '__main__':
-    emulation_name = "csle-level9-070"
+    emulation_name = "csle-level9-080"
     emulation_env_config = MetastoreFacade.get_emulation_by_name(emulation_name)
     if emulation_env_config is None:
         raise ValueError(f"Could not find an emulation environment with the name: {emulation_name}")

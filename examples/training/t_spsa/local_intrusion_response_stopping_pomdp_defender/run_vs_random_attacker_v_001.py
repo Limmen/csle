@@ -15,7 +15,7 @@ from gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config i
 from csle_agents.common.objective_type import ObjectiveType
 
 if __name__ == '__main__':
-    emulation_name = "csle-level9-070"
+    emulation_name = "csle-level9-080"
     emulation_env_config = MetastoreFacade.get_emulation_by_name(emulation_name)
     if emulation_env_config is None:
         raise ValueError(f"Could not find an emulation environment with the name: {emulation_name}")

@@ -51,26 +51,26 @@ Table 2: Properties of an emulation configuration.
 
 Users of CSLE can create new emulation configurations and insert them into the metastore. CSLE also includes a set of
 pre-installed configurations
-(see Table 3). One of these pre-installed configurations is `csle-level9-070` (as an example), whose topology is shown
+(see Table 3). One of these pre-installed configurations is `csle-level9-080` (as an example), whose topology is shown
 in Fig. 6 and whose configuration is listed in Table 4.
 
 
 | *Emulation configuration* | *Description*                                                                   |
 |---------------------------|---------------------------------------------------------------------------------|
-| `csle-level1-070`         | Emulation with 7 components, 3 flags, password vulnerabilities, no IDS.         |
-| `csle-level2-070`         | Emulation with 13 components, 6 flags, password vulnerabilities, no IDS.        |
-| `csle-level3-070`         | Emulation with 34 components, 6 flags, password vulnerabilities, no IDS.        |
-| `csle-level4-070`         | Emulation with 7 components, 3 flags, password vulnerabilities, IDS.            |
-| `csle-level5-070`         | Emulation with 13 components, 6 flags, password vulnerabilities, IDS.           |
-| `csle-level6-070`         | Emulation with 34 components, 6 flags, password vulnerabilities, IDS.           |
-| `csle-level7-070`         | Emulation with 7 components, 3 flags, password & RCE vulnerabilities, IDS.      |
-| `csle-level8-070`         | Emulation with 13 components, 6 flags, password & RCE vulnerabilities, IDS.     |
-| `csle-level9-070`         | Emulation with 34 components, 6 flags, password & RCE vulnerabilities, IDS.     |
-| `csle-level10-070`        | Emulation with 16 components, 12 flags, password & RCE vulnerabilities, IDS.    |
-| `csle-level11-070`        | Emulation with 36 components, 6 flags, password & RCE vulnerabilities, IDS.     |
-| `csle-level12-070`        | Emulation with 7 components, 3 flags, password RCE vulnerabilities, IDS, SDN.   |
-| `csle-level13-070`        | Emulation with 64 components, 6 flags, password RCE vulnerabilities, IDS, SDN.  |
-| `csle-level14-070`        | Emulation with 17 components, 12 flags, password RCE vulnerabilities, IDS, SDN. |
+| `csle-level1-080`         | Emulation with 7 components, 3 flags, password vulnerabilities, no IDS.         |
+| `csle-level2-080`         | Emulation with 13 components, 6 flags, password vulnerabilities, no IDS.        |
+| `csle-level3-080`         | Emulation with 34 components, 6 flags, password vulnerabilities, no IDS.        |
+| `csle-level4-080`         | Emulation with 7 components, 3 flags, password vulnerabilities, IDS.            |
+| `csle-level5-080`         | Emulation with 13 components, 6 flags, password vulnerabilities, IDS.           |
+| `csle-level6-080`         | Emulation with 34 components, 6 flags, password vulnerabilities, IDS.           |
+| `csle-level7-080`         | Emulation with 7 components, 3 flags, password & RCE vulnerabilities, IDS.      |
+| `csle-level8-080`         | Emulation with 13 components, 6 flags, password & RCE vulnerabilities, IDS.     |
+| `csle-level9-080`         | Emulation with 34 components, 6 flags, password & RCE vulnerabilities, IDS.     |
+| `csle-level10-080`        | Emulation with 16 components, 12 flags, password & RCE vulnerabilities, IDS.    |
+| `csle-level11-080`        | Emulation with 36 components, 6 flags, password & RCE vulnerabilities, IDS.     |
+| `csle-level12-080`        | Emulation with 7 components, 3 flags, password RCE vulnerabilities, IDS, SDN.   |
+| `csle-level13-080`        | Emulation with 64 components, 6 flags, password RCE vulnerabilities, IDS, SDN.  |
+| `csle-level14-080`        | Emulation with 17 components, 12 flags, password RCE vulnerabilities, IDS, SDN. |
 
 
 <p class="captionFig">
@@ -80,7 +80,7 @@ Table 3: Pre-installed emulation configurations.
 <p align="center">
 <img src="./../../img/example_topology.png" width="30%">
 <p class="captionFig">
-Figure 6: Topology of the emulation configuration `csle-level9-070`
+Figure 6: Topology of the emulation configuration `csle-level9-080`
 </p>
 </p>
 
@@ -103,7 +103,7 @@ Figure 6: Topology of the emulation configuration `csle-level9-070`
 
 <p class="captionFig">
 Table 4: Configuration of the emulation configuration 
-`csle-level9-070`, whose topology is shown in Fig. 6.
+`csle-level9-080`, whose topology is shown in Fig. 6.
 </p>
 
 An *emulation execution* consists of a set of running containers and virtual networks, 
