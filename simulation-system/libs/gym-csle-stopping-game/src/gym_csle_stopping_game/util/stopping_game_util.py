@@ -390,7 +390,7 @@ class StoppingGameUtil:
         return file_str
 
     @staticmethod
-    def reduce_T_attacker(T: npt.NDArray[np.float_], strategy: Policy) -> npt.NDArray[np.float_]:
+    def reduce_T_attacker(T: npt.NDArray[np.float64], strategy: Policy) -> npt.NDArray[np.float64]:
         """
         Reduces the transition tensor based on a given attacker strategy
 
@@ -415,7 +415,7 @@ class StoppingGameUtil:
         return reduced_T
 
     @staticmethod
-    def reduce_R_attacker(R: npt.NDArray[np.float_], strategy: Policy) -> npt.NDArray[np.float_]:
+    def reduce_R_attacker(R: npt.NDArray[np.float64], strategy: Policy) -> npt.NDArray[np.float64]:
         """
         Reduces the reward tensor based on a given attacker strategy
 
@@ -433,7 +433,7 @@ class StoppingGameUtil:
         return reduced_R
 
     @staticmethod
-    def reduce_Z_attacker(Z: npt.NDArray[np.float_], strategy: Policy) -> npt.NDArray[np.float_]:
+    def reduce_Z_attacker(Z: npt.NDArray[np.float64], strategy: Policy) -> npt.NDArray[np.float64]:
         """
         Reduces the observation tensor based on a given attacker strategy
 
@@ -450,7 +450,7 @@ class StoppingGameUtil:
         return reduced_Z
 
     @staticmethod
-    def reduce_T_defender(T: npt.NDArray[np.float_], strategy: Policy) -> npt.NDArray[np.float_]:
+    def reduce_T_defender(T: npt.NDArray[np.float64], strategy: Policy) -> npt.NDArray[np.float64]:
         """
         Reduces the transition tensor based on a given defender strategy
 
@@ -469,7 +469,7 @@ class StoppingGameUtil:
         return reduced_T
 
     @staticmethod
-    def reduce_R_defender(R: npt.NDArray[np.float_], strategy: Policy) -> npt.NDArray[np.float_]:
+    def reduce_R_defender(R: npt.NDArray[np.float64], strategy: Policy) -> npt.NDArray[np.float64]:
         """
         Reduces the reward tensor based on a given defender strategy
 
@@ -487,10 +487,10 @@ class StoppingGameUtil:
         return reduced_R
 
     @staticmethod
-    def aggregate_belief_mdp_defender(aggregation_resolution: int, T: npt.NDArray[np.float_],
-                                      R: npt.NDArray[np.float_], Z: npt.NDArray[np.float_],
+    def aggregate_belief_mdp_defender(aggregation_resolution: int, T: npt.NDArray[np.float64],
+                                      R: npt.NDArray[np.float64], Z: npt.NDArray[np.float64],
                                       S: npt.NDArray[np.int_], A: npt.NDArray[np.int_], O: npt.NDArray[np.int_]) \
-            -> Tuple[npt.NDArray[np.float_], npt.NDArray[np.int_], npt.NDArray[np.float_], npt.NDArray[np.float_]]:
+            -> Tuple[npt.NDArray[np.float64], npt.NDArray[np.int_], npt.NDArray[np.float64], npt.NDArray[np.float64]]:
         """
         Generates an aggregate belief MDP from a given POMDP specification and aggregation resolution
 
@@ -512,7 +512,7 @@ class StoppingGameUtil:
         return aggregate_belief_space, A, belief_T, belief_R
 
     @staticmethod
-    def generate_aggregate_belief_space(n: int, belief_space_dimension: int) -> npt.NDArray[np.float_]:
+    def generate_aggregate_belief_space(n: int, belief_space_dimension: int) -> npt.NDArray[np.float64]:
         """
         Generate an aggregate belief space B_n.
 
@@ -534,8 +534,8 @@ class StoppingGameUtil:
 
     @staticmethod
     def generate_aggregate_belief_reward_tensor(
-            aggregate_belief_space: npt.NDArray[np.float_], S: npt.NDArray[np.int_], A: npt.NDArray[np.int_],
-            R: npt.NDArray[np.float_]) -> npt.NDArray[np.float_]:
+            aggregate_belief_space: npt.NDArray[np.float64], S: npt.NDArray[np.int_], A: npt.NDArray[np.int_],
+            R: npt.NDArray[np.float64]) -> npt.NDArray[np.float64]:
         """
         Generates an aggregate reward tensor for the aggregate belief MDP
 
@@ -557,8 +557,8 @@ class StoppingGameUtil:
 
     @staticmethod
     def generate_aggregate_belief_transition_operator(
-            aggregate_belief_space: npt.NDArray[np.float_], S: npt.NDArray[np.int_], A: npt.NDArray[np.int_],
-            O: npt.NDArray[np.int_], T: npt.NDArray[np.float_], Z: npt.NDArray[np.float_]) -> npt.NDArray[np.float_]:
+            aggregate_belief_space: npt.NDArray[np.float64], S: npt.NDArray[np.int_], A: npt.NDArray[np.int_],
+            O: npt.NDArray[np.int_], T: npt.NDArray[np.float64], Z: npt.NDArray[np.float64]) -> npt.NDArray[np.float64]:
         """
         Generates an aggregate belief space transition operator
 
@@ -581,11 +581,11 @@ class StoppingGameUtil:
         return belief_T
 
     @staticmethod
-    def aggregate_belief_transition_probability(b1: npt.NDArray[np.float_], b2: npt.NDArray[np.float_], a: int,
+    def aggregate_belief_transition_probability(b1: npt.NDArray[np.float64], b2: npt.NDArray[np.float64], a: int,
                                                 S: npt.NDArray[np.int_], O: npt.NDArray[np.int_],
                                                 A: npt.NDArray[np.int_],
-                                                T: npt.NDArray[np.float_], Z: npt.NDArray[np.float_],
-                                                aggregate_belief_space: npt.NDArray[np.float_]) -> float:
+                                                T: npt.NDArray[np.float64], Z: npt.NDArray[np.float64],
+                                                aggregate_belief_space: npt.NDArray[np.float64]) -> float:
         """
         Calculates the probability of transitioning from belief b1 to belief b2 when taking action a
 
@@ -616,8 +616,8 @@ class StoppingGameUtil:
 
     @staticmethod
     def pomdp_next_belief(o: int, a: int, b: npt.NDArray[np.float64], states: npt.NDArray[np.int_],
-                          observations: npt.NDArray[np.int_], observation_tensor: npt.NDArray[np.float_],
-                          transition_tensor: npt.NDArray[np.float_]) \
+                          observations: npt.NDArray[np.int_], observation_tensor: npt.NDArray[np.float64],
+                          transition_tensor: npt.NDArray[np.float64]) \
             -> npt.NDArray[np.float64]:
         """
         Computes the next belief of the POMDP using a Bayesian filter
@@ -643,8 +643,8 @@ class StoppingGameUtil:
 
     @staticmethod
     def pomdp_bayes_filter(s_prime: int, o: int, a: int, b: npt.NDArray[np.float64], states: npt.NDArray[np.int_],
-                           observations: npt.NDArray[np.int_], observation_tensor: npt.NDArray[np.float_],
-                           transition_tensor: npt.NDArray[np.float_]) -> float:
+                           observations: npt.NDArray[np.int_], observation_tensor: npt.NDArray[np.float64],
+                           transition_tensor: npt.NDArray[np.float64]) -> float:
         """
         A Bayesian filter to compute b[s_prime] of the POMDP
 
@@ -679,8 +679,8 @@ class StoppingGameUtil:
         return b_prime_s_prime
 
     @staticmethod
-    def find_nearest_neighbor_belief(belief_space: npt.NDArray[np.float_], target_belief: npt.NDArray[np.float_]) \
-            -> npt.NDArray[np.float_]:
+    def find_nearest_neighbor_belief(belief_space: npt.NDArray[np.float64], target_belief: npt.NDArray[np.float64]) \
+            -> npt.NDArray[np.float64]:
         """
         Finds the nearest neighbor (in the Euclidean sense) of a given belief in a certain belief space
 
