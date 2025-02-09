@@ -9,7 +9,7 @@ RUN apt-get -y install apt-utils  \
                        exploitdb nikto traceroute finger git sshpass lftp recon-ng netdiscover hping3 ncat masscan \
                        iptables proxychains zip unzip arptables irssi irssi-scripts screen postgresql-client-common \
                        snmp postgresql-client smbclient tcpdump netcat-traditional traceroute sysstat iproute2  \
-                       lsof
+                       lsof nmap
 
 #RUN apt-get -y install man-db
 #&& DEBIAN_FRONTEND=noninteractive apt -yqq install kali-linux-headless
@@ -34,8 +34,7 @@ RUN git clone https://github.com/Limmen/vulscan scipag_vulscan &&\
 
 # NMAP nmap-vulners
 RUN git clone https://github.com/Limmen/nmap-vulners &&\
-    cp nmap-vulners/vulners.nse /usr/share/nmap/scripts/ &&\
-    nmap --script-updatedb
+    cp nmap-vulners/vulners.nse /usr/share/nmap/scripts/
 
 # SecLists
 RUN git clone https://github.com/Limmen/SecLists

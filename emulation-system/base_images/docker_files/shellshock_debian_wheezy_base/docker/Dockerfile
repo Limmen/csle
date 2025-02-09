@@ -95,8 +95,11 @@ RUN chmod 644 /etc/xinetd.d/telnet &&\
 ENV PATH="/root/miniconda3/bin:${PATH}"
 ARG PATH="/root/miniconda3/bin:${PATH}"
 
-RUN wget --no-check-certificate \
-    https://repo.anaconda.com/miniconda/Miniconda3-4.7.12.1-Linux-x86_64.sh \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates wget && update-ca-certificates
+
+RUN curl -fsSL https://repo.anaconda.com/miniconda/Miniconda3-4.7.12.1-Linux-x86_64.sh  \
+    -o Miniconda3-4.7.12.1-Linux-x86_64.sh \
     && mkdir /root/.conda \
     && bash Miniconda3-4.7.12.1-Linux-x86_64.sh -b \
     && rm -f Miniconda3-4.7.12.1-Linux-x86_64.sh

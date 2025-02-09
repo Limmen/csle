@@ -53,15 +53,18 @@ more specific Docker images.
 - `ubuntu_20_base` ([ubuntu_20_base](./docker_files/ubuntu_20_base)): a base image for csle emulations with Ubuntu 20.
      - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_ubuntu_20_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_ubuntu_20_base/)
      - OS: Ubuntu:20.
-- `ubuntu_22_base` ([ubuntu_22_base](./docker_files/ubuntu_22_base)): a base image for csle emulations with Ubuntu 22.
-    - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_ubuntu_22_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_ubuntu_22_base/)
-    - OS: Ubuntu:22.
+- `ubuntu_24_base` ([ubuntu_24_base](./docker_files/ubuntu_22_base)): a base image for csle emulations with Ubuntu 24.
+    - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_ubuntu_24_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_ubuntu_24_base/)
+    - OS: Ubuntu:24.
 - `blank_ubuntu_20` ([blank_ubuntu_20](./docker_files/blank_ubuntu_20)): a plain base image with Ubuntu 20.
      - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_blank_ubuntu_20?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_blank_ubuntu_20/)
      - OS: Ubuntu:20.
 - `blank_ubuntu_22` ([blank_ubuntu_22](./docker_files/blank_ubuntu_22)): a plain base image with Ubuntu 22.
     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_blank_ubuntu_22?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_blank_ubuntu_22/)
-    - OS: Ubuntu:22.  
+    - OS: Ubuntu:22.
+- `blank_ubuntu_24` ([blank_ubuntu_24](./docker_files/blank_ubuntu_24)): a plain base image with Ubuntu 24.
+    - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_blank_ubuntu_24?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_blank_ubuntu_24/)
+    - OS: Ubuntu:24.  
 - `pengine_exploit_base` ([pengine_exploit_base](./docker_files/pengine_exploit_base)): a base image with a vulnerable prolog SLD pengine server
      - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_pengine_exploit_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_pengine_exploit_base/)
      - OS: Ubuntu:20.      
@@ -93,6 +96,7 @@ make kali_base # Build kali_base
 make ubuntu_20_base # Build ubuntu_20_base
 make ubuntu_22_base # Build ubuntu_22_base
 make ubuntu_14_base # Build ubuntu_14_base
+make ubuntu_24_base # Build ubuntu_24_base
 make ssh_base # Build ssh_base
 make samba_base # Build samba_base
 make shellshock_base # Build shellshock_base
@@ -106,6 +110,7 @@ make cve_2010_0426_base # Build cve_2010_0426_base
 make cve_2015_5602_base # Build cve_2010_0426_base
 make blank_ubuntu_20 # Build blank_ubuntu_20
 make blank_ubuntu_22 # Build blank_ubuntu_22
+make blank_ubuntu_24 # Build blank_ubuntu_24
 make pengine_exploit_base # Build pengine_exploit_base
 make ovs_base # Build ovs_base
 make ryu_base # Build ryu_base
@@ -116,6 +121,7 @@ make rm_kali_base # Remove kali_base
 make rm_ubuntu_20_base # Remove ubuntu_20_base
 make rm_ubuntu_22_base # Remove ubuntu_22_base
 make rm_ubuntu_14_base # Remove ubuntu_14_base
+make rm_ubuntu_24_base # Remove ubuntu_24_base
 make rm_ssh_base # Remove ssh_base
 make rm_samba_base # Remove samba_base
 make rm_shellshock_base # Remove shellshock_base
@@ -129,6 +135,7 @@ make rm_cve_2010_0426_base # Remove cve_2010_0426_base
 make rm_cve_2015_5602_base # Remove cve_2010_0426_base
 make rm_blank_ubuntu_20 # Remove blank_ubuntu_20
 make rm_blank_ubuntu_22 # Remove blank_ubuntu_22
+make rm_blank_ubuntu_24 # Remove blank_ubuntu_24
 make rm_pengine_exploit_base # Remove pengine_exploit_base
 make rm_ovs_base # Remove ovs_base
 make rm_ryu_base # Remove ryu_base
@@ -139,6 +146,7 @@ make push_kali_base # Push kali_base to DockerHub
 make push_ubuntu_20_base # Push ubuntu_20_base to DockerHub
 make push_ubuntu_22_base # Push ubuntu_22_base to DockerHub
 make push_ubuntu_14_base # Push ubuntu_14_base to DockerHub
+make push_ubuntu_24_base # Push ubuntu_24_base to DockerHub
 make push_ssh_base # Push ssh_base to DockerHub
 make push_samba_base # Push samba_base to DockerHub
 make push_shellshock_base # Push shellshock_base to DockerHub
@@ -152,6 +160,7 @@ make push_cve_2010_0426_base # Push cve_2010_0426_base to DockerHub
 make push_cve_2015_5602_base # Push cve_2010_0426_base to DockerHub
 make push_blank_ubuntu_20 # Push blank_ubuntu_20 to DockerHub
 make push_blank_ubuntu_22 # Push blank_ubuntu_22 to DockerHub
+make push_blank_ubuntu_24 # Push blank_ubuntu_24 to DockerHub
 make push_pengine_exploit_base # Push pengine_exploit_base to DockerHub
 make push_ovs_base # Push ovs_base to DockerHub
 make push_ryu_base # Push ryu_base to DockerHub
@@ -162,6 +171,7 @@ make pull_kali_base # pull kali_base from DockerHub
 make pull_ubuntu_20_base # pull ubuntu_20_base from DockerHub
 make pull_ubuntu_22_base # pull ubuntu_22 _base from DockerHub
 make pull_ubuntu_14_base # pull ubuntu_14_base from DockerHub
+make pull_ubuntu_24_base # pull ubuntu_24 _base from DockerHub
 make pull_ssh_base # pull ssh_base from DockerHub
 make pull_samba_base # pull samba_base from DockerHub
 make pull_shellshock_base # pull shellshock_base from DockerHub
@@ -175,6 +185,7 @@ make pull_cve_2010_0426_base # pull cve_2010_0426_base from DockerHub
 make pull_cve_2015_5602_base # pull cve_2010_0426_base from DockerHub
 make pull_blank_ubuntu_20 # pull blank_ubuntu_20 from DockerHub
 make pull_blank_ubuntu_22 # pull blank_ubuntu_22 from DockerHub
+make pull_blank_ubuntu_24 # pull blank_ubuntu_24 from DockerHub
 make pull_pengine_exploit_base # pull pengine_exploit_base from DockerHub
 make pull_ovs_base # pull ovs_base from DockerHub
 make pull_ryu_base # pull ryu_base from DockerHub

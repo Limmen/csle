@@ -1,5 +1,5 @@
 # OS
-FROM kimham/csle_cve_2015_5602_base:0.7.0
+FROM kimham/csle_cve_2015_5602_base:0.8.0
 USER root
 
 # Add start script
