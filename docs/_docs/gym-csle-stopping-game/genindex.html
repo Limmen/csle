@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; gym-csle-stopping-game 0.7.0 documentation</title>
+  <title>Index &mdash; gym-csle-stopping-game 0.8.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,7 +13,9 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="#" />
     <link rel="search" title="Search" href="search.html" /> 
@@ -54,8 +56,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Index</li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Index</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -89,22 +91,18 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.action_space">action_space (gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv attribute)</a>
-
-      <ul>
-        <li><a href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.action_space">(gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv attribute)</a>
-</li>
-        <li><a href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.action_space">(gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv attribute)</a>
-</li>
-      </ul></li>
       <li><a href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.add_observation_vector">add_observation_vector() (gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv method)</a>
+</li>
+      <li><a href="gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.aggregate_belief_mdp_defender">aggregate_belief_mdp_defender() (gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil static method)</a>
+</li>
+      <li><a href="gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.aggregate_belief_transition_probability">aggregate_belief_transition_probability() (gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil static method)</a>
 </li>
       <li><a href="gym_csle_stopping_game.constants.html#gym_csle_stopping_game.constants.constants.ENV_METRICS.ATTACKER_ACTION">ATTACKER_ACTION (gym_csle_stopping_game.constants.constants.ENV_METRICS attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="gym_csle_stopping_game.dao.html#gym_csle_stopping_game.dao.stopping_game_config.StoppingGameConfig.attacker_action_space">attacker_action_space() (gym_csle_stopping_game.dao.stopping_game_config.StoppingGameConfig method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.attacker_actions">attacker_actions() (gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil static method)</a>
 </li>
       <li><a href="gym_csle_stopping_game.dao.html#gym_csle_stopping_game.dao.stopping_game_state.StoppingGameState.attacker_observation">attacker_observation() (gym_csle_stopping_game.dao.stopping_game_state.StoppingGameState method)</a>
@@ -126,6 +124,8 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.bayes_filter">bayes_filter() (gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil static method)</a>
+</li>
+      <li><a href="gym_csle_stopping_game.constants.html#gym_csle_stopping_game.constants.constants.ENV_METRICS.BELIEF">BELIEF (gym_csle_stopping_game.constants.constants.ENV_METRICS attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -167,6 +167,8 @@
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.find_nearest_neighbor_belief">find_nearest_neighbor_belief() (gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil static method)</a>
+</li>
       <li><a href="gym_csle_stopping_game.dao.html#gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config.StoppingGameAttackerMdpConfig.from_dict">from_dict() (gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config.StoppingGameAttackerMdpConfig static method)</a>
 
       <ul>
@@ -195,6 +197,12 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.generate_aggregate_belief_reward_tensor">generate_aggregate_belief_reward_tensor() (gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil static method)</a>
+</li>
+      <li><a href="gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.generate_aggregate_belief_space">generate_aggregate_belief_space() (gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil static method)</a>
+</li>
+      <li><a href="gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.generate_aggregate_belief_transition_operator">generate_aggregate_belief_transition_operator() (gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil static method)</a>
+</li>
       <li><a href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.generate_random_particles">generate_random_particles() (gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv method)</a>
 
       <ul>
@@ -251,6 +259,8 @@
         <li><a href="gym_csle_stopping_game.dao.html#module-gym_csle_stopping_game.dao">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config
 
@@ -258,8 +268,6 @@
         <li><a href="gym_csle_stopping_game.dao.html#module-gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     gym_csle_stopping_game.dao.stopping_game_config
 
@@ -424,14 +432,6 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="gym_csle_stopping_game.constants.html#gym_csle_stopping_game.constants.constants.ENV_METRICS.OBSERVATION">OBSERVATION (gym_csle_stopping_game.constants.constants.ENV_METRICS attribute)</a>
 </li>
-      <li><a href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.observation_space">observation_space (gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv attribute)</a>
-
-      <ul>
-        <li><a href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv.observation_space">(gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env.StoppingGameMdpAttackerEnv attribute)</a>
-</li>
-        <li><a href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.observation_space">(gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv attribute)</a>
-</li>
-      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.observation_space">observation_space() (gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil static method)</a>
@@ -444,6 +444,12 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.pomdp_bayes_filter">pomdp_bayes_filter() (gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil static method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.pomdp_next_belief">pomdp_next_belief() (gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil static method)</a>
+</li>
       <li><a href="gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.pomdp_solver_file">pomdp_solver_file() (gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil static method)</a>
 </li>
   </ul></td>
@@ -458,6 +464,16 @@
         <li><a href="gym_csle_stopping_game.constants.html#gym_csle_stopping_game.constants.constants.STATIC_DEFENDER_STRATEGIES.RANDOM">(gym_csle_stopping_game.constants.constants.STATIC_DEFENDER_STRATEGIES attribute)</a>
 </li>
       </ul></li>
+      <li><a href="gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.reduce_R_attacker">reduce_R_attacker() (gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil static method)</a>
+</li>
+      <li><a href="gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.reduce_R_defender">reduce_R_defender() (gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil static method)</a>
+</li>
+      <li><a href="gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.reduce_T_attacker">reduce_T_attacker() (gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil static method)</a>
+</li>
+      <li><a href="gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.reduce_T_defender">reduce_T_defender() (gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil static method)</a>
+</li>
+      <li><a href="gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.reduce_Z_attacker">reduce_Z_attacker() (gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil static method)</a>
+</li>
       <li><a href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.render">render() (gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv method)</a>
 
       <ul>
@@ -466,6 +482,8 @@
         <li><a href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.render">(gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="gym_csle_stopping_game.dao.html#gym_csle_stopping_game.dao.stopping_game_state.StoppingGameState.reset">reset() (gym_csle_stopping_game.dao.stopping_game_state.StoppingGameState method)</a>
 
       <ul>
@@ -476,8 +494,6 @@
         <li><a href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv.reset">(gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env.StoppingGamePomdpDefenderEnv method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="gym_csle_stopping_game.envs.html#gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv.reset_traces">reset_traces() (gym_csle_stopping_game.envs.stopping_game_env.StoppingGameEnv method)</a>
 
       <ul>

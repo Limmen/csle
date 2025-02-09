@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.logging package &mdash; csle-common 0.7.0 documentation</title>
+  <title>csle_common.logging package &mdash; csle-common 0.8.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,7 +14,9 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -44,8 +46,24 @@
 <li class="toctree-l1"><a class="reference internal" href="csle_common.dao.html">csle_common.dao package</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">csle_common.logging package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_common.logging.custom_formatter">csle_common.logging.custom_formatter module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_common.logging.log">csle_common.logging.log module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_common.logging.custom_formatter">csle_common.logging.custom_formatter module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#csle_common.logging.custom_formatter.CustomFormatter"><code class="docutils literal notranslate"><span class="pre">CustomFormatter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_common.logging.custom_formatter.CustomFormatter.format"><code class="docutils literal notranslate"><span class="pre">CustomFormatter.format()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_common.logging.log">csle_common.logging.log module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#csle_common.logging.log.Logger"><code class="docutils literal notranslate"><span class="pre">Logger</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_common.logging.log.Logger.get_log_file_path"><code class="docutils literal notranslate"><span class="pre">Logger.get_log_file_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_common.logging.log.Logger.get_logger"><code class="docutils literal notranslate"><span class="pre">Logger.get_logger()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_common.logging.log.Logger.setup_logfile"><code class="docutils literal notranslate"><span class="pre">Logger.setup_logfile()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_common.logging.log.SingletonType"><code class="docutils literal notranslate"><span class="pre">SingletonType</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_common.logging.log.handle_exception"><code class="docutils literal notranslate"><span class="pre">handle_exception()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#module-csle_common.logging">Module contents</a></li>
 </ul>
 </li>
@@ -67,8 +85,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>csle_common.logging package</li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">csle_common.logging package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/csle_common.logging.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -79,16 +97,16 @@
            <div itemprop="articleBody">
              
   <section id="csle-common-logging-package">
-<h1>csle_common.logging package<a class="headerlink" href="#csle-common-logging-package" title="Permalink to this headline"></a></h1>
+<h1>csle_common.logging package<a class="headerlink" href="#csle-common-logging-package" title="Permalink to this heading"></a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 </section>
 <section id="module-csle_common.logging.custom_formatter">
-<span id="csle-common-logging-custom-formatter-module"></span><h2>csle_common.logging.custom_formatter module<a class="headerlink" href="#module-csle_common.logging.custom_formatter" title="Permalink to this headline"></a></h2>
+<span id="csle-common-logging-custom-formatter-module"></span><h2>csle_common.logging.custom_formatter module<a class="headerlink" href="#module-csle_common.logging.custom_formatter" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_common.logging.custom_formatter.CustomFormatter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.logging.custom_formatter.</span></span><span class="sig-name descname"><span class="pre">CustomFormatter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datefmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'%'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/logging/custom_formatter.html#CustomFormatter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.logging.custom_formatter.CustomFormatter" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">logging.Formatter</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.logging.custom_formatter.</span></span><span class="sig-name descname"><span class="pre">CustomFormatter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datefmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'%'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defaults</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/logging/custom_formatter.html#CustomFormatter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.logging.custom_formatter.CustomFormatter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Formatter</span></code></p>
 <p>Custom formatter for DEBUG-logging.</p>
 <p>Custom Formatter does these 2 things:
 1. Overrides ‘funcName’ with the value of ‘func_name_override’, if it exists.
@@ -111,7 +129,7 @@
 
 </section>
 <section id="module-csle_common.logging.log">
-<span id="csle-common-logging-log-module"></span><h2>csle_common.logging.log module<a class="headerlink" href="#module-csle_common.logging.log" title="Permalink to this headline"></a></h2>
+<span id="csle-common-logging-log-module"></span><h2>csle_common.logging.log module<a class="headerlink" href="#module-csle_common.logging.log" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_common.logging.log.Logger">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.logging.log.</span></span><span class="sig-name descname"><span class="pre">Logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/logging/log.html#Logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.logging.log.Logger" title="Permalink to this definition"></a></dt>
@@ -129,7 +147,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.logging.log.Logger.get_logger">
-<span class="sig-name descname"><span class="pre">get_logger</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">logging.Logger</span></span></span><a class="reference internal" href="_modules/csle_common/logging/log.html#Logger.get_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.logging.log.Logger.get_logger" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_logger</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Logger</span></span></span><a class="reference internal" href="_modules/csle_common/logging/log.html#Logger.get_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.logging.log.Logger.get_logger" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the CSLE logger</p>
@@ -183,7 +201,7 @@
 
 </section>
 <section id="module-csle_common.logging">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_common.logging" title="Permalink to this headline"></a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_common.logging" title="Permalink to this heading"></a></h2>
 </section>
 </section>
 

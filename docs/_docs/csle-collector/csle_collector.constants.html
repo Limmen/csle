@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_collector.constants package &mdash; csle-collector 0.7.0 documentation</title>
+  <title>csle_collector.constants package &mdash; csle-collector 0.8.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,7 +14,9 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -41,7 +43,474 @@
 <li class="toctree-l1"><a class="reference internal" href="csle_collector.client_manager.html">csle_collector.client_manager package</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">csle_collector.constants package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.constants.constants">csle_collector.constants.constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.constants.constants">csle_collector.constants.constants module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.constants.constants.BEATS"><code class="docutils literal notranslate"><span class="pre">BEATS</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.BEATS.ADD_HOST_METADATA_PROPERTY"><code class="docutils literal notranslate"><span class="pre">BEATS.ADD_HOST_METADATA_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.BEATS.AUDIT_PROPERTY"><code class="docutils literal notranslate"><span class="pre">BEATS.AUDIT_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.BEATS.AUTH_PROPERTY"><code class="docutils literal notranslate"><span class="pre">BEATS.AUTH_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.BEATS.ELASTIC_OUTPUT_PROPERTY"><code class="docutils literal notranslate"><span class="pre">BEATS.ELASTIC_OUTPUT_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.BEATS.ENABLED_PROPERTY"><code class="docutils literal notranslate"><span class="pre">BEATS.ENABLED_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.BEATS.FILESTREAM_PROPERTY"><code class="docutils literal notranslate"><span class="pre">BEATS.FILESTREAM_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.BEATS.FILE_PROPERTY"><code class="docutils literal notranslate"><span class="pre">BEATS.FILE_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.BEATS.FORWARDED_PROPERTY"><code class="docutils literal notranslate"><span class="pre">BEATS.FORWARDED_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.BEATS.GROUP_ID_PROPERTY"><code class="docutils literal notranslate"><span class="pre">BEATS.GROUP_ID_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.BEATS.HOSTS_PROPERTY"><code class="docutils literal notranslate"><span class="pre">BEATS.HOSTS_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.BEATS.HOST_PROPERTY"><code class="docutils literal notranslate"><span class="pre">BEATS.HOST_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.BEATS.ID_PROPERTY"><code class="docutils literal notranslate"><span class="pre">BEATS.ID_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.BEATS.INDEX_NUM_SHARDS_PROPERTY"><code class="docutils literal notranslate"><span class="pre">BEATS.INDEX_NUM_SHARDS_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.BEATS.KAFKA_PROPERTY"><code class="docutils literal notranslate"><span class="pre">BEATS.KAFKA_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.BEATS.LOG_PROPERTY"><code class="docutils literal notranslate"><span class="pre">BEATS.LOG_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.BEATS.METRICSETS_PROPERTY"><code class="docutils literal notranslate"><span class="pre">BEATS.METRICSETS_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.BEATS.MODULE_PROPERTY"><code class="docutils literal notranslate"><span class="pre">BEATS.MODULE_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.BEATS.NAME_PROPERTY"><code class="docutils literal notranslate"><span class="pre">BEATS.NAME_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.BEATS.PATHS_PROPERTY"><code class="docutils literal notranslate"><span class="pre">BEATS.PATHS_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.BEATS.PATH_PROPERTY"><code class="docutils literal notranslate"><span class="pre">BEATS.PATH_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.BEATS.PERIOD_PROPERTY"><code class="docutils literal notranslate"><span class="pre">BEATS.PERIOD_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.BEATS.PROCESSORS_PROPERTY"><code class="docutils literal notranslate"><span class="pre">BEATS.PROCESSORS_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.BEATS.RELOAD_ENABLED_PROPERTY"><code class="docutils literal notranslate"><span class="pre">BEATS.RELOAD_ENABLED_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.BEATS.SERVER_PROPERTY"><code class="docutils literal notranslate"><span class="pre">BEATS.SERVER_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.BEATS.SETUP_KIBANA_PROPERTY"><code class="docutils literal notranslate"><span class="pre">BEATS.SETUP_KIBANA_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.BEATS.SETUP_TEMPLATE_SETTINGS_PROPERTY"><code class="docutils literal notranslate"><span class="pre">BEATS.SETUP_TEMPLATE_SETTINGS_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.BEATS.SLOWLOG_PROPERTY"><code class="docutils literal notranslate"><span class="pre">BEATS.SLOWLOG_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.BEATS.SYSLOG_PROPERTY"><code class="docutils literal notranslate"><span class="pre">BEATS.SYSLOG_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.BEATS.TOPICS_PROPERTY"><code class="docutils literal notranslate"><span class="pre">BEATS.TOPICS_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.BEATS.TYPE_PROPERTY"><code class="docutils literal notranslate"><span class="pre">BEATS.TYPE_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.BEATS.VAR_INPUT_PROPERTY"><code class="docutils literal notranslate"><span class="pre">BEATS.VAR_INPUT_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.BEATS.VAR_PATHS_PROPERTY"><code class="docutils literal notranslate"><span class="pre">BEATS.VAR_PATHS_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.BEATS.WHEN_NOT_CONTAIN_TAGS_PROPERTY"><code class="docutils literal notranslate"><span class="pre">BEATS.WHEN_NOT_CONTAIN_TAGS_PROPERTY</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.constants.constants.DICT_PROPERTIES"><code class="docutils literal notranslate"><span class="pre">DICT_PROPERTIES</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.DICT_PROPERTIES.RUNNING"><code class="docutils literal notranslate"><span class="pre">DICT_PROPERTIES.RUNNING</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.DICT_PROPERTIES.TOPICS"><code class="docutils literal notranslate"><span class="pre">DICT_PROPERTIES.TOPICS</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.constants.constants.DOCKER_STATS"><code class="docutils literal notranslate"><span class="pre">DOCKER_STATS</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.DOCKER_STATS.BLKIO_STATS"><code class="docutils literal notranslate"><span class="pre">DOCKER_STATS.BLKIO_STATS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.DOCKER_STATS.BLK_READ"><code class="docutils literal notranslate"><span class="pre">DOCKER_STATS.BLK_READ</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.DOCKER_STATS.BLK_WRITE"><code class="docutils literal notranslate"><span class="pre">DOCKER_STATS.BLK_WRITE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.DOCKER_STATS.CONTAINER_ID"><code class="docutils literal notranslate"><span class="pre">DOCKER_STATS.CONTAINER_ID</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.DOCKER_STATS.CONTAINER_IP"><code class="docutils literal notranslate"><span class="pre">DOCKER_STATS.CONTAINER_IP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.DOCKER_STATS.CONTAINER_NAME"><code class="docutils literal notranslate"><span class="pre">DOCKER_STATS.CONTAINER_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.DOCKER_STATS.CPU_PERCENT"><code class="docutils literal notranslate"><span class="pre">DOCKER_STATS.CPU_PERCENT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.DOCKER_STATS.CPU_STATS"><code class="docutils literal notranslate"><span class="pre">DOCKER_STATS.CPU_STATS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.DOCKER_STATS.CPU_USAGE"><code class="docutils literal notranslate"><span class="pre">DOCKER_STATS.CPU_USAGE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.DOCKER_STATS.CURRENT"><code class="docutils literal notranslate"><span class="pre">DOCKER_STATS.CURRENT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.DOCKER_STATS.IO_SERVICE_BYTES_RECURSIVE"><code class="docutils literal notranslate"><span class="pre">DOCKER_STATS.IO_SERVICE_BYTES_RECURSIVE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.DOCKER_STATS.LIMIT"><code class="docutils literal notranslate"><span class="pre">DOCKER_STATS.LIMIT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.DOCKER_STATS.MEMORY_STATS"><code class="docutils literal notranslate"><span class="pre">DOCKER_STATS.MEMORY_STATS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.DOCKER_STATS.MEM_CURRENT"><code class="docutils literal notranslate"><span class="pre">DOCKER_STATS.MEM_CURRENT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.DOCKER_STATS.MEM_PERCENT"><code class="docutils literal notranslate"><span class="pre">DOCKER_STATS.MEM_PERCENT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.DOCKER_STATS.MEM_TOTAL"><code class="docutils literal notranslate"><span class="pre">DOCKER_STATS.MEM_TOTAL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.DOCKER_STATS.NETWORKS"><code class="docutils literal notranslate"><span class="pre">DOCKER_STATS.NETWORKS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.DOCKER_STATS.NET_RX"><code class="docutils literal notranslate"><span class="pre">DOCKER_STATS.NET_RX</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.DOCKER_STATS.NET_TX"><code class="docutils literal notranslate"><span class="pre">DOCKER_STATS.NET_TX</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.DOCKER_STATS.ONLINE_CPUS"><code class="docutils literal notranslate"><span class="pre">DOCKER_STATS.ONLINE_CPUS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.DOCKER_STATS.OP"><code class="docutils literal notranslate"><span class="pre">DOCKER_STATS.OP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.DOCKER_STATS.PERCPU_USAGE"><code class="docutils literal notranslate"><span class="pre">DOCKER_STATS.PERCPU_USAGE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.DOCKER_STATS.PIDS"><code class="docutils literal notranslate"><span class="pre">DOCKER_STATS.PIDS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.DOCKER_STATS.PIDS_STATS"><code class="docutils literal notranslate"><span class="pre">DOCKER_STATS.PIDS_STATS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.DOCKER_STATS.PRECPU_STATS"><code class="docutils literal notranslate"><span class="pre">DOCKER_STATS.PRECPU_STATS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.DOCKER_STATS.READ"><code class="docutils literal notranslate"><span class="pre">DOCKER_STATS.READ</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.DOCKER_STATS.RX_BYTES"><code class="docutils literal notranslate"><span class="pre">DOCKER_STATS.RX_BYTES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.DOCKER_STATS.SYSTEM_CPU_USAGE"><code class="docutils literal notranslate"><span class="pre">DOCKER_STATS.SYSTEM_CPU_USAGE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.DOCKER_STATS.TIMESTAMP"><code class="docutils literal notranslate"><span class="pre">DOCKER_STATS.TIMESTAMP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.DOCKER_STATS.TOTAL_USAGE"><code class="docutils literal notranslate"><span class="pre">DOCKER_STATS.TOTAL_USAGE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.DOCKER_STATS.TX_BYTES"><code class="docutils literal notranslate"><span class="pre">DOCKER_STATS.TX_BYTES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.DOCKER_STATS.UNIX_DOCKER_SOCK_URL"><code class="docutils literal notranslate"><span class="pre">DOCKER_STATS.UNIX_DOCKER_SOCK_URL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.DOCKER_STATS.USAGE"><code class="docutils literal notranslate"><span class="pre">DOCKER_STATS.USAGE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.DOCKER_STATS.VALUE"><code class="docutils literal notranslate"><span class="pre">DOCKER_STATS.VALUE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.DOCKER_STATS.WRITE"><code class="docutils literal notranslate"><span class="pre">DOCKER_STATS.WRITE</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.constants.constants.ELK"><code class="docutils literal notranslate"><span class="pre">ELK</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.ELK.ELASTICSEARCH_LOG_DIR"><code class="docutils literal notranslate"><span class="pre">ELK.ELASTICSEARCH_LOG_DIR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.ELK.ELASTICSEARCH_START"><code class="docutils literal notranslate"><span class="pre">ELK.ELASTICSEARCH_START</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.ELK.ELASTICSEARCH_STATUS"><code class="docutils literal notranslate"><span class="pre">ELK.ELASTICSEARCH_STATUS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.ELK.ELASTICSEARCH_STOP"><code class="docutils literal notranslate"><span class="pre">ELK.ELASTICSEARCH_STOP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.ELK.ELASTIC_PORT"><code class="docutils literal notranslate"><span class="pre">ELK.ELASTIC_PORT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.ELK.ELK_LOG"><code class="docutils literal notranslate"><span class="pre">ELK.ELK_LOG</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.ELK.ELK_START"><code class="docutils literal notranslate"><span class="pre">ELK.ELK_START</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.ELK.KIBANA_LOG_DIR"><code class="docutils literal notranslate"><span class="pre">ELK.KIBANA_LOG_DIR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.ELK.KIBANA_PORT"><code class="docutils literal notranslate"><span class="pre">ELK.KIBANA_PORT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.ELK.KIBANA_START"><code class="docutils literal notranslate"><span class="pre">ELK.KIBANA_START</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.ELK.KIBANA_STATUS"><code class="docutils literal notranslate"><span class="pre">ELK.KIBANA_STATUS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.ELK.KIBANA_STOP"><code class="docutils literal notranslate"><span class="pre">ELK.KIBANA_STOP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.ELK.LOGSTASH_LOG_DIR"><code class="docutils literal notranslate"><span class="pre">ELK.LOGSTASH_LOG_DIR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.ELK.LOGSTASH_PORT"><code class="docutils literal notranslate"><span class="pre">ELK.LOGSTASH_PORT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.ELK.LOGSTASH_START"><code class="docutils literal notranslate"><span class="pre">ELK.LOGSTASH_START</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.ELK.LOGSTASH_STATUS"><code class="docutils literal notranslate"><span class="pre">ELK.LOGSTASH_STATUS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.ELK.LOGSTASH_STOP"><code class="docutils literal notranslate"><span class="pre">ELK.LOGSTASH_STOP</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.constants.constants.ELK_CONFIG"><code class="docutils literal notranslate"><span class="pre">ELK_CONFIG</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET"><code class="docutils literal notranslate"><span class="pre">ELK_CONFIG.NETWORK_ID_FOURTH_OCTET</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET"><code class="docutils literal notranslate"><span class="pre">ELK_CONFIG.NETWORK_ID_THIRD_OCTET</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.ELK_CONFIG.SUFFIX"><code class="docutils literal notranslate"><span class="pre">ELK_CONFIG.SUFFIX</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.constants.constants.EXTERNAL_NETWORK"><code class="docutils literal notranslate"><span class="pre">EXTERNAL_NETWORK</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.EXTERNAL_NETWORK.NETWORK_ID_THIRD_OCTET"><code class="docutils literal notranslate"><span class="pre">EXTERNAL_NETWORK.NETWORK_ID_THIRD_OCTET</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.constants.constants.FILEBEAT"><code class="docutils literal notranslate"><span class="pre">FILEBEAT</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.FILEBEAT.CONFIG_DIR"><code class="docutils literal notranslate"><span class="pre">FILEBEAT.CONFIG_DIR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.FILEBEAT.CONFIG_FILE"><code class="docutils literal notranslate"><span class="pre">FILEBEAT.CONFIG_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.FILEBEAT.ELASTICSEARCH_MODULE"><code class="docutils literal notranslate"><span class="pre">FILEBEAT.ELASTICSEARCH_MODULE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.FILEBEAT.ELASTICSEARCH_MODULE_CONFIG_FILE"><code class="docutils literal notranslate"><span class="pre">FILEBEAT.ELASTICSEARCH_MODULE_CONFIG_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.FILEBEAT.ENABLE_MODULE_CMD"><code class="docutils literal notranslate"><span class="pre">FILEBEAT.ENABLE_MODULE_CMD</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.FILEBEAT.FILEBEAT_GROUP_ID"><code class="docutils literal notranslate"><span class="pre">FILEBEAT.FILEBEAT_GROUP_ID</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.FILEBEAT.FILEBEAT_START"><code class="docutils literal notranslate"><span class="pre">FILEBEAT.FILEBEAT_START</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.FILEBEAT.FILEBEAT_STATUS"><code class="docutils literal notranslate"><span class="pre">FILEBEAT.FILEBEAT_STATUS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.FILEBEAT.FILEBEAT_STOP"><code class="docutils literal notranslate"><span class="pre">FILEBEAT.FILEBEAT_STOP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.FILEBEAT.INPUTS_PROPERTY"><code class="docutils literal notranslate"><span class="pre">FILEBEAT.INPUTS_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.FILEBEAT.KAFKA_MODULE"><code class="docutils literal notranslate"><span class="pre">FILEBEAT.KAFKA_MODULE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.FILEBEAT.KAFKA_MODULE_CONFIG_FILE"><code class="docutils literal notranslate"><span class="pre">FILEBEAT.KAFKA_MODULE_CONFIG_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.FILEBEAT.KIBANA_MODULE"><code class="docutils literal notranslate"><span class="pre">FILEBEAT.KIBANA_MODULE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.FILEBEAT.KIBANA_MODULE_CONFIG_FILE"><code class="docutils literal notranslate"><span class="pre">FILEBEAT.KIBANA_MODULE_CONFIG_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.FILEBEAT.LOGSTASH_MODULE"><code class="docutils literal notranslate"><span class="pre">FILEBEAT.LOGSTASH_MODULE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.FILEBEAT.LOGSTASH_MODULE_CONFIG_FILE"><code class="docutils literal notranslate"><span class="pre">FILEBEAT.LOGSTASH_MODULE_CONFIG_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.FILEBEAT.MODULES_CONFIG_DIR"><code class="docutils literal notranslate"><span class="pre">FILEBEAT.MODULES_CONFIG_DIR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.FILEBEAT.MODULES_PROPERTY"><code class="docutils literal notranslate"><span class="pre">FILEBEAT.MODULES_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.FILEBEAT.SETUP_CMD"><code class="docutils literal notranslate"><span class="pre">FILEBEAT.SETUP_CMD</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.FILEBEAT.SNORT_MODULE"><code class="docutils literal notranslate"><span class="pre">FILEBEAT.SNORT_MODULE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.FILEBEAT.SNORT_MODULE_CONFIG_FILE"><code class="docutils literal notranslate"><span class="pre">FILEBEAT.SNORT_MODULE_CONFIG_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.FILEBEAT.SYSTEM_MODULE"><code class="docutils literal notranslate"><span class="pre">FILEBEAT.SYSTEM_MODULE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.FILEBEAT.SYSTEM_MODULE_CONFIG_FILE"><code class="docutils literal notranslate"><span class="pre">FILEBEAT.SYSTEM_MODULE_CONFIG_FILE</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.constants.constants.GRPC"><code class="docutils literal notranslate"><span class="pre">GRPC</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.GRPC.CONFIG_TIMEOUT_SECONDS"><code class="docutils literal notranslate"><span class="pre">GRPC.CONFIG_TIMEOUT_SECONDS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.GRPC.OPERATION_TIMEOUT_SECONDS"><code class="docutils literal notranslate"><span class="pre">GRPC.OPERATION_TIMEOUT_SECONDS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.GRPC.TIMEOUT_SECONDS"><code class="docutils literal notranslate"><span class="pre">GRPC.TIMEOUT_SECONDS</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.constants.constants.GRPC_WORKERS"><code class="docutils literal notranslate"><span class="pre">GRPC_WORKERS</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.GRPC_WORKERS.DEFAULT_MAX_NUM_WORKERS"><code class="docutils literal notranslate"><span class="pre">GRPC_WORKERS.DEFAULT_MAX_NUM_WORKERS</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.constants.constants.HEARTBEAT"><code class="docutils literal notranslate"><span class="pre">HEARTBEAT</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.HEARTBEAT.CONFIG_DIR"><code class="docutils literal notranslate"><span class="pre">HEARTBEAT.CONFIG_DIR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.HEARTBEAT.CONFIG_FILE"><code class="docutils literal notranslate"><span class="pre">HEARTBEAT.CONFIG_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.HEARTBEAT.CSLE_MONITOR_SERVICE_ID"><code class="docutils literal notranslate"><span class="pre">HEARTBEAT.CSLE_MONITOR_SERVICE_ID</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.HEARTBEAT.CSLE_MONITOR_SERVICE_NAME"><code class="docutils literal notranslate"><span class="pre">HEARTBEAT.CSLE_MONITOR_SERVICE_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.HEARTBEAT.HEARTBEAT_MONITORS_PROPERTY"><code class="docutils literal notranslate"><span class="pre">HEARTBEAT.HEARTBEAT_MONITORS_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.HEARTBEAT.HEARTBEAT_START"><code class="docutils literal notranslate"><span class="pre">HEARTBEAT.HEARTBEAT_START</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.HEARTBEAT.HEARTBEAT_STATUS"><code class="docutils literal notranslate"><span class="pre">HEARTBEAT.HEARTBEAT_STATUS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.HEARTBEAT.HEARTBEAT_STOP"><code class="docutils literal notranslate"><span class="pre">HEARTBEAT.HEARTBEAT_STOP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.HEARTBEAT.ICMP_MONITOR_TYPE"><code class="docutils literal notranslate"><span class="pre">HEARTBEAT.ICMP_MONITOR_TYPE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.HEARTBEAT.SCHEDULE_PROPERTY"><code class="docutils literal notranslate"><span class="pre">HEARTBEAT.SCHEDULE_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.HEARTBEAT.SETUP_CMD"><code class="docutils literal notranslate"><span class="pre">HEARTBEAT.SETUP_CMD</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.constants.constants.HOST_METRICS"><code class="docutils literal notranslate"><span class="pre">HOST_METRICS</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.HOST_METRICS.LIST_FAILED_LOGIN_ATTEMPTS"><code class="docutils literal notranslate"><span class="pre">HOST_METRICS.LIST_FAILED_LOGIN_ATTEMPTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.HOST_METRICS.LIST_LOGGED_IN_USERS_CMD"><code class="docutils literal notranslate"><span class="pre">HOST_METRICS.LIST_LOGGED_IN_USERS_CMD</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.HOST_METRICS.LIST_NUMBER_OF_PROCESSES"><code class="docutils literal notranslate"><span class="pre">HOST_METRICS.LIST_NUMBER_OF_PROCESSES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.HOST_METRICS.LIST_OPEN_CONNECTIONS_CMD"><code class="docutils literal notranslate"><span class="pre">HOST_METRICS.LIST_OPEN_CONNECTIONS_CMD</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.HOST_METRICS.LIST_SUCCESSFUL_LOGIN_ATTEMPTS"><code class="docutils literal notranslate"><span class="pre">HOST_METRICS.LIST_SUCCESSFUL_LOGIN_ATTEMPTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.HOST_METRICS.LIST_USER_ACCOUNTS"><code class="docutils literal notranslate"><span class="pre">HOST_METRICS.LIST_USER_ACCOUNTS</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.constants.constants.HTTP"><code class="docutils literal notranslate"><span class="pre">HTTP</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.HTTP.APPLICATION_JSON_TYPE"><code class="docutils literal notranslate"><span class="pre">HTTP.APPLICATION_JSON_TYPE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.HTTP.BAD_REQUEST_RESPONSE_CODE"><code class="docutils literal notranslate"><span class="pre">HTTP.BAD_REQUEST_RESPONSE_CODE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.HTTP.DELETE"><code class="docutils literal notranslate"><span class="pre">HTTP.DELETE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.HTTP.GET"><code class="docutils literal notranslate"><span class="pre">HTTP.GET</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.HTTP.HTTP_PROTOCOL_PREFIX"><code class="docutils literal notranslate"><span class="pre">HTTP.HTTP_PROTOCOL_PREFIX</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.HTTP.INTERNAL_SERVER_ERROR_RESPONSE_CODE"><code class="docutils literal notranslate"><span class="pre">HTTP.INTERNAL_SERVER_ERROR_RESPONSE_CODE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.HTTP.LOCALHOST"><code class="docutils literal notranslate"><span class="pre">HTTP.LOCALHOST</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.HTTP.OK_RESPONSE_CODE"><code class="docutils literal notranslate"><span class="pre">HTTP.OK_RESPONSE_CODE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.HTTP.POST"><code class="docutils literal notranslate"><span class="pre">HTTP.POST</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.HTTP.PUT"><code class="docutils literal notranslate"><span class="pre">HTTP.PUT</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.constants.constants.INTERFACES"><code class="docutils literal notranslate"><span class="pre">INTERFACES</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.INTERFACES.ADDR"><code class="docutils literal notranslate"><span class="pre">INTERFACES.ADDR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.INTERFACES.ETH0"><code class="docutils literal notranslate"><span class="pre">INTERFACES.ETH0</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.INTERFACES.ETH1"><code class="docutils literal notranslate"><span class="pre">INTERFACES.ETH1</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA"><code class="docutils literal notranslate"><span class="pre">KAFKA</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA.AUTO_OFFSET_RESET_PROPERTY"><code class="docutils literal notranslate"><span class="pre">KAFKA.AUTO_OFFSET_RESET_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY"><code class="docutils literal notranslate"><span class="pre">KAFKA.BOOTSTRAP_SERVERS_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA.CLIENT_ID_PROPERTY"><code class="docutils literal notranslate"><span class="pre">KAFKA.CLIENT_ID_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA.DIR"><code class="docutils literal notranslate"><span class="pre">KAFKA.DIR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA.EARLIEST_OFFSET"><code class="docutils literal notranslate"><span class="pre">KAFKA.EARLIEST_OFFSET</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA.EXTERNAL_IP_PLACEHOLDER"><code class="docutils literal notranslate"><span class="pre">KAFKA.EXTERNAL_IP_PLACEHOLDER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA.EXTERNAL_PORT"><code class="docutils literal notranslate"><span class="pre">KAFKA.EXTERNAL_PORT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA.GROUP_ID_PROPERTY"><code class="docutils literal notranslate"><span class="pre">KAFKA.GROUP_ID_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA.INTERNAL_IP_PLACEHOLDER"><code class="docutils literal notranslate"><span class="pre">KAFKA.INTERNAL_IP_PLACEHOLDER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA.KAFKA_CONFIG_FILE"><code class="docutils literal notranslate"><span class="pre">KAFKA.KAFKA_CONFIG_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA.KAFKA_START"><code class="docutils literal notranslate"><span class="pre">KAFKA.KAFKA_START</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA.KAFKA_STATUS"><code class="docutils literal notranslate"><span class="pre">KAFKA.KAFKA_STATUS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA.KAFKA_STOP"><code class="docutils literal notranslate"><span class="pre">KAFKA.KAFKA_STOP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA.PORT"><code class="docutils literal notranslate"><span class="pre">KAFKA.PORT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA.RETENTION_MS_CONFIG_PROPERTY"><code class="docutils literal notranslate"><span class="pre">KAFKA.RETENTION_MS_CONFIG_PROPERTY</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.ALL_DELTA_AGG_LABELS"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.ALL_DELTA_AGG_LABELS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.ALL_DELTA_MACHINE_LABELS"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.ALL_DELTA_MACHINE_LABELS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.ALL_INITIAL_AGG_LABELS"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.ALL_INITIAL_AGG_LABELS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.ALL_INITIAL_MACHINE_LABELS"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.ALL_INITIAL_MACHINE_LABELS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.ATTACKER_ACTIONS_ATTRIBUTES"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.ATTACKER_ACTIONS_ATTRIBUTES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.ATTACKER_ACTIONS_TOPIC_NAME"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.ATTACKER_ACTIONS_TOPIC_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_ATTRIBUTES"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_ATTRIBUTES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_NAME"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_ATTRIBUTES"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_ATTRIBUTES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_NAME"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.CLIENT_POPULATION_METRIC_LABELS"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.CLIENT_POPULATION_METRIC_LABELS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.CLIENT_POPULATION_TOPIC_ATTRIBUTES"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.CLIENT_POPULATION_TOPIC_ATTRIBUTES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.CLIENT_POPULATION_TOPIC_NAME"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.CLIENT_POPULATION_TOPIC_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.DEFAULT_NUM_PARTITIONS"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.DEFAULT_NUM_PARTITIONS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.DEFAULT_NUM_REPLICAS"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.DEFAULT_NUM_REPLICAS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.DEFAULT_RETENTION_TIME_HOURS"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.DEFAULT_RETENTION_TIME_HOURS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.DEFENDER_ACTIONS_ATTRIBUTES"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.DEFENDER_ACTIONS_ATTRIBUTES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.DEFENDER_ACTIONS_TOPIC_NAME"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.DEFENDER_ACTIONS_TOPIC_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.DOCKER_HOST_STATS_TOPIC_NAME"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.DOCKER_HOST_STATS_TOPIC_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.DOCKER_STATS_COUNTER_LABELS"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.DOCKER_STATS_COUNTER_LABELS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.DOCKER_STATS_PERCENT_LABELS"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.DOCKER_STATS_PERCENT_LABELS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.DOCKER_STATS_TOPIC_ATTRIBUTES"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.DOCKER_STATS_TOPIC_ATTRIBUTES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.DOCKER_STATS_TOPIC_NAME"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.DOCKER_STATS_TOPIC_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.HOST_METRICS_LABELS"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.HOST_METRICS_LABELS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.HOST_METRICS_TOPIC_ATTRIBUTES"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.HOST_METRICS_TOPIC_ATTRIBUTES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.HOST_METRICS_TOPIC_NAME"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.HOST_METRICS_TOPIC_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.OPENFLOW_AGG_FLOW_STATS_TOPIC_ATTRIBUTES"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.OPENFLOW_AGG_FLOW_STATS_TOPIC_ATTRIBUTES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.OPENFLOW_AGG_FLOW_STATS_TOPIC_NAME"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.OPENFLOW_AGG_FLOW_STATS_TOPIC_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.OPENFLOW_FLOW_STATS_TOPIC_ATTRIBUTES"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.OPENFLOW_FLOW_STATS_TOPIC_ATTRIBUTES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.OPENFLOW_FLOW_STATS_TOPIC_NAME"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.OPENFLOW_FLOW_STATS_TOPIC_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.OPENFLOW_PORT_STATS_TOPIC_ATTRIBUTES"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.OPENFLOW_PORT_STATS_TOPIC_ATTRIBUTES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.OPENFLOW_PORT_STATS_TOPIC_NAME"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.OPENFLOW_PORT_STATS_TOPIC_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.OSSEC_IDS_ALERTS_LABELS"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.OSSEC_IDS_ALERTS_LABELS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.OSSEC_IDS_LOG_TOPIC_ATTRIBUTES"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.OSSEC_IDS_LOG_TOPIC_ATTRIBUTES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.OSSEC_IDS_LOG_TOPIC_NAME"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.OSSEC_IDS_LOG_TOPIC_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.SNORT_IDS_ALERTS_LABELS"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.SNORT_IDS_ALERTS_LABELS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.SNORT_IDS_IP_LOG_ATTRIBUTES"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.SNORT_IDS_IP_LOG_ATTRIBUTES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.SNORT_IDS_IP_LOG_TOPIC_NAME"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.SNORT_IDS_IP_LOG_TOPIC_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.SNORT_IDS_LOG_TOPIC_ATTRIBUTES"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.SNORT_IDS_LOG_TOPIC_ATTRIBUTES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.SNORT_IDS_LOG_TOPIC_NAME"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.SNORT_IDS_LOG_TOPIC_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.SNORT_IDS_RULE_LOG_ATTRIBUTES"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.SNORT_IDS_RULE_LOG_ATTRIBUTES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.SNORT_IDS_RULE_LOG_TOPIC_NAME"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.SNORT_IDS_RULE_LOG_TOPIC_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.KAFKA_CONFIG.SUFFIX"><code class="docutils literal notranslate"><span class="pre">KAFKA_CONFIG.SUFFIX</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.constants.constants.LOG_FILES"><code class="docutils literal notranslate"><span class="pre">LOG_FILES</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.LOG_FILES.CLIENT_MANAGER_LOG_DIR"><code class="docutils literal notranslate"><span class="pre">LOG_FILES.CLIENT_MANAGER_LOG_DIR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.LOG_FILES.CLIENT_MANAGER_LOG_FILE"><code class="docutils literal notranslate"><span class="pre">LOG_FILES.CLIENT_MANAGER_LOG_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.LOG_FILES.CLUSTER_MANAGER_LOG_DIR"><code class="docutils literal notranslate"><span class="pre">LOG_FILES.CLUSTER_MANAGER_LOG_DIR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.LOG_FILES.CLUSTER_MANAGER_LOG_FILE"><code class="docutils literal notranslate"><span class="pre">LOG_FILES.CLUSTER_MANAGER_LOG_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.LOG_FILES.DEFAULT_LOG_FILE_PATHS"><code class="docutils literal notranslate"><span class="pre">LOG_FILES.DEFAULT_LOG_FILE_PATHS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.LOG_FILES.DOCKER_STATS_MANAGER_LOG_DIR"><code class="docutils literal notranslate"><span class="pre">LOG_FILES.DOCKER_STATS_MANAGER_LOG_DIR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.LOG_FILES.DOCKER_STATS_MANAGER_LOG_FILE"><code class="docutils literal notranslate"><span class="pre">LOG_FILES.DOCKER_STATS_MANAGER_LOG_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.LOG_FILES.ELK_MANAGER_LOG_DIR"><code class="docutils literal notranslate"><span class="pre">LOG_FILES.ELK_MANAGER_LOG_DIR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.LOG_FILES.ELK_MANAGER_LOG_FILE"><code class="docutils literal notranslate"><span class="pre">LOG_FILES.ELK_MANAGER_LOG_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.LOG_FILES.HOST_MANAGER_LOG_DIR"><code class="docutils literal notranslate"><span class="pre">LOG_FILES.HOST_MANAGER_LOG_DIR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.LOG_FILES.HOST_MANAGER_LOG_FILE"><code class="docutils literal notranslate"><span class="pre">LOG_FILES.HOST_MANAGER_LOG_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.LOG_FILES.KAFKA_LOG_FILE"><code class="docutils literal notranslate"><span class="pre">LOG_FILES.KAFKA_LOG_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.LOG_FILES.KAFKA_MANAGER_LOG_DIR"><code class="docutils literal notranslate"><span class="pre">LOG_FILES.KAFKA_MANAGER_LOG_DIR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.LOG_FILES.KAFKA_MANAGER_LOG_FILE"><code class="docutils literal notranslate"><span class="pre">LOG_FILES.KAFKA_MANAGER_LOG_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.LOG_FILES.MINBFT_CLIENT_MANAGER_LOG_DIR"><code class="docutils literal notranslate"><span class="pre">LOG_FILES.MINBFT_CLIENT_MANAGER_LOG_DIR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.LOG_FILES.MINBFT_CLIENT_MANAGER_LOG_FILE"><code class="docutils literal notranslate"><span class="pre">LOG_FILES.MINBFT_CLIENT_MANAGER_LOG_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.LOG_FILES.MINBFT_MANAGER_LOG_DIR"><code class="docutils literal notranslate"><span class="pre">LOG_FILES.MINBFT_MANAGER_LOG_DIR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.LOG_FILES.MINBFT_MANAGER_LOG_FILE"><code class="docutils literal notranslate"><span class="pre">LOG_FILES.MINBFT_MANAGER_LOG_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.LOG_FILES.OSSEC_IDS_MANAGER_LOG_DIR"><code class="docutils literal notranslate"><span class="pre">LOG_FILES.OSSEC_IDS_MANAGER_LOG_DIR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.LOG_FILES.OSSEC_IDS_MANAGER_LOG_FILE"><code class="docutils literal notranslate"><span class="pre">LOG_FILES.OSSEC_IDS_MANAGER_LOG_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.LOG_FILES.RYU_MANAGER_LOG_DIR"><code class="docutils literal notranslate"><span class="pre">LOG_FILES.RYU_MANAGER_LOG_DIR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.LOG_FILES.RYU_MANAGER_LOG_FILE"><code class="docutils literal notranslate"><span class="pre">LOG_FILES.RYU_MANAGER_LOG_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.LOG_FILES.SNORT_IDS_MANAGER_LOG_DIR"><code class="docutils literal notranslate"><span class="pre">LOG_FILES.SNORT_IDS_MANAGER_LOG_DIR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.LOG_FILES.SNORT_IDS_MANAGER_LOG_FILE"><code class="docutils literal notranslate"><span class="pre">LOG_FILES.SNORT_IDS_MANAGER_LOG_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.LOG_FILES.TRAFFIC_MANAGER_LOG_DIR"><code class="docutils literal notranslate"><span class="pre">LOG_FILES.TRAFFIC_MANAGER_LOG_DIR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.LOG_FILES.TRAFFIC_MANAGER_LOG_FILE"><code class="docutils literal notranslate"><span class="pre">LOG_FILES.TRAFFIC_MANAGER_LOG_FILE</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.constants.constants.MANAGER_PORTS"><code class="docutils literal notranslate"><span class="pre">MANAGER_PORTS</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.MANAGER_PORTS.CLIENT_MANAGER_DEFAULT_PORT"><code class="docutils literal notranslate"><span class="pre">MANAGER_PORTS.CLIENT_MANAGER_DEFAULT_PORT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.MANAGER_PORTS.DOCKER_STATS_MANAGER_DEFAULT_PORT"><code class="docutils literal notranslate"><span class="pre">MANAGER_PORTS.DOCKER_STATS_MANAGER_DEFAULT_PORT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.MANAGER_PORTS.ELK_MANAGER_DEFAULT_PORT"><code class="docutils literal notranslate"><span class="pre">MANAGER_PORTS.ELK_MANAGER_DEFAULT_PORT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.MANAGER_PORTS.HOST_MANAGER_DEFAULT_PORT"><code class="docutils literal notranslate"><span class="pre">MANAGER_PORTS.HOST_MANAGER_DEFAULT_PORT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.MANAGER_PORTS.KAFKA_MANAGER_DEFAULT_PORT"><code class="docutils literal notranslate"><span class="pre">MANAGER_PORTS.KAFKA_MANAGER_DEFAULT_PORT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.MANAGER_PORTS.OSSEC_IDS_MANAGER_DEFAULT_PORT"><code class="docutils literal notranslate"><span class="pre">MANAGER_PORTS.OSSEC_IDS_MANAGER_DEFAULT_PORT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.MANAGER_PORTS.SDN_CONTROLLER_MANAGER_DEFAULT_PORT"><code class="docutils literal notranslate"><span class="pre">MANAGER_PORTS.SDN_CONTROLLER_MANAGER_DEFAULT_PORT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.MANAGER_PORTS.SNORT_IDS_MANAGER_DEFAULT_PORT"><code class="docutils literal notranslate"><span class="pre">MANAGER_PORTS.SNORT_IDS_MANAGER_DEFAULT_PORT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.MANAGER_PORTS.TRAFFIC_MANAGER_DEFAULT_PORT"><code class="docutils literal notranslate"><span class="pre">MANAGER_PORTS.TRAFFIC_MANAGER_DEFAULT_PORT</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.constants.constants.METRICBEAT"><code class="docutils literal notranslate"><span class="pre">METRICBEAT</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.METRICBEAT.CONFIG_DIR"><code class="docutils literal notranslate"><span class="pre">METRICBEAT.CONFIG_DIR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.METRICBEAT.CONFIG_FILE"><code class="docutils literal notranslate"><span class="pre">METRICBEAT.CONFIG_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.METRICBEAT.CORE_METRICS_PROPERTY"><code class="docutils literal notranslate"><span class="pre">METRICBEAT.CORE_METRICS_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.METRICBEAT.CPU_METRIC"><code class="docutils literal notranslate"><span class="pre">METRICBEAT.CPU_METRIC</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.METRICBEAT.CPU_METRICS_PROPERTY"><code class="docutils literal notranslate"><span class="pre">METRICBEAT.CPU_METRICS_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.METRICBEAT.ELASTICSEARCH_MODULE"><code class="docutils literal notranslate"><span class="pre">METRICBEAT.ELASTICSEARCH_MODULE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.METRICBEAT.ELASTICSEARCH_MODULE_CONFIG_FILE"><code class="docutils literal notranslate"><span class="pre">METRICBEAT.ELASTICSEARCH_MODULE_CONFIG_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.METRICBEAT.ENABLE_MODULE_CMD"><code class="docutils literal notranslate"><span class="pre">METRICBEAT.ENABLE_MODULE_CMD</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.METRICBEAT.KAFKA_MODULE"><code class="docutils literal notranslate"><span class="pre">METRICBEAT.KAFKA_MODULE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.METRICBEAT.KAFKA_MODULE_CONFIG_FILE"><code class="docutils literal notranslate"><span class="pre">METRICBEAT.KAFKA_MODULE_CONFIG_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.METRICBEAT.KIBANA_MODULE"><code class="docutils literal notranslate"><span class="pre">METRICBEAT.KIBANA_MODULE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.METRICBEAT.KIBANA_MODULE_CONFIG_FILE"><code class="docutils literal notranslate"><span class="pre">METRICBEAT.KIBANA_MODULE_CONFIG_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.METRICBEAT.LINUX_MODULE"><code class="docutils literal notranslate"><span class="pre">METRICBEAT.LINUX_MODULE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.METRICBEAT.LINUX_MODULE_CONFIG_FILE"><code class="docutils literal notranslate"><span class="pre">METRICBEAT.LINUX_MODULE_CONFIG_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.METRICBEAT.LOAD_METRIC"><code class="docutils literal notranslate"><span class="pre">METRICBEAT.LOAD_METRIC</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.METRICBEAT.LOGSTASH_MODULE"><code class="docutils literal notranslate"><span class="pre">METRICBEAT.LOGSTASH_MODULE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.METRICBEAT.LOGSTASH_MODULE_CONFIG_FILE"><code class="docutils literal notranslate"><span class="pre">METRICBEAT.LOGSTASH_MODULE_CONFIG_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.METRICBEAT.MEMORY_METRIC"><code class="docutils literal notranslate"><span class="pre">METRICBEAT.MEMORY_METRIC</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.METRICBEAT.METRICBEAT_START"><code class="docutils literal notranslate"><span class="pre">METRICBEAT.METRICBEAT_START</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.METRICBEAT.METRICBEAT_STATUS"><code class="docutils literal notranslate"><span class="pre">METRICBEAT.METRICBEAT_STATUS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.METRICBEAT.METRICBEAT_STOP"><code class="docutils literal notranslate"><span class="pre">METRICBEAT.METRICBEAT_STOP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.METRICBEAT.MODULES_CONFIG_DIR"><code class="docutils literal notranslate"><span class="pre">METRICBEAT.MODULES_CONFIG_DIR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.METRICBEAT.MODULES_PROPERTY"><code class="docutils literal notranslate"><span class="pre">METRICBEAT.MODULES_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.METRICBEAT.NETWORK_METRIC"><code class="docutils literal notranslate"><span class="pre">METRICBEAT.NETWORK_METRIC</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.METRICBEAT.NORMALIZED_PERCENTAGES_PROPERTY"><code class="docutils literal notranslate"><span class="pre">METRICBEAT.NORMALIZED_PERCENTAGES_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.METRICBEAT.PAGEINFO_METRIC"><code class="docutils literal notranslate"><span class="pre">METRICBEAT.PAGEINFO_METRIC</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.METRICBEAT.PERCENTAGES_PROPERTY"><code class="docutils literal notranslate"><span class="pre">METRICBEAT.PERCENTAGES_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.METRICBEAT.PROCESSES_PROPERTY"><code class="docutils literal notranslate"><span class="pre">METRICBEAT.PROCESSES_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.METRICBEAT.PROCESS_METRIC"><code class="docutils literal notranslate"><span class="pre">METRICBEAT.PROCESS_METRIC</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.METRICBEAT.PROCESS_SUMMARY_METRIC"><code class="docutils literal notranslate"><span class="pre">METRICBEAT.PROCESS_SUMMARY_METRIC</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.METRICBEAT.SETUP_CMD"><code class="docutils literal notranslate"><span class="pre">METRICBEAT.SETUP_CMD</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.METRICBEAT.SNORT_MODULE_CONFIG_FILE"><code class="docutils literal notranslate"><span class="pre">METRICBEAT.SNORT_MODULE_CONFIG_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.METRICBEAT.SOCKET_SUMMARY_METRIC"><code class="docutils literal notranslate"><span class="pre">METRICBEAT.SOCKET_SUMMARY_METRIC</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.METRICBEAT.SUMMARY_METRIC"><code class="docutils literal notranslate"><span class="pre">METRICBEAT.SUMMARY_METRIC</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.METRICBEAT.SYSTEM_MODULE"><code class="docutils literal notranslate"><span class="pre">METRICBEAT.SYSTEM_MODULE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.METRICBEAT.SYSTEM_MODULE_CONFIG_FILE"><code class="docutils literal notranslate"><span class="pre">METRICBEAT.SYSTEM_MODULE_CONFIG_FILE</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.constants.constants.OSSEC"><code class="docutils literal notranslate"><span class="pre">OSSEC</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.OSSEC.ALERTLINE_REGEX"><code class="docutils literal notranslate"><span class="pre">OSSEC.ALERTLINE_REGEX</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.OSSEC.CHECK_IF_OSSEC_IS_RUNNING_CMD"><code class="docutils literal notranslate"><span class="pre">OSSEC.CHECK_IF_OSSEC_IS_RUNNING_CMD</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.OSSEC.DATELINEREGEX"><code class="docutils literal notranslate"><span class="pre">OSSEC.DATELINEREGEX</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.OSSEC.HOSTLINE_REGEX"><code class="docutils literal notranslate"><span class="pre">OSSEC.HOSTLINE_REGEX</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.OSSEC.MAX_ALERTS"><code class="docutils literal notranslate"><span class="pre">OSSEC.MAX_ALERTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.OSSEC.OSSEC_ALERTS_FILE"><code class="docutils literal notranslate"><span class="pre">OSSEC.OSSEC_ALERTS_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.OSSEC.OSSEC_ALERT_RULE_ID_TO_DESCR"><code class="docutils literal notranslate"><span class="pre">OSSEC.OSSEC_ALERT_RULE_ID_TO_DESCR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.OSSEC.OSSEC_IDS_ALERT_GROUP_ID"><code class="docutils literal notranslate"><span class="pre">OSSEC.OSSEC_IDS_ALERT_GROUP_ID</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.OSSEC.OSSEC_LOG_FILE"><code class="docutils literal notranslate"><span class="pre">OSSEC.OSSEC_LOG_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.OSSEC.OSSEC_RUNNING_SEARCH"><code class="docutils literal notranslate"><span class="pre">OSSEC.OSSEC_RUNNING_SEARCH</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.OSSEC.OSSEC_SEVERE_ALERT_LEVEL_THRESHOLD"><code class="docutils literal notranslate"><span class="pre">OSSEC.OSSEC_SEVERE_ALERT_LEVEL_THRESHOLD</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.OSSEC.RULELINE_REGEX"><code class="docutils literal notranslate"><span class="pre">OSSEC.RULELINE_REGEX</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.OSSEC.SERVHOSTLINE_REGEX"><code class="docutils literal notranslate"><span class="pre">OSSEC.SERVHOSTLINE_REGEX</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.OSSEC.SRCIPLINE_REGEX"><code class="docutils literal notranslate"><span class="pre">OSSEC.SRCIPLINE_REGEX</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.OSSEC.START_OSSEC_IDS"><code class="docutils literal notranslate"><span class="pre">OSSEC.START_OSSEC_IDS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.OSSEC.STOP_OSSEC_IDS"><code class="docutils literal notranslate"><span class="pre">OSSEC.STOP_OSSEC_IDS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.OSSEC.TAIL_ALERTS_COMMAND"><code class="docutils literal notranslate"><span class="pre">OSSEC.TAIL_ALERTS_COMMAND</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.OSSEC.USERLINE_REGEX"><code class="docutils literal notranslate"><span class="pre">OSSEC.USERLINE_REGEX</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.AF_PACKET_PROPERTY"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.AF_PACKET_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.AMQP_PORTS"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.AMQP_PORTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.AMQP_PROTOCOL"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.AMQP_PROTOCOL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.ANY_DEVICE_PROPERTY"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.ANY_DEVICE_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.CASSANDRA_PORTS"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.CASSANDRA_PORTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.CASSANDRA_PROTOCOL"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.CASSANDRA_PROTOCOL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.CONFIG_DIR"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.CONFIG_DIR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.CONFIG_FILE"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.CONFIG_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.DHCPV4_PORTS"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.DHCPV4_PORTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.DHCPV4_PROTOCOL"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.DHCPV4_PROTOCOL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.DNS_PORTS"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.DNS_PORTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.DNS_PROTOCOL"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.DNS_PROTOCOL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.FILEBEAT_GROUP_ID"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.FILEBEAT_GROUP_ID</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.FLOWS"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.FLOWS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.HTTP_PORTS"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.HTTP_PORTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.HTTP_PROTOCOL"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.HTTP_PROTOCOL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.ICMP_PROTOCOL"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.ICMP_PROTOCOL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.INTERFACES_DEVICE_PROPERTY"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.INTERFACES_DEVICE_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.INTERFACES_TYPE_PROPERTY"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.INTERFACES_TYPE_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.MEMCACHE_PORTS"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.MEMCACHE_PORTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.MEMCACHE_PROTOCOL"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.MEMCACHE_PROTOCOL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.MONGODB_PORTS"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.MONGODB_PORTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.MONGODB_PROTOCOL"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.MONGODB_PROTOCOL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.MYSQL_PORTS"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.MYSQL_PORTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.MYSQL_PROTOCOL"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.MYSQL_PROTOCOL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.NFS_PORTS"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.NFS_PORTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.NFS_PROTOCOL"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.NFS_PROTOCOL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.PACKETBEAT_START"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.PACKETBEAT_START</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.PACKETBEAT_STATUS"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.PACKETBEAT_STATUS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.PACKETBEAT_STOP"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.PACKETBEAT_STOP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.PGSQL_PORTS"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.PGSQL_PORTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.PGSQL_PROTOCOL"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.PGSQL_PROTOCOL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.PORTS_PROPERTY"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.PORTS_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.PROTOCOLS"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.PROTOCOLS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.REDIS_PORTS"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.REDIS_PORTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.REDIS_PROTOCOL"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.REDIS_PROTOCOL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.SETUP_CMD"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.SETUP_CMD</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.SIP_PORTS"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.SIP_PORTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.SIP_PROTOCOL"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.SIP_PROTOCOL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.THRIFT_PORTS"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.THRIFT_PORTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.THRIFT_PROTOCOL"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.THRIFT_PROTOCOL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.TIMEOUT_PROPERTY"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.TIMEOUT_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.TLS_PORTS"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.TLS_PORTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.PACKETBEAT.TLS_PROTOCOL"><code class="docutils literal notranslate"><span class="pre">PACKETBEAT.TLS_PROTOCOL</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.constants.constants.RYU"><code class="docutils literal notranslate"><span class="pre">RYU</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.RYU.CHECK_IF_RYU_CONTROLLER_IS_RUNNING"><code class="docutils literal notranslate"><span class="pre">RYU.CHECK_IF_RYU_CONTROLLER_IS_RUNNING</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.RYU.KAFKA_CONF"><code class="docutils literal notranslate"><span class="pre">RYU.KAFKA_CONF</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.RYU.PRODUCER_RUNNING"><code class="docutils literal notranslate"><span class="pre">RYU.PRODUCER_RUNNING</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.RYU.REQUEST_TIMEOUT_S"><code class="docutils literal notranslate"><span class="pre">RYU.REQUEST_TIMEOUT_S</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.RYU.RYU_CONTROLLER_FILENAME"><code class="docutils literal notranslate"><span class="pre">RYU.RYU_CONTROLLER_FILENAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.RYU.SEARCH_CONTROLLER"><code class="docutils literal notranslate"><span class="pre">RYU.SEARCH_CONTROLLER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.RYU.START_PRODUCER_HTTP_RESOURCE"><code class="docutils literal notranslate"><span class="pre">RYU.START_PRODUCER_HTTP_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.RYU.START_RYU_CONTROLLER"><code class="docutils literal notranslate"><span class="pre">RYU.START_RYU_CONTROLLER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.RYU.STATUS_PRODUCER_HTTP_RESOURCE"><code class="docutils literal notranslate"><span class="pre">RYU.STATUS_PRODUCER_HTTP_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.RYU.STOP_PRODUCER_HTTP_RESOURCE"><code class="docutils literal notranslate"><span class="pre">RYU.STOP_PRODUCER_HTTP_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.RYU.STOP_RYU_CONTROLLER"><code class="docutils literal notranslate"><span class="pre">RYU.STOP_RYU_CONTROLLER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.RYU.STOP_RYU_CONTROLLER_MANAGER"><code class="docutils literal notranslate"><span class="pre">RYU.STOP_RYU_CONTROLLER_MANAGER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.RYU.TIME_STEP_LEN_SECONDS"><code class="docutils literal notranslate"><span class="pre">RYU.TIME_STEP_LEN_SECONDS</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.constants.constants.SNORT_IDS_ROUTER"><code class="docutils literal notranslate"><span class="pre">SNORT_IDS_ROUTER</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.SNORT_IDS_ROUTER.CHECK_IF_SNORT_IS_RUNNING_CMD"><code class="docutils literal notranslate"><span class="pre">SNORT_IDS_ROUTER.CHECK_IF_SNORT_IS_RUNNING_CMD</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.SNORT_IDS_ROUTER.CLASSIFICATION_REGEX"><code class="docutils literal notranslate"><span class="pre">SNORT_IDS_ROUTER.CLASSIFICATION_REGEX</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.SNORT_IDS_ROUTER.GREP_SNORT_CONF"><code class="docutils literal notranslate"><span class="pre">SNORT_IDS_ROUTER.GREP_SNORT_CONF</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.SNORT_IDS_ROUTER.IPS_REGEX"><code class="docutils literal notranslate"><span class="pre">SNORT_IDS_ROUTER.IPS_REGEX</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.SNORT_IDS_ROUTER.MAX_ALERTS"><code class="docutils literal notranslate"><span class="pre">SNORT_IDS_ROUTER.MAX_ALERTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.SNORT_IDS_ROUTER.PRIORITY_REGEX"><code class="docutils literal notranslate"><span class="pre">SNORT_IDS_ROUTER.PRIORITY_REGEX</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.SNORT_IDS_ROUTER.PS_AUX_CMD"><code class="docutils literal notranslate"><span class="pre">SNORT_IDS_ROUTER.PS_AUX_CMD</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.SNORT_IDS_ROUTER.RULE_ID_REGEX"><code class="docutils literal notranslate"><span class="pre">SNORT_IDS_ROUTER.RULE_ID_REGEX</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.SNORT_IDS_ROUTER.SEARCH_SNORT_RUNNING"><code class="docutils literal notranslate"><span class="pre">SNORT_IDS_ROUTER.SEARCH_SNORT_RUNNING</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.SNORT_IDS_ROUTER.SNORT_ALERTS_FILE"><code class="docutils literal notranslate"><span class="pre">SNORT_IDS_ROUTER.SNORT_ALERTS_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.SNORT_IDS_ROUTER.SNORT_ALERT_IDS_ID"><code class="docutils literal notranslate"><span class="pre">SNORT_IDS_ROUTER.SNORT_ALERT_IDS_ID</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.SNORT_IDS_ROUTER.SNORT_FAST_LOG_FILE"><code class="docutils literal notranslate"><span class="pre">SNORT_IDS_ROUTER.SNORT_FAST_LOG_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.SNORT_IDS_ROUTER.SNORT_LOG_DIR_PERMISSION_CMD"><code class="docutils literal notranslate"><span class="pre">SNORT_IDS_ROUTER.SNORT_LOG_DIR_PERMISSION_CMD</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.SNORT_IDS_ROUTER.SNORT_SEVERE_ALERT_PRIORITY_THRESHOLD"><code class="docutils literal notranslate"><span class="pre">SNORT_IDS_ROUTER.SNORT_SEVERE_ALERT_PRIORITY_THRESHOLD</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.SNORT_IDS_ROUTER.SNORT_STATS_FILE"><code class="docutils literal notranslate"><span class="pre">SNORT_IDS_ROUTER.SNORT_STATS_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.SNORT_IDS_ROUTER.START_SNORT_IDS"><code class="docutils literal notranslate"><span class="pre">SNORT_IDS_ROUTER.START_SNORT_IDS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.SNORT_IDS_ROUTER.STOP_SNORT_IDS"><code class="docutils literal notranslate"><span class="pre">SNORT_IDS_ROUTER.STOP_SNORT_IDS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.SNORT_IDS_ROUTER.TAIL_ALERTS_COMMAND"><code class="docutils literal notranslate"><span class="pre">SNORT_IDS_ROUTER.TAIL_ALERTS_COMMAND</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.SNORT_IDS_ROUTER.TAIL_ALERTS_LATEST_COMMAND"><code class="docutils literal notranslate"><span class="pre">SNORT_IDS_ROUTER.TAIL_ALERTS_LATEST_COMMAND</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.SNORT_IDS_ROUTER.TAIL_FAST_LOG_COMMAND"><code class="docutils literal notranslate"><span class="pre">SNORT_IDS_ROUTER.TAIL_FAST_LOG_COMMAND</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.SNORT_IDS_ROUTER.UPDATE_RULESET"><code class="docutils literal notranslate"><span class="pre">SNORT_IDS_ROUTER.UPDATE_RULESET</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.constants.constants.SPARK"><code class="docutils literal notranslate"><span class="pre">SPARK</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.SPARK.SPARK_MASTER_PID_FILE"><code class="docutils literal notranslate"><span class="pre">SPARK.SPARK_MASTER_PID_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.SPARK.SPARK_WORKER_PID_FILE"><code class="docutils literal notranslate"><span class="pre">SPARK.SPARK_WORKER_PID_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.SPARK.START_SPARK_MASTER"><code class="docutils literal notranslate"><span class="pre">SPARK.START_SPARK_MASTER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.SPARK.START_SPARK_WORKER"><code class="docutils literal notranslate"><span class="pre">SPARK.START_SPARK_WORKER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.SPARK.STOP_SPARK_MASTER"><code class="docutils literal notranslate"><span class="pre">SPARK.STOP_SPARK_MASTER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.SPARK.STOP_SPARK_WORKER"><code class="docutils literal notranslate"><span class="pre">SPARK.STOP_SPARK_WORKER</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.constants.constants.SYSTEM"><code class="docutils literal notranslate"><span class="pre">SYSTEM</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.SYSTEM.AUTH_LOG"><code class="docutils literal notranslate"><span class="pre">SYSTEM.AUTH_LOG</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.SYSTEM.SYSLOG"><code class="docutils literal notranslate"><span class="pre">SYSTEM.SYSLOG</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.constants.constants.TRAFFIC_GENERATOR"><code class="docutils literal notranslate"><span class="pre">TRAFFIC_GENERATOR</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.TRAFFIC_GENERATOR.CHECK_IF_TRAFFIC_GENERATOR_IS_RUNNING"><code class="docutils literal notranslate"><span class="pre">TRAFFIC_GENERATOR.CHECK_IF_TRAFFIC_GENERATOR_IS_RUNNING</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.TRAFFIC_GENERATOR.CREATE_TRAFFIC_GENERATOR_FILE"><code class="docutils literal notranslate"><span class="pre">TRAFFIC_GENERATOR.CREATE_TRAFFIC_GENERATOR_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.TRAFFIC_GENERATOR.MAKE_TRAFFIC_GENERATOR_FILE_EXECUTABLE"><code class="docutils literal notranslate"><span class="pre">TRAFFIC_GENERATOR.MAKE_TRAFFIC_GENERATOR_FILE_EXECUTABLE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.TRAFFIC_GENERATOR.REMOVE_OLD_TRAFFIC_GENERATOR_FILE"><code class="docutils literal notranslate"><span class="pre">TRAFFIC_GENERATOR.REMOVE_OLD_TRAFFIC_GENERATOR_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.TRAFFIC_GENERATOR.START_TRAFFIC_GENERATOR_CMD"><code class="docutils literal notranslate"><span class="pre">TRAFFIC_GENERATOR.START_TRAFFIC_GENERATOR_CMD</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.TRAFFIC_GENERATOR.STOP_TRAFFIC_GENERATOR"><code class="docutils literal notranslate"><span class="pre">TRAFFIC_GENERATOR.STOP_TRAFFIC_GENERATOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.constants.constants.TRAFFIC_GENERATOR.TRAFFIC_GENERATOR_FILE_NAME"><code class="docutils literal notranslate"><span class="pre">TRAFFIC_GENERATOR.TRAFFIC_GENERATOR_FILE_NAME</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.constants">Module contents</a></li>
 </ul>
 </li>
@@ -67,8 +536,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>csle_collector.constants package</li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">csle_collector.constants package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/csle_collector.constants.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -79,12 +548,12 @@
            <div itemprop="articleBody">
              
   <section id="csle-collector-constants-package">
-<h1>csle_collector.constants package<a class="headerlink" href="#csle-collector-constants-package" title="Permalink to this headline"></a></h1>
+<h1>csle_collector.constants package<a class="headerlink" href="#csle-collector-constants-package" title="Permalink to this heading"></a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 </section>
 <section id="module-csle_collector.constants.constants">
-<span id="csle-collector-constants-constants-module"></span><h2>csle_collector.constants.constants module<a class="headerlink" href="#module-csle_collector.constants.constants" title="Permalink to this headline"></a></h2>
+<span id="csle-collector-constants-constants-module"></span><h2>csle_collector.constants.constants module<a class="headerlink" href="#module-csle_collector.constants.constants" title="Permalink to this heading"></a></h2>
 <p>Constants for csle collector</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_collector.constants.constants.BEATS">
@@ -2213,7 +2682,7 @@
 
 </section>
 <section id="module-csle_collector.constants">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_collector.constants" title="Permalink to this headline"></a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_collector.constants" title="Permalink to this heading"></a></h2>
 </section>
 </section>
 

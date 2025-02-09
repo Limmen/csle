@@ -207,7 +207,7 @@
                 "physical_host_ip": "",
                 "restart_policy": "on-failure:3",
                 "suffix": "_1",
-                "version": "0.7.0"
+                "version": "0.8.0"
             },
             {
                 "docker_gw_bridge_ip": "",
@@ -241,7 +241,7 @@
                 "physical_host_ip": "",
                 "restart_policy": "on-failure:3",
                 "suffix": "_1",
-                "version": "0.7.0"
+                "version": "0.8.0"
             },
             {
                 "docker_gw_bridge_ip": "",
@@ -285,7 +285,7 @@
                 "physical_host_ip": "",
                 "restart_policy": "on-failure:3",
                 "suffix": "_1",
-                "version": "0.7.0"
+                "version": "0.8.0"
             },
             {
                 "docker_gw_bridge_ip": "",
@@ -319,7 +319,7 @@
                 "physical_host_ip": "",
                 "restart_policy": "on-failure:3",
                 "suffix": "_1",
-                "version": "0.7.0"
+                "version": "0.8.0"
             }
         ],
         "ids_enabled": true,
@@ -360,7 +360,7 @@
         "docker_stats_manager_max_workers": 10,
         "docker_stats_manager_port": 50046,
         "time_step_len_seconds": 30,
-        "version": "0.7.0"
+        "version": "0.8.0"
     },
     "elk_config": {
         "container": {
@@ -385,7 +385,7 @@
             "physical_host_ip": "",
             "restart_policy": "on-failure:3",
             "suffix": "_1",
-            "version": "0.7.0"
+            "version": "0.8.0"
         },
         "elastic_port": 9200,
         "elk_manager_log_dir": "/",
@@ -436,7 +436,7 @@
             "physical_host_ip": ""
         },
         "time_step_len_seconds": 30,
-        "version": "0.7.0"
+        "version": "0.8.0"
     },
     "execution_id": -1,
     "flags_config": {
@@ -464,7 +464,7 @@
         "host_manager_max_workers": 10,
         "host_manager_port": 50049,
         "time_step_len_seconds": 30,
-        "version": "0.7.0"
+        "version": "0.8.0"
     },
     "hostname": "p120-n6.kthopen.kth.se",
     "id": -1,
@@ -492,7 +492,7 @@
             "physical_host_ip": "",
             "restart_policy": "on-failure:3",
             "suffix": "_1",
-            "version": "0.7.0"
+            "version": "0.8.0"
         },
         "firewall_config": {
             "docker_gw_bridge_ip": "",
@@ -902,7 +902,7 @@
                 "retention_time_hours": 240
             }
         ],
-        "version": "0.7.0"
+        "version": "0.8.0"
     },
     "level": 15,
     "name": "csle-level15-070",
@@ -912,7 +912,7 @@
         "ossec_ids_manager_max_workers": 10,
         "ossec_ids_manager_port": 50047,
         "time_step_len_seconds": 30,
-        "version": "0.7.0"
+        "version": "0.8.0"
     },
     "ovs_config": {
         "switch_configs": []
@@ -1190,7 +1190,7 @@
         "snort_ids_manager_max_workers": 10,
         "snort_ids_manager_port": 50048,
         "time_step_len_seconds": 30,
-        "version": "0.7.0"
+        "version": "0.8.0"
     },
     "static_attacker_sequences": {},
     "topology_config": {
@@ -1585,7 +1585,7 @@
             }
         ]
     },
-    "version": "0.7.0",
+    "version": "0.8.0",
     "vuln_config": {
         "vulnerabilities": [
             {

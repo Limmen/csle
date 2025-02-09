@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.controllers.management_system_controller &mdash; csle-common 0.7.0 documentation</title>
+  <title>csle_common.controllers.management_system_controller &mdash; csle-common 0.8.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,7 +13,9 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -58,9 +60,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>csle_common.controllers.management_system_controller</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_common.controllers.management_system_controller</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -142,8 +144,12 @@
 
 <span class="sd">        :return: True if nginx is running, false otherwise</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">NGINX_STATUS</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">),</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">nginx_running</span> <span class="o">=</span> <span class="s2">&quot;active (running)&quot;</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">stdout</span> <span class="ow">or</span> <span class="s2">&quot;active (exited)&quot;</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">stdout</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">NGINX_STATUS</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">),</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">stdout</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="n">nginx_running</span> <span class="o">=</span> <span class="s2">&quot;active (running)&quot;</span> <span class="ow">in</span> <span class="n">output</span> <span class="ow">or</span> <span class="s2">&quot;active (exited)&quot;</span> <span class="ow">in</span> <span class="n">output</span>
         <span class="k">return</span> <span class="n">nginx_running</span></div>
 
 <div class="viewcode-block" id="ManagementSystemController.is_postgresql_running"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.management_system_controller.ManagementSystemController.is_postgresql_running">[docs]</a>    <span class="nd">@staticmethod</span>
@@ -153,12 +159,22 @@
 
 <span class="sd">        :return: True if PostgreSQL is running, false otherwise</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">POSTGRESQL_STATUS</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">),</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">postgresql_running</span> <span class="o">=</span> <span class="s2">&quot;active (running)&quot;</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">stdout</span> <span class="ow">or</span> <span class="s2">&quot;active (exited)&quot;</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">stdout</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">POSTGRESQL_STATUS</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">),</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                    <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">stdout</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="n">postgresql_running</span> <span class="o">=</span> <span class="s2">&quot;active (running)&quot;</span> <span class="ow">in</span> <span class="n">output</span> <span class="ow">or</span> <span class="s2">&quot;active (exited)&quot;</span> <span class="ow">in</span> <span class="n">output</span>
         <span class="k">if</span> <span class="n">postgresql_running</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">postgresql_running</span>
-        <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">POSTGRESQL_STATUS_VERSION</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">),</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">postgresql_running</span> <span class="o">=</span> <span class="s2">&quot;active (running)&quot;</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">stdout</span> <span class="ow">or</span> <span class="s2">&quot;active (exited)&quot;</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">stdout</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">POSTGRESQL_STATUS_VERSION</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">),</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                    <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">stdout</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="n">postgresql_running</span> <span class="o">=</span> <span class="s2">&quot;active (running)&quot;</span> <span class="ow">in</span> <span class="n">output</span> <span class="ow">or</span> <span class="s2">&quot;active (exited)&quot;</span> <span class="ow">in</span> <span class="n">output</span>
         <span class="k">return</span> <span class="n">postgresql_running</span></div>
 
 <div class="viewcode-block" id="ManagementSystemController.is_docker_engine_running"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.management_system_controller.ManagementSystemController.is_docker_engine_running">[docs]</a>    <span class="nd">@staticmethod</span>
@@ -168,8 +184,13 @@
 
 <span class="sd">        :return: True if Docker engine is running, false otherwise</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">DOCKER_ENGINE_STATUS</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">),</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">docker_engine_running</span> <span class="o">=</span> <span class="s2">&quot;active (running)&quot;</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">stdout</span> <span class="ow">or</span> <span class="s2">&quot;active (exited)&quot;</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">stdout</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">DOCKER_ENGINE_STATUS</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">),</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                    <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">stdout</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="n">docker_engine_running</span> <span class="o">=</span> <span class="s2">&quot;active (running)&quot;</span> <span class="ow">in</span> <span class="n">output</span> <span class="ow">or</span> <span class="s2">&quot;active (exited)&quot;</span> <span class="ow">in</span> <span class="n">output</span>
         <span class="k">return</span> <span class="n">docker_engine_running</span></div>
 
 <div class="viewcode-block" id="ManagementSystemController.is_flask_running"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.management_system_controller.ManagementSystemController.is_flask_running">[docs]</a>    <span class="nd">@staticmethod</span>

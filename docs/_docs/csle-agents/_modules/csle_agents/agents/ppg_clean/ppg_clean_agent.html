@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_agents.agents.ppg_clean.ppg_clean_agent &mdash; csle-agents 0.7.0 documentation</title>
+  <title>csle_agents.agents.ppg_clean.ppg_clean_agent &mdash; csle-agents 0.8.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,7 +13,9 @@
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -54,9 +56,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../index.html">Module code</a> &raquo;</li>
-      <li>csle_agents.agents.ppg_clean.ppg_clean_agent</li>
+      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_agents.agents.ppg_clean.ppg_clean_agent</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -72,11 +74,11 @@
 <span class="sd">Copyright (c) 2019 CleanRL developers https://github.com/vwxyzjn/cleanrl</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Any</span>
 <span class="kn">import</span> <span class="nn">random</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
-<span class="kn">from</span> <span class="nn">gymnasium.wrappers.record_episode_statistics</span> <span class="kn">import</span> <span class="n">RecordEpisodeStatistics</span>
+<span class="kn">from</span> <span class="nn">gymnasium.wrappers.common</span> <span class="kn">import</span> <span class="n">RecordEpisodeStatistics</span>
 <span class="kn">from</span> <span class="nn">gymnasium.spaces.discrete</span> <span class="kn">import</span> <span class="n">Discrete</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -354,8 +356,8 @@
                     <span class="n">logprobs</span><span class="p">[</span><span class="n">step</span><span class="p">]</span> <span class="o">=</span> <span class="n">logprob</span>
 
                     <span class="c1"># execute the game and log data.</span>
-                    <span class="n">next_obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">info_d</span> <span class="o">=</span> <span class="n">envs</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
-                    <span class="k">if</span> <span class="n">done</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                    <span class="n">next_obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">info_d</span> <span class="o">=</span> <span class="n">envs</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span> <span class="c1"># type: ignore</span>
+                    <span class="k">if</span> <span class="n">done</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="s2">&quot;final_info&quot;</span> <span class="ow">in</span> <span class="n">info_d</span><span class="p">:</span>
                         <span class="n">horizons</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">info_d</span><span class="p">[</span><span class="s2">&quot;final_info&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">TIME_HORIZON</span><span class="p">])</span>
                         <span class="n">info_returns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">info_d</span><span class="p">[</span><span class="s2">&quot;final_info&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">RETURN</span><span class="p">])</span>
                     <span class="n">rewards</span><span class="p">[</span><span class="n">step</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">reward</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
@@ -522,14 +524,14 @@
         <span class="n">base_env</span><span class="p">:</span> <span class="n">BaseEnv</span> <span class="o">=</span> <span class="n">envs</span><span class="o">.</span><span class="n">envs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">env</span>  <span class="c1"># type: ignore</span>
         <span class="k">return</span> <span class="n">exp_result</span><span class="p">,</span> <span class="n">base_env</span><span class="p">,</span> <span class="n">agent</span></div>
 
-<div class="viewcode-block" id="PPGCleanAgent.make_env"><a class="viewcode-back" href="../../../../csle_agents.agents.ppg_clean.html#csle_agents.agents.ppg_clean.ppg_clean_agent.PPGCleanAgent.make_env">[docs]</a>    <span class="k">def</span> <span class="nf">make_env</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">RecordEpisodeStatistics</span><span class="p">]:</span>
+<div class="viewcode-block" id="PPGCleanAgent.make_env"><a class="viewcode-back" href="../../../../csle_agents.agents.ppg_clean.html#csle_agents.agents.ppg_clean.ppg_clean_agent.PPGCleanAgent.make_env">[docs]</a>    <span class="k">def</span> <span class="nf">make_env</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">RecordEpisodeStatistics</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Helper function for creating the environment to use for training</span>
 
 <span class="sd">        :return: a function that creates the environment</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">def</span> <span class="nf">thunk</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RecordEpisodeStatistics</span><span class="p">:</span>
+        <span class="k">def</span> <span class="nf">thunk</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RecordEpisodeStatistics</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Function for creating a new environment</span>
 

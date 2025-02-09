@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_rest_api.rest_api &mdash; csle-rest-api 0.7.0 documentation</title>
+  <title>csle_rest_api.rest_api &mdash; csle-rest-api 0.8.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,7 +13,9 @@
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -55,9 +57,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../index.html">Module code</a> &raquo;</li>
-      <li>csle_rest_api.rest_api</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_rest_api.rest_api</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -68,6 +70,7 @@
              
   <h1>Source code for csle_rest_api.rest_api</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
+<span class="kn">from</span> <span class="nn">flask_cors</span> <span class="kn">import</span> <span class="n">CORS</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">socketio</span>
 <span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
 <span class="kn">from</span> <span class="nn">csle_common.logging.log</span> <span class="kn">import</span> <span class="n">Logger</span>
@@ -153,6 +156,8 @@
 <span class="sd">    :return: the flask app</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">static_url_path</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">static_folder</span><span class="o">=</span><span class="n">static_folder</span><span class="p">)</span>
+    <span class="n">CORS</span><span class="p">(</span><span class="n">app</span><span class="p">)</span> <span class="c1"># allow CORS for all domains on all routes.</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">CORS_HEADERS</span><span class="p">]</span> <span class="o">=</span> <span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">CONTENT_TYPE</span>
 
     <span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">get_emulations_page_bp</span><span class="p">(</span><span class="n">static_folder</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;../../</span><span class="si">{</span><span class="n">static_folder</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">),</span>
                            <span class="n">url_prefix</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}</span><span class="s2">&quot;</span>

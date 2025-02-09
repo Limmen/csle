@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_agents.agents.simulated_annealing.simulated_annealing_agent &mdash; csle-agents 0.5.0 documentation</title>
+  <title>csle_agents.agents.simulated_annealing.simulated_annealing_agent &mdash; csle-agents 0.8.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,7 +13,9 @@
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -54,9 +56,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../index.html">Module code</a> &raquo;</li>
-      <li>csle_agents.agents.simulated_annealing.simulated_annealing_agent</li>
+      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_agents.agents.simulated_annealing.simulated_annealing_agent</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -221,8 +223,8 @@
                                                   <span class="n">training_job</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">training_job</span><span class="p">)</span>
             <span class="c1"># Save latest trace</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_to_metastore</span><span class="p">:</span>
-                <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">save_simulation_trace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">get_traces</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">reset_traces</span><span class="p">()</span>
+                <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">save_simulation_trace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">get_traces</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">reset_traces</span><span class="p">()</span>
 
         <span class="c1"># Calculate average and std metrics</span>
         <span class="n">exp_result</span><span class="o">.</span><span class="n">avg_metrics</span> <span class="o">=</span> <span class="p">{}</span>
@@ -258,7 +260,7 @@
                 <span class="n">exp_result</span><span class="o">.</span><span class="n">avg_metrics</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span> <span class="o">=</span> <span class="n">avg_metrics</span>
                 <span class="n">exp_result</span><span class="o">.</span><span class="n">std_metrics</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span> <span class="o">=</span> <span class="n">std_metrics</span>
 
-        <span class="n">traces</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">get_traces</span><span class="p">()</span>
+        <span class="n">traces</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">get_traces</span><span class="p">()</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">traces</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_to_metastore</span><span class="p">:</span>
             <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">save_simulation_trace</span><span class="p">(</span><span class="n">traces</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
         <span class="n">ts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
@@ -402,8 +404,8 @@
                 <span class="n">progress</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">iterations_done</span> <span class="o">/</span> <span class="n">total_iterations</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
                 <span class="n">training_job</span><span class="o">.</span><span class="n">progress_percentage</span> <span class="o">=</span> <span class="n">progress</span>
                 <span class="n">training_job</span><span class="o">.</span><span class="n">experiment_result</span> <span class="o">=</span> <span class="n">exp_result</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">get_traces</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="n">training_job</span><span class="o">.</span><span class="n">simulation_traces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">get_traces</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">get_traces</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">training_job</span><span class="o">.</span><span class="n">simulation_traces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">get_traces</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">training_job</span><span class="o">.</span><span class="n">simulation_traces</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">training_job</span><span class="o">.</span><span class="n">num_cached_traces</span><span class="p">:</span>
                     <span class="n">training_job</span><span class="o">.</span><span class="n">simulation_traces</span> <span class="o">=</span> <span class="n">training_job</span><span class="o">.</span><span class="n">simulation_traces</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_to_metastore</span><span class="p">:</span>
@@ -456,7 +458,7 @@
             <span class="k">while</span> <span class="ow">not</span> <span class="n">done</span> <span class="ow">and</span> <span class="n">t</span> <span class="o">&lt;=</span> <span class="n">max_steps</span><span class="p">:</span>
                 <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;t:</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">, a: </span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2">, b1:</span><span class="si">{</span><span class="n">b1</span><span class="si">}</span><span class="s2">, r:</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">, l:</span><span class="si">{</span><span class="n">l</span><span class="si">}</span><span class="s2">, info:</span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">player_type</span> <span class="o">==</span> <span class="n">PlayerType</span><span class="o">.</span><span class="n">ATTACKER</span><span class="p">:</span>
-                    <span class="n">policy</span><span class="o">.</span><span class="n">opponent_strategy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">static_defender_strategy</span>
+                    <span class="n">policy</span><span class="o">.</span><span class="n">opponent_strategy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">static_defender_strategy</span>
                     <span class="n">a</span> <span class="o">=</span> <span class="n">policy</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="n">o</span><span class="o">=</span><span class="n">o</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">a</span> <span class="o">=</span> <span class="n">policy</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="n">o</span><span class="o">=</span><span class="n">o</span><span class="p">)</span>

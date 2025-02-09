@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_common.constants.constants &mdash; csle-common 0.7.0 documentation</title>
+  <title>csle_common.constants.constants &mdash; csle-common 0.8.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,7 +13,9 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -58,9 +60,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>csle_common.constants.constants</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_common.constants.constants</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -1023,8 +1025,8 @@
     <span class="n">CADVISOR_LOGS</span> <span class="o">=</span> <span class="s2">&quot;docker logs cadvisor&quot;</span>
     <span class="n">PGADMIN_LOGS</span> <span class="o">=</span> <span class="s2">&quot;docker logs pgadmin&quot;</span>
     <span class="n">GRAFANA_LOGS</span> <span class="o">=</span> <span class="s2">&quot;docker logs grafana&quot;</span>
-    <span class="n">DOCKER_ENGINE_LOGS</span> <span class="o">=</span> <span class="s2">&quot;sudo /usr/bin/journalctl -u docker.service -n 100 --no-pager -e&quot;</span>
-    <span class="n">DOCKER_ENGINE_LOGS_ALTERNATIVE</span> <span class="o">=</span> <span class="s2">&quot;sudo /bin/journalctl -u docker.service -n 100 --no-pager -e&quot;</span>
+    <span class="n">DOCKER_ENGINE_LOGS</span> <span class="o">=</span> <span class="s2">&quot;sudo -n /usr/bin/journalctl -u docker.service -n 100 --no-pager -e&quot;</span>
+    <span class="n">DOCKER_ENGINE_LOGS_ALTERNATIVE</span> <span class="o">=</span> <span class="s2">&quot;sudo -n /bin/journalctl -u docker.service -n 100 --no-pager -e&quot;</span>
     <span class="n">NODE_EXPORTER_PID_FILE</span> <span class="o">=</span> <span class="s2">&quot;/var/log/csle/node_exporter.pid&quot;</span>
     <span class="n">CSLE_MGMT_WEBAPP_PID_FILE</span> <span class="o">=</span> <span class="s2">&quot;/var/log/csle/csle_mgmt_webapp.pid&quot;</span>
     <span class="n">NODE_EXPORTER_LOG_FILE</span> <span class="o">=</span> <span class="s2">&quot;/var/log/csle/node_exporter.log&quot;</span>
@@ -1047,12 +1049,12 @@
     <span class="n">POSTGRESQL_STATUS</span> <span class="o">=</span> <span class="s2">&quot;service postgresql status&quot;</span>
     <span class="n">POSTGRESQL_STATUS_VERSION</span> <span class="o">=</span> <span class="s2">&quot;service postgresql@15-main status&quot;</span>
     <span class="n">DOCKER_ENGINE_STATUS</span> <span class="o">=</span> <span class="s2">&quot;service docker status&quot;</span>
-    <span class="n">POSTGRESQL_START</span> <span class="o">=</span> <span class="s2">&quot;sudo service postgresql start&quot;</span>
-    <span class="n">POSTGRESQL_STOP</span> <span class="o">=</span> <span class="s2">&quot;sudo service postgresql stop&quot;</span>
-    <span class="n">NGINX_START</span> <span class="o">=</span> <span class="s2">&quot;sudo service nginx start&quot;</span>
-    <span class="n">NGINX_STOP</span> <span class="o">=</span> <span class="s2">&quot;sudo service nginx stop&quot;</span>
-    <span class="n">DOCKER_ENGINE_START</span> <span class="o">=</span> <span class="s2">&quot;sudo service docker start&quot;</span>
-    <span class="n">DOCKER_ENGINE_STOP</span> <span class="o">=</span> <span class="s2">&quot;sudo service docker stop&quot;</span></div>
+    <span class="n">POSTGRESQL_START</span> <span class="o">=</span> <span class="s2">&quot;sudo -n service postgresql start&quot;</span>
+    <span class="n">POSTGRESQL_STOP</span> <span class="o">=</span> <span class="s2">&quot;sudo -n service postgresql stop&quot;</span>
+    <span class="n">NGINX_START</span> <span class="o">=</span> <span class="s2">&quot;sudo -n service nginx start&quot;</span>
+    <span class="n">NGINX_STOP</span> <span class="o">=</span> <span class="s2">&quot;sudo -n service nginx stop&quot;</span>
+    <span class="n">DOCKER_ENGINE_START</span> <span class="o">=</span> <span class="s2">&quot;sudo -n service docker start&quot;</span>
+    <span class="n">DOCKER_ENGINE_STOP</span> <span class="o">=</span> <span class="s2">&quot;sudo -n service docker stop&quot;</span></div>
 
 
 <div class="viewcode-block" id="OVS"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.OVS">[docs]</a><span class="k">class</span> <span class="nc">OVS</span><span class="p">:</span>
@@ -1084,7 +1086,7 @@
     <span class="n">DEFAULT_HOST_LINE_4</span> <span class="o">=</span> <span class="s2">&quot;&#39;ff00::0 ip6-mcastprefix&#39;&quot;</span>
     <span class="n">DEFAULT_HOST_LINE_5</span> <span class="o">=</span> <span class="s2">&quot;&#39;ff02::1 ip6-allnodes&#39;&quot;</span>
     <span class="n">DEFAULT_HOST_LINE_6</span> <span class="o">=</span> <span class="s2">&quot;&#39;&#39;ff02::2 ip6-allrouters&#39;&#39;&quot;</span>
-    <span class="n">APPEND_TO_ETC_HOSTS</span> <span class="o">=</span> <span class="s2">&quot;sudo tee -a /etc/hosts&quot;</span></div>
+    <span class="n">APPEND_TO_ETC_HOSTS</span> <span class="o">=</span> <span class="s2">&quot;sudo -n tee -a /etc/hosts&quot;</span></div>
 
 
 <div class="viewcode-block" id="FILE_PATTERNS"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.FILE_PATTERNS">[docs]</a><span class="k">class</span> <span class="nc">FILE_PATTERNS</span><span class="p">:</span>

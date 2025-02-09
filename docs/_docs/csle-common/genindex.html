@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; csle-common 0.7.0 documentation</title>
+  <title>Index &mdash; csle-common 0.8.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,7 +13,9 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="#" />
     <link rel="search" title="Search" href="search.html" /> 
@@ -58,8 +60,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Index</li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Index</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -146,8 +148,6 @@
         <li><a href="csle_common.dao.training.html#csle_common.dao.training.vector_policy.VectorPolicy.action">(csle_common.dao.training.vector_policy.VectorPolicy method)</a>
 </li>
       </ul></li>
-      <li><a href="csle_common.dao.simulation_config.html#csle_common.dao.simulation_config.base_env.BaseEnv.action_space">action_space (csle_common.dao.simulation_config.base_env.BaseEnv attribute)</a>
-</li>
       <li><a href="csle_common.dao.simulation_config.html#csle_common.dao.simulation_config.action_space_config.ActionSpaceConfig.actions_ids">actions_ids() (csle_common.dao.simulation_config.action_space_config.ActionSpaceConfig method)</a>
 </li>
       <li><a href="csle_common.dao.simulation_config.html#csle_common.dao.simulation_config.action_space_config.ActionSpaceConfig">ActionSpaceConfig (class in csle_common.dao.simulation_config.action_space_config)</a>
@@ -214,10 +214,10 @@
 </li>
       <li><a href="csle_common.dao.training.html#csle_common.dao.training.policy_type.PolicyType.ALPHA_VECTORS">ALPHA_VECTORS (csle_common.dao.training.policy_type.PolicyType attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_common.dao.training.html#csle_common.dao.training.alpha_vectors_policy.AlphaVectorsPolicy">AlphaVectorsPolicy (class in csle_common.dao.training.alpha_vectors_policy)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_common.constants.html#csle_common.constants.constants.SAMBA.ALREADY_EXISTS">ALREADY_EXISTS (csle_common.constants.constants.SAMBA attribute)</a>
 </li>
       <li><a href="csle_common.util.html#csle_common.util.cluster_util.ClusterUtil.am_i_leader">am_i_leader() (csle_common.util.cluster_util.ClusterUtil static method)</a>
@@ -4926,10 +4926,10 @@
 </li>
       <li><a href="csle_common.metastore.html#csle_common.metastore.metastore_facade.MetastoreFacade.list_gaussian_mixture_system_models_ids">list_gaussian_mixture_system_models_ids() (csle_common.metastore.metastore_facade.MetastoreFacade static method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_common.metastore.html#csle_common.metastore.metastore_facade.MetastoreFacade.list_gp_system_models">list_gp_system_models() (csle_common.metastore.metastore_facade.MetastoreFacade static method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_common.metastore.html#csle_common.metastore.metastore_facade.MetastoreFacade.list_gp_system_models_ids">list_gp_system_models_ids() (csle_common.metastore.metastore_facade.MetastoreFacade static method)</a>
 </li>
       <li><a href="csle_common.constants.html#csle_common.constants.constants.MANAGEMENT.LIST_IMAGES">LIST_IMAGES (csle_common.constants.constants.MANAGEMENT attribute)</a>
@@ -4991,6 +4991,8 @@
       <li><a href="csle_common.metastore.html#csle_common.metastore.metastore_facade.MetastoreFacade.list_tabular_policies">list_tabular_policies() (csle_common.metastore.metastore_facade.MetastoreFacade static method)</a>
 </li>
       <li><a href="csle_common.metastore.html#csle_common.metastore.metastore_facade.MetastoreFacade.list_tabular_policies_ids">list_tabular_policies_ids() (csle_common.metastore.metastore_facade.MetastoreFacade static method)</a>
+</li>
+      <li><a href="csle_common.util.html#csle_common.util.general_util.GeneralUtil.list_to_tuple">list_to_tuple() (csle_common.util.general_util.GeneralUtil static method)</a>
 </li>
       <li><a href="csle_common.metastore.html#csle_common.metastore.metastore_facade.MetastoreFacade.list_traces_datasets">list_traces_datasets() (csle_common.metastore.metastore_facade.MetastoreFacade static method)</a>
 </li>
@@ -6011,8 +6013,6 @@
 </li>
       <li><a href="csle_common.dao.simulation_config.html#csle_common.dao.simulation_config.observation_space_config.ObservationSpaceConfig.observation_ids">observation_ids() (csle_common.dao.simulation_config.observation_space_config.ObservationSpaceConfig method)</a>
 </li>
-      <li><a href="csle_common.dao.simulation_config.html#csle_common.dao.simulation_config.base_env.BaseEnv.observation_space">observation_space (csle_common.dao.simulation_config.base_env.BaseEnv attribute)</a>
-</li>
       <li><a href="csle_common.dao.simulation_config.html#csle_common.dao.simulation_config.observation_function_config.ObservationFunctionConfig">ObservationFunctionConfig (class in csle_common.dao.simulation_config.observation_function_config)</a>
 </li>
       <li><a href="csle_common.dao.simulation_config.html#csle_common.dao.simulation_config.observation_space_config.ObservationSpaceConfig">ObservationSpaceConfig (class in csle_common.dao.simulation_config.observation_space_config)</a>
@@ -6061,10 +6061,10 @@
       </ul></li>
       <li><a href="csle_common.constants.html#csle_common.constants.constants.NMAP_XML.OS_CLASS">OS_CLASS (csle_common.constants.constants.NMAP_XML attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.OS_DETECTION_SCAN">OS_DETECTION_SCAN() (csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions static method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_action_id.EmulationAttackerActionId.OS_DETECTION_SCAN_ALL">OS_DETECTION_SCAN_ALL (csle_common.dao.emulation_action.attacker.emulation_attacker_action_id.EmulationAttackerActionId attribute)</a>
 </li>
       <li><a href="csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_action_id.EmulationAttackerActionId.OS_DETECTION_SCAN_HOST">OS_DETECTION_SCAN_HOST (csle_common.dao.emulation_action.attacker.emulation_attacker_action_id.EmulationAttackerActionId attribute)</a>
@@ -8113,16 +8113,6 @@
 </li>
       <li><a href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.traffic_managers_info.TrafficManagersInfo">TrafficManagersInfo (class in csle_common.dao.emulation_config.traffic_managers_info)</a>
 </li>
-      <li><a href="csle_common.dao.system_identification.html#csle_common.dao.system_identification.gp_regression_model_with_gauissan_noise.GPRegressionModelWithGaussianNoise.training">training (csle_common.dao.system_identification.gp_regression_model_with_gauissan_noise.GPRegressionModelWithGaussianNoise attribute)</a>
-
-      <ul>
-        <li><a href="csle_common.models.html#csle_common.models.fnn_w_softmax.FNNwithSoftmax.training">(csle_common.models.fnn_w_softmax.FNNwithSoftmax attribute)</a>
-</li>
-        <li><a href="csle_common.models.html#csle_common.models.ppo_network.PPONetwork.training">(csle_common.models.ppo_network.PPONetwork attribute)</a>
-</li>
-        <li><a href="csle_common.models.html#csle_common.models.q_network.QNetwork.training">(csle_common.models.q_network.QNetwork attribute)</a>
-</li>
-      </ul></li>
       <li><a href="csle_common.constants.html#csle_common.constants.constants.METADATA_STORE.TRAINING_JOBS_TABLE">TRAINING_JOBS_TABLE (csle_common.constants.constants.METADATA_STORE attribute)</a>
 </li>
       <li><a href="csle_common.dao.jobs.html#csle_common.dao.jobs.training_job_config.TrainingJobConfig">TrainingJobConfig (class in csle_common.dao.jobs.training_job_config)</a>

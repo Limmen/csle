@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_collector.traffic_manager package &mdash; csle-collector 0.7.0 documentation</title>
+  <title>csle_collector.traffic_manager package &mdash; csle-collector 0.8.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,7 +14,9 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -47,11 +49,49 @@
 <li class="toctree-l1"><a class="reference internal" href="csle_collector.snort_ids_manager.html">csle_collector.snort_ids_manager package</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">csle_collector.traffic_manager package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.traffic_manager.query_traffic_manager">csle_collector.traffic_manager.query_traffic_manager module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.traffic_manager.traffic_manager">csle_collector.traffic_manager.traffic_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.traffic_manager.query_traffic_manager">csle_collector.traffic_manager.query_traffic_manager module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.traffic_manager.query_traffic_manager.get_traffic_status"><code class="docutils literal notranslate"><span class="pre">get_traffic_status()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.traffic_manager.query_traffic_manager.start_traffic"><code class="docutils literal notranslate"><span class="pre">start_traffic()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.traffic_manager.query_traffic_manager.stop_traffic"><code class="docutils literal notranslate"><span class="pre">stop_traffic()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.traffic_manager.traffic_manager">csle_collector.traffic_manager.traffic_manager module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.traffic_manager.traffic_manager.TrafficManagerServicer"><code class="docutils literal notranslate"><span class="pre">TrafficManagerServicer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.traffic_manager.traffic_manager.TrafficManagerServicer.getTrafficStatus"><code class="docutils literal notranslate"><span class="pre">TrafficManagerServicer.getTrafficStatus()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.traffic_manager.traffic_manager.TrafficManagerServicer.startTraffic"><code class="docutils literal notranslate"><span class="pre">TrafficManagerServicer.startTraffic()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.traffic_manager.traffic_manager.TrafficManagerServicer.stopTraffic"><code class="docutils literal notranslate"><span class="pre">TrafficManagerServicer.stopTraffic()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.traffic_manager.traffic_manager.serve"><code class="docutils literal notranslate"><span class="pre">serve()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.traffic_manager.traffic_manager_pb2">csle_collector.traffic_manager.traffic_manager_pb2 module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.traffic_manager.traffic_manager_pb2_grpc">csle_collector.traffic_manager.traffic_manager_pb2_grpc module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.traffic_manager.traffic_manager_util">csle_collector.traffic_manager.traffic_manager_util module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.traffic_manager.traffic_manager_pb2_grpc">csle_collector.traffic_manager.traffic_manager_pb2_grpc module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManager"><code class="docutils literal notranslate"><span class="pre">TrafficManager</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManager.getTrafficStatus"><code class="docutils literal notranslate"><span class="pre">TrafficManager.getTrafficStatus()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManager.startTraffic"><code class="docutils literal notranslate"><span class="pre">TrafficManager.startTraffic()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManager.stopTraffic"><code class="docutils literal notranslate"><span class="pre">TrafficManager.stopTraffic()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManagerServicer"><code class="docutils literal notranslate"><span class="pre">TrafficManagerServicer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManagerServicer.getTrafficStatus"><code class="docutils literal notranslate"><span class="pre">TrafficManagerServicer.getTrafficStatus()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManagerServicer.startTraffic"><code class="docutils literal notranslate"><span class="pre">TrafficManagerServicer.startTraffic()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManagerServicer.stopTraffic"><code class="docutils literal notranslate"><span class="pre">TrafficManagerServicer.stopTraffic()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManagerStub"><code class="docutils literal notranslate"><span class="pre">TrafficManagerStub</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.traffic_manager.traffic_manager_pb2_grpc.add_TrafficManagerServicer_to_server"><code class="docutils literal notranslate"><span class="pre">add_TrafficManagerServicer_to_server()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.traffic_manager.traffic_manager_util">csle_collector.traffic_manager.traffic_manager_util module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.traffic_manager.traffic_manager_util.TrafficManagerUtil"><code class="docutils literal notranslate"><span class="pre">TrafficManagerUtil</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.traffic_manager.traffic_manager_util.TrafficManagerUtil.traffic_dto_empty"><code class="docutils literal notranslate"><span class="pre">TrafficManagerUtil.traffic_dto_empty()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.traffic_manager.traffic_manager_util.TrafficManagerUtil.traffic_dto_from_dict"><code class="docutils literal notranslate"><span class="pre">TrafficManagerUtil.traffic_dto_from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.traffic_manager.traffic_manager_util.TrafficManagerUtil.traffic_dto_to_dict"><code class="docutils literal notranslate"><span class="pre">TrafficManagerUtil.traffic_dto_to_dict()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.traffic_manager">Module contents</a></li>
 </ul>
 </li>
@@ -70,8 +110,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>csle_collector.traffic_manager package</li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">csle_collector.traffic_manager package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/csle_collector.traffic_manager.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -82,15 +122,15 @@
            <div itemprop="articleBody">
              
   <section id="csle-collector-traffic-manager-package">
-<h1>csle_collector.traffic_manager package<a class="headerlink" href="#csle-collector-traffic-manager-package" title="Permalink to this headline"></a></h1>
+<h1>csle_collector.traffic_manager package<a class="headerlink" href="#csle-collector-traffic-manager-package" title="Permalink to this heading"></a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 </section>
 <section id="module-csle_collector.traffic_manager.query_traffic_manager">
-<span id="csle-collector-traffic-manager-query-traffic-manager-module"></span><h2>csle_collector.traffic_manager.query_traffic_manager module<a class="headerlink" href="#module-csle_collector.traffic_manager.query_traffic_manager" title="Permalink to this headline"></a></h2>
+<span id="csle-collector-traffic-manager-query-traffic-manager-module"></span><h2>csle_collector.traffic_manager.query_traffic_manager module<a class="headerlink" href="#module-csle_collector.traffic_manager.query_traffic_manager" title="Permalink to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="csle_collector.traffic_manager.query_traffic_manager.get_traffic_status">
-<span class="sig-prename descclassname"><span class="pre">csle_collector.traffic_manager.query_traffic_manager.</span></span><span class="sig-name descname"><span class="pre">get_traffic_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManagerStub" title="csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManagerStub"><span class="pre">csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">traffic_manager_pb2.TrafficDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/traffic_manager/query_traffic_manager.html#get_traffic_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.traffic_manager.query_traffic_manager.get_traffic_status" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">csle_collector.traffic_manager.query_traffic_manager.</span></span><span class="sig-name descname"><span class="pre">get_traffic_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManagerStub" title="csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManagerStub"><span class="pre">TrafficManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">TrafficDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/traffic_manager/query_traffic_manager.html#get_traffic_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.traffic_manager.query_traffic_manager.get_traffic_status" title="Permalink to this definition"></a></dt>
 <dd><p>Queries the server for the Traffic generator status</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -107,7 +147,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="csle_collector.traffic_manager.query_traffic_manager.start_traffic">
-<span class="sig-prename descclassname"><span class="pre">csle_collector.traffic_manager.query_traffic_manager.</span></span><span class="sig-name descname"><span class="pre">start_traffic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManagerStub" title="csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManagerStub"><span class="pre">csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">commands</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sleep_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">traffic_manager_pb2.TrafficDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/traffic_manager/query_traffic_manager.html#start_traffic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.traffic_manager.query_traffic_manager.start_traffic" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">csle_collector.traffic_manager.query_traffic_manager.</span></span><span class="sig-name descname"><span class="pre">start_traffic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManagerStub" title="csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManagerStub"><span class="pre">TrafficManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">commands</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sleep_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">TrafficDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/traffic_manager/query_traffic_manager.html#start_traffic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.traffic_manager.query_traffic_manager.start_traffic" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to the traffic manager to start the traffic generator script</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -126,7 +166,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="csle_collector.traffic_manager.query_traffic_manager.stop_traffic">
-<span class="sig-prename descclassname"><span class="pre">csle_collector.traffic_manager.query_traffic_manager.</span></span><span class="sig-name descname"><span class="pre">stop_traffic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManagerStub" title="csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManagerStub"><span class="pre">csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">traffic_manager_pb2.TrafficDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/traffic_manager/query_traffic_manager.html#stop_traffic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.traffic_manager.query_traffic_manager.stop_traffic" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">csle_collector.traffic_manager.query_traffic_manager.</span></span><span class="sig-name descname"><span class="pre">stop_traffic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManagerStub" title="csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManagerStub"><span class="pre">TrafficManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">TrafficDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/traffic_manager/query_traffic_manager.html#stop_traffic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.traffic_manager.query_traffic_manager.stop_traffic" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to the traffic manager to stop the traffic generator</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -143,16 +183,16 @@
 
 </section>
 <section id="module-csle_collector.traffic_manager.traffic_manager">
-<span id="csle-collector-traffic-manager-traffic-manager-module"></span><h2>csle_collector.traffic_manager.traffic_manager module<a class="headerlink" href="#module-csle_collector.traffic_manager.traffic_manager" title="Permalink to this headline"></a></h2>
+<span id="csle-collector-traffic-manager-traffic-manager-module"></span><h2>csle_collector.traffic_manager.traffic_manager module<a class="headerlink" href="#module-csle_collector.traffic_manager.traffic_manager" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_collector.traffic_manager.traffic_manager.TrafficManagerServicer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.traffic_manager.traffic_manager.</span></span><span class="sig-name descname"><span class="pre">TrafficManagerServicer</span></span><a class="reference internal" href="_modules/csle_collector/traffic_manager/traffic_manager.html#TrafficManagerServicer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.traffic_manager.traffic_manager.TrafficManagerServicer" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManagerServicer" title="csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManagerServicer"><code class="xref py py-class docutils literal notranslate"><span class="pre">csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManagerServicer</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManagerServicer" title="csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManagerServicer"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrafficManagerServicer</span></code></a></p>
 <p>gRPC server for managing a traffic generator. Allows to start/stop the script and also to query the
 state of the script.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.traffic_manager.traffic_manager.TrafficManagerServicer.getTrafficStatus">
-<span class="sig-name descname"><span class="pre">getTrafficStatus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">traffic_manager_pb2.GetTrafficStatusMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">grpc.ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">traffic_manager_pb2.TrafficDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/traffic_manager/traffic_manager.html#TrafficManagerServicer.getTrafficStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.traffic_manager.traffic_manager.TrafficManagerServicer.getTrafficStatus" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">getTrafficStatus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">GetTrafficStatusMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">TrafficDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/traffic_manager/traffic_manager.html#TrafficManagerServicer.getTrafficStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.traffic_manager.traffic_manager.TrafficManagerServicer.getTrafficStatus" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the state of the traffic manager</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -169,7 +209,7 @@ state of the script.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.traffic_manager.traffic_manager.TrafficManagerServicer.startTraffic">
-<span class="sig-name descname"><span class="pre">startTraffic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">traffic_manager_pb2.StartTrafficMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">grpc.ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">traffic_manager_pb2.TrafficDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/traffic_manager/traffic_manager.html#TrafficManagerServicer.startTraffic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.traffic_manager.traffic_manager.TrafficManagerServicer.startTraffic" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">startTraffic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StartTrafficMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">TrafficDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/traffic_manager/traffic_manager.html#TrafficManagerServicer.startTraffic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.traffic_manager.traffic_manager.TrafficManagerServicer.startTraffic" title="Permalink to this definition"></a></dt>
 <dd><p>Starts the traffic generator</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -186,7 +226,7 @@ state of the script.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.traffic_manager.traffic_manager.TrafficManagerServicer.stopTraffic">
-<span class="sig-name descname"><span class="pre">stopTraffic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">traffic_manager_pb2.StopTrafficMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">grpc.ServicerContext</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/traffic_manager/traffic_manager.html#TrafficManagerServicer.stopTraffic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.traffic_manager.traffic_manager.TrafficManagerServicer.stopTraffic" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">stopTraffic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StopTrafficMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/traffic_manager/traffic_manager.html#TrafficManagerServicer.stopTraffic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.traffic_manager.traffic_manager.TrafficManagerServicer.stopTraffic" title="Permalink to this definition"></a></dt>
 <dd><p>Stops the traffic generator</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -224,11 +264,11 @@ state of the script.</p>
 
 </section>
 <section id="module-csle_collector.traffic_manager.traffic_manager_pb2">
-<span id="csle-collector-traffic-manager-traffic-manager-pb2-module"></span><h2>csle_collector.traffic_manager.traffic_manager_pb2 module<a class="headerlink" href="#module-csle_collector.traffic_manager.traffic_manager_pb2" title="Permalink to this headline"></a></h2>
+<span id="csle-collector-traffic-manager-traffic-manager-pb2-module"></span><h2>csle_collector.traffic_manager.traffic_manager_pb2 module<a class="headerlink" href="#module-csle_collector.traffic_manager.traffic_manager_pb2" title="Permalink to this heading"></a></h2>
 <p>Generated protocol buffer code.</p>
 </section>
 <section id="module-csle_collector.traffic_manager.traffic_manager_pb2_grpc">
-<span id="csle-collector-traffic-manager-traffic-manager-pb2-grpc-module"></span><h2>csle_collector.traffic_manager.traffic_manager_pb2_grpc module<a class="headerlink" href="#module-csle_collector.traffic_manager.traffic_manager_pb2_grpc" title="Permalink to this headline"></a></h2>
+<span id="csle-collector-traffic-manager-traffic-manager-pb2-grpc-module"></span><h2>csle_collector.traffic_manager.traffic_manager_pb2_grpc module<a class="headerlink" href="#module-csle_collector.traffic_manager.traffic_manager_pb2_grpc" title="Permalink to this heading"></a></h2>
 <p>Client and server classes corresponding to protobuf-defined services.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManager">
@@ -291,7 +331,7 @@ state of the script.</p>
 
 </section>
 <section id="module-csle_collector.traffic_manager.traffic_manager_util">
-<span id="csle-collector-traffic-manager-traffic-manager-util-module"></span><h2>csle_collector.traffic_manager.traffic_manager_util module<a class="headerlink" href="#module-csle_collector.traffic_manager.traffic_manager_util" title="Permalink to this headline"></a></h2>
+<span id="csle-collector-traffic-manager-traffic-manager-util-module"></span><h2>csle_collector.traffic_manager.traffic_manager_util module<a class="headerlink" href="#module-csle_collector.traffic_manager.traffic_manager_util" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_collector.traffic_manager.traffic_manager_util.TrafficManagerUtil">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.traffic_manager.traffic_manager_util.</span></span><span class="sig-name descname"><span class="pre">TrafficManagerUtil</span></span><a class="reference internal" href="_modules/csle_collector/traffic_manager/traffic_manager_util.html#TrafficManagerUtil"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.traffic_manager.traffic_manager_util.TrafficManagerUtil" title="Permalink to this definition"></a></dt>
@@ -299,7 +339,7 @@ state of the script.</p>
 <p>Class with utility functions related to the Traffic Manager</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.traffic_manager.traffic_manager_util.TrafficManagerUtil.traffic_dto_empty">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">traffic_dto_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">traffic_manager_pb2.TrafficDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/traffic_manager/traffic_manager_util.html#TrafficManagerUtil.traffic_dto_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.traffic_manager.traffic_manager_util.TrafficManagerUtil.traffic_dto_empty" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">traffic_dto_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">TrafficDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/traffic_manager/traffic_manager_util.html#TrafficManagerUtil.traffic_dto_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.traffic_manager.traffic_manager_util.TrafficManagerUtil.traffic_dto_empty" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>an empty TrafficDTO</p>
@@ -309,7 +349,7 @@ state of the script.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.traffic_manager.traffic_manager_util.TrafficManagerUtil.traffic_dto_from_dict">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">traffic_dto_from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">traffic_manager_pb2.TrafficDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/traffic_manager/traffic_manager_util.html#TrafficManagerUtil.traffic_dto_from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.traffic_manager.traffic_manager_util.TrafficManagerUtil.traffic_dto_from_dict" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">traffic_dto_from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">TrafficDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/traffic_manager/traffic_manager_util.html#TrafficManagerUtil.traffic_dto_from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.traffic_manager.traffic_manager_util.TrafficManagerUtil.traffic_dto_from_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a dict representation of a TrafficDTO to a DTO</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -323,7 +363,7 @@ state of the script.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.traffic_manager.traffic_manager_util.TrafficManagerUtil.traffic_dto_to_dict">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">traffic_dto_to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">traffic_dto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">traffic_manager_pb2.TrafficDTO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/traffic_manager/traffic_manager_util.html#TrafficManagerUtil.traffic_dto_to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.traffic_manager.traffic_manager_util.TrafficManagerUtil.traffic_dto_to_dict" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">traffic_dto_to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">traffic_dto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">TrafficDTO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/traffic_manager/traffic_manager_util.html#TrafficManagerUtil.traffic_dto_to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.traffic_manager.traffic_manager_util.TrafficManagerUtil.traffic_dto_to_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a TrafficDTO to a dict</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -339,7 +379,7 @@ state of the script.</p>
 
 </section>
 <section id="module-csle_collector.traffic_manager">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_collector.traffic_manager" title="Permalink to this headline"></a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_collector.traffic_manager" title="Permalink to this heading"></a></h2>
 </section>
 </section>
 

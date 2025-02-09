@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>gym_csle_stopping_game.util.stopping_game_util &mdash; gym-csle-stopping-game 0.7.0 documentation</title>
+  <title>gym_csle_stopping_game.util.stopping_game_util &mdash; gym-csle-stopping-game 0.8.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,7 +13,9 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -54,9 +56,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>gym_csle_stopping_game.util.stopping_game_util</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">gym_csle_stopping_game.util.stopping_game_util</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -66,11 +68,13 @@
            <div itemprop="articleBody">
              
   <h1>Source code for gym_csle_stopping_game.util.stopping_game_util</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">numpy.typing</span> <span class="k">as</span> <span class="nn">npt</span>
 <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">betabinom</span>
 <span class="kn">from</span> <span class="nn">gym_csle_stopping_game.dao.stopping_game_config</span> <span class="kn">import</span> <span class="n">StoppingGameConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.training.policy</span> <span class="kn">import</span> <span class="n">Policy</span>
 
 
 <div class="viewcode-block" id="StoppingGameUtil"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil">[docs]</a><span class="k">class</span> <span class="nc">StoppingGameUtil</span><span class="p">:</span>
@@ -158,7 +162,7 @@
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">R_l</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="StoppingGameUtil.transition_tensor"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.transition_tensor">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">transition_tensor</span><span class="p">(</span><span class="n">L</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">transition_tensor</span><span class="p">(</span><span class="n">L</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the transition tensor</span>
 
@@ -173,15 +177,15 @@
                     <span class="p">[</span>
                         <span class="c1"># Attacker continues</span>
                         <span class="p">[</span>
-                            <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>  <span class="c1"># No intrusion</span>
-                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">l</span><span class="p">),</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">l</span><span class="p">)],</span>  <span class="c1"># Intrusion</span>
-                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>  <span class="c1"># Terminal</span>
+                            <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>  <span class="c1"># No intrusion</span>
+                            <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>  <span class="c1"># Intrusion</span>
+                            <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>  <span class="c1"># Terminal</span>
                         <span class="p">],</span>
                         <span class="c1"># Attacker stops</span>
                         <span class="p">[</span>
-                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>  <span class="c1"># No intrusion</span>
-                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>  <span class="c1"># Intrusion</span>
-                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>  <span class="c1"># Terminal</span>
+                            <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>  <span class="c1"># No intrusion</span>
+                            <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>  <span class="c1"># Intrusion</span>
+                            <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>  <span class="c1"># Terminal</span>
                         <span class="p">]</span>
                     <span class="p">],</span>
 
@@ -189,15 +193,15 @@
                     <span class="p">[</span>
                         <span class="c1"># Attacker continues</span>
                         <span class="p">[</span>
-                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>  <span class="c1"># No intrusion</span>
-                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>  <span class="c1"># Intrusion</span>
-                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>  <span class="c1"># Terminal</span>
+                            <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>  <span class="c1"># No intrusion</span>
+                            <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>  <span class="c1"># Intrusion</span>
+                            <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>  <span class="c1"># Terminal</span>
                         <span class="p">],</span>
                         <span class="c1"># Attacker stops</span>
                         <span class="p">[</span>
-                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>  <span class="c1"># No Intrusion</span>
-                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>  <span class="c1"># Intrusion</span>
-                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>  <span class="c1"># Terminal</span>
+                            <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>  <span class="c1"># No Intrusion</span>
+                            <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>  <span class="c1"># Intrusion</span>
+                            <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>  <span class="c1"># Terminal</span>
                         <span class="p">]</span>
                     <span class="p">]</span>
                 <span class="p">]</span>
@@ -207,15 +211,15 @@
                     <span class="p">[</span>
                         <span class="c1"># Attacker continues</span>
                         <span class="p">[</span>
-                            <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>  <span class="c1"># No intrusion</span>
-                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">l</span><span class="p">),</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">l</span><span class="p">)],</span>  <span class="c1"># Intrusion</span>
-                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>  <span class="c1"># Terminal</span>
+                            <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>  <span class="c1"># No intrusion</span>
+                            <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">l</span><span class="p">),</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">l</span><span class="p">)],</span>  <span class="c1"># Intrusion</span>
+                            <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>  <span class="c1"># Terminal</span>
                         <span class="p">],</span>
                         <span class="c1"># Attacker stops</span>
                         <span class="p">[</span>
-                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>  <span class="c1"># No intrusion</span>
-                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>  <span class="c1"># Intrusion</span>
-                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>  <span class="c1"># Terminal</span>
+                            <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>  <span class="c1"># No intrusion</span>
+                            <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>  <span class="c1"># Intrusion</span>
+                            <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>  <span class="c1"># Terminal</span>
                         <span class="p">]</span>
                     <span class="p">],</span>
 
@@ -223,15 +227,15 @@
                     <span class="p">[</span>
                         <span class="c1"># Attacker continues</span>
                         <span class="p">[</span>
-                            <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>  <span class="c1"># No intrusion</span>
-                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">l</span><span class="p">),</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">l</span><span class="p">)],</span>  <span class="c1"># Intrusion</span>
-                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>  <span class="c1"># Terminal</span>
+                            <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>  <span class="c1"># No intrusion</span>
+                            <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">l</span><span class="p">),</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">l</span><span class="p">)],</span>  <span class="c1"># Intrusion</span>
+                            <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>  <span class="c1"># Terminal</span>
                         <span class="p">],</span>
                         <span class="c1"># Attacker stops</span>
                         <span class="p">[</span>
-                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>  <span class="c1"># No Intrusion</span>
-                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>  <span class="c1"># Intrusion</span>
-                            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>  <span class="c1"># Terminal</span>
+                            <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>  <span class="c1"># No Intrusion</span>
+                            <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>  <span class="c1"># Intrusion</span>
+                            <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>  <span class="c1"># Terminal</span>
                         <span class="p">]</span>
                     <span class="p">]</span>
                 <span class="p">]</span>
@@ -453,7 +457,315 @@
                     <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">O</span><span class="p">:</span>
                         <span class="n">r</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">a1</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">s</span><span class="p">]</span>
                         <span class="n">file_str</span> <span class="o">=</span> <span class="n">file_str</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;R: </span><span class="si">{</span><span class="n">a1</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="n">s_prime</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="n">o</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">r</span><span class="si">:</span><span class="s2">.80f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="k">return</span> <span class="n">file_str</span></div></div>
+        <span class="k">return</span> <span class="n">file_str</span></div>
+
+<div class="viewcode-block" id="StoppingGameUtil.reduce_T_attacker"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.reduce_T_attacker">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">reduce_T_attacker</span><span class="p">(</span><span class="n">T</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">],</span> <span class="n">strategy</span><span class="p">:</span> <span class="n">Policy</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reduces the transition tensor based on a given attacker strategy</span>
+
+<span class="sd">        :param T: the tensor to reduce</span>
+<span class="sd">        :param strategy: the strategy to use for the reduction</span>
+<span class="sd">        :return: the reduced tensor (|A1|x|S|x|S|)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="n">T</span> <span class="o">=</span> <span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">reduced_T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">T</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">T</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">T</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]):</span>
+                    <span class="n">reduced_T</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">T</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">strategy</span><span class="o">.</span><span class="n">probability</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">T</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="p">][</span>
+                        <span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">strategy</span><span class="o">.</span><span class="n">probability</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="c1"># if j == 0:</span>
+                    <span class="c1">#     reduced_T[i][j][k] = T[i][0][j][k] * strategy.probability(j, 0) + T[i][1][j][</span>
+                    <span class="c1">#         k] * strategy.probability(j, 1)</span>
+                    <span class="c1"># else:</span>
+                    <span class="c1">#     reduced_T[i][j][k] = (T[i][0][j][k] * (1 - strategy.probability(j, 0)) + T[i][1][j][k] *</span>
+                    <span class="c1">#                           strategy.probability(j, 1))</span>
+        <span class="k">return</span> <span class="n">reduced_T</span></div>
+
+<div class="viewcode-block" id="StoppingGameUtil.reduce_R_attacker"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.reduce_R_attacker">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">reduce_R_attacker</span><span class="p">(</span><span class="n">R</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">],</span> <span class="n">strategy</span><span class="p">:</span> <span class="n">Policy</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reduces the reward tensor based on a given attacker strategy</span>
+
+<span class="sd">        :param R: the reward tensor to reduce</span>
+<span class="sd">        :param strategy: the strategy to use for the reduction</span>
+<span class="sd">        :return: the reduced reward tensor (|A1|x|S|)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="n">R</span> <span class="o">=</span> <span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">reduced_R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">R</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">R</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+                <span class="n">reduced_R</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">strategy</span><span class="o">.</span><span class="n">probability</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span>
+                                   <span class="n">strategy</span><span class="o">.</span><span class="n">probability</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">reduced_R</span></div>
+
+<div class="viewcode-block" id="StoppingGameUtil.reduce_Z_attacker"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.reduce_Z_attacker">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">reduce_Z_attacker</span><span class="p">(</span><span class="n">Z</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">],</span> <span class="n">strategy</span><span class="p">:</span> <span class="n">Policy</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reduces the observation tensor based on a given attacker strategy</span>
+
+<span class="sd">        :param Z: the observation tensor to reduce</span>
+<span class="sd">        :param strategy: the strategy to use for the reduction</span>
+<span class="sd">        :return: the reduced observation tensor (|A1|x|S|x|O|)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">reduced_Z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">Z</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Z</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">Z</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Z</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Z</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Z</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]):</span>
+                    <span class="n">reduced_Z</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">Z</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">strategy</span><span class="o">.</span><span class="n">probability</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">Z</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="p">][</span>
+                        <span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">strategy</span><span class="o">.</span><span class="n">probability</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">reduced_Z</span></div>
+
+<div class="viewcode-block" id="StoppingGameUtil.reduce_T_defender"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.reduce_T_defender">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">reduce_T_defender</span><span class="p">(</span><span class="n">T</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">],</span> <span class="n">strategy</span><span class="p">:</span> <span class="n">Policy</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reduces the transition tensor based on a given defender strategy</span>
+
+<span class="sd">        :param T: the tensor to reduce</span>
+<span class="sd">        :param strategy: the strategy to use for the reduction</span>
+<span class="sd">        :return: the reduced tensor (|A2|x|S|x|S|)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="n">T</span> <span class="o">=</span> <span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">reduced_T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">T</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">T</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">T</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]):</span>
+                    <span class="n">reduced_T</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">strategy</span><span class="o">.</span><span class="n">probability</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">T</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="p">]</span>
+                                          <span class="o">*</span> <span class="n">strategy</span><span class="o">.</span><span class="n">probability</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">reduced_T</span></div>
+
+<div class="viewcode-block" id="StoppingGameUtil.reduce_R_defender"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.reduce_R_defender">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">reduce_R_defender</span><span class="p">(</span><span class="n">R</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">],</span> <span class="n">strategy</span><span class="p">:</span> <span class="n">Policy</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reduces the reward tensor based on a given defender strategy</span>
+
+<span class="sd">        :param R: the reward tensor to reduce</span>
+<span class="sd">        :param strategy: the strategy to use for the reduction</span>
+<span class="sd">        :return: the reduced reward tensor (|A2|x|S|)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="n">R</span> <span class="o">=</span> <span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">reduced_R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">R</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">R</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+                <span class="n">reduced_R</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">strategy</span><span class="o">.</span><span class="n">probability</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span>
+                                   <span class="n">strategy</span><span class="o">.</span><span class="n">probability</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">reduced_R</span></div>
+
+<div class="viewcode-block" id="StoppingGameUtil.aggregate_belief_mdp_defender"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.aggregate_belief_mdp_defender">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">aggregate_belief_mdp_defender</span><span class="p">(</span><span class="n">aggregation_resolution</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">T</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">],</span>
+                                      <span class="n">R</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">],</span> <span class="n">Z</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">],</span>
+                                      <span class="n">S</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int_</span><span class="p">],</span> <span class="n">A</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int_</span><span class="p">],</span> <span class="n">O</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int_</span><span class="p">])</span> \
+            <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">],</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int_</span><span class="p">],</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">],</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates an aggregate belief MDP from a given POMDP specification and aggregation resolution</span>
+
+<span class="sd">        :param aggregation_resolution: the belief aggregation resolution</span>
+<span class="sd">        :param T: the transition tensor of the POMDP</span>
+<span class="sd">        :param R: the reward tensor of the POMDP</span>
+<span class="sd">        :param Z: the observation tensor of the POMDP</span>
+<span class="sd">        :param S: the state space of the POMDP</span>
+<span class="sd">        :param A: the action space of the POMDP</span>
+<span class="sd">        :param O: the observation space of the POMDP</span>
+<span class="sd">        :return: the state space, action space, transition operator, and belief operator of the belief MDP</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">aggregate_belief_space</span> <span class="o">=</span> <span class="n">StoppingGameUtil</span><span class="o">.</span><span class="n">generate_aggregate_belief_space</span><span class="p">(</span>
+            <span class="n">n</span><span class="o">=</span><span class="n">aggregation_resolution</span><span class="p">,</span> <span class="n">belief_space_dimension</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">S</span><span class="p">))</span>
+        <span class="n">belief_T</span> <span class="o">=</span> <span class="n">StoppingGameUtil</span><span class="o">.</span><span class="n">generate_aggregate_belief_transition_operator</span><span class="p">(</span>
+            <span class="n">aggregate_belief_space</span><span class="o">=</span><span class="n">aggregate_belief_space</span><span class="p">,</span> <span class="n">S</span><span class="o">=</span><span class="n">S</span><span class="p">,</span> <span class="n">A</span><span class="o">=</span><span class="n">A</span><span class="p">,</span> <span class="n">O</span><span class="o">=</span><span class="n">O</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="n">T</span><span class="p">,</span> <span class="n">Z</span><span class="o">=</span><span class="n">Z</span><span class="p">)</span>
+        <span class="n">belief_R</span> <span class="o">=</span> <span class="n">StoppingGameUtil</span><span class="o">.</span><span class="n">generate_aggregate_belief_reward_tensor</span><span class="p">(</span>
+            <span class="n">aggregate_belief_space</span><span class="o">=</span><span class="n">aggregate_belief_space</span><span class="p">,</span> <span class="n">S</span><span class="o">=</span><span class="n">S</span><span class="p">,</span> <span class="n">A</span><span class="o">=</span><span class="n">A</span><span class="p">,</span> <span class="n">R</span><span class="o">=</span><span class="n">R</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">aggregate_belief_space</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">belief_T</span><span class="p">,</span> <span class="n">belief_R</span></div>
+
+<div class="viewcode-block" id="StoppingGameUtil.generate_aggregate_belief_space"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.generate_aggregate_belief_space">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">generate_aggregate_belief_space</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">belief_space_dimension</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate an aggregate belief space B_n.</span>
+
+<span class="sd">        :param n: the aggregation resolution</span>
+<span class="sd">        :param belief_space_dimension: the belief space dimension</span>
+<span class="sd">        :return: the aggregate belief space</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Generate all combinations of integer allocations k_i such that sum(k_i) = n</span>
+        <span class="n">combinations</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">repeat</span><span class="o">=</span><span class="n">belief_space_dimension</span><span class="p">)</span> <span class="k">if</span> <span class="nb">sum</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">==</span> <span class="n">n</span><span class="p">]</span>
+
+        <span class="c1"># Convert integer allocations to belief points by dividing each k_i by n</span>
+        <span class="n">belief_points</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">k_i</span> <span class="o">/</span> <span class="n">n</span> <span class="k">for</span> <span class="n">k_i</span> <span class="ow">in</span> <span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">]</span>
+
+        <span class="c1"># Remove all beliefs that violate the stopping dynamics</span>
+        <span class="n">belief_points</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mf">1.0</span> <span class="ow">or</span> <span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">belief_points</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">belief_points</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="StoppingGameUtil.generate_aggregate_belief_reward_tensor"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.generate_aggregate_belief_reward_tensor">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">generate_aggregate_belief_reward_tensor</span><span class="p">(</span>
+            <span class="n">aggregate_belief_space</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">],</span> <span class="n">S</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int_</span><span class="p">],</span> <span class="n">A</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int_</span><span class="p">],</span>
+            <span class="n">R</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates an aggregate reward tensor for the aggregate belief MDP</span>
+
+<span class="sd">        :param aggregate_belief_space: the aggregate belief space</span>
+<span class="sd">        :param S: the state space of the POMDP</span>
+<span class="sd">        :param A: the action space of the POMDP</span>
+<span class="sd">        :param R: the reward tensor of the POMDP</span>
+<span class="sd">        :return: the reward tensor of the aggregate belief MDP</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">belief_R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">A</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">aggregate_belief_space</span><span class="p">)))</span>
+        <span class="n">belief_space_list</span> <span class="o">=</span> <span class="n">aggregate_belief_space</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">A</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">aggregate_belief_space</span><span class="p">:</span>
+                <span class="n">expected_reward</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">S</span><span class="p">:</span>
+                    <span class="n">expected_reward</span> <span class="o">+=</span> <span class="n">R</span><span class="p">[</span><span class="n">a</span><span class="p">][</span><span class="n">s</span><span class="p">]</span> <span class="o">*</span> <span class="n">b</span><span class="p">[</span><span class="n">s</span><span class="p">]</span>
+                <span class="n">belief_R</span><span class="p">[</span><span class="n">a</span><span class="p">][</span><span class="n">belief_space_list</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">tolist</span><span class="p">())]</span> <span class="o">=</span> <span class="n">expected_reward</span>
+        <span class="k">return</span> <span class="n">belief_R</span></div>
+
+<div class="viewcode-block" id="StoppingGameUtil.generate_aggregate_belief_transition_operator"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.generate_aggregate_belief_transition_operator">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">generate_aggregate_belief_transition_operator</span><span class="p">(</span>
+            <span class="n">aggregate_belief_space</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">],</span> <span class="n">S</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int_</span><span class="p">],</span> <span class="n">A</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int_</span><span class="p">],</span>
+            <span class="n">O</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int_</span><span class="p">],</span> <span class="n">T</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">],</span> <span class="n">Z</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates an aggregate belief space transition operator</span>
+
+<span class="sd">        :param aggregate_belief_space: the aggregate belief space</span>
+<span class="sd">        :param O: the observation space of the POMDP</span>
+<span class="sd">        :param S: the state space of the POMDP</span>
+<span class="sd">        :param A: the action space of the POMDP</span>
+<span class="sd">        :param T: the transition operator of the POMDP</span>
+<span class="sd">        :param Z: the observation tensor of the POMDP</span>
+<span class="sd">        :return: the aggregate belief space operator</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">belief_space_list</span> <span class="o">=</span> <span class="n">aggregate_belief_space</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">belief_T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">A</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">aggregate_belief_space</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">aggregate_belief_space</span><span class="p">)))</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">A</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">b1</span> <span class="ow">in</span> <span class="n">aggregate_belief_space</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">b2</span> <span class="ow">in</span> <span class="n">aggregate_belief_space</span><span class="p">:</span>
+                    <span class="n">belief_T</span><span class="p">[</span><span class="n">a</span><span class="p">][</span><span class="n">belief_space_list</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">b1</span><span class="o">.</span><span class="n">tolist</span><span class="p">())][</span><span class="n">belief_space_list</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">b2</span><span class="o">.</span><span class="n">tolist</span><span class="p">())]</span> \
+                        <span class="o">=</span> <span class="n">StoppingGameUtil</span><span class="o">.</span><span class="n">aggregate_belief_transition_probability</span><span class="p">(</span>
+                        <span class="n">b1</span><span class="o">=</span><span class="n">b1</span><span class="p">,</span> <span class="n">b2</span><span class="o">=</span><span class="n">b2</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">S</span><span class="o">=</span><span class="n">S</span><span class="p">,</span> <span class="n">O</span><span class="o">=</span><span class="n">O</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="n">T</span><span class="p">,</span> <span class="n">Z</span><span class="o">=</span><span class="n">Z</span><span class="p">,</span> <span class="n">aggregate_belief_space</span><span class="o">=</span><span class="n">aggregate_belief_space</span><span class="p">,</span> <span class="n">A</span><span class="o">=</span><span class="n">A</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">belief_T</span></div>
+
+<div class="viewcode-block" id="StoppingGameUtil.aggregate_belief_transition_probability"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.aggregate_belief_transition_probability">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">aggregate_belief_transition_probability</span><span class="p">(</span><span class="n">b1</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">],</span> <span class="n">b2</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">],</span> <span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                                                <span class="n">S</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int_</span><span class="p">],</span> <span class="n">O</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int_</span><span class="p">],</span>
+                                                <span class="n">A</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int_</span><span class="p">],</span>
+                                                <span class="n">T</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">],</span> <span class="n">Z</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">],</span>
+                                                <span class="n">aggregate_belief_space</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculates the probability of transitioning from belief b1 to belief b2 when taking action a</span>
+
+<span class="sd">        :param b1: the source belief</span>
+<span class="sd">        :param b2: the target belief</span>
+<span class="sd">        :param a: the action</span>
+<span class="sd">        :param S: the state space of the POMDP</span>
+<span class="sd">        :param O: the observation space of the POMDP</span>
+<span class="sd">        :param A: the action space of the POMDP</span>
+<span class="sd">        :param T: the transition operator</span>
+<span class="sd">        :param Z: the observation tensor</span>
+<span class="sd">        :param aggregate_belief_space: the aggregate belief space</span>
+<span class="sd">        :return: the probability P(b2 | b1, a)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">prob</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">O</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">sum</span><span class="p">([</span><span class="n">Z</span><span class="p">[</span><span class="n">a</span><span class="p">][</span><span class="n">s_prime</span><span class="p">][</span><span class="n">o</span><span class="p">]</span> <span class="o">*</span> <span class="n">b1</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">*</span> <span class="n">T</span><span class="p">[</span><span class="n">a</span><span class="p">][</span><span class="n">s</span><span class="p">][</span><span class="n">s_prime</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">S</span> <span class="k">for</span> <span class="n">s_prime</span> <span class="ow">in</span> <span class="n">S</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">b_prime</span> <span class="o">=</span> <span class="n">StoppingGameUtil</span><span class="o">.</span><span class="n">pomdp_next_belief</span><span class="p">(</span>
+                <span class="n">o</span><span class="o">=</span><span class="n">o</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">b1</span><span class="p">,</span> <span class="n">states</span><span class="o">=</span><span class="n">S</span><span class="p">,</span> <span class="n">observations</span><span class="o">=</span><span class="n">O</span><span class="p">,</span> <span class="n">observation_tensor</span><span class="o">=</span><span class="n">Z</span><span class="p">,</span> <span class="n">transition_tensor</span><span class="o">=</span><span class="n">T</span><span class="p">)</span>
+            <span class="n">nearest_neighbor</span> <span class="o">=</span> <span class="n">StoppingGameUtil</span><span class="o">.</span><span class="n">find_nearest_neighbor_belief</span><span class="p">(</span><span class="n">belief_space</span><span class="o">=</span><span class="n">aggregate_belief_space</span><span class="p">,</span>
+                                                                             <span class="n">target_belief</span><span class="o">=</span><span class="n">b_prime</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">nearest_neighbor</span><span class="p">,</span> <span class="n">b2</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">S</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">s_prime</span> <span class="ow">in</span> <span class="n">S</span><span class="p">:</span>
+                        <span class="n">prob</span> <span class="o">+=</span> <span class="n">Z</span><span class="p">[</span><span class="n">a</span><span class="p">][</span><span class="n">s_prime</span><span class="p">][</span><span class="n">o</span><span class="p">]</span> <span class="o">*</span> <span class="n">b1</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">*</span> <span class="n">T</span><span class="p">[</span><span class="n">a</span><span class="p">][</span><span class="n">s</span><span class="p">][</span><span class="n">s_prime</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">prob</span></div>
+
+<div class="viewcode-block" id="StoppingGameUtil.pomdp_next_belief"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.pomdp_next_belief">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">pomdp_next_belief</span><span class="p">(</span><span class="n">o</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">states</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int_</span><span class="p">],</span>
+                          <span class="n">observations</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int_</span><span class="p">],</span> <span class="n">observation_tensor</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">],</span>
+                          <span class="n">transition_tensor</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">])</span> \
+            <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes the next belief of the POMDP using a Bayesian filter</span>
+
+<span class="sd">        :param o: the latest observation</span>
+<span class="sd">        :param a: the latest action of player 1</span>
+<span class="sd">        :param b: the current belief</span>
+<span class="sd">        :param states: the list of states</span>
+<span class="sd">        :param observations: the list of observations</span>
+<span class="sd">        :param observation_tensor: the observation tensor</span>
+<span class="sd">        :param transition_tensor: the transition tensor</span>
+<span class="sd">        :return: the new belief</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">b_prime</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">states</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">s_prime</span> <span class="ow">in</span> <span class="n">states</span><span class="p">:</span>
+            <span class="n">b_prime</span><span class="p">[</span><span class="n">s_prime</span><span class="p">]</span> <span class="o">=</span> <span class="n">StoppingGameUtil</span><span class="o">.</span><span class="n">pomdp_bayes_filter</span><span class="p">(</span>
+                <span class="n">s_prime</span><span class="o">=</span><span class="n">s_prime</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="n">o</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">,</span> <span class="n">states</span><span class="o">=</span><span class="n">states</span><span class="p">,</span> <span class="n">observations</span><span class="o">=</span><span class="n">observations</span><span class="p">,</span>
+                <span class="n">transition_tensor</span><span class="o">=</span><span class="n">transition_tensor</span><span class="p">,</span> <span class="n">observation_tensor</span><span class="o">=</span><span class="n">observation_tensor</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">round</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">b_prime</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;error, b_prime:</span><span class="si">{</span><span class="n">b_prime</span><span class="si">}</span><span class="s2">, o:</span><span class="si">{</span><span class="n">o</span><span class="si">}</span><span class="s2">, a:</span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2">, b:</span><span class="si">{</span><span class="n">b</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">round</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">b_prime</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">b_prime</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="StoppingGameUtil.pomdp_bayes_filter"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.pomdp_bayes_filter">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">pomdp_bayes_filter</span><span class="p">(</span><span class="n">s_prime</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">states</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int_</span><span class="p">],</span>
+                           <span class="n">observations</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int_</span><span class="p">],</span> <span class="n">observation_tensor</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">],</span>
+                           <span class="n">transition_tensor</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A Bayesian filter to compute b[s_prime] of the POMDP</span>
+
+<span class="sd">        :param s_prime: the state to compute the belief for</span>
+<span class="sd">        :param o: the latest observation</span>
+<span class="sd">        :param a: the latest action</span>
+<span class="sd">        :param b: the current belief</span>
+<span class="sd">        :param states: the list of states</span>
+<span class="sd">        :param observations: the list of observations</span>
+<span class="sd">        :param observation_tensor: the observation tensor</span>
+<span class="sd">        :param transition_tensor: the transition tensor of the POMDP</span>
+<span class="sd">        :return: b[s_prime]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">states</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">s_prime_1</span> <span class="ow">in</span> <span class="n">states</span><span class="p">:</span>
+                <span class="n">prob_1</span> <span class="o">=</span> <span class="n">observation_tensor</span><span class="p">[</span><span class="n">a</span><span class="p">][</span><span class="n">s_prime_1</span><span class="p">][</span><span class="n">o</span><span class="p">]</span>
+                <span class="n">norm</span> <span class="o">+=</span> <span class="n">b</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">*</span> <span class="n">prob_1</span> <span class="o">*</span> <span class="n">transition_tensor</span><span class="p">[</span><span class="n">a</span><span class="p">][</span><span class="n">s</span><span class="p">][</span><span class="n">s_prime_1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">norm</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;zero norm, a: </span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2">, b: </span><span class="si">{</span><span class="n">b</span><span class="si">}</span><span class="s2">, o: </span><span class="si">{</span><span class="n">o</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="mf">0.0</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">states</span><span class="p">:</span>
+            <span class="n">temp</span> <span class="o">+=</span> <span class="n">observation_tensor</span><span class="p">[</span><span class="n">a</span><span class="p">][</span><span class="n">s_prime</span><span class="p">][</span><span class="n">o</span><span class="p">]</span> <span class="o">*</span> <span class="n">transition_tensor</span><span class="p">[</span><span class="n">a</span><span class="p">][</span><span class="n">s</span><span class="p">][</span><span class="n">s_prime</span><span class="p">]</span> <span class="o">*</span> <span class="n">b</span><span class="p">[</span><span class="n">s</span><span class="p">]</span>
+        <span class="n">b_prime_s_prime</span> <span class="o">=</span> <span class="n">temp</span> <span class="o">/</span> <span class="n">norm</span>
+        <span class="k">if</span> <span class="nb">round</span><span class="p">(</span><span class="n">b_prime_s_prime</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;b_prime_s_prime &gt;= 1: </span><span class="si">{</span><span class="n">b_prime_s_prime</span><span class="si">}</span><span class="s2">, a1:</span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2">, s_prime:</span><span class="si">{</span><span class="n">s_prime</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">round</span><span class="p">(</span><span class="n">b_prime_s_prime</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">s_prime</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">o</span> <span class="o">!=</span> <span class="n">observations</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">assert</span> <span class="nb">round</span><span class="p">(</span><span class="n">b_prime_s_prime</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mf">0.01</span>
+        <span class="k">return</span> <span class="n">b_prime_s_prime</span></div>
+
+<div class="viewcode-block" id="StoppingGameUtil.find_nearest_neighbor_belief"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.find_nearest_neighbor_belief">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">find_nearest_neighbor_belief</span><span class="p">(</span><span class="n">belief_space</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">],</span> <span class="n">target_belief</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">])</span> \
+            <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Finds the nearest neighbor (in the Euclidean sense) of a given belief in a certain belief space</span>
+
+<span class="sd">        :param belief_space: the belief to search from</span>
+<span class="sd">        :param target_belief: the belief to find the nearest neighbor of</span>
+<span class="sd">        :return: the nearest neighbor belief from the belief space</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Compute Euclidean distances between the target belief and all points in the belief space</span>
+        <span class="n">distances</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">belief_space</span> <span class="o">-</span> <span class="n">target_belief</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Find the index of the minimum distance (break ties consistently by choosing the smallest index)</span>
+        <span class="n">nearest_index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">distances</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">belief_space</span><span class="p">[</span><span class="n">nearest_index</span><span class="p">])</span></div></div>
 </pre></div>
 
            </div>

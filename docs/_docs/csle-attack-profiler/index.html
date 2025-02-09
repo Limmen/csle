@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csle_attack_profiler package &mdash; csle-attack-profiler 0.7.0 documentation</title>
+  <title>csle_attack_profiler package &mdash; csle-attack-profiler 0.8.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,7 +14,9 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -53,8 +55,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
-      <li>csle_attack_profiler package</li>
+      <li><a href="#" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">csle_attack_profiler package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -65,15 +67,35 @@
            <div itemprop="articleBody">
              
   <section id="csle-attack-profiler-package">
-<h1>csle_attack_profiler package<a class="headerlink" href="#csle-attack-profiler-package" title="Permalink to this headline"></a></h1>
+<h1>csle_attack_profiler package<a class="headerlink" href="#csle-attack-profiler-package" title="Permalink to this heading"></a></h1>
 <section id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline"></a></h2>
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="csle_attack_profiler.html">csle_attack_profiler package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="csle_attack_profiler.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_attack_profiler.html#module-csle_attack_profiler.attack_profiler">csle_attack_profiler.attack_profiler module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="csle_attack_profiler.html#module-csle_attack_profiler.hmm_profiling">csle_attack_profiler.hmm_profiling module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csle_attack_profiler.html#module-csle_attack_profiler.attack_profiler">csle_attack_profiler.attack_profiler module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_attack_profiler.html#csle_attack_profiler.attack_profiler.AttackProfiler"><code class="docutils literal notranslate"><span class="pre">AttackProfiler</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_attack_profiler.html#csle_attack_profiler.attack_profiler.AttackProfiler.get_attack_profile"><code class="docutils literal notranslate"><span class="pre">AttackProfiler.get_attack_profile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_attack_profiler.html#csle_attack_profiler.attack_profiler.AttackProfiler.get_attack_profile_sequence"><code class="docutils literal notranslate"><span class="pre">AttackProfiler.get_attack_profile_sequence()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_attack_profiler.html#module-csle_attack_profiler.hmm_profiling">csle_attack_profiler.hmm_profiling module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="csle_attack_profiler.html#csle_attack_profiler.hmm_profiling.HMMProfiler"><code class="docutils literal notranslate"><span class="pre">HMMProfiler</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="csle_attack_profiler.html#csle_attack_profiler.hmm_profiling.HMMProfiler.calculate_initial_states"><code class="docutils literal notranslate"><span class="pre">HMMProfiler.calculate_initial_states()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_attack_profiler.html#csle_attack_profiler.hmm_profiling.HMMProfiler.convert_states_to_profiles"><code class="docutils literal notranslate"><span class="pre">HMMProfiler.convert_states_to_profiles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_attack_profiler.html#csle_attack_profiler.hmm_profiling.HMMProfiler.create_model"><code class="docutils literal notranslate"><span class="pre">HMMProfiler.create_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_attack_profiler.html#csle_attack_profiler.hmm_profiling.HMMProfiler.generate_sequence"><code class="docutils literal notranslate"><span class="pre">HMMProfiler.generate_sequence()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_attack_profiler.html#csle_attack_profiler.hmm_profiling.HMMProfiler.get_matrices_of_observation"><code class="docutils literal notranslate"><span class="pre">HMMProfiler.get_matrices_of_observation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_attack_profiler.html#csle_attack_profiler.hmm_profiling.HMMProfiler.load_model"><code class="docutils literal notranslate"><span class="pre">HMMProfiler.load_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_attack_profiler.html#csle_attack_profiler.hmm_profiling.HMMProfiler.profile_sequence"><code class="docutils literal notranslate"><span class="pre">HMMProfiler.profile_sequence()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_attack_profiler.html#csle_attack_profiler.hmm_profiling.HMMProfiler.viterbi"><code class="docutils literal notranslate"><span class="pre">HMMProfiler.viterbi()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="csle_attack_profiler.html#module-csle_attack_profiler">Module contents</a></li>
 </ul>
 </li>
@@ -81,7 +103,7 @@
 </div>
 </section>
 <section id="module-csle_attack_profiler">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_attack_profiler" title="Permalink to this headline"></a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_attack_profiler" title="Permalink to this heading"></a></h2>
 </section>
 </section>
 
@@ -95,7 +117,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024-2025, Bength Pappila & Kim Hammar</p>
+    <p>&#169; Copyright 2024, Bength Pappila.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
