@@ -381,7 +381,7 @@ class CyborgScenarioTwoDefender(BaseEnv):
 
         :return: a list with the access states
         """
-        return env.env.env.env.env._create_numeric_access_table()
+        return list(env.env.env.env.env._create_numeric_access_table())
 
     @staticmethod
     def bline_state(env: ChallengeWrapper) -> int:
@@ -391,7 +391,7 @@ class CyborgScenarioTwoDefender(BaseEnv):
         :param env: the cyborg environment
         :return: the bline state
         """
-        return env.env.env.env.env.env.environment_controller.get_bline_state()
+        return int(env.env.env.env.env.env.environment_controller.get_bline_state())
 
     def get_ip_map(self) -> Dict[str, Any]:
         """
