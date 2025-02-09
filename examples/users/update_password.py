@@ -2,7 +2,7 @@ from csle_common.metastore.metastore_facade import MetastoreFacade
 import bcrypt
 
 if __name__ == '__main__':
-    admin_user  = MetastoreFacade.get_management_user_config(id=1)
+    admin_user = MetastoreFacade.get_management_user_config(id=1)
     new_pwd = "<PASSWORD>"
     byte_pwd = new_pwd.encode('utf-8')
     salt = bcrypt.gensalt()
