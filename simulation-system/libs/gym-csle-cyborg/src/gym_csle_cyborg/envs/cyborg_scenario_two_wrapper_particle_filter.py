@@ -91,7 +91,7 @@ class CyborgScenarioTwoWrapperParticleFilter(BaseEnv):
                 failed_samples = 0
                 new_particles.append(x_prime)
             failed_samples += 1
-            if failed_samples > 50:
+            if failed_samples > 500:
                 # Particle deprivation
                 if len(new_particles) == 0:
                     while True:
