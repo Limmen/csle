@@ -40,7 +40,7 @@ class CyborgScenarioTwoWrapperParticleFilter(BaseEnv):
         :return: (obs, reward, terminated, truncated, info)
         """
         self.control_sequence.append(action)
-        _, r, done, _, info = self.env.step(action = action)
+        _, r, done, _, info = self.env.step(action=action)
         self.particles = self.particle_filter(
             particles=self.particles, max_num_particles=50, train_env=self.train_env,
             obs=info[agents_constants.COMMON.OBSERVATION], control_sequence=self.control_sequence)

@@ -102,5 +102,5 @@ if __name__ == '__main__':
                      experiment_config=experiment_config, save_to_metastore=True)
     experiment_execution = agent.train()
     MetastoreFacade.save_experiment_execution(experiment_execution)
-    # for policy in experiment_execution.result.policies.values():
-    #     MetastoreFacade.save_ppo_policy(ppo_policy=policy)
+    for policy in experiment_execution.result.policies.values():
+        MetastoreFacade.save_ppo_policy(ppo_policy=policy)

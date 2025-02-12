@@ -34,7 +34,7 @@ class AptGameUtil:
         return np.array(list(range(N + 1)))
 
     @staticmethod
-    def defender_actions() -> npt.NDArray[np.int_]:
+    def defender_actions() -> npt.NDArray[int]:
         """
         Gets the action space of the defender
 
@@ -43,7 +43,7 @@ class AptGameUtil:
         return np.array([0, 1])
 
     @staticmethod
-    def attacker_actions() -> npt.NDArray[np.int_]:
+    def attacker_actions() -> npt.NDArray[int]:
         """
         Gets the action space of the attacker
 
@@ -160,7 +160,7 @@ class AptGameUtil:
         return np.array(Z)
 
     @staticmethod
-    def sample_next_state(T: npt.NDArray[Any], s: int, a1: int, a2: int, S: npt.NDArray[np.int_]) -> int:
+    def sample_next_state(T: npt.NDArray[Any], s: int, a1: int, a2: int, S: npt.NDArray[int]) -> int:
         """
         Samples the next state
 
@@ -187,7 +187,7 @@ class AptGameUtil:
         return int(np.random.choice(np.arange(0, len(b1)), p=b1))
 
     @staticmethod
-    def sample_next_observation(Z: npt.NDArray[Any], s_prime: int, O: npt.NDArray[np.int_]) -> int:
+    def sample_next_observation(Z: npt.NDArray[Any], s_prime: int, O: npt.NDArray[int]) -> int:
         """
         Samples the next observation
 

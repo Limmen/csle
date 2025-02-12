@@ -47,7 +47,7 @@ class AptGameMdpAttackerEnv(BaseEnv):
         self.reset()
         super().__init__()
 
-    def step(self, pi2: Union[npt.NDArray[Any], int, float, np.int_, np.float64]) \
+    def step(self, pi2: Union[npt.NDArray[Any], int, float, int, np.float64]) \
             -> Tuple[npt.NDArray[Any], int, bool, bool, Dict[str, Any]]:
         """
         Takes a step in the environment by executing the given action

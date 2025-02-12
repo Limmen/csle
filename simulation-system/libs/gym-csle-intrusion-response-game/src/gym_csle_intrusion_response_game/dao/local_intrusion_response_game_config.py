@@ -11,10 +11,10 @@ class LocalIntrusionResponseGameConfig(JSONSerializable):
     DTO representing the configuration of the local intrusion response game
     """
 
-    def __init__(self, env_name: str, T: npt.NDArray[Any], O: npt.NDArray[np.int_], Z: npt.NDArray[Any],
-                 R: npt.NDArray[Any], S: npt.NDArray[np.int_], S_A: npt.NDArray[np.int_],
-                 S_D: npt.NDArray[np.int_], s_1_idx: int, zones: npt.NDArray[np.int_],
-                 A1: npt.NDArray[np.int_], A2: npt.NDArray[np.int_], d_b1: npt.NDArray[np.float64],
+    def __init__(self, env_name: str, T: npt.NDArray[Any], O: npt.NDArray[int], Z: npt.NDArray[Any],
+                 R: npt.NDArray[Any], S: npt.NDArray[int], S_A: npt.NDArray[int],
+                 S_D: npt.NDArray[int], s_1_idx: int, zones: npt.NDArray[int],
+                 A1: npt.NDArray[int], A2: npt.NDArray[int], d_b1: npt.NDArray[np.float64],
                  a_b1: npt.NDArray[np.float64], gamma: float,
                  beta: float, C_D: npt.NDArray[Any], eta: float, A_P: npt.NDArray[Any],
                  Z_D_P: npt.NDArray[Any], Z_U: npt.NDArray[Any]) -> None:
