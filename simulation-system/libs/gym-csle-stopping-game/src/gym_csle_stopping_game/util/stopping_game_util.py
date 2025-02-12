@@ -558,7 +558,8 @@ class StoppingGameUtil:
     @staticmethod
     def generate_aggregate_belief_transition_operator(
             aggregate_belief_space: npt.NDArray[np.float64], S: npt.NDArray[np.int32], A: npt.NDArray[np.int32],
-            O: npt.NDArray[np.int32], T: npt.NDArray[np.float64], Z: npt.NDArray[np.float64]) -> npt.NDArray[np.float64]:
+            O: npt.NDArray[np.int32], T: npt.NDArray[np.float64], Z: npt.NDArray[np.float64]) \
+            -> npt.NDArray[np.float64]:
         """
         Generates an aggregate belief space transition operator
 
