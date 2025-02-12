@@ -61,13 +61,12 @@ csle_config:
   metastore_user: "csle"
   metastore_password: "csle"
   metastore_database_name: "csle"
-  localhost: false
-  version: "0.8.0"
+  version: "0.7.0"
   cluster_config:
     cluster_nodes:
-      - ip: "34.88.71.96"
+      - ip: "34.142.42.219"
         leader: true
-        cpus: 2
+        cpus: 8
         gpus: 0
-        RAM: 8
+        RAM: 64
   allow_registration: true

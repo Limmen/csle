@@ -30,10 +30,11 @@
       apt:
         name: nginx
 
-    - name: Check if Anaconda is installed; if you see error, ignore it!
+    - name: Check if Anaconda is installed.
       shell: "/home/{{ user }}/anaconda3/bin/conda --version"
       register: anaconda_installed
       ignore_errors: true
+      no_log: true
 
     - name: Download Anaconda
       ansible.builtin.get_url:
@@ -87,10 +88,11 @@
         dest: "/home/{{ user }}/csle/config.json"
         content: "{{ csle_config | to_json(indent=4, sort_keys=True) }}"
 
-    - name: Check if csle home environment variable already exists in .bashrc; if you see error, ignore it!
+    - name: Check if csle home environment variable already exists in .bashrc
       shell: grep -qxF 'export CSLE_HOME=/home/{{ user }}/csle' "/home/{{ user }}/.bashrc"
       register: variable_exists
       ignore_errors: true
+      no_log: true
 
     - name: Add environment variable to .bashrc if not already present
       lineinfile:

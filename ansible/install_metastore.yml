@@ -4,10 +4,11 @@
 
   tasks:
 
-    - name: Check if PostgreSQL is installed, if you see error here just ignore it!
+    - name: Check if PostgreSQL is installed
       shell: "psql --version"
       register: postgresql_installed
       ignore_errors: true
+      no_log: true
 
     - name: Download PostgreSQL
       ansible.builtin.get_url:
@@ -118,7 +119,7 @@
         regexp: "SELECT 'CREATE"
         line: ''
 
-    - name: Create PostgreSQL database, if you see error here just ignore it!
+    - name: Create PostgreSQL database
       become: yes
       become_method: sudo
       become_user: postgres
@@ -129,8 +130,9 @@
 #        login_password: "{{ postgres_password }}"
         query: "CREATE DATABASE csle"
       ignore_errors: true
+      no_log: true
 
-    - name: Setup database privileges, if you see error here just ignore it!
+    - name: Setup database privileges
       become: yes
       become_method: sudo
       become_user: postgres
@@ -140,8 +142,9 @@
 #        login_password: "{{ postgres_password }}"
         path: /var/lib/postgresql/create_db.sql
       ignore_errors: true
+      no_log: true
 
-    - name: Add citus extension, if you see error here just ignore it!
+    - name: Add citus extension
       become: yes
       become_method: sudo
       become_user: postgres
@@ -152,6 +155,7 @@
         name: citus
         version: latest
       ignore_errors: true
+      no_log: true
 
     - name: Change mode and ownership of the /var/log/postgresql
       file:
