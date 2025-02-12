@@ -90,6 +90,15 @@ After registering the variable, add it to the debug group.
     var: git_installation
 ```
 
+## Tests
+The following table details the last time ansible was tested and worked correctly for different setups.
+
+| Setup                        | Last date tested |
+|------------------------------|------------------|
+| Single server, Ubuntu 22.04. | 2025-02-12 ✔     |
+| Two servers, Ubuntu 20.04.   | 2024-04-23 ✔     |
+
+
 ## Author & Maintainer
 
 Kim Hammar <kimham@kth.se>

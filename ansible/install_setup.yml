@@ -35,6 +35,7 @@
       register: anaconda_installed
       ignore_errors: true
       no_log: true
+      failed_when: false
 
     - name: Download Anaconda
       ansible.builtin.get_url:

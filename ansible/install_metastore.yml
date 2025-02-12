@@ -9,6 +9,7 @@
       register: postgresql_installed
       ignore_errors: true
       no_log: true
+      failed_when: false
 
     - name: Download PostgreSQL
       ansible.builtin.get_url:
@@ -131,6 +132,7 @@
         query: "CREATE DATABASE csle"
       ignore_errors: true
       no_log: true
+      failed_when: false
 
     - name: Setup database privileges
       become: yes
@@ -143,6 +145,7 @@
         path: /var/lib/postgresql/create_db.sql
       ignore_errors: true
       no_log: true
+      failed_when: false
 
     - name: Add citus extension
       become: yes
@@ -156,6 +159,7 @@
         version: latest
       ignore_errors: true
       no_log: true
+      failed_when: false
 
     - name: Change mode and ownership of the /var/log/postgresql
       file:
