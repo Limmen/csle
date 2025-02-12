@@ -1,9 +1,7 @@
-import copy
 from typing import List, Dict, Tuple
 import random
 import numpy as np
 from collections import Counter
-import copy
 from gym_csle_cyborg.envs.cyborg_scenario_two_wrapper import CyborgScenarioTwoWrapper
 from gym_csle_cyborg.dao.red_agent_type import RedAgentType
 from gym_csle_cyborg.dao.csle_cyborg_wrapper_config import CSLECyborgWrapperConfig
@@ -114,7 +112,6 @@ def monte_carlo_most_frequent_particle(particles: List[CyborgWrapperState], N: i
     most_frequent_particle = counter.most_common(1)[0][0]
     return most_frequent_particle
 
-
 def particle_filter(particles: List[CyborgWrapperState], max_num_particles: int, train_env: CyborgScenarioTwoWrapper,
                     obs: int, control_sequence: List[int],
                     cyborg_env: CyborgScenarioTwoDefender, t: int) -> List[CyborgWrapperState]:
@@ -164,7 +161,6 @@ def particle_filter(particles: List[CyborgWrapperState], max_num_particles: int,
                 return new_particles
     return new_particles
 
-
 def restore_policy(x: CyborgWrapperState, train_env: CyborgScenarioTwoWrapper, particles: List[CyborgWrapperState]) \
         -> int:
     """
@@ -202,36 +198,10 @@ def restore_policy(x: CyborgWrapperState, train_env: CyborgScenarioTwoWrapper, p
             return restore_actions[i]
     return u
 
-def rollout_eval(mu, train_env, m, particles, control_sequence, t, mc_samples):
-    costs = []
-    for j in range(mc_samples):
-        C = 0
-        k = t
-        while t <= 100 and  k < t + m:
-            monte_carlo_state = monte_carlo_most_frequent_particle(particles=particles, N=100)
-            u = restore_policy(x=monte_carlo_state, train_env=train_env, particles=particles)
-            if t <= 2:
-                u = 31
-            if u == -1:
-                u = base_policy(x=monte_carlo_state, mu=mu, id_to_state=id_to_state)
-            _, r, _, _, info = env.step(u)
-            control_sequence.append(u)
-            particles = particle_filter(particles=particles, max_num_particles=50,
-                                        train_env=train_env, obs=info[agents_constants.COMMON.OBSERVATION],
-                                        control_sequence=control_sequence, cyborg_env=env, t=t)
-            c = -r
-            C += c
-            k+= 1
-        monte_carlo_state = monte_carlo_most_frequent_particle(particles=particles, N=100)
-        aggregate_state = Cage2AggregateMDP.get_aggregate_state(s=monte_carlo_state, state_to_id=state_to_id)
-        C += J[aggregate_state]
-        costs.append(C)
-    return np.mean(costs)
 
 def rollout_policy(train_env: CyborgScenarioTwoWrapper, J: List[float], state_to_id: Dict[str, int],
                    mu: List[List[float]], l: int, id_to_state: Dict[int, List[int]],
-                   particles: List[CyborgWrapperState], control_sequence, env: CyborgScenarioTwoDefender, t: int,
-                   gamma=0.99, mc_samples=10, m = 0) -> Tuple[int, float]:
+                   particles: List[CyborgWrapperState], gamma=0.99, mc_samples=10) -> Tuple[int, float]:
     """
     A rollout policy for cage-2
 
@@ -249,29 +219,20 @@ def rollout_policy(train_env: CyborgScenarioTwoWrapper, J: List[float], state_to
     U = [27, 28, 29, 30, 31, 32, 35]
     Q_n = []
     for u in U:
-        # print(f"{u}/{len(U)}")
         returns = []
         for i in range(mc_samples):
             particle = random.choice(particles)
-            control_sequence_prime = control_sequence.copy()
-            control_sequence_prime.append(u)
             train_env.set_state(particle)
             _, _, _, _, info = train_env.step(action=u)
             x_prime = info[agents_constants.COMMON.STATE]
-            particles_prime = particle_filter(particles=copy.deepcopy(particles), max_num_particles=50,
-                                              train_env=train_env, obs=info[agents_constants.COMMON.OBSERVATION],
-                                              control_sequence=control_sequence_prime, cyborg_env=env, t=t)
-            # aggregate_state = Cage2AggregateMDP.get_aggregate_state(s=x_prime, state_to_id=state_to_id)
+            aggregate_state = Cage2AggregateMDP.get_aggregate_state(s=x_prime, state_to_id=state_to_id)
             c = -info[agents_constants.COMMON.REWARD]
             if l == 1:
-                returns.append(c + gamma * rollout_eval(mu=mu, train_env=train_env, m=m, particles=particles_prime,
-                                                        control_sequence=control_sequence_prime, t=t,
-                                                        mc_samples=mc_samples))
+                returns.append(c + gamma * J[aggregate_state])
             else:
                 returns.append(c + gamma * rollout_policy(train_env=train_env, J=J,
                                                           state_to_id=state_to_id, id_to_state=id_to_state,
-                                                          mu=mu, l=l - 1, particles=particles_prime,
-                                                          control_sequence=control_sequence_prime, m=m, env=env, t=t)[1])
+                                                          mu=mu, l=l - 1, particles=particles)[1])
         Q_n.append(np.mean(returns))
     u_star = int(np.argmin(Q_n))
     J_star = float(Q_n[u_star])
@@ -297,9 +258,6 @@ def base_policy(x: CyborgWrapperState, mu: List[List[float]], id_to_state: Dict[
 
 
 if __name__ == '__main__':
-    seed = 441902
-    np.random.seed(seed)
-    random.seed(seed)
     config = CSLECyborgConfig(
         gym_env_name="csle-cyborg-scenario-two-v1", scenario=2, baseline_red_agents=[RedAgentType.B_LINE_AGENT],
         maximum_steps=100, red_agent_distribution=[1.0], reduced_action_space=True, decoy_state=True,
@@ -330,22 +288,34 @@ if __name__ == '__main__':
         train_env.reset()
         particles = train_env.initial_particles
         while not done and t < max_env_steps:
-            print(f"{t}/{max_env_steps}")
             monte_carlo_state = monte_carlo_most_frequent_particle(particles=particles, N=100)
             u = restore_policy(x=monte_carlo_state, train_env=train_env, particles=particles)
             if t <= 2:
                 u = 31
             if u == -1:
+                u = base_policy(x=monte_carlo_state, mu=mu, id_to_state=id_to_state)
+                if t < 50 and u in [27, 28, 29]:
+                    u = 7
+                    # aggregate_state = Cage2AggregateMDP.get_aggregate_state(s=monte_carlo_state, state_to_id=state_to_id)
+                    # aggregate_state_vec = id_to_state[aggregate_state]
+                    # aggregate_state_vec[2] = 4
+                    # aggregate_state_vec[3] = 1
+                    # aggregate_state_vec[4] = 1
+                    # aggregate_state_vec[8] = 4
+                    # aggregate_state = state_to_id[",".join(list(map(lambda x: str(x), aggregate_state_vec)))]
+                    # u = Cage2AggregateMDP.get_aggregate_control(mu=mu, aggregate_state=aggregate_state, id_to_state=id_to_state)
                 # u = base_policy(x=monte_carlo_state, mu=mu, id_to_state=id_to_state)
-                # import time
-                # start = time.time()
-                u = rollout_policy(state_to_id=state_to_id, id_to_state=id_to_state, train_env=train_env, J=J, mu=mu,
-                                   gamma=gamma, l=l, particles=copy.deepcopy(particles), mc_samples=20, m=0,
-                                   control_sequence=copy.deepcopy(control_sequence), env=env, t=t)[0]
-                # print((time.time() - start)/60)
+                # u = rollout_policy(state_to_id=state_to_id, id_to_state=id_to_state, train_env=train_env, J=J, mu=mu,
+                #                    gamma=gamma, l=l, particles=particles, mc_samples=20)[0]
+            # if t > 50 and u in [27, 28, 29, 30, 31, 32, 35]
+            # else:
+            #     u = 35
+            #     # u = restore_policy(x=monte_carlo_state, train_env=train_env, particles=particles)
+            #     # if u == -1:
+            #     #     u = 35
             _, r, _, _, info = env.step(u)
             control_sequence.append(u)
-            particles = particle_filter(particles=copy.deepcopy(particles), max_num_particles=50,
+            particles = particle_filter(particles=particles, max_num_particles=50,
                                         train_env=train_env, obs=info[agents_constants.COMMON.OBSERVATION],
                                         control_sequence=control_sequence, cyborg_env=env, t=t)
             c = -r
@@ -358,4 +328,4 @@ if __name__ == '__main__':
             # x = info[agents_constants.COMMON.STATE]
             t += 1
         returns.append(C)
-        print(f"{i}/{N}, {np.mean(returns)}, {C}")
+        print(f"{i}/{N}, {np.mean(returns)}")

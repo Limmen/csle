@@ -52,6 +52,7 @@ def particle_filter(particles: List[CyborgWrapperState], max_num_particles: int,
         failed_samples += 1
         if failed_samples > 500:
             # Particle deprivation
+            failed_samples = 1
             if len(new_particles) == 0:
                 while True:
                     t = 0
@@ -62,6 +63,9 @@ def particle_filter(particles: List[CyborgWrapperState], max_num_particles: int,
                         if int(o) == int(obs):
                             return [info[agents_constants.COMMON.STATE]]
                         t += 1
+                        failed_samples += 1
+                    if failed_samples > 500:
+                        return particles
             else:
                 return new_particles
     return new_particles
@@ -162,8 +166,48 @@ def base_policy(x: CyborgWrapperState, mu: List[List[float]], id_to_state: Dict[
     aggregate_state = Cage2AggregateMDP.get_aggregate_state(s=x, state_to_id=state_to_id)
     return Cage2AggregateMDP.get_aggregate_control(mu=mu, aggregate_state=aggregate_state, id_to_state=id_to_state)
 
+def pf_probability(true_state: CyborgWrapperState, particles: List[CyborgWrapperState]) -> float:
+    matches = 0
+    for particle in particles:
+        if particle == true_state:
+            matches += 1
+    if matches > 0:
+        return matches/len(particles)
+    else:
+        return 0
+
+
+from collections import Counter
+
+def compute_probability_distribution(elements):
+    """
+    Compute a probability distribution based on the occurrences of elements in a list.
+
+    Args:
+        elements (list): A list of elements (may contain duplicates).
+
+    Returns:
+        dict: A dictionary where keys are unique elements, and values are their probabilities.
+    """
+    if not elements:
+        return {}
+
+    # Count occurrences of each element
+    counts = Counter(elements)
+
+    # Total number of elements
+    total_count = sum(counts.values())
+
+    # Compute probabilities
+    probability_distribution = {element: count / total_count for element, count in counts.items()}
+
+    return probability_distribution
+
 
 if __name__ == '__main__':
+    seed = 91285091
+    np.random.seed(seed)
+    random.seed(seed)
     config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="",
                                      save_trace=False, reward_shaping=False, scenario=2,
                                      red_agent_type=RedAgentType.B_LINE_AGENT)
@@ -172,7 +216,7 @@ if __name__ == '__main__':
     action_id_to_type_and_host, type_and_host_to_action_id \
         = CyborgEnvUtil.get_action_dicts(scenario=2, reduced_action_space=True, decoy_state=True,
                                          decoy_optimization=False)
-    N = 10000
+    N = 100
     max_env_steps = 100
     mu = np.loadtxt("./mu2.txt")
     J = np.loadtxt("./J2.txt")
@@ -180,6 +224,9 @@ if __name__ == '__main__':
     gamma = 0.99
     l = 1
     returns = []
+    pfs = list(np.zeros((100,)).tolist())
+    for i in range(100):
+        pfs[i] = []
     for i in range(N):
         done = False
         _, info = env.reset()
@@ -189,27 +236,36 @@ if __name__ == '__main__':
         C = 0
         particles = env.initial_particles
         while not done and t < max_env_steps:
-            monte_carlo_state = monte_carlo_most_frequent_particle(particles=particles, N=100)
+            distribution = compute_probability_distribution(elements=particles)
+            distribution = list(distribution.values())
+            from scipy.special import entr
+            entropy = entr(np.array(distribution)).sum(axis=0)
+            pfs[t-1].append(entropy)
+            # print(pfs)
+            # print(f"t:{t}, pf:{pf_probability(true_state=x, particles=particles)}")
+            monte_carlo_state = monte_carlo_most_frequent_particle(particles=particles, N=10)
             u = restore_policy(x=monte_carlo_state, train_env=train_env, particles=particles)
             if t <= 2:
                 u = 31
             if u == -1:
-                # u = base_policy(x=monte_carlo_state, mu=mu, id_to_state=id_to_state)
-                u = rollout_policy(state_to_id=state_to_id, id_to_state=id_to_state, train_env=train_env, J=J, mu=mu,
-                                   gamma=gamma, l=l, particles=particles, mc_samples=20)[0]
+                u = base_policy(x=monte_carlo_state, mu=mu, id_to_state=id_to_state)
             _, _, _, _, info = env.step(u)
             control_sequence.append(u)
-            particles = particle_filter(particles=particles, max_num_particles=50,
+            particles = particle_filter(particles=particles, max_num_particles=100,
                                         train_env=train_env, obs=info[agents_constants.COMMON.OBSERVATION],
                                         control_sequence=control_sequence)
+            # print(distribution)
+            # print(sum(distribution))
+            # from scipy.special import entr
+            # print(f"entropy: {entr(np.array(distribution)).sum(axis=0)}")
             c = -info[agents_constants.COMMON.REWARD]
             C += c
-            # aggstate = id_to_state[Cage2AggregateMDP.get_aggregate_state(s=monte_carlo_state,
-            #                                                               state_to_id=state_to_id)]
-            # print(f"t:{t}, u: {u}, c: {c}, a: {action_id_to_type_and_host[u]}, C: {C}, "
-            #       f"aggstate: {aggstate},"
-            #       f"true state: {id_to_state[Cage2AggregateMDP.get_aggregate_state(s=x, state_to_id=state_to_id)]}")
             x = info[agents_constants.COMMON.STATE]
             t += 1
         returns.append(C)
         print(f"{i}/{N}, {np.mean(returns)}")
+        for i in range(100):
+            print(f"{i}, {np.mean(pfs[i])}, {np.std(pfs[i])}")
+
+    for i in range(100):
+        print(f"{i}, {np.mean(pfs[i])}, {np.std(pfs[i])}")

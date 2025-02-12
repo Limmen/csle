@@ -5,11 +5,15 @@ import numpy as np
 from prettytable import PrettyTable
 import numpy.typing as npt
 import gymnasium as gym
+from multiprocessing import Pool
+import torch
 import random
+import os
 from csle_cyborg.agents.wrappers.challenge_wrapper import ChallengeWrapper
 import csle_common.constants.constants as constants
 from csle_common.dao.simulation_config.base_env import BaseEnv
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
+from csle_common.metastore.metastore_facade import MetastoreFacade
 import gym_csle_cyborg.constants.constants as env_constants
 from gym_csle_cyborg.dao.csle_cyborg_config import CSLECyborgConfig
 from gym_csle_cyborg.dao.blue_agent_action_type import BlueAgentActionType
@@ -381,7 +385,7 @@ class CyborgScenarioTwoDefender(BaseEnv):
 
         :return: a list with the access states
         """
-        return list(env.env.env.env.env._create_numeric_access_table())
+        return env.env.env.env.env._create_numeric_access_table()
 
     @staticmethod
     def bline_state(env: ChallengeWrapper) -> int:
@@ -391,7 +395,7 @@ class CyborgScenarioTwoDefender(BaseEnv):
         :param env: the cyborg environment
         :return: the bline state
         """
-        return int(env.env.env.env.env.env.environment_controller.get_bline_state())
+        return env.env.env.env.env.env.environment_controller.get_bline_state()
 
     def get_ip_map(self) -> Dict[str, Any]:
         """
@@ -935,3 +939,115 @@ class CyborgScenarioTwoDefender(BaseEnv):
             scan_state.append(env_constants.CYBORG.NOT_SCANNED)
             decoy_state.append([])
         return scan_state, decoy_state
+
+    def parallel_rollout(self, policy_id: int, num_processes: int, num_evals_per_process: int, max_horizon: int,
+                         state_id: int) -> float:
+        """
+        Performs parallel rollout with a given base policy
+
+        :param policy_id: the id of the base policy
+        :param num_processes: the number of parallel processes
+        :param num_evals_per_process: the number of evaluations per process
+        :param max_horizon: the maximum length of the rollout
+        :param state_id: the state to start the simulation from
+        :return: the average return
+        """
+        os.environ[constants.CUDA.CUDA_VISIBLE_DEVICES] = ""
+        seeds = random.sample(range(10, 30000), num_processes)
+        inputs = [(self.config, num_evals_per_process, max_horizon, policy_id, self.visited_cyborg_states,
+                   self.cyborg_action_type_and_host_to_id, self.decoy_action_types,
+                   self.action_id_to_type_and_host, self.cyborg_hostname_to_id,
+                   self.decoy_actions_per_host, self.decoy_state, self.observation_id_to_tensor,
+                   self.cyborg_hostnames, seeds[i], self.visited_scanned_states, self.visited_decoy_states,
+                   self.decoy_state_space_lookup, self.decoy_state_space_hosts_lookup,
+                   self.cyborg_action_id_to_type_and_host, state_id)
+                  for i in range(num_processes)]
+        with Pool(num_processes) as p:
+            returns = p.map(CyborgScenarioTwoDefender.process_rollout, inputs)
+            return float(np.mean(returns))
+
+    @staticmethod
+    def process_rollout(
+            input: Tuple[CSLECyborgConfig, int, int, int, Dict[int, Any], Dict[Tuple[BlueAgentActionType, str], int],
+            List[BlueAgentActionType], Dict[int, Tuple[BlueAgentActionType, str]], Dict[str, int],
+            List[List[BlueAgentActionType]], List[List[BlueAgentActionType]], Dict[int, npt.NDArray[Any]],
+            List[str], int, Dict[int, List[int]], Dict[int, List[List[BlueAgentActionType]]],
+            Dict[int, Any], Dict[Any, Any], Dict[int, Tuple[BlueAgentActionType, str]], int]) -> float:
+        """
+        Performs a rollout on a given parallel process
+
+        :param input: the input for the rollout
+        :return: the average return
+        """
+        (config, num_evals, max_horizon, policy_id, visited_cyborg_states, cyborg_action_type_and_host_to_id,
+         decoy_action_types, action_id_to_type_and_host, cyborg_hostname_to_id, decoy_actions_per_host,
+         decoy_state, observation_id_to_tensor, cyborg_hostnames, seed, visited_scanned_states,
+         visited_decoy_states, decoy_state_space_lookup, decoy_state_space_hosts_lookup,
+         cyborg_action_id_to_type_and_host, state_id) = input
+        policy = MetastoreFacade.get_ppo_policy(id=policy_id)
+        env, _, _ = CyborgEnvUtil.create_cyborg_env(config=config, red_agent_type=None)
+        config_cache_val = config.cache_visited_states
+        config.cache_visited_states = False
+        random.seed(seed)
+        np.random.seed(seed)
+        torch.manual_seed(seed)
+        returns = []
+        for i in range(num_evals):
+            done = False
+            trace = SimulationTrace(simulation_env=config.gym_env_name)
+            o, info = env.reset()
+            decoy_state, scan_state = CyborgScenarioTwoDefender.update_cyborg_state(
+                s=state_id, env=env, visited_cyborg_states=visited_cyborg_states,
+                visited_decoy_states=visited_decoy_states, visited_scanned_states=visited_scanned_states)
+            info, initial_belief, scan_state = CyborgScenarioTwoDefender.populate_info(
+                info=dict(info), obs=o, trace=trace, env=env,
+                cyborg_hostnames=cyborg_hostnames, scan_state=scan_state,
+                decoy_state=decoy_state, config=config, cyborg_hostname_to_id=cyborg_hostname_to_id,
+                visited_cyborg_states=visited_cyborg_states, visited_scanned_states=visited_scanned_states,
+                visited_decoy_states=visited_decoy_states, reset=True)
+            scan_state = scan_state
+            o, observation_id_to_tensor = CyborgScenarioTwoDefender.encode_observation(
+                config=config, info=info, decoy_state=decoy_state, scan_state=scan_state,
+                decoy_state_space_lookup=decoy_state_space_lookup,
+                decoy_state_space_hosts_lookup=decoy_state_space_hosts_lookup,
+                observation_id_to_tensor=observation_id_to_tensor, o=o,
+                users_ids_randomized=env_constants.CYBORG.USER_HOST_IDS,
+                enterprise_ids_randomized=env_constants.CYBORG.ENTERPRISE_HOST_IDS)
+            observation_id_to_tensor = observation_id_to_tensor
+            trace = SimulationTrace(simulation_env=config.gym_env_name)
+
+            R = 0
+            t = 0
+            while not done and t < max_horizon:
+                action = policy.action(o=o)
+                action, decoy_state = CyborgScenarioTwoDefender.encode_action(
+                    action=action, config=config, action_id_to_type_and_host=action_id_to_type_and_host,
+                    cyborg_action_type_and_host_to_id=cyborg_action_type_and_host_to_id,
+                    decoy_action_types=decoy_action_types, decoy_actions_per_host=decoy_actions_per_host,
+                    decoy_state=decoy_state, cyborg_hostname_to_id=cyborg_hostname_to_id,
+                    cyborg_action_id_to_type_and_host=cyborg_action_id_to_type_and_host)
+                decoy_state = decoy_state
+                o, r, done, _, info = env.step(action=action)
+                info, _, scan_state = CyborgScenarioTwoDefender.populate_info(
+                    info=dict(info), obs=o, trace=trace, env=env,
+                    cyborg_hostnames=cyborg_hostnames, scan_state=scan_state, decoy_state=decoy_state,
+                    config=config, cyborg_hostname_to_id=cyborg_hostname_to_id,
+                    visited_cyborg_states=visited_cyborg_states,
+                    visited_scanned_states=visited_scanned_states,
+                    visited_decoy_states=visited_decoy_states, reset=False)
+                scan_state = scan_state
+
+                o, observation_id_to_tensor = CyborgScenarioTwoDefender.encode_observation(
+                    config=config, info=info, decoy_state=decoy_state, scan_state=scan_state,
+                    decoy_state_space_lookup=decoy_state_space_lookup,
+                    decoy_state_space_hosts_lookup=decoy_state_space_hosts_lookup,
+                    observation_id_to_tensor=observation_id_to_tensor, o=o,
+                    users_ids_randomized=env_constants.CYBORG.USER_HOST_IDS,
+                    enterprise_ids_randomized=env_constants.CYBORG.ENTERPRISE_HOST_IDS)
+                observation_id_to_tensor = observation_id_to_tensor
+
+                R += r
+                t += 1
+            returns.append(R + policy.value(o))
+        config.cache_visited_states = config_cache_val
+        return float(np.mean(returns))

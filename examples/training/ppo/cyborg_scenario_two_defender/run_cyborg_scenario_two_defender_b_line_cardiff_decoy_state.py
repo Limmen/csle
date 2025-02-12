@@ -10,7 +10,7 @@ from gym_csle_cyborg.dao.csle_cyborg_config import CSLECyborgConfig
 from gym_csle_cyborg.dao.red_agent_type import RedAgentType
 
 if __name__ == '__main__':
-    emulation_name = "csle-level9-080"
+    emulation_name = "csle-level9-070"
     emulation_env_config = MetastoreFacade.get_emulation_by_name(emulation_name)
     if emulation_env_config is None:
         raise ValueError(f"Could not find an emulation environment with the name: {emulation_name}")
@@ -20,7 +20,7 @@ if __name__ == '__main__':
         raise ValueError(f"Could not find a simulation with name: {simulation_name}")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}ppo_test",
-        title="Cardiff PPO Cyborg BLine", random_seeds=[399], agent_type=AgentType.PPO,
+        title="Cardiff PPO Cyborg BLine", random_seeds=[399, 7891, 2512, 10193, 44123], agent_type=AgentType.PPO,
         log_every=1,
         hparams={
             constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER: HParam(
@@ -66,13 +66,13 @@ if __name__ == '__main__':
                                                             name=agents_constants.PPO.NUM_GRADIENT_STEPS,
                                                             descr="number of gradient steps"),
             agents_constants.COMMON.NUM_TRAINING_TIMESTEPS: HParam(
-                value=int(2048) * 4500, name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
+                value=int(2048) * 1505, name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
                 descr="number of timesteps to train"),
             agents_constants.COMMON.EVAL_EVERY: HParam(value=10, name=agents_constants.COMMON.EVAL_EVERY,
                                                        descr="training iterations between evaluations"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=50, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="the batch size for evaluation"),
-            agents_constants.COMMON.SAVE_EVERY: HParam(value=50, name=agents_constants.COMMON.SAVE_EVERY,
+            agents_constants.COMMON.SAVE_EVERY: HParam(value=250, name=agents_constants.COMMON.SAVE_EVERY,
                                                        descr="how frequently to save the model"),
             agents_constants.COMMON.CONFIDENCE_INTERVAL: HParam(
                 value=0.95, name=agents_constants.COMMON.CONFIDENCE_INTERVAL,
@@ -98,6 +98,9 @@ if __name__ == '__main__':
     agent = PPOAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                      experiment_config=experiment_config, save_to_metastore=True)
     experiment_execution = agent.train()
-    MetastoreFacade.save_experiment_execution(experiment_execution)
-    for policy in experiment_execution.result.policies.values():
-        MetastoreFacade.save_ppo_policy(ppo_policy=policy)
+    try:
+        MetastoreFacade.save_experiment_execution(experiment_execution)
+        for policy in experiment_execution.result.policies.values():
+            MetastoreFacade.save_ppo_policy(ppo_policy=policy)
+    except Exception:
+        pass
