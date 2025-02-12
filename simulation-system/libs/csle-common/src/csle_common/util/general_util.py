@@ -73,7 +73,7 @@ class GeneralUtil:
         return L
 
     @staticmethod
-    def one_hot_encode_integer(value: int, max_value: int) -> npt.NDArray[np.int]:
+    def one_hot_encode_integer(value: int, max_value: int) -> npt.NDArray[int]:
         """
         One-hot encodes an integer
 
@@ -88,7 +88,7 @@ class GeneralUtil:
         return one_hot_vector
 
     @staticmethod
-    def one_hot_encode_vector(vector: List[int], max_value: int) -> npt.NDArray[np.int]:
+    def one_hot_encode_vector(vector: List[int], max_value: int) -> npt.NDArray[int]:
         """
         One-hot encodes a vector
 
