@@ -1,5 +1,7 @@
-from typing import Tuple
+from typing import Tuple, List
 import socket
+import numpy as np
+import numpy.typing as npt
 
 
 class GeneralUtil:
@@ -69,3 +71,38 @@ class GeneralUtil:
         if isinstance(L, list):
             return tuple(GeneralUtil.list_to_tuple(item) for item in L)  # Recursively convert lists to tuples
         return L
+
+    @staticmethod
+    def one_hot_encode_integer(value: int, max_value: int) -> npt.NDArray[np.int]:
+        """
+        One-hot encodes an integer
+
+        :param value: the interger value
+        :param max_value: the maximum value
+        :return: the one-hot encoded vector
+        """
+        if not (0 <= value <= max_value):
+            raise ValueError(f"Value is: {value}, Value must be between 0 and {max_value} (inclusive).")
+        one_hot_vector = np.zeros(max_value + 1, dtype=int)
+        one_hot_vector[value] = 1
+        return one_hot_vector
+
+    @staticmethod
+    def one_hot_encode_vector(vector: List[int], max_value: int) -> npt.NDArray[np.int]:
+        """
+        One-hot encodes a vector
+
+        :param vector: the vector to one-hot encode
+        :param max_value: the maximum value in each entry of the vector
+        :return: the one-hot encoded vector
+        """
+        vector = np.array(vector)
+
+        # Validate input values
+        if not np.all((0 <= vector) & (vector <= max_value)):
+            raise ValueError(f"Vector is: {vector}. Input vector can only contain values between 0 and {max_value}.")
+
+        # Create one-hot encoding dynamically based on max_value
+        one_hot = np.eye(max_value + 1)[vector]  # Identity matrix of size (max_value + 1)
+
+        return one_hot.flatten()

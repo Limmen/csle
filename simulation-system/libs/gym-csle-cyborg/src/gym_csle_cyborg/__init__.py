@@ -15,3 +15,9 @@ register(
     entry_point='gym_csle_cyborg.envs.cyborg_scenario_two_wrapper:CyborgScenarioTwoWrapper',
     kwargs={'config': None}
 )
+
+register(
+    id='csle-cyborg-scenario-two-wrapper-particle-filter-v1',
+    entry_point='gym_csle_cyborg.envs.cyborg_scenario_two_wrapper_particle_filter:CyborgScenarioTwoWrapperParticleFilter',
+    kwargs={'config': None}
+)

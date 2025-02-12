@@ -1,4 +1,5 @@
 from typing import List, Dict, Any, Union
+import numpy as np
 from csle_base.json_serializable import JSONSerializable
 import gym_csle_cyborg.constants.constants as env_constants
 from csle_common.util.general_util import GeneralUtil
@@ -184,3 +185,12 @@ class CyborgWrapperState(JSONSerializable):
                      GeneralUtil.list_to_tuple(self.malware_state), GeneralUtil.list_to_tuple(self.ssh_access),
                      GeneralUtil.list_to_tuple(self.escalated), GeneralUtil.list_to_tuple(self.exploited),
                      self.bline_base_jump, GeneralUtil.list_to_tuple(self.scanned_subnets)))
+
+    def to_vector(self) -> List[int]:
+        """
+        :return: a vector representation of the state
+        """
+        return (list(GeneralUtil.one_hot_encode_vector(vector=self.scan_state, max_value=2))
+                + list(GeneralUtil.one_hot_encode_vector(np.array(self.s).flatten(), max_value=5))
+                + list(GeneralUtil.one_hot_encode_integer(value=self.red_agent_state, max_value=14))
+                + list(GeneralUtil.one_hot_encode_integer(value=self.red_agent_target, max_value=12)))

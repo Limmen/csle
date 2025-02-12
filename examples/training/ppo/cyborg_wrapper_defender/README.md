@@ -1,6 +1,6 @@
 # Proximal Policy Optimization (PPO) for POMDP
 
-This directory contains example scripts for optimizing defender policies using PPO for the official cyborg environment.
+This directory contains example scripts for optimizing defender policies using PPO for the cyborg wrapper environment.
 
 ## Commands
 
