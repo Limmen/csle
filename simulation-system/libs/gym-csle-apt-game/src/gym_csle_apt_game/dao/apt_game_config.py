@@ -11,9 +11,9 @@ class AptGameConfig(SimulationEnvInputConfig):
     """
 
     def __init__(self, env_name: str,
-                 T: npt.NDArray[Any], O: npt.NDArray[int], Z: npt.NDArray[Any],
-                 C: npt.NDArray[Any], S: npt.NDArray[int], A1: npt.NDArray[int],
-                 A2: npt.NDArray[int], b1: npt.NDArray[np.float64], N: int, p_a: float,
+                 T: npt.NDArray[Any], O: npt.NDArray[np.int32], Z: npt.NDArray[Any],
+                 C: npt.NDArray[Any], S: npt.NDArray[np.int32], A1: npt.NDArray[np.int32],
+                 A2: npt.NDArray[np.int32], b1: npt.NDArray[np.float64], N: int, p_a: float,
                  save_dir: str, checkpoint_traces_freq: int, gamma: float = 1) -> None:
         """
         Initializes the DTO

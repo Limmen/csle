@@ -422,9 +422,9 @@ class Cage2AggregateMDP:
                     action = Cage2AggregateMDP.aggregate_control_to_original_control()[u]
                     sts = id_to_state[sx]
                     print(f"mu({sts})={action_id_to_type_and_host[action]}")
-            time_elapsed = (time.time() - start)/60
+            time_elapsed = (time.time() - start) / 60
             mu = Cage2AggregateMDP.policy(X=X, U=U, gamma=gamma, J=J, state_to_id=state_to_id, id_to_state=id_to_state)
-            np.savetxt(f"mu_temp_{round(time_elapsed,2)}.txt", mu)
+            np.savetxt(f"mu_temp_{round(time_elapsed, 2)}.txt", mu)
             np.savetxt(f"J_temp_{round(time_elapsed, 2)}.txt", J)
             if delta < epsilon:
                 break

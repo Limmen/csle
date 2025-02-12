@@ -2,9 +2,7 @@ from gym_csle_apt_game.dao.apt_game_config import AptGameConfig
 from gym_csle_apt_game.util.apt_game_util import AptGameUtil
 from gym_csle_apt_game.envs.apt_game_env import AptGameEnv
 from gym_csle_apt_game.envs.apt_game_pomdp_defender_env import AptGamePomdpDefenderEnv
-from gym_csle_apt_game.dao.apt_game_defender_pomdp_config import (
-    AptGameDefenderPomdpConfig,
-)
+from gym_csle_apt_game.dao.apt_game_defender_pomdp_config import AptGameDefenderPomdpConfig
 from csle_common.dao.training.policy import Policy
 from csle_common.dao.training.random_policy import RandomPolicy
 from csle_common.dao.training.player_type import PlayerType

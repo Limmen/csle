@@ -3,7 +3,6 @@ from typing import List, Dict, Tuple
 import random
 import numpy as np
 from collections import Counter
-import copy
 from gym_csle_cyborg.envs.cyborg_scenario_two_wrapper import CyborgScenarioTwoWrapper
 from gym_csle_cyborg.dao.red_agent_type import RedAgentType
 from gym_csle_cyborg.dao.csle_cyborg_wrapper_config import CSLECyborgWrapperConfig
@@ -26,9 +25,9 @@ def get_wrapper_state_from_cyborg(cyborg_env: CyborgScenarioTwoDefender, obs_id,
     for i in range(len(scan_state)):
         if i in [9, 10, 11, 12] and scan_state[i] > 0:
             scanned_subnets[0] = 1
-        if i in [3,4,5,6,7] and scan_state[i] > 0:
+        if i in [3, 4, 5, 6, 7] and scan_state[i] > 0:
             scanned_subnets[1] = 1
-        if i in [4,5,6,7] and scan_state[i] > 0:
+        if i in [4, 5, 6, 7] and scan_state[i] > 0:
             scanned_subnets[2] = 1
     red_action_targets = {}
     red_action_targets[0] = 0
@@ -76,9 +75,9 @@ def get_wrapper_state_from_cyborg(cyborg_env: CyborgScenarioTwoDefender, obs_id,
             known = 1
         if t > 0 and i in [9, 10, 11, 12]:
             known = 1
-        if red_agent_state >= 6 and i in [0,1, 2, 3]:
+        if red_agent_state >= 6 and i in [0, 1, 2, 3]:
             known = 1
-        if red_agent_state >= 8 and i in [4,5,6,7]:
+        if red_agent_state >= 8 and i in [4, 5, 6, 7]:
             known = 1
         access = access_list[i]
         decoy = len(decoy_state[i])
@@ -95,11 +94,13 @@ def get_wrapper_state_from_cyborg(cyborg_env: CyborgScenarioTwoDefender, obs_id,
                                        obs=obs_vector,
                                        red_action_targets=red_action_targets,
                                        privilege_escalation_detected=privilege_escalation_detected,
-                                       red_agent_state=red_agent_state, red_agent_target=red_agent_target, malware_state=malware_state,
+                                       red_agent_state=red_agent_state, red_agent_target=red_agent_target,
+                                       malware_state=malware_state,
                                        ssh_access=ssh_access, escalated=escalated, exploited=exploited,
                                        bline_base_jump=bline_base_jump, scanned_subnets=scanned_subnets,
                                        attacker_observed_decoy=attacker_observed_decoy, detected=detected)
     return wrapper_state
+
 
 def monte_carlo_most_frequent_particle(particles: List[CyborgWrapperState], N: int) -> CyborgWrapperState:
     """
@@ -202,12 +203,13 @@ def restore_policy(x: CyborgWrapperState, train_env: CyborgScenarioTwoWrapper, p
             return restore_actions[i]
     return u
 
+
 def rollout_eval(mu, train_env, m, particles, control_sequence, t, mc_samples):
     costs = []
     for j in range(mc_samples):
         C = 0
         k = t
-        while t <= 100 and  k < t + m:
+        while t <= 100 and k < t + m:
             monte_carlo_state = monte_carlo_most_frequent_particle(particles=particles, N=100)
             u = restore_policy(x=monte_carlo_state, train_env=train_env, particles=particles)
             if t <= 2:
@@ -221,17 +223,18 @@ def rollout_eval(mu, train_env, m, particles, control_sequence, t, mc_samples):
                                         control_sequence=control_sequence, cyborg_env=env, t=t)
             c = -r
             C += c
-            k+= 1
+            k += 1
         monte_carlo_state = monte_carlo_most_frequent_particle(particles=particles, N=100)
         aggregate_state = Cage2AggregateMDP.get_aggregate_state(s=monte_carlo_state, state_to_id=state_to_id)
         C += J[aggregate_state]
         costs.append(C)
     return np.mean(costs)
 
+
 def rollout_policy(train_env: CyborgScenarioTwoWrapper, J: List[float], state_to_id: Dict[str, int],
                    mu: List[List[float]], l: int, id_to_state: Dict[int, List[int]],
                    particles: List[CyborgWrapperState], control_sequence, env: CyborgScenarioTwoDefender, t: int,
-                   gamma=0.99, mc_samples=10, m = 0) -> Tuple[int, float]:
+                   gamma=0.99, mc_samples=10, m=0) -> Tuple[int, float]:
     """
     A rollout policy for cage-2
 
@@ -257,7 +260,7 @@ def rollout_policy(train_env: CyborgScenarioTwoWrapper, J: List[float], state_to
             control_sequence_prime.append(u)
             train_env.set_state(particle)
             _, _, _, _, info = train_env.step(action=u)
-            x_prime = info[agents_constants.COMMON.STATE]
+            # x_prime = info[agents_constants.COMMON.STATE]
             particles_prime = particle_filter(particles=copy.deepcopy(particles), max_num_particles=50,
                                               train_env=train_env, obs=info[agents_constants.COMMON.OBSERVATION],
                                               control_sequence=control_sequence_prime, cyborg_env=env, t=t)
@@ -271,7 +274,8 @@ def rollout_policy(train_env: CyborgScenarioTwoWrapper, J: List[float], state_to
                 returns.append(c + gamma * rollout_policy(train_env=train_env, J=J,
                                                           state_to_id=state_to_id, id_to_state=id_to_state,
                                                           mu=mu, l=l - 1, particles=particles_prime,
-                                                          control_sequence=control_sequence_prime, m=m, env=env, t=t)[1])
+                                                          control_sequence=control_sequence_prime, m=m, env=env, t=t)[
+                    1])
         Q_n.append(np.mean(returns))
     u_star = int(np.argmin(Q_n))
     J_star = float(Q_n[u_star])

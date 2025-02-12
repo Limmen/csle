@@ -11,10 +11,10 @@ class WorkflowIntrusionResponseGameConfig(JSONSerializable):
     """
 
     def __init__(self, env_name: str, adjacency_matrix: npt.NDArray[Any],
-                 nodes: npt.NDArray[int], initial_zones: npt.NDArray[int], X_max: int, beta: float,
+                 nodes: npt.NDArray[np.int32], initial_zones: npt.NDArray[np.int32], X_max: int, beta: float,
                  gamma: float,
-                 zones: npt.NDArray[int], Z_D_P: npt.NDArray[Any], C_D: npt.NDArray[Any], A_P: npt.NDArray[Any],
-                 Z_U: npt.NDArray[Any], eta: float, gw_reachable: npt.NDArray[int]):
+                 zones: npt.NDArray[np.int32], Z_D_P: npt.NDArray[Any], C_D: npt.NDArray[Any], A_P: npt.NDArray[Any],
+                 Z_U: npt.NDArray[Any], eta: float, gw_reachable: npt.NDArray[np.int32]):
         """
         Initializes the DTO
 

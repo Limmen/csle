@@ -13,7 +13,7 @@ class IntrusionResponseGameUtil:
     """
 
     @staticmethod
-    def is_local_state_terminal(s: npt.NDArray[int]) -> bool:
+    def is_local_state_terminal(s: npt.NDArray[np.int32]) -> bool:
         """
         Utility function for checking if a local state is terminal or not
 
@@ -23,7 +23,7 @@ class IntrusionResponseGameUtil:
         return bool(s[env_constants.STATES.D_STATE_INDEX] == -1 and s[env_constants.STATES.A_STATE_INDEX] == -1)
 
     @staticmethod
-    def is_local_state_in_zone(s: npt.NDArray[int], zone: int) -> bool:
+    def is_local_state_in_zone(s: npt.NDArray[np.int32], zone: int) -> bool:
         """
         Utility function for checking if a local state is in a given zone or not
 
@@ -34,7 +34,7 @@ class IntrusionResponseGameUtil:
         return bool(s[env_constants.STATES.D_STATE_INDEX] == zone)
 
     @staticmethod
-    def is_local_state_shutdown_or_redirect(s: npt.NDArray[int]) -> bool:
+    def is_local_state_shutdown_or_redirect(s: npt.NDArray[np.int32]) -> bool:
         """
         Utility function for checking if a local node is in shutdown or redirect state
 
@@ -46,7 +46,7 @@ class IntrusionResponseGameUtil:
                     and s[env_constants.STATES.D_STATE_INDEX] == env_constants.DEFENDER_STATES.REDIRECT)
 
     @staticmethod
-    def is_local_state_compromised(s: npt.NDArray[int]) -> bool:
+    def is_local_state_compromised(s: npt.NDArray[np.int32]) -> bool:
         """
         Utility function for checking if a local state has been compromised
 
@@ -56,7 +56,7 @@ class IntrusionResponseGameUtil:
         return bool(s[env_constants.STATES.A_STATE_INDEX] == env_constants.ATTACK_STATES.COMPROMISED)
 
     @staticmethod
-    def is_local_state_healthy(s: npt.NDArray[int]) -> bool:
+    def is_local_state_healthy(s: npt.NDArray[np.int32]) -> bool:
         """
         Utility function for checking if a local state is healthy and not discovered nor compromised
 
@@ -66,7 +66,7 @@ class IntrusionResponseGameUtil:
         return bool(s[env_constants.STATES.A_STATE_INDEX] == env_constants.ATTACK_STATES.HEALTHY)
 
     @staticmethod
-    def is_local_state_recon(s: npt.NDArray[int]) -> bool:
+    def is_local_state_recon(s: npt.NDArray[np.int32]) -> bool:
         """
         Utility function for checking if a local state has been discovered by the attacker
 
@@ -76,7 +76,7 @@ class IntrusionResponseGameUtil:
         return bool(s[env_constants.STATES.A_STATE_INDEX] == env_constants.ATTACK_STATES.RECON)
 
     @staticmethod
-    def are_local_states_equal(s: npt.NDArray[int], s_prime: npt.NDArray[int]) -> bool:
+    def are_local_states_equal(s: npt.NDArray[np.int32], s_prime: npt.NDArray[np.int32]) -> bool:
         """
         Utility function for checking if two local states are equal
 
@@ -88,7 +88,7 @@ class IntrusionResponseGameUtil:
             env_constants.STATES.A_STATE_INDEX] == s_prime[env_constants.STATES.A_STATE_INDEX])
 
     @staticmethod
-    def are_local_defense_states_equal(s: npt.NDArray[int], s_prime: npt.NDArray[int]) -> bool:
+    def are_local_defense_states_equal(s: npt.NDArray[np.int32], s_prime: npt.NDArray[np.int32]) -> bool:
         """
         Utility function for checking if two local defense states are equal
 
@@ -99,7 +99,7 @@ class IntrusionResponseGameUtil:
         return bool(s[env_constants.STATES.D_STATE_INDEX] == s_prime[env_constants.STATES.D_STATE_INDEX])
 
     @staticmethod
-    def are_local_attack_states_equal(s: npt.NDArray[int], s_prime: npt.NDArray[int]) -> bool:
+    def are_local_attack_states_equal(s: npt.NDArray[np.int32], s_prime: npt.NDArray[np.int32]) -> bool:
         """
         Utility function for checking if two local attack states are equal
 
@@ -196,7 +196,7 @@ class IntrusionResponseGameUtil:
         return np.array(S)
 
     @staticmethod
-    def local_defender_state_space(number_of_zones: int) -> npt.NDArray[int]:
+    def local_defender_state_space(number_of_zones: int) -> npt.NDArray[np.int32]:
         """
         Gets the defender state space of the local version of the game
 
@@ -209,7 +209,7 @@ class IntrusionResponseGameUtil:
         return np.array(S)
 
     @staticmethod
-    def local_attacker_state_space() -> npt.NDArray[int]:
+    def local_attacker_state_space() -> npt.NDArray[np.int32]:
         """
         Gets the attacker state space of the local version of the game
 
@@ -222,7 +222,7 @@ class IntrusionResponseGameUtil:
         return np.array(S)
 
     @staticmethod
-    def local_defender_actions(number_of_zones: int) -> npt.NDArray[int]:
+    def local_defender_actions(number_of_zones: int) -> npt.NDArray[np.int32]:
         """
         Gets the defender's action space in the local version of the game
 
@@ -232,7 +232,7 @@ class IntrusionResponseGameUtil:
         return np.array(list(range(number_of_zones + 1)))
 
     @staticmethod
-    def local_attacker_actions() -> npt.NDArray[int]:
+    def local_attacker_actions() -> npt.NDArray[np.int32]:
         """
         Gets the attacker's action space in the local version of the game
 
@@ -242,7 +242,7 @@ class IntrusionResponseGameUtil:
                          env_constants.ATTACKER_ACTIONS.BRUTE_FORCE, env_constants.ATTACKER_ACTIONS.EXPLOIT])
 
     @staticmethod
-    def local_observation_space(X_max: int) -> npt.NDArray[int]:
+    def local_observation_space(X_max: int) -> npt.NDArray[np.int32]:
         """
         Gets the observation space of the local version of the game
 
@@ -270,7 +270,7 @@ class IntrusionResponseGameUtil:
         return beta * impact * int(not IntrusionResponseGameUtil.is_local_state_shutdown_or_redirect(s=s))
 
     @staticmethod
-    def constant_defender_action_costs(A1: npt.NDArray[int], constant_cost: float) -> npt.NDArray[np.float64]:
+    def constant_defender_action_costs(A1: npt.NDArray[np.int32], constant_cost: float) -> npt.NDArray[np.float64]:
         """
         Returns a vector with the local defender action costs where each action has the same constant cost
 
@@ -297,7 +297,7 @@ class IntrusionResponseGameUtil:
         return np.array(list(range(1, num_zones + 1)))
 
     @staticmethod
-    def constant_zone_utilities(zones: npt.NDArray[int], constant_utility: float) -> npt.NDArray[np.float64]:
+    def constant_zone_utilities(zones: npt.NDArray[np.int32], constant_utility: float) -> npt.NDArray[np.float64]:
         """
         Returns a vector with the zone utilities where each zone has the same constant utility
 
@@ -311,7 +311,7 @@ class IntrusionResponseGameUtil:
         return np.array(Z_U)
 
     @staticmethod
-    def constant_zone_detection_probabilities(zones: npt.NDArray[int], constant_detection_prob: float) \
+    def constant_zone_detection_probabilities(zones: npt.NDArray[np.int32], constant_detection_prob: float) \
             -> npt.NDArray[np.float64]:
         """
         Returns a vector with the zone detection probabilities where each zone as the same uniform detection

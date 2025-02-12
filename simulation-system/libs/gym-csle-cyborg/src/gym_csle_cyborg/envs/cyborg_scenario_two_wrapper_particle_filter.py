@@ -28,9 +28,9 @@ class CyborgScenarioTwoWrapperParticleFilter(BaseEnv):
         self.train_env = CyborgScenarioTwoWrapper(config=self.config)
         self.particles: List[CyborgWrapperState] = []
         self.particles = self.env.initial_particles
-        self.control_sequence = []
+        self.control_sequence: List[int] = []
         self.action_space = self.env.action_space
-        self.observation_space = gym.spaces.Box(low=0, high=1, shape=(379,), dtype=np.int)
+        self.observation_space = gym.spaces.Box(low=0, high=1, shape=(379,), dtype=np.int32)
 
     def step(self, action: int) -> Tuple[npt.NDArray[Any], float, bool, bool, Dict[str, Any]]:
         """
@@ -79,7 +79,7 @@ class CyborgScenarioTwoWrapperParticleFilter(BaseEnv):
         :return: the list of updated particles
         """
         u = control_sequence[-1]
-        new_particles = []
+        new_particles: List[CyborgWrapperState] = []
         failed_samples = 0
         while len(new_particles) < max_num_particles:
             x = random.choice(particles)

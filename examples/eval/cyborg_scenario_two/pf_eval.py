@@ -166,18 +166,17 @@ def base_policy(x: CyborgWrapperState, mu: List[List[float]], id_to_state: Dict[
     aggregate_state = Cage2AggregateMDP.get_aggregate_state(s=x, state_to_id=state_to_id)
     return Cage2AggregateMDP.get_aggregate_control(mu=mu, aggregate_state=aggregate_state, id_to_state=id_to_state)
 
+
 def pf_probability(true_state: CyborgWrapperState, particles: List[CyborgWrapperState]) -> float:
     matches = 0
     for particle in particles:
         if particle == true_state:
             matches += 1
     if matches > 0:
-        return matches/len(particles)
+        return matches / len(particles)
     else:
         return 0
 
-
-from collections import Counter
 
 def compute_probability_distribution(elements):
     """
@@ -239,8 +238,9 @@ if __name__ == '__main__':
             distribution = compute_probability_distribution(elements=particles)
             distribution = list(distribution.values())
             from scipy.special import entr
+
             entropy = entr(np.array(distribution)).sum(axis=0)
-            pfs[t-1].append(entropy)
+            pfs[t - 1].append(entropy)
             # print(pfs)
             # print(f"t:{t}, pf:{pf_probability(true_state=x, particles=particles)}")
             monte_carlo_state = monte_carlo_most_frequent_particle(particles=particles, N=10)

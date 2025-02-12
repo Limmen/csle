@@ -24,9 +24,9 @@ def get_wrapper_state_from_cyborg(cyborg_env: CyborgScenarioTwoDefender, obs_id,
     for i in range(len(scan_state)):
         if i in [9, 10, 11, 12] and scan_state[i] > 0:
             scanned_subnets[0] = 1
-        if i in [3,4,5,6,7] and scan_state[i] > 0:
+        if i in [3, 4, 5, 6, 7] and scan_state[i] > 0:
             scanned_subnets[1] = 1
-        if i in [4,5,6,7] and scan_state[i] > 0:
+        if i in [4, 5, 6, 7] and scan_state[i] > 0:
             scanned_subnets[2] = 1
     red_action_targets = {}
     red_action_targets[0] = 0
@@ -74,9 +74,9 @@ def get_wrapper_state_from_cyborg(cyborg_env: CyborgScenarioTwoDefender, obs_id,
             known = 1
         if t > 0 and i in [9, 10, 11, 12]:
             known = 1
-        if red_agent_state >= 6 and i in [0,1, 2, 3]:
+        if red_agent_state >= 6 and i in [0, 1, 2, 3]:
             known = 1
-        if red_agent_state >= 8 and i in [4,5,6,7]:
+        if red_agent_state >= 8 and i in [4, 5, 6, 7]:
             known = 1
         access = access_list[i]
         decoy = len(decoy_state[i])
@@ -93,11 +93,13 @@ def get_wrapper_state_from_cyborg(cyborg_env: CyborgScenarioTwoDefender, obs_id,
                                        obs=obs_vector,
                                        red_action_targets=red_action_targets,
                                        privilege_escalation_detected=privilege_escalation_detected,
-                                       red_agent_state=red_agent_state, red_agent_target=red_agent_target, malware_state=malware_state,
+                                       red_agent_state=red_agent_state, red_agent_target=red_agent_target,
+                                       malware_state=malware_state,
                                        ssh_access=ssh_access, escalated=escalated, exploited=exploited,
                                        bline_base_jump=bline_base_jump, scanned_subnets=scanned_subnets,
                                        attacker_observed_decoy=attacker_observed_decoy, detected=detected)
     return wrapper_state
+
 
 def monte_carlo_most_frequent_particle(particles: List[CyborgWrapperState], N: int) -> CyborgWrapperState:
     """
@@ -111,6 +113,7 @@ def monte_carlo_most_frequent_particle(particles: List[CyborgWrapperState], N: i
     counter = Counter(samples)
     most_frequent_particle = counter.most_common(1)[0][0]
     return most_frequent_particle
+
 
 def particle_filter(particles: List[CyborgWrapperState], max_num_particles: int, train_env: CyborgScenarioTwoWrapper,
                     obs: int, control_sequence: List[int],
@@ -160,6 +163,7 @@ def particle_filter(particles: List[CyborgWrapperState], max_num_particles: int,
             else:
                 return new_particles
     return new_particles
+
 
 def restore_policy(x: CyborgWrapperState, train_env: CyborgScenarioTwoWrapper, particles: List[CyborgWrapperState]) \
         -> int:

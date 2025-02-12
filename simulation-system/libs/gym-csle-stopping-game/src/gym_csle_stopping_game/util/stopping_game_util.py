@@ -31,7 +31,7 @@ class StoppingGameUtil:
         return np.array([0, 1, 2])
 
     @staticmethod
-    def defender_actions() -> npt.NDArray[int]:
+    def defender_actions() -> npt.NDArray[np.int32]:
         """
         Gets the action space of the defender
 
@@ -40,7 +40,7 @@ class StoppingGameUtil:
         return np.array([0, 1])
 
     @staticmethod
-    def attacker_actions() -> npt.NDArray[int]:
+    def attacker_actions() -> npt.NDArray[np.int32]:
         """
         Gets the action space of the attacker
 
@@ -217,7 +217,7 @@ class StoppingGameUtil:
         return Z
 
     @staticmethod
-    def sample_next_state(T: npt.NDArray[Any], l: int, s: int, a1: int, a2: int, S: npt.NDArray[int]) -> int:
+    def sample_next_state(T: npt.NDArray[Any], l: int, s: int, a1: int, a2: int, S: npt.NDArray[np.int32]) -> int:
         """
         Samples the next state
 
@@ -245,7 +245,7 @@ class StoppingGameUtil:
         return int(np.random.choice(np.arange(0, len(b1)), p=b1))
 
     @staticmethod
-    def sample_next_observation(Z: npt.NDArray[Any], s_prime: int, O: npt.NDArray[int]) -> int:
+    def sample_next_observation(Z: npt.NDArray[Any], s_prime: int, O: npt.NDArray[np.int32]) -> int:
         """
         Samples the next observation
 
@@ -489,8 +489,8 @@ class StoppingGameUtil:
     @staticmethod
     def aggregate_belief_mdp_defender(aggregation_resolution: int, T: npt.NDArray[np.float64],
                                       R: npt.NDArray[np.float64], Z: npt.NDArray[np.float64],
-                                      S: npt.NDArray[int], A: npt.NDArray[int], O: npt.NDArray[int]) \
-            -> Tuple[npt.NDArray[np.float64], npt.NDArray[int], npt.NDArray[np.float64], npt.NDArray[np.float64]]:
+                                      S: npt.NDArray[np.int32], A: npt.NDArray[np.int32], O: npt.NDArray[np.int32]) \
+            -> Tuple[npt.NDArray[np.float64], npt.NDArray[np.int32], npt.NDArray[np.float64], npt.NDArray[np.float64]]:
         """
         Generates an aggregate belief MDP from a given POMDP specification and aggregation resolution
 
@@ -534,7 +534,7 @@ class StoppingGameUtil:
 
     @staticmethod
     def generate_aggregate_belief_reward_tensor(
-            aggregate_belief_space: npt.NDArray[np.float64], S: npt.NDArray[int], A: npt.NDArray[int],
+            aggregate_belief_space: npt.NDArray[np.float64], S: npt.NDArray[np.int32], A: npt.NDArray[np.int32],
             R: npt.NDArray[np.float64]) -> npt.NDArray[np.float64]:
         """
         Generates an aggregate reward tensor for the aggregate belief MDP
@@ -557,8 +557,8 @@ class StoppingGameUtil:
 
     @staticmethod
     def generate_aggregate_belief_transition_operator(
-            aggregate_belief_space: npt.NDArray[np.float64], S: npt.NDArray[int], A: npt.NDArray[int],
-            O: npt.NDArray[int], T: npt.NDArray[np.float64], Z: npt.NDArray[np.float64]) -> npt.NDArray[np.float64]:
+            aggregate_belief_space: npt.NDArray[np.float64], S: npt.NDArray[np.int32], A: npt.NDArray[np.int32],
+            O: npt.NDArray[np.int32], T: npt.NDArray[np.float64], Z: npt.NDArray[np.float64]) -> npt.NDArray[np.float64]:
         """
         Generates an aggregate belief space transition operator
 
@@ -582,8 +582,8 @@ class StoppingGameUtil:
 
     @staticmethod
     def aggregate_belief_transition_probability(b1: npt.NDArray[np.float64], b2: npt.NDArray[np.float64], a: int,
-                                                S: npt.NDArray[int], O: npt.NDArray[int],
-                                                A: npt.NDArray[int],
+                                                S: npt.NDArray[np.int32], O: npt.NDArray[np.int32],
+                                                A: npt.NDArray[np.int32],
                                                 T: npt.NDArray[np.float64], Z: npt.NDArray[np.float64],
                                                 aggregate_belief_space: npt.NDArray[np.float64]) -> float:
         """
@@ -615,8 +615,8 @@ class StoppingGameUtil:
         return prob
 
     @staticmethod
-    def pomdp_next_belief(o: int, a: int, b: npt.NDArray[np.float64], states: npt.NDArray[int],
-                          observations: npt.NDArray[int], observation_tensor: npt.NDArray[np.float64],
+    def pomdp_next_belief(o: int, a: int, b: npt.NDArray[np.float64], states: npt.NDArray[np.int32],
+                          observations: npt.NDArray[np.int32], observation_tensor: npt.NDArray[np.float64],
                           transition_tensor: npt.NDArray[np.float64]) \
             -> npt.NDArray[np.float64]:
         """
@@ -642,8 +642,8 @@ class StoppingGameUtil:
         return np.array(b_prime)
 
     @staticmethod
-    def pomdp_bayes_filter(s_prime: int, o: int, a: int, b: npt.NDArray[np.float64], states: npt.NDArray[int],
-                           observations: npt.NDArray[int], observation_tensor: npt.NDArray[np.float64],
+    def pomdp_bayes_filter(s_prime: int, o: int, a: int, b: npt.NDArray[np.float64], states: npt.NDArray[np.int32],
+                           observations: npt.NDArray[np.int32], observation_tensor: npt.NDArray[np.float64],
                            transition_tensor: npt.NDArray[np.float64]) -> float:
         """
         A Bayesian filter to compute b[s_prime] of the POMDP

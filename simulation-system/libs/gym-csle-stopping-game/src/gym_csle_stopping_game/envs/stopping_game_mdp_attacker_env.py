@@ -56,7 +56,8 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
         :param pi2: attacker stage policy
         :return: (obs, reward, terminated, truncated, info)
         """
-        if type(pi2) is int or type(pi2) is float or type(pi2) is np.int64 or type(pi2) is np.float64:
+        if (type(pi2) is int or type(pi2) is float or type(pi2) is np.int64 or type(pi2) is np.int32 # type: ignore
+                or type(pi2) is np.float64): # type: ignore
             a2 = pi2
             if self.latest_attacker_obs is None:
                 raise ValueError("Attacker observation is None")
