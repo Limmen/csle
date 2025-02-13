@@ -36,6 +36,7 @@
       register: docker_swarm_status
       changed_when: false
       ignore_errors: yes
+      failed_when: false
 
     - name: Check if the docker swarm has been initialized
       set_fact:
@@ -45,6 +46,7 @@
       become: true
       command: docker swarm init --advertise-addr "{{ leader_ip }}"
       ignore_errors: yes
+      failed_when: false
       when: not swarm_initialized
 
     - name: List docker swarm join command

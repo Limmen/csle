@@ -49,6 +49,7 @@
         executable: /bin/bash
       ignore_errors: true
       no_log: true
+      failed_when: false
       when: not python_libraries_installed
 
     - name: Modify constants.py file

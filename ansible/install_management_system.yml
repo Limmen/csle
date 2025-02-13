@@ -15,6 +15,7 @@
         executable: /bin/bash
       register: nvm_installed
       ignore_errors: true
+      failed_when: false
 
     - name: Download nvm
       ansible.builtin.get_url:
@@ -54,6 +55,7 @@
         executable: /bin/bash
       register: nvm_node_installed
       ignore_errors: true
+      failed_when: false
 
     - name: Using nvm to install node
       shell: "source /home/{{ user }}/.nvm/nvm.sh && nvm install node"
@@ -62,6 +64,7 @@
       when:
         - nvm_node_installed.rc != 0
       ignore_errors: true
+      failed_when: false
 
     - name: Check if npm is installed
       shell: "source /home/{{ user }}/.nvm/nvm.sh && npm -v"
@@ -69,6 +72,7 @@
         executable: /bin/bash
       register: npm_installed
       ignore_errors: true
+      failed_when: false
 
     - name: Installing npm
       shell: "source /home/{{ user }}/.nvm/nvm.sh && npm install -g npm"
@@ -77,18 +81,21 @@
       when:
         - npm_installed.rc != 0
       ignore_errors: true
+      failed_when: false
 
     - name: Check if the web application is installed
       stat:
         path: "/home/{{ user }}/csle/management-system/csle-mgmt-webapp/node_modules"
       register: web_app_installed
       ignore_errors: true
+      failed_when: false
 
     - name: Check if the web application is built
       stat:
         path: "/home/{{ user }}/csle/management-system/csle-mgmt-webapp/build"
       register: web_app_built
       ignore_errors: true
+      failed_when: false
 
     - name: Install and build web application
       shell: "source /home/{{ user }}/.nvm/nvm.sh && cd /home/{{ user }}/csle/management-system/csle-mgmt-webapp && npm install --legacy-peer-deps && npm run build"
@@ -98,6 +105,7 @@
         - not web_app_installed.stat.exists
         - not web_app_built.stat.exists
       ignore_errors: true
+      failed_when: false
 
     - name: List running docker containers
       become: true

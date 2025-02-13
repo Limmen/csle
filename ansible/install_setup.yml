@@ -94,6 +94,7 @@
       register: variable_exists
       ignore_errors: true
       no_log: true
+      failed_when: false
 
     - name: Add environment variable to .bashrc if not already present
       lineinfile:
