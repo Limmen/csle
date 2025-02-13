@@ -18,22 +18,10 @@
   connection: local
   gather_facts: false
   tasks:
-    - name: Debug resolved path
-      debug:
-        msg: "python /home/{{ user }}/csle/ansible/start_services.py {{ leader_ip }} {{ user }} {{ conda_environment_name }}"
-
-    - name: Check file existence
-      stat:
-       path: "/home/kim/csle/ansible/start_services.py"
-      register: script_file
 
     - name: Execute start script on the leader node
-      command: "python /home/{{ user }}/csle/ansible/start_services.py {{ leader_ip }} {{ user }} {{ conda_environment_name }}"
-      become: true
-      become_user: "{{ user }}"
+      command: "python ./start_services.py {{ leader_ip }} {{ user }} {{ conda_environment_name }}"
 
     - name: Execute start scripts on the worker nodes
-      command: "python /home/{{ user }}/csle/ansible/start_services.py {{ item }} {{ user }} {{ conda_environment_name }}"
+      command: "python ./start_services.py {{ item }} {{ user }} {{ conda_environment_name }}"
       loop: "{{ groups['worker'] }}"
-      become: true
-      become_user: "{{ user }}"
