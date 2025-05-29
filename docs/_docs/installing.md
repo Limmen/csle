@@ -1038,21 +1038,20 @@ chmod u+x install.sh
 Listing 89: Commands to install the management system and associated tools.
 </p>
 
-Next, configure the IP of the leader by editing the following file on the leader:
+Next, configure the IP of the leader by editing the following files on each server (leader and workers):
 ```bash
-csle/management-system/csle-mgmt-webapp/src
-    /components/Common/serverIp.js
+csle/management-system/csle-mgmt-webapp/src/components/Common/serverIp.js
+csle/management-system/csle-mgmt-webapp/server/server.py 
 ```
 
 <p class="captionFig">
-Listing 90: File to configure the IPs of servers in the management system.
+Listing 90: Files to configure the IPs of servers in the management system.
 </p>
 
 Next, configure the port of the web interface on the leader by editing the file:
 
 ```bash
-  csle/management-system/csle-mgmt-webapp/src
-      /components/Common/serverPort.js
+  csle/management-system/csle-mgmt-webapp/src/components/Common/serverPort.js
 ```
 
 <p class="captionFig">
