@@ -239,13 +239,14 @@ class MGMT_WEBAPP:
     WS_CONTAINER_TERMINAL_NAMESPACE = "container-terminal"
     CONTAINER_TERMINAL_SSH_SHELL = "container-terminal-ssh-shell"
     CONTAINER_TERMINAL_SSH_CONNECTION = "container-terminal-ssh-connection"
+    RECOVERY_AI_RESOURCE = "recovery-ai"
+    RECOVERY_AI_PAGE_RESOURCE = "recovery-ai-page"
 
 
 class SESSION_TOKENS:
     """
     Constants related to session tokens
     """
-
     EXPIRE_TIME_HOURS = 48
 
 

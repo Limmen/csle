@@ -74,6 +74,8 @@ from csle_rest_api.resources.version.routes import version_bp
 from csle_rest_api.resources.logs.routes import logs_bp
 from csle_rest_api.resources.create_emulation.routes import create_emulation_bp
 from csle_rest_api.web_sockets.container_terminal.container_terminal import get_container_terminal_bp
+from csle_rest_api.pages.recovery_ai.routes import get_recovery_ai_page_bp
+from csle_rest_api.resources.recovery_ai.routes import recovery_ai_bp
 import csle_rest_api.constants.constants as api_constants
 
 
@@ -85,7 +87,7 @@ def create_app(static_folder: str):
     :return: the flask app
     """
     app = Flask(__name__, static_url_path='', static_folder=static_folder)
-    CORS(app) # allow CORS for all domains on all routes.
+    CORS(app)  # allow CORS for all domains on all routes.
     app.config[api_constants.MGMT_WEBAPP.CORS_HEADERS] = api_constants.MGMT_WEBAPP.CONTENT_TYPE
 
     app.register_blueprint(get_emulations_page_bp(static_folder=f"../../{static_folder}"),
@@ -180,6 +182,9 @@ def create_app(static_folder: str):
     app.register_blueprint(get_register_page_bp(static_folder=f"../../{static_folder}"),
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.REGISTER_PAGE_RESOURCE}")
+    app.register_blueprint(get_recovery_ai_page_bp(static_folder=f"../../{static_folder}"),
+                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
+                                      f"{api_constants.MGMT_WEBAPP.RECOVERY_AI_PAGE_RESOURCE}")
     app.register_blueprint(emulations_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}")
@@ -287,6 +292,9 @@ def create_app(static_folder: str):
     app.register_blueprint(create_emulation_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.CREATE_EMULATION_RESOURCE}")
+    app.register_blueprint(
+        recovery_ai_bp,
+        url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.RECOVERY_AI_RESOURCE}")
     web_sockets_container_terminal_bp = get_container_terminal_bp(app)
     app.register_blueprint(web_sockets_container_terminal_bp)
 
@@ -296,6 +304,7 @@ def create_app(static_folder: str):
         :return: the root page of the management application
         """
         return app.send_static_file(api_constants.MGMT_WEBAPP.STATIC_RESOURCE_INDEX)
+
     socketio.init_app(app)
     return app
 

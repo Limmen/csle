@@ -1,0 +1,35 @@
+.faSymbolLabel {
+    margin-right: 10px;
+}
+
+.incResponse {
+    margin-top: -30px;
+}
+
+.reasoning {
+    margin-top: -20px;
+}
+
+.reasoningTitle {
+    margin-top: -10px;
+}
+
+.shieldIcon {
+    margin-top: -20px;
+}
+
+.incDetected {
+    font-style: italic;
+}
+
+.incTitle {
+    font-weight: bolder;
+}
+
+.incidentCheckbox {
+    margin-left: -20px;
+}
+
+.incidentDescription {
+    margin-left: -20px;
+}

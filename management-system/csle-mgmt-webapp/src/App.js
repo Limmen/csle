@@ -23,6 +23,7 @@ import ControlPlane from "./components/MainContainer/ControlPlane/ControlPlane";
 import SDNControllers from "./components/MainContainer/SDNControllers/SDNControllers";
 import Downloads from "./components/MainContainer/Downloads/Downloads";
 import CreateEmulation from "./components/MainContainer/CreateEmulation/CreateEmulation";
+import RecoveryAI from './components/MainContainer/RecoveryAI/RecoveryAI'
 import ServerCluster from "./components/MainContainer/ServerCluster/ServerCluster";
 import ContainerTerminal from "./components/MainContainer/ContainerTerminal/ContainerTerminal";
 import {BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
@@ -51,7 +52,8 @@ import {
     SYSTEM_MODELS_PAGE_RESOURCE,
     JOBS_PAGE_RESOURCE,
     SERVER_CLUSTER_PAGE_RESOURCE,
-    CREATE_EMULATION_PAGE
+    CREATE_EMULATION_PAGE_RESOURCE,
+    RECOVERY_AI_PAGE_RESOURCE
 } from "./components/Common/constants";
 
 function App() {
@@ -204,9 +206,15 @@ function App() {
                                     </ProtectedRoute>
                                 }>
                                 </Route>
-                                <Route path={CREATE_EMULATION_PAGE} index element={
+                                <Route path={CREATE_EMULATION_PAGE_RESOURCE} index element={
                                     <ProtectedRoute>
                                         <CreateEmulation sessionData={sessionData} setSessionData={setSessionData} />
+                                    </ProtectedRoute>
+                                }>
+                                </Route>
+                                <Route path={RECOVERY_AI_PAGE_RESOURCE} index element={
+                                    <ProtectedRoute>
+                                        <RecoveryAI sessionData={sessionData} setSessionData={setSessionData} />
                                     </ProtectedRoute>
                                 }>
                                 </Route>
