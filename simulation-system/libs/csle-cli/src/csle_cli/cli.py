@@ -4320,7 +4320,7 @@ def list_all(all: bool = False, running: bool = True, stopped: bool = False) -> 
                                                    f"ip:{node.ip}, port:{constants.COMMANDS.NODE_EXPORTER_PORT}",
                         bold=False)
         else:
-            click.secho("Node exporter status: " + f" {click.style('[stopped],', fg='red')} ip:{node.ip}",
+            click.secho("Node exporter status: " + f" {click.style('[stopped]', fg='red')} ip:{node.ip}",
                         bold=False)
         if node_status.cAdvisorRunning:
             click.secho("cAdvisor status: " + f" {click.style('[running]', fg='green')} "
