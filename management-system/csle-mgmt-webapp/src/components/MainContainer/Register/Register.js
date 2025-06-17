@@ -29,7 +29,7 @@ const Register = () => {
 
     const createUser = useCallback((userConfiguration) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${USERS_RESOURCE}/${CREATE_SUBRESOURCE}`,
+            `/${USERS_RESOURCE}/${CREATE_SUBRESOURCE}`,
             {
                 method: HTTP_REST_POST,
                 headers: new Headers({
@@ -74,7 +74,8 @@ const Register = () => {
             "email": email,
             "first_name": firstName,
             "last_name": lastName,
-            "organization": organization
+            "organization": organization,
+            "admin": false
         }
         if (username === "" || password === "") {
             alert.show("Username or password cannot be empty")

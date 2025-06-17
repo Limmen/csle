@@ -49,7 +49,7 @@ const AlphaVecPolicies = (props) => {
 
     const fetchAlphaVecPolicy = useCallback((alpha_vec_policy_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${ALPHA_VEC_POLICIES_RESOURCE}/${alpha_vec_policy_id.value}`
+            (`/${ALPHA_VEC_POLICIES_RESOURCE}/${alpha_vec_policy_id.value}`
                 + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_GET,
@@ -80,7 +80,7 @@ const AlphaVecPolicies = (props) => {
 
     const fetchAlphaVecPoliciesIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${ALPHA_VEC_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `/${ALPHA_VEC_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -125,7 +125,7 @@ const AlphaVecPolicies = (props) => {
 
     const removeAlphaVecPoliciesRequest = useCallback((alpha_vec_policies_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${ALPHA_VEC_POLICIES_RESOURCE}/${alpha_vec_policies_id}`
+            (`/${ALPHA_VEC_POLICIES_RESOURCE}/${alpha_vec_policies_id}`
                 + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_DELETE,
@@ -154,7 +154,7 @@ const AlphaVecPolicies = (props) => {
 
     const removeAllAlphaVecPoliciesRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${ALPHA_VEC_POLICIES_RESOURCE}`
+            `/${ALPHA_VEC_POLICIES_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,

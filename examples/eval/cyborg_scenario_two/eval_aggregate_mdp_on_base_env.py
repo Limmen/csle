@@ -316,6 +316,9 @@ if __name__ == '__main__':
     action_id_to_type_and_host, type_and_host_to_action_id \
         = CyborgEnvUtil.get_action_dicts(scenario=2, reduced_action_space=True, decoy_state=True,
                                          decoy_optimization=False)
+    print(CyborgEnvUtil.get_cyborg_hosts())
+    import sys
+    sys.exit(0)
     N = 10000
     max_env_steps = 100
     mu = np.loadtxt("./mu2.txt")

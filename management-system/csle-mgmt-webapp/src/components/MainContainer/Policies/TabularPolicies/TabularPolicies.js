@@ -50,7 +50,7 @@ const TabularPolicies = (props) => {
 
     const fetchTabularPolicy = useCallback((tabular_policy_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${TABULAR_POLICIES_RESOURCE}/${tabular_policy_id.value}`
+            (`/${TABULAR_POLICIES_RESOURCE}/${tabular_policy_id.value}`
                 + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_GET,
@@ -81,7 +81,7 @@ const TabularPolicies = (props) => {
 
     const fetchTabularPoliciesIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${TABULAR_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `/${TABULAR_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -127,7 +127,7 @@ const TabularPolicies = (props) => {
 
     const removeTabularPoliciesRequest = useCallback((tabular_policy_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${TABULAR_POLICIES_RESOURCE}/${tabular_policy_id}`
+            `/${TABULAR_POLICIES_RESOURCE}/${tabular_policy_id}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,
@@ -156,7 +156,7 @@ const TabularPolicies = (props) => {
 
     const removeAllTabularPoliciesRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${TABULAR_POLICIES_RESOURCE}`
+            `/${TABULAR_POLICIES_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,

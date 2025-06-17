@@ -48,7 +48,7 @@ const VectorPolicies = (props) => {
 
     const fetchVectorPolicy = useCallback((vector_policy_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${VECTOR_POLICIES_RESOURCE}/${vector_policy_id.value}`
+            (`/${VECTOR_POLICIES_RESOURCE}/${vector_policy_id.value}`
                 + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_GET,
@@ -79,7 +79,7 @@ const VectorPolicies = (props) => {
 
     const fetchVectorPoliciesIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${VECTOR_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `/${VECTOR_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -124,7 +124,7 @@ const VectorPolicies = (props) => {
 
     const removeVectorPoliciesRequest = useCallback((vector_policy_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${VECTOR_POLICIES_RESOURCE}/${vector_policy_id}`
+            `/${VECTOR_POLICIES_RESOURCE}/${vector_policy_id}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,
@@ -153,7 +153,7 @@ const VectorPolicies = (props) => {
 
     const removeAllVectorPoliciesRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${VECTOR_POLICIES_RESOURCE}`
+            `/${VECTOR_POLICIES_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,

@@ -50,7 +50,7 @@ const MultiThesholdPolicies = (props) => {
 
     const fetchMultiThresholdPolicy = useCallback((multi_threshold_policy_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${MULTI_THRESHOLD_POLICIES_RESOURCE}/${multi_threshold_policy_id.value}` +
+            (`/${MULTI_THRESHOLD_POLICIES_RESOURCE}/${multi_threshold_policy_id.value}` +
                 `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_GET,
@@ -80,7 +80,7 @@ const MultiThesholdPolicies = (props) => {
 
     const fetchMultiThresholdPoliciesIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${MULTI_THRESHOLD_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `/${MULTI_THRESHOLD_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -125,7 +125,7 @@ const MultiThesholdPolicies = (props) => {
 
     const removeMultiThresholdPoliciesRequest = useCallback((multi_threshold_policy_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${MULTI_THRESHOLD_POLICIES_RESOURCE}/${multi_threshold_policy_id}`
+            (`/${MULTI_THRESHOLD_POLICIES_RESOURCE}/${multi_threshold_policy_id}`
                 + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_DELETE,
@@ -154,7 +154,7 @@ const MultiThesholdPolicies = (props) => {
 
     const removeAllMultiThresholdPoliciesRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${MULTI_THRESHOLD_POLICIES_RESOURCE}`
+            `/${MULTI_THRESHOLD_POLICIES_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,

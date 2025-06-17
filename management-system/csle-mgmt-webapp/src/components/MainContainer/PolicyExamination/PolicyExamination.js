@@ -154,7 +154,7 @@ const PolicyExamination = (props) => {
     }, [])
 
     const fetchTraces = useCallback(() => {
-        fetch(`${HTTP_PREFIX}${ip}:${port}/${EMULATION_SIMULATION_TRACES_RESOURCE}`
+        fetch(`/${EMULATION_SIMULATION_TRACES_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`, {
             method: HTTP_REST_GET,
             headers: new Headers({

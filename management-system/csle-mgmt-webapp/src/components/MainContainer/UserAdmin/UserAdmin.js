@@ -76,7 +76,7 @@ const UserAdmin = (props) => {
 
     const fetchUsers = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${USERS_RESOURCE}`
+            `/${USERS_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -108,7 +108,7 @@ const UserAdmin = (props) => {
 
     const updateUser = useCallback((user) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${USERS_RESOURCE}/${user.id}`
+            `/${USERS_RESOURCE}/${user.id}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_PUT,

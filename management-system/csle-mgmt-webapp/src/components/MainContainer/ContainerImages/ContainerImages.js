@@ -43,7 +43,7 @@ const ContainerImages = (props) => {
          * @type {(function(): void)|*}
          */
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${IMAGES_RESOURCE}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `/${IMAGES_RESOURCE}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: "GET",
                 headers: new Headers({

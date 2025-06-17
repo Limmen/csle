@@ -325,7 +325,7 @@ const CreateEmulation = (props) => {
       };
 
       fetch(
-        `${HTTP_PREFIX}${ip}:${port}/${CREATE_EMULATION_RESOURCE}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+        `/${CREATE_EMULATION_RESOURCE}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
         {
           method: "POST",
           headers: new Headers({

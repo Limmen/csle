@@ -42,7 +42,7 @@ const Simulations = (props) => {
 
     const fetchSimulation = useCallback((simulation_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${SIMULATIONS_RESOURCE}/${simulation_id.value}`
+            `/${SIMULATIONS_RESOURCE}/${simulation_id.value}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -72,7 +72,7 @@ const Simulations = (props) => {
 
     const fetchSimulationsIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${SIMULATIONS_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `/${SIMULATIONS_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -117,7 +117,7 @@ const Simulations = (props) => {
 
     const removeAllSimulationsRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${SIMULATIONS_RESOURCE}`
+            `/${SIMULATIONS_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,
@@ -152,7 +152,7 @@ const Simulations = (props) => {
 
     const removeSimulationRequest = useCallback((simulation_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${SIMULATIONS_RESOURCE}/${simulation_id}`
+            `/${SIMULATIONS_RESOURCE}/${simulation_id}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,

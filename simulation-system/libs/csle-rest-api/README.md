@@ -212,9 +212,11 @@ A REST API for the CSLE management platform.
 - `dnspython` (for HTTP server)
 - `gevent` (for HTTP server)
 - `paramiko` (for terminal emulation)
-- `types-paramiko` (for terminal emulation)
 - `requests` (for making HTTP requests)
-- `types-requests` (for making HTTP requests)
+- `peft` (for serving LLMs)
+- `transformers` (for serving LLMs)
+- `accelerate` (for serving LLMs)
+- `bitsandbytes` (for serving LLMs)
 
 ## Development Requirements
 

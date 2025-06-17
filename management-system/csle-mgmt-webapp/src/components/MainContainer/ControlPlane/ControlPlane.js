@@ -46,7 +46,7 @@ const ControlPlane = (props) => {
 
     const fetchSelectedExecution = useCallback((id_obj) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${EMULATION_EXECUTIONS_RESOURCE}/${id_obj.value.id}?`
+            (`/${EMULATION_EXECUTIONS_RESOURCE}/${id_obj.value.id}?`
                 + `${EMULATION_QUERY_PARAM}=${id_obj.value.emulation}&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_GET,
@@ -117,7 +117,7 @@ const ControlPlane = (props) => {
     );
 
     const fetchExecutionInfo = useCallback((id_obj) => fetch(
-        (`${HTTP_PREFIX}${ip}:${port}/${EMULATION_EXECUTIONS_RESOURCE}/${id_obj.value.id}/${INFO_SUBRESOURCE}?`
+        (`/${EMULATION_EXECUTIONS_RESOURCE}/${id_obj.value.id}/${INFO_SUBRESOURCE}?`
             +`${EMULATION_QUERY_PARAM}=${id_obj.value.emulation}&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
         {
             method: HTTP_REST_GET,
@@ -186,7 +186,7 @@ const ControlPlane = (props) => {
 
     const fetchEmulationExecutionIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${EMULATION_EXECUTIONS_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `/${EMULATION_EXECUTIONS_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,

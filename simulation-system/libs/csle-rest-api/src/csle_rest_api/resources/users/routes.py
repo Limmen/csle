@@ -184,9 +184,7 @@ def create_user() -> Tuple[Response, int]:
             password = json_data[api_constants.MGMT_WEBAPP.PASSWORD_PROPERTY]
             first_name = json_data[api_constants.MGMT_WEBAPP.FIRST_NAME_PROPERTY]
             last_name = json_data[api_constants.MGMT_WEBAPP.LAST_NAME_PROPERTY]
-            organization = json_data[
-                api_constants.MGMT_WEBAPP.ORGANIZATION_PROPERTY
-            ]
+            organization = json_data[api_constants.MGMT_WEBAPP.ORGANIZATION_PROPERTY]
             email = json_data[api_constants.MGMT_WEBAPP.EMAIL_PROPERTY]
             if password == "" or username == "":
                 error_reason = "Password or username cannot be empty."

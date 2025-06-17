@@ -64,7 +64,7 @@ const SystemAdmin = (props) => {
 
     const fetchConfig = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${CONFIG_RESOURCE}`
+            `/${CONFIG_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -97,7 +97,7 @@ const SystemAdmin = (props) => {
 
     const updateConfig = useCallback((config) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${CONFIG_RESOURCE}`
+            `/${CONFIG_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_PUT,

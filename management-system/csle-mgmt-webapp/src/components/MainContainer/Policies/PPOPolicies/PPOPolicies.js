@@ -49,7 +49,7 @@ const PPOPolicies = (props) => {
 
     const fetchPpoPolicy = useCallback((ppo_policy_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${PPO_POLICIES_RESOURCE}/${ppo_policy_id.value}`
+            `/${PPO_POLICIES_RESOURCE}/${ppo_policy_id.value}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -80,7 +80,7 @@ const PPOPolicies = (props) => {
 
     const fetchPPOPoliciesIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${PPO_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `/${PPO_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -125,7 +125,7 @@ const PPOPolicies = (props) => {
 
     const removePpoPoliciesRequest = useCallback((ppo_policy_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${PPO_POLICIES_RESOURCE}/${ppo_policy_id}`
+            `/${PPO_POLICIES_RESOURCE}/${ppo_policy_id}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,
@@ -154,7 +154,7 @@ const PPOPolicies = (props) => {
 
     const removeAllPpoPoliciesRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${PPO_POLICIES_RESOURCE}` +
+            `/${PPO_POLICIES_RESOURCE}` +
             `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,

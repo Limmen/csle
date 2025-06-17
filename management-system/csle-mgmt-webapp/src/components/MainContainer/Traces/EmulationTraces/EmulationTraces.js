@@ -48,7 +48,7 @@ const EmulationTraces = (props) => {
 
     const fetchEmulationTrace = useCallback((trace_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${EMULATION_TRACES_RESOURCE}/${trace_id.value}`
+            `/${EMULATION_TRACES_RESOURCE}/${trace_id.value}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -78,7 +78,7 @@ const EmulationTraces = (props) => {
 
     const fetchEmulationTracesIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${EMULATION_TRACES_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `/${EMULATION_TRACES_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -122,7 +122,7 @@ const EmulationTraces = (props) => {
 
     const removeEmulationTraceRequest = useCallback((emulation_trace_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${EMULATION_TRACES_RESOURCE}/${emulation_trace_id}`
+            `/${EMULATION_TRACES_RESOURCE}/${emulation_trace_id}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,
@@ -151,7 +151,7 @@ const EmulationTraces = (props) => {
 
     const removeAllEmulationTracesRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${EMULATION_TRACES_RESOURCE}`
+            `/${EMULATION_TRACES_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,

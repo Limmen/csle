@@ -100,6 +100,7 @@ export const STATISTICS_DATASETS_RESOURCE = "statistics-datasets"
 export const SIMULATIONS_RESOURCE = "simulations"
 export const EMULATION_STATISTICS_RESOURCE = "emulation-statistics"
 export const RECOVERY_AI_RESOURCE = "recovery-ai"
+export const RECOVERY_AI_EXAMPLE_RESOURCE = "example"
 export const IMAGES_RESOURCE = "images"
 export const FILE_RESOURCE = "file"
 export const LOGIN_RESOURCE = "login"
@@ -337,3 +338,9 @@ export const DEFAULT_INTERFACE_CONFIG = {
     trafficManagerLogDir: "/",
     trafficManagerMaxWorkers: "10"
 }
+export const RECOVERY_AI_INCIDENT_FIELD = "Incident"
+export const RECOVERY_AI_INCIDENT_DESCRIPTION_FIELD = "Incident description"
+export const RECOVERY_AI_MITRE_ATTACK_TACTICS_FIELD = "MITRE ATT&CK Tactics"
+export const RECOVERY_AI_MITRE_ATTACK_TECHNIQUES_FIELD = "MITRE ATT&CK Techniques"
+export const RECOVERY_AI_RECOVERY_ACTIONS_FIELD = "Recovery actions"
+export const RECOVERY_AI_ACTION_EXPLANATIONS_FIELD = "Action explanations"

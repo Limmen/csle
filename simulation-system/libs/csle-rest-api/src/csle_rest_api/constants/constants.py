@@ -1,6 +1,7 @@
 """
 Constants for csle-rest-api
 """
+import re
 
 
 class MGMT_WEBAPP:
@@ -241,6 +242,11 @@ class MGMT_WEBAPP:
     CONTAINER_TERMINAL_SSH_CONNECTION = "container-terminal-ssh-connection"
     RECOVERY_AI_RESOURCE = "recovery-ai"
     RECOVERY_AI_PAGE_RESOURCE = "recovery-ai-page"
+    RECOVERY_AI_THINK_END_DELIMITER = "</think>"
+    RECOVERY_AI_JSON_SYSTEM_DESCRIPTION = "systemDescription"
+    RECOVERY_AI_JSON_LOGS = "networkLogs"
+    RECOVERY_AI_DATA_DELIMITER = "data:"
+    EVENT_STREAM_CONTENT_TYPE = "text/event-stream"
 
 
 class SESSION_TOKENS:
@@ -323,3 +329,28 @@ class CREATE_EMULATION_PAGE:
     USERS = "users"
     PORT = "port"
     SERVICES = "services"
+
+
+class LLM:
+    """
+    String constants related to LLMs
+    """
+    DEEPSEEK_32B_QWEN = "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B"
+    DEEPSEEK_14B_QWEN = "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B"
+    DEEPSEEK_7B_QWEN = "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B"
+    DEEPSEEK_1_5B_QWEN = "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B"
+    DEEPSEEK_8B_LLAMA = "deepseek-ai/DeepSeek-R1-Distill-Llama-8B"
+    LLAMA_1B_INSTRUCT = "meta-llama/Llama-3.2-1B-Instruct"
+    MISTRAL_7B_INSTRUCT = "mistralai/Mistral-7B-Instruct-v0.3"
+    QWEN_14B = "Qwen/Qwen3-14B"
+    SDPA = "sdpa"
+    NF4 = "nf4"
+
+
+class RAG:
+    """
+    String constants related to RAG
+    """
+    OTX_API_KEY = "d6110d660939deabf8103294a0e39f91553c3cab3ba340e3b9d0a62fb68a4cfe"
+    OTX_BASE_URL = "https://otx.alienvault.com/api/v1/indicators"
+    OTX_HEADERS = {"X-OTX-API-KEY": OTX_API_KEY}

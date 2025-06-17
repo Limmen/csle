@@ -12,6 +12,8 @@
 
 .reasoningTitle {
     margin-top: -10px;
+    white-space: pre-wrap;   /* keep \n but allow wrapping */
+    word-break: break-word;  /* break long words/URLs if needed */
 }
 
 .shieldIcon {
@@ -30,6 +32,28 @@
     margin-left: -20px;
 }
 
-.incidentDescription {
-    margin-left: -20px;
+.analysisSpinner {
+    margin-left: 30px;
+    font-style: italic;
+    color: gray;
+}
+
+.generateSpinner {
+    margin-right: 15px;
+}
+
+.resetButton {
+    margin-left: 20px
+}
+
+.planCard {
+    margin-top: -58px;
+}
+
+.planDownloadButton {
+    margin-left: 20px
+}
+
+.exampleSpinner {
+    margin-right: 10px;
 }

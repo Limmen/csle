@@ -74,7 +74,7 @@ const EmulationStatistics = (props) => {
 
     const fetchEmulationStatistic = useCallback((statistic_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${EMULATION_STATISTICS_RESOURCE}/${statistic_id.value}` +
+            (`/${EMULATION_STATISTICS_RESOURCE}/${statistic_id.value}` +
                 `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_GET,
@@ -254,7 +254,7 @@ const EmulationStatistics = (props) => {
 
     const fetchEmulationStatisticsIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${EMULATION_STATISTICS_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `/${EMULATION_STATISTICS_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -322,7 +322,7 @@ const EmulationStatistics = (props) => {
 
     const removeEmulationStatisticRequest = useCallback((statistic_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${EMULATION_STATISTICS_RESOURCE}/${statistic_id}` +
+            `/${EMULATION_STATISTICS_RESOURCE}/${statistic_id}` +
             `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,

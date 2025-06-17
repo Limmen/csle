@@ -123,7 +123,7 @@ const Monitoring = (props) => {
 
 
     const fetchMonitoringData = useCallback((len, execution) => fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${EMULATIONS_RESOURCE}/${execution.emulation_env_config.id}` +
+            (`/${EMULATIONS_RESOURCE}/${execution.emulation_env_config.id}` +
                 `/${EXECUTIONS_SUBRESOURCE}/${execution.ip_first_octet}/${MONITOR_SUBRESOURCE}/${len}`
                 + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
@@ -177,7 +177,7 @@ const Monitoring = (props) => {
 
     const fetchSelectedExecution = useCallback((id_obj) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${EMULATION_EXECUTIONS_RESOURCE}/${id_obj.value.id}`
+            (`/${EMULATION_EXECUTIONS_RESOURCE}/${id_obj.value.id}`
                 + `?${EMULATION_QUERY_PARAM}=${id_obj.value.emulation}`
                 + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
@@ -432,7 +432,7 @@ const Monitoring = (props) => {
 
     const fetchEmulationExecutionIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${EMULATION_EXECUTIONS_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `/${EMULATION_EXECUTIONS_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,

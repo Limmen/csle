@@ -50,7 +50,7 @@ const FnnWSoftmaxPolicies = (props) => {
 
     const fetchFnnWSoftmaxPolicy = useCallback((fnn_w_softmax_policy_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${FNN_W_SOFTMAX_POLICIES_RESOURCE}/${fnn_w_softmax_policy_id.value}` +
+            (`/${FNN_W_SOFTMAX_POLICIES_RESOURCE}/${fnn_w_softmax_policy_id.value}` +
                 `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_GET,
@@ -81,7 +81,7 @@ const FnnWSoftmaxPolicies = (props) => {
 
     const fetchFnnWSoftmaxPoliciesIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${FNN_W_SOFTMAX_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `/${FNN_W_SOFTMAX_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -126,7 +126,7 @@ const FnnWSoftmaxPolicies = (props) => {
 
     const removeFnnWSoftmaxPoliciesRequest = useCallback((fnn_w_softmax_policy_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${FNN_W_SOFTMAX_POLICIES_RESOURCE}/${fnn_w_softmax_policy_id}` +
+            (`/${FNN_W_SOFTMAX_POLICIES_RESOURCE}/${fnn_w_softmax_policy_id}` +
                 `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_DELETE,
@@ -155,7 +155,7 @@ const FnnWSoftmaxPolicies = (props) => {
 
     const removeAllFnnWSoftmaxPoliciesRequest = useCallback(() => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${FNN_W_SOFTMAX_POLICIES_RESOURCE}`
+            (`/${FNN_W_SOFTMAX_POLICIES_RESOURCE}`
                 + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_DELETE,

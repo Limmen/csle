@@ -48,7 +48,7 @@ const SimulationTraces = (props) => {
 
     const fetchSimulationTrace = useCallback((trace_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${SIMULATION_TRACES_RESOURCE}/${trace_id.value}`
+            `/${SIMULATION_TRACES_RESOURCE}/${trace_id.value}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -78,7 +78,7 @@ const SimulationTraces = (props) => {
 
     const fetchSimulationTracesIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${SIMULATION_TRACES_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `/${SIMULATION_TRACES_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -122,7 +122,7 @@ const SimulationTraces = (props) => {
 
     const removeSimulationTraceRequest = useCallback((simulation_trace_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${SIMULATION_TRACES_RESOURCE}/${simulation_trace_id}`
+            (`/${SIMULATION_TRACES_RESOURCE}/${simulation_trace_id}`
                 + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_DELETE,
@@ -158,7 +158,7 @@ const SimulationTraces = (props) => {
 
     const removeAllSimulationTracesRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${SIMULATION_TRACES_RESOURCE}`
+            `/${SIMULATION_TRACES_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,

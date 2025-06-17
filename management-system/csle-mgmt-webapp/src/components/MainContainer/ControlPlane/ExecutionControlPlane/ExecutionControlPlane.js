@@ -112,7 +112,7 @@ const ExecutionControlPlane = (props) => {
 
     const fetchLogs = useCallback((name, entity) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${LOGS_RESOURCE}/${entity}?${TOKEN_QUERY_PARAM}=`
+            `/${LOGS_RESOURCE}/${entity}?${TOKEN_QUERY_PARAM}=`
             +`${props.sessionData.token}&${EMULATION_QUERY_PARAM}=${props.execution.emulation_name}&`
             +`${EXECUTION_ID_QUERY_PARAM}=${props.execution.ip_first_octet}`,
             {
@@ -142,7 +142,7 @@ const ExecutionControlPlane = (props) => {
 
     const startOrStopEntity = useCallback((id, emulation, start, stop, entity, name, node_ip) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${EMULATION_EXECUTIONS_RESOURCE}/${id}/${entity}?`
+            `/${EMULATION_EXECUTIONS_RESOURCE}/${id}/${entity}?`
             +`${EMULATION_QUERY_PARAM}=${emulation}&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_POST,

@@ -14,6 +14,8 @@ eventlet==0.33.2
 dnspython==2.2.1
 gevent==22.10.2
 paramiko==3.2.0
-types-paramiko==3.2.0.0
 requests==2.31.0
-types-requests==2.31.0.1
+peft==0.15.2
+transformers==4.52.1
+accelerate==1.7.0
+bitsandbytes==0.45.5

@@ -182,7 +182,7 @@ const SystemModels = (props) => {
 
     const fetchEmpiricalSystemModel = useCallback((model_id_obj) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${EMPIRICAL_SYSTEM_MODELS_RESOURCE}/`
+            (`/${EMPIRICAL_SYSTEM_MODELS_RESOURCE}/`
                 + `${parseInt(model_id_obj.value.split("_")[0])}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_GET,
@@ -236,7 +236,7 @@ const SystemModels = (props) => {
 
     const fetchMCMCSystemModel = useCallback((model_id_obj) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${MCMC_SYSTEM_MODELS_RESOURCE}/`
+            (`/${MCMC_SYSTEM_MODELS_RESOURCE}/`
                 + `${parseInt(model_id_obj.value.split("_")[0])}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_GET,
@@ -287,7 +287,7 @@ const SystemModels = (props) => {
 
     const fetchGPSystemModel = useCallback((model_id_obj) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${GP_SYSTEM_MODELS_RESOURCE}/`
+            (`/${GP_SYSTEM_MODELS_RESOURCE}/`
                 + `${parseInt(model_id_obj.value.split("_")[0])} ?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_GET,
@@ -343,7 +343,7 @@ const SystemModels = (props) => {
 
     const fetchGaussianMixtureSystemModel = useCallback((model_id_obj) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE}/`
+            (`/${GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE}/`
                 + `${parseInt(model_id_obj.value.split("_")[0])}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_GET,
@@ -398,7 +398,7 @@ const SystemModels = (props) => {
 
     const fetchSystemModelsIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${SYSTEM_MODELS_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `/${SYSTEM_MODELS_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -463,7 +463,7 @@ const SystemModels = (props) => {
 
     const removeGaussianMixtureSystemModelRequest = useCallback((model_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE}/${model_id}`
+            (`/${GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE}/${model_id}`
                 + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_DELETE,
@@ -492,7 +492,7 @@ const SystemModels = (props) => {
 
     const removeEmpiricalSystemModelRequest = useCallback((model_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${EMPIRICAL_SYSTEM_MODELS_RESOURCE}/${model_id}`
+            (`/${EMPIRICAL_SYSTEM_MODELS_RESOURCE}/${model_id}`
                 + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_DELETE,
@@ -521,7 +521,7 @@ const SystemModels = (props) => {
 
     const removeMCMCSystemModelRequest = useCallback((model_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${MCMC_SYSTEM_MODELS_RESOURCE}/${model_id}`
+            (`/${MCMC_SYSTEM_MODELS_RESOURCE}/${model_id}`
                 + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_DELETE,
@@ -550,7 +550,7 @@ const SystemModels = (props) => {
 
     const removeGpSystemModelRequest = useCallback((model_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${GP_SYSTEM_MODELS_RESOURCE}/${model_id}`
+            (`/${GP_SYSTEM_MODELS_RESOURCE}/${model_id}`
                 + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_DELETE,

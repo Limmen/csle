@@ -49,7 +49,7 @@ const SystemIdentificationJobs = (props) => {
 
     const fetchSystemIdentificationJob = useCallback((system_identification_job_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${SYSTEM_IDENTIFICATION_JOBS_RESOURCE}/` +
+            (`/${SYSTEM_IDENTIFICATION_JOBS_RESOURCE}/` +
                 `${system_identification_job_id.value}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_GET,
@@ -79,7 +79,7 @@ const SystemIdentificationJobs = (props) => {
 
     const fetchSystemIdentificationJobsIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${SYSTEM_IDENTIFICATION_JOBS_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `/${SYSTEM_IDENTIFICATION_JOBS_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -131,7 +131,7 @@ const SystemIdentificationJobs = (props) => {
 
     const removeSystemIdentificationJobRequest = useCallback((system_identification_job_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${SYSTEM_IDENTIFICATION_JOBS_RESOURCE}/${system_identification_job_id}` +
+            (`/${SYSTEM_IDENTIFICATION_JOBS_RESOURCE}/${system_identification_job_id}` +
                 `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_DELETE,
@@ -161,7 +161,7 @@ const SystemIdentificationJobs = (props) => {
 
     const removeAllSystemIdentificationJobsRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${SYSTEM_IDENTIFICATION_JOBS_RESOURCE}`
+            `/${SYSTEM_IDENTIFICATION_JOBS_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,
@@ -302,7 +302,7 @@ const SystemIdentificationJobs = (props) => {
 
     const stopSystemIdentificationJobRequest = useCallback((system_identification_job_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${SYSTEM_IDENTIFICATION_JOBS_RESOURCE}/${system_identification_job_id}`
+            (`/${SYSTEM_IDENTIFICATION_JOBS_RESOURCE}/${system_identification_job_id}`
                 + `?${STOP_PROPERTY}=true&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_POST,
@@ -338,7 +338,7 @@ const SystemIdentificationJobs = (props) => {
 
     const startSystemIdentificationJobRequest = useCallback((system_identification_job_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${SYSTEM_IDENTIFICATION_JOBS_RESOURCE}/${system_identification_job_id}` +
+            (`/${SYSTEM_IDENTIFICATION_JOBS_RESOURCE}/${system_identification_job_id}` +
                 `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_POST,

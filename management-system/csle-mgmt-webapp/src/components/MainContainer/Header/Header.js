@@ -59,7 +59,7 @@ const Header = (props) => {
 
   const fetchVersion = useCallback(() => {
     fetch(
-      `${HTTP_PREFIX}${ip}:${port}/${VERSION_RESOURCE}`,
+      `/${VERSION_RESOURCE}`,
       {
         method: HTTP_REST_GET,
         headers: new Headers({
@@ -78,7 +78,7 @@ const Header = (props) => {
 
   const fetchRegistrationAllowed = useCallback(() => {
     fetch(
-      `${HTTP_PREFIX}${ip}:${port}/${CONFIG_RESOURCE}/${REGISTRATION_ALLOWED_SUBRESOURCE}`,
+      `/${CONFIG_RESOURCE}/${REGISTRATION_ALLOWED_SUBRESOURCE}`,
       {
         method: HTTP_REST_GET,
         headers: new Headers({

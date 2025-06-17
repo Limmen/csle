@@ -33,7 +33,7 @@ const ChangeUserDataForm = (props) => {
 
     const updateUser = useCallback((user) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${USERS_RESOURCE}/${user.id}?${TOKEN_QUERY_PARAM}=${token}`,
+            `/${USERS_RESOURCE}/${user.id}?${TOKEN_QUERY_PARAM}=${token}`,
             {
                 method: HTTP_REST_PUT,
                 headers: new Headers({

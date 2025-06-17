@@ -49,7 +49,7 @@ const Emulations = (props) => {
 
     const fetchEmulation = useCallback((emulation_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${EMULATIONS_RESOURCE}/${emulation_id.value}`
+            `/${EMULATIONS_RESOURCE}/${emulation_id.value}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -79,7 +79,7 @@ const Emulations = (props) => {
 
     const fetchEmulationIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${EMULATIONS_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `/${EMULATIONS_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -131,7 +131,7 @@ const Emulations = (props) => {
 
     const removeEmulationRequest = useCallback((emulationId) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${EMULATIONS_RESOURCE}/`
+            `/${EMULATIONS_RESOURCE}/`
                 + `${emulationId}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,
@@ -162,7 +162,7 @@ const Emulations = (props) => {
 
     const removeEmulationExecutionRequest = useCallback((emulation_id, execution_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${EMULATIONS_RESOURCE}/${emulation_id}/${EXECUTIONS_SUBRESOURCE}/`
+            (`/${EMULATIONS_RESOURCE}/${emulation_id}/${EXECUTIONS_SUBRESOURCE}/`
                     + `${execution_id}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_DELETE,
@@ -196,7 +196,7 @@ const Emulations = (props) => {
 
     const startOrStopEmulationRequest = useCallback((emulation_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${EMULATIONS_RESOURCE}/${emulation_id}`
+            `/${EMULATIONS_RESOURCE}/${emulation_id}`
                 + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_POST,
@@ -230,7 +230,7 @@ const Emulations = (props) => {
 
     const removeAllEmulationsRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${EMULATIONS_RESOURCE}`
+            `/${EMULATIONS_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,

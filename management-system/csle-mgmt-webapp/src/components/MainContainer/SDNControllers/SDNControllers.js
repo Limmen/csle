@@ -50,7 +50,7 @@ const SDNControllers = (props) => {
 
     const fetchEmulationExecutionWithSdnController = useCallback((id_obj) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${EMULATION_EXECUTIONS_RESOURCE}/${id_obj.value.id}`
+            (`/${EMULATION_EXECUTIONS_RESOURCE}/${id_obj.value.id}`
                 + `?${EMULATION_QUERY_PARAM}=${id_obj.value.emulation}`
                 + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
@@ -81,7 +81,7 @@ const SDNControllers = (props) => {
 
     const fetchEmulationExecutionsWithSdnControllersIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${SDN_CONTROLLERS_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `/${SDN_CONTROLLERS_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,

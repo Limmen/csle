@@ -49,7 +49,7 @@ const DataCollectionJobs = (props) => {
 
     const fetchDataCollectionJob = useCallback((data_collection_job_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${DATA_COLLECTION_JOBS_RESOURCE}/${data_collection_job_id.value}` +
+            (`/${DATA_COLLECTION_JOBS_RESOURCE}/${data_collection_job_id.value}` +
                 `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_GET,
@@ -80,7 +80,7 @@ const DataCollectionJobs = (props) => {
 
     const fetchDataCollectionJobIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${DATA_COLLECTION_JOBS_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `/${DATA_COLLECTION_JOBS_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -202,7 +202,7 @@ const DataCollectionJobs = (props) => {
 
     const removeDataCollectionJobRequest = useCallback((data_collection_job_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${DATA_COLLECTION_JOBS_RESOURCE}/${data_collection_job_id}` +
+            (`/${DATA_COLLECTION_JOBS_RESOURCE}/${data_collection_job_id}` +
                 `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_DELETE,
@@ -232,7 +232,7 @@ const DataCollectionJobs = (props) => {
 
     const removeAllDataCollectionJobsRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${DATA_COLLECTION_JOBS_RESOURCE}`
+            `/${DATA_COLLECTION_JOBS_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,
@@ -373,7 +373,7 @@ const DataCollectionJobs = (props) => {
 
     const stopDataCollectionJobRequest = useCallback((data_collection_job_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${DATA_COLLECTION_JOBS_RESOURCE}/${data_collection_job_id}`
+            (`/${DATA_COLLECTION_JOBS_RESOURCE}/${data_collection_job_id}`
                 + `?${STOP_PROPERTY}=true&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_POST,
@@ -409,7 +409,7 @@ const DataCollectionJobs = (props) => {
 
     const startDataCollectionJobRequest = useCallback((data_collection_job_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${DATA_COLLECTION_JOBS_RESOURCE}/${data_collection_job_id}` +
+            (`/${DATA_COLLECTION_JOBS_RESOURCE}/${data_collection_job_id}` +
                 `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_POST,

@@ -43,7 +43,7 @@ const TrainingResults = (props) => {
 
     const fetchExperiment = useCallback((experiment_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${EXPERIMENTS_RESOURCE}/${experiment_id.value}`
+            `/${EXPERIMENTS_RESOURCE}/${experiment_id.value}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -74,7 +74,7 @@ const TrainingResults = (props) => {
 
     const fetchExperiments = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${EXPERIMENTS_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `/${EXPERIMENTS_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -119,7 +119,7 @@ const TrainingResults = (props) => {
 
     const removeExperimentRequest = useCallback((experiment_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${EXPERIMENTS_RESOURCE}/${experiment_id}`
+            `/${EXPERIMENTS_RESOURCE}/${experiment_id}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,
@@ -148,7 +148,7 @@ const TrainingResults = (props) => {
 
     const removeAllExperimentsRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${EXPERIMENTS_RESOURCE}`
+            `/${EXPERIMENTS_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,

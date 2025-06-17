@@ -49,7 +49,7 @@ const DQNPolicies = (props) => {
 
     const fetchDQNPolicy = useCallback((dqn_policy_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${DQN_POLICIES_RESOURCE}/${dqn_policy_id.value}`
+            `/${DQN_POLICIES_RESOURCE}/${dqn_policy_id.value}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -80,7 +80,7 @@ const DQNPolicies = (props) => {
 
     const fetchDQNPoliciesIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${DQN_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `/${DQN_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -126,7 +126,7 @@ const DQNPolicies = (props) => {
 
     const removeDQNPoliciesRequest = useCallback((dqn_policy_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${DQN_POLICIES_RESOURCE}/${dqn_policy_id}`
+            `/${DQN_POLICIES_RESOURCE}/${dqn_policy_id}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,
@@ -253,7 +253,7 @@ const DQNPolicies = (props) => {
 
     const removeAllDQNPoliciesRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${DQN_POLICIES_RESOURCE}`
+            `/${DQN_POLICIES_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,

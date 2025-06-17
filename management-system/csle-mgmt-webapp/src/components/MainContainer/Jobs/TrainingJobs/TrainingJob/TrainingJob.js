@@ -41,7 +41,7 @@ const TrainingJob = (props) => {
 
     const fetchLogs = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${FILE_RESOURCE}`
+            `/${FILE_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_POST,

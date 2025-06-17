@@ -44,7 +44,7 @@ const Downloads = (props) => {
 
     const fetchTracesDatasets = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${TRACES_DATASETS_RESOURCE}`,
+            `/${TRACES_DATASETS_RESOURCE}`,
             {
                 method: HTTP_REST_GET,
                 headers: new Headers({
@@ -66,7 +66,7 @@ const Downloads = (props) => {
 
     const removeAllTracesDatasetsRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${TRACES_DATASETS_RESOURCE}?${TOKEN_QUERY_PARAM}=`
+            `/${TRACES_DATASETS_RESOURCE}?${TOKEN_QUERY_PARAM}=`
                 +`${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,
@@ -95,7 +95,7 @@ const Downloads = (props) => {
 
     const removeTracesDatasetRequest = useCallback((tracesDataset) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${TRACES_DATASETS_RESOURCE}/${tracesDataset.id}?`
+            `/${TRACES_DATASETS_RESOURCE}/${tracesDataset.id}?`
                 +`${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,
@@ -545,8 +545,7 @@ const Downloads = (props) => {
     );
 
     const fetchStatisticsDatasets = useCallback(() => {
-        fetch(
-            `http://` + ip + ':' + port + '/statistics-datasets',
+        fetch('/statistics-datasets',
             {
                 method: "GET",
                 headers: new Headers({
@@ -568,7 +567,7 @@ const Downloads = (props) => {
 
     const removeAllStatisticsDatasetsRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${STATISTICS_DATASETS_RESOURCE}?`
+            `/${STATISTICS_DATASETS_RESOURCE}?`
                 + `${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,
@@ -597,7 +596,7 @@ const Downloads = (props) => {
 
     const removeStatisticsDatasetRequest = useCallback((statisticsDataset) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${STATISTICS_DATASETS_RESOURCE}/${statisticsDataset.id}`
+            `/${STATISTICS_DATASETS_RESOURCE}/${statisticsDataset.id}`
                 + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,

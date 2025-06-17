@@ -85,7 +85,7 @@ const LogsAdmin = (props) => {
 
     const fetchLogFile = useCallback((path, node_ip) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${FILE_RESOURCE}`
+            `/${FILE_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_POST,
@@ -113,7 +113,7 @@ const LogsAdmin = (props) => {
 
     const fetchStatsManagerLogs = useCallback((node_ip) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${LOGS_RESOURCE}/${DOCKER_STATS_MANAGER_SUBRESOURCE}`
+            `/${LOGS_RESOURCE}/${DOCKER_STATS_MANAGER_SUBRESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_POST,
@@ -142,7 +142,7 @@ const LogsAdmin = (props) => {
 
     const fetchCsleLogFiles = useCallback((node_ip) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${LOGS_RESOURCE}`
+            `/${LOGS_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_POST,
@@ -184,7 +184,7 @@ const LogsAdmin = (props) => {
 
     const fetchPrometheusLogs = useCallback((node_ip) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${LOGS_RESOURCE}/${PROMETHEUS_RESOURCE}`
+            `/${LOGS_RESOURCE}/${PROMETHEUS_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_POST,
@@ -212,7 +212,7 @@ const LogsAdmin = (props) => {
 
     const fetchNodeExporterLogs = useCallback((node_ip) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${LOGS_RESOURCE}/${NODE_EXPORTER_RESOURCE}`
+            `/${LOGS_RESOURCE}/${NODE_EXPORTER_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_POST,
@@ -240,7 +240,7 @@ const LogsAdmin = (props) => {
 
     const fetchCAdvisorLogs = useCallback((node_ip) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${LOGS_RESOURCE}/${CADVISOR_RESOURCE}`
+            `/${LOGS_RESOURCE}/${CADVISOR_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_POST,
@@ -268,7 +268,7 @@ const LogsAdmin = (props) => {
 
     const fetchPgAdminLogs = useCallback((node_ip) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${LOGS_RESOURCE}/${PGADMIN_RESOURCE}`
+            `/${LOGS_RESOURCE}/${PGADMIN_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_POST,
@@ -296,7 +296,7 @@ const LogsAdmin = (props) => {
 
     const fetchGrafanaLogs = useCallback((node_ip) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${LOGS_RESOURCE}/${GRAFANA_RESOURCE}`
+            `/${LOGS_RESOURCE}/${GRAFANA_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_POST,
@@ -325,7 +325,7 @@ const LogsAdmin = (props) => {
 
     const fetchNginxLogs = useCallback((node_ip) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${LOGS_RESOURCE}/${NGINX_RESOURCE}`
+            `/${LOGS_RESOURCE}/${NGINX_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_POST,
@@ -353,7 +353,7 @@ const LogsAdmin = (props) => {
 
     const fetchPostgresqlLogs = useCallback((node_ip) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${LOGS_RESOURCE}/${POSTGRESQL_RESOURCE}`
+            `/${LOGS_RESOURCE}/${POSTGRESQL_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_POST,
@@ -381,7 +381,7 @@ const LogsAdmin = (props) => {
 
     const fetchFlaskLogs = useCallback((node_ip) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${LOGS_RESOURCE}/${FLASK_RESOURCE}`
+            `/${LOGS_RESOURCE}/${FLASK_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_POST,
@@ -409,7 +409,7 @@ const LogsAdmin = (props) => {
 
     const fetchClusterManagerLogs = useCallback((node_ip) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${LOGS_RESOURCE}/${CLUSTER_MANAGER_RESOURCE}`
+            `/${LOGS_RESOURCE}/${CLUSTER_MANAGER_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_POST,
@@ -437,7 +437,7 @@ const LogsAdmin = (props) => {
 
     const fetchDockerLogs = useCallback((node_ip) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${LOGS_RESOURCE}/${DOCKER_RESOURCE}`
+            `/${LOGS_RESOURCE}/${DOCKER_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_POST,
@@ -465,7 +465,7 @@ const LogsAdmin = (props) => {
 
     const fetchServerCluster = useCallback((path) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${CLUSTER_STATUS_RESOURCE}`
+            `/${CLUSTER_STATUS_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,

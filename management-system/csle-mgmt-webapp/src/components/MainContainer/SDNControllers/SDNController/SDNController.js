@@ -46,7 +46,7 @@ const SDNController = (props) => {
 
     const fetchSwitches = useCallback((emulation_name, exec_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${EMULATION_EXECUTIONS_RESOURCE}/${exec_id}` +
+            (`/${EMULATION_EXECUTIONS_RESOURCE}/${exec_id}` +
                 `/${SWITCHES_SUBRESOURCE}` +
                 `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}&${EMULATION_QUERY_PARAM}=${emulation_name}`),
             {
