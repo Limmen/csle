@@ -7,7 +7,7 @@ from gym_csle_cyborg.dao.red_agent_type import RedAgentType
 from gym_csle_cyborg.dao.csle_cyborg_wrapper_config import CSLECyborgWrapperConfig
 
 if __name__ == '__main__':
-    # ppo_policy = MetastoreFacade.get_ppo_policy(id=15)
+    ppo_policy = MetastoreFacade.get_ppo_policy(id=15)
     config = CSLECyborgWrapperConfig(maximum_steps=100, gym_env_name="",
                                      save_trace=False, reward_shaping=False, scenario=2,
                                      red_agent_type=RedAgentType.B_LINE_AGENT)
@@ -19,11 +19,6 @@ if __name__ == '__main__':
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
-    # for k,v in env.action_id_to_type_and_host.items():
-    #     print(k)
-    #     print(v)
-    # import sys
-    # sys.exit(0)
     restore_ent0 = 0
     restore_ent1 = 1
     restore_ent2 = 2
@@ -46,10 +41,8 @@ if __name__ == '__main__':
             for i in range(len(env.s)):
                 if env.s[i][2] == 1:
                     compromised_hosts.append(i)
-            # print(compromised_hosts)
             defender_action_type, defender_action_host = env.action_id_to_type_and_host[a]
-            # print(env.action_space)
-            # a = ppo_policy.action(o=o)
+            a = ppo_policy.action(o=o)
             o, r, done, _, info = env.step(a)
             R += r
             t += 1

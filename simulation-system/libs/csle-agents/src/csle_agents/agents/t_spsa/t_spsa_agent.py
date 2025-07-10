@@ -37,10 +37,10 @@ class TSPSAAgent(BaseAgent):
 
     def __init__(self, simulation_env_config: SimulationEnvConfig,
                  emulation_env_config: Union[None, EmulationEnvConfig],
-                 experiment_config: ExperimentConfig, env: Optional[BaseEnv] = None,
+                 experiment_config: ExperimentConfig, env: BaseEnv = None,
                  training_job: Optional[TrainingJobConfig] = None, save_to_metastore: bool = True):
         """
-        Initializes the TSPSA agent
+        Initializes the T-SPSA agent
 
         :param simulation_env_config: the simulation env config
         :param emulation_env_config: the emulation env config

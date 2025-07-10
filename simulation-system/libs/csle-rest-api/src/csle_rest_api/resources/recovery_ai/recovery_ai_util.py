@@ -67,8 +67,8 @@ class RecoveryAIUtil:
 
     @staticmethod
     def generate_output(model: PreTrainedModel, tokenizer: PreTrainedTokenizer, prompt: str,
-                        no_think: bool = False, temperature: float = 0.6) -> Generator[
-        str, Any, List[str] | Tuple[str, str]]:
+                        no_think: bool = False, temperature: float = 0.6) \
+            -> Generator[str, Any, List[str] | Tuple[str, str]]:
         """
         Uses a given LLM, tokenizer, and prompt to generate a stream of outputs
 
@@ -162,9 +162,9 @@ class RecoveryAIUtil:
             try:
                 threat_intel = IOCAnalyzer.analyze(urls=urls, ips=ips, hostnames=hostnames, domains=domains, cves=cves,
                                                    nids=nids)
-            except:
+            except Exception:
                 pass
-            ioc_text = f"Information retrieval complete.\\n\\n"
+            ioc_text = "Information retrieval complete.\\n\\n"
             tokens = ioc_text.split(" ")
             for token in tokens:
                 yield f"{api_constants.MGMT_WEBAPP.RECOVERY_AI_DATA_DELIMITER} {token}\n\n"
@@ -176,8 +176,7 @@ class RecoveryAIUtil:
     def recovery_loop(model: PreTrainedModel, tokenizer: PreTrainedTokenizer, system: str, logs: str,
                       incident_str: str, action_prompt_template: str, state_prompt_template: str,
                       num_optimization_steps: int = 3, temperature: float = 1, lookahead_horizon: int = 1,
-                      rollout_horizon: int = 1) -> Generator[
-        str, None, None]:
+                      rollout_horizon: int = 1) -> Generator[str, None, None]:
         """
         Loop that generates the recovery plan from a given incident report.
 
@@ -335,8 +334,8 @@ class RecoveryAIUtil:
                 yield f"{api_constants.MGMT_WEBAPP.RECOVERY_AI_DATA_DELIMITER} {token}\n\n"
 
             action = json.loads(action_output_str)
-            action_str = (f"{Prompts.ACTION}: {action[Prompts.ACTION]}\n{Prompts.EXPLANATION}: "
-                          f"{action[Prompts.EXPLANATION]}")
+            # action_str = (f"{Prompts.ACTION}: {action[Prompts.ACTION]}\n{Prompts.EXPLANATION}: "
+            #               f"{action[Prompts.EXPLANATION]}")
             # state_input = state_prompt_template.format(system, logs, incident_str, json.dumps(state, indent=4),
             #                                            action_str)
             # _, state_output_str = yield from RecoveryAIUtil.generate_output(model, tokenizer, state_input, no_think

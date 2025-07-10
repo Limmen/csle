@@ -1,5 +1,4 @@
 from typing import List, Tuple, Dict, Any
-import re
 from csle_rest_api.resources.recovery_ai.rag.ioc_extractor import IOCExtractor
 from csle_rest_api.resources.recovery_ai.rag.otx_lookup import OTXLookup
 
