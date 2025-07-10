@@ -151,10 +151,6 @@ class SimulatedAnnealingAgent(BaseAgent):
             exp_result = self.simulated_annealing(exp_result=exp_result, seed=seed,
                                                   random_seeds=self.experiment_config.random_seeds,
                                                   training_job=self.training_job)
-            # Save latest trace
-            if self.save_to_metastore:
-                MetastoreFacade.save_simulation_trace(self.env.unwrapped.get_traces()[-1])
-            self.env.unwrapped.reset_traces()
 
         # Calculate average and std metrics
         exp_result.avg_metrics = {}
@@ -190,9 +186,6 @@ class SimulatedAnnealingAgent(BaseAgent):
                 exp_result.avg_metrics[metric] = avg_metrics
                 exp_result.std_metrics[metric] = std_metrics
 
-        traces = self.env.unwrapped.get_traces()
-        if len(traces) > 0 and self.save_to_metastore:
-            MetastoreFacade.save_simulation_trace(traces[-1])
         ts = time.time()
         self.exp_execution.timestamp = ts
         self.exp_execution.result = exp_result
@@ -334,8 +327,6 @@ class SimulatedAnnealingAgent(BaseAgent):
                 progress = round(iterations_done / total_iterations, 2)
                 training_job.progress_percentage = progress
                 training_job.experiment_result = exp_result
-                if self.env is not None and len(self.env.unwrapped.get_traces()) > 0:
-                    training_job.simulation_traces.append(self.env.unwrapped.get_traces()[-1])
                 if len(training_job.simulation_traces) > training_job.num_cached_traces:
                     training_job.simulation_traces = training_job.simulation_traces[1:]
                 if self.save_to_metastore:
@@ -355,7 +346,7 @@ class SimulatedAnnealingAgent(BaseAgent):
                     f"{running_avg_J}, "
                     f"opt_J:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN][-1]}, "
                     f"int_len:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH][-1]}, "
-                    f"sigmoid(theta):{policy.thresholds()}, progress: {round(progress*100,2)}%, "
+                    f"sigmoid(theta):{policy.thresholds()}, progress: {round(progress * 100, 2)}%, "
                     f"stop distributions:{policy.stop_distributions()}")
         policy = self.get_policy(theta=list(theta), L=L)
         exp_result.policies[seed] = policy
@@ -459,7 +450,7 @@ class SimulatedAnnealingAgent(BaseAgent):
         return np.array(theta_1)
 
     def get_policy(self, theta: List[float], L: int) -> Union[MultiThresholdStoppingPolicy,
-                                                              LinearThresholdStoppingPolicy]:
+    LinearThresholdStoppingPolicy]:
         """
         Gets the policy of a given parameter vector
 

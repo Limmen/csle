@@ -867,7 +867,7 @@ class IntrusionResponseGameUtil:
         for s_prime in range(len(S)):
             state_probs.append(T[a1][a2][s_idx][s_prime])
         s_prime = np.random.choice(np.arange(0, len(S)), p=state_probs)
-        return s_prime
+        return int(s_prime)
 
     @staticmethod
     def sample_next_observation(Z: npt.NDArray[Any], a1: int, a2: int, s_prime_idx: int, O: npt.NDArray[Any]) -> int:

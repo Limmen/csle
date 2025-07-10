@@ -162,7 +162,7 @@ class EmulationTrace(JSONSerializable):
         """
         :return: approximately the number of attributes recorded per time-step of the trace
         """
-        num_attributes = 2
+        num_attributes: int = 2
         num_attributes = (num_attributes + (1 + len(self.attacker_observation_states))
                           * self.initial_attacker_observation_state.num_attributes())
         num_attributes = (num_attributes + (1 + len(self.defender_observation_states))

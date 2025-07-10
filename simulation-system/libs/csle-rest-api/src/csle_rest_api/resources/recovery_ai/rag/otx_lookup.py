@@ -18,8 +18,11 @@ class OTXLookup:
         """
         url = f"{constants.RAG.OTX_BASE_URL}/IPv4/{ip}/general"
         api_key = os.environ.get(constants.RAG.OTX_API_KEY)
+        if api_key is None:
+            raise ValueError("Could not find API key for OTX API among environment variables")
         headers = {constants.RAG.OTX_API_KEY_HEADER: api_key}
-        return requests.get(url, headers=headers).json()
+        response: requests.Response = requests.get(url, headers=headers).json()
+        return response
 
     @staticmethod
     def lookup_domain(domain: str) -> requests.Response:
@@ -31,8 +34,11 @@ class OTXLookup:
         """
         url = f"{constants.RAG.OTX_BASE_URL}/domain/{domain}/general"
         api_key = os.environ.get(constants.RAG.OTX_API_KEY)
+        if api_key is None:
+            raise ValueError("Could not find API key for OTX API among environment variables")
         headers = {constants.RAG.OTX_API_KEY_HEADER: api_key}
-        return requests.get(url, headers=headers).json()
+        response: requests.Response = requests.get(url, headers=headers).json()
+        return response
 
     @staticmethod
     def lookup_url(url: str) -> requests.Response:
@@ -44,8 +50,11 @@ class OTXLookup:
         """
         url = f"{constants.RAG.OTX_BASE_URL}/url/{url}/general"
         api_key = os.environ.get(constants.RAG.OTX_API_KEY)
+        if api_key is None:
+            raise ValueError("Could not find API key for OTX API among environment variables")
         headers = {constants.RAG.OTX_API_KEY_HEADER: api_key}
-        return requests.get(url, headers=headers).json()
+        response: requests.Response = requests.get(url, headers=headers).json()
+        return response
 
     @staticmethod
     def lookup_hostname(hostname: str) -> requests.Response:
@@ -57,8 +66,11 @@ class OTXLookup:
         """
         url = f"{constants.RAG.OTX_BASE_URL}/hostname/{hostname}/general"
         api_key = os.environ.get(constants.RAG.OTX_API_KEY)
+        if api_key is None:
+            raise ValueError("Could not find API key for OTX API among environment variables")
         headers = {constants.RAG.OTX_API_KEY_HEADER: api_key}
-        return requests.get(url, headers=headers).json()
+        response: requests.Response = requests.get(url, headers=headers).json()
+        return response
 
     @staticmethod
     def lookup_cve(cve: str) -> requests.Response:
@@ -70,5 +82,8 @@ class OTXLookup:
         """
         url = f"{constants.RAG.OTX_BASE_URL}/cve/{cve}"
         api_key = os.environ.get(constants.RAG.OTX_API_KEY)
+        if api_key is None:
+            raise ValueError("Could not find API key for OTX API among environment variables")
         headers = {constants.RAG.OTX_API_KEY_HEADER: api_key}
-        return requests.get(url, headers=headers).json()
+        response: requests.Response = requests.get(url, headers=headers).json()
+        return response

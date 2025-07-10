@@ -1,8 +1,11 @@
 import time
-from typing import Tuple, Dict, List, Any, Generator
+from typing import Tuple, Dict, List, Any, Generator, cast, Optional, Union
 import os
-from transformers import (AutoTokenizer, AutoModelForCausalLM, PreTrainedTokenizer, PreTrainedModel,
-                          BitsAndBytesConfig, TextIteratorStreamer)
+from transformers import AutoTokenizer, AutoModelForCausalLM, PreTrainedModel
+from transformers.tokenization_utils import PreTrainedTokenizer
+from transformers.utils.quantization_config import BitsAndBytesConfig
+from transformers.generation.streamers import TextIteratorStreamer
+from peft import PeftModel
 import torch
 import json
 import threading
@@ -66,7 +69,7 @@ class RecoveryAIUtil:
                           for a in previous_actions])
 
     @staticmethod
-    def generate_output(model: PreTrainedModel, tokenizer: PreTrainedTokenizer, prompt: str,
+    def generate_output(model: Union[PreTrainedModel, PeftModel], tokenizer: PreTrainedTokenizer, prompt: str,
                         no_think: bool = False, temperature: float = 0.6) \
             -> Generator[str, Any, List[str] | Tuple[str, str]]:
         """
@@ -79,10 +82,11 @@ class RecoveryAIUtil:
         :param temperature: parameter that controls the stochasticity of the output (higher means more stochastic)
         :return: the reasoning string and the answer string by the LLM.
         """
+        assert isinstance(model, torch.nn.Module)
         model.eval()
         inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
-        streamer = TextIteratorStreamer(tokenizer, skip_special_tokens=True, skip_prompt=True)
-        thread = threading.Thread(target=model.generate,
+        streamer = TextIteratorStreamer(cast(AutoTokenizer, tokenizer), skip_special_tokens=True, skip_prompt=True)
+        thread = threading.Thread(target=model.generate,  # type: ignore
                                   kwargs={**inputs, "max_new_tokens": 6000, "temperature": temperature,
                                           "do_sample": True, "streamer": streamer})
         thread.start()
@@ -109,7 +113,7 @@ class RecoveryAIUtil:
         :param incident: the incident report
         :return: the formatted string
         """
-        description = incident[Prompts.INCIDENT_DESCRIPTION]
+        description: str = incident[Prompts.INCIDENT_DESCRIPTION]
         description += "\nMITRE ATT&CK tactics being used: " + ", ".join(incident[Prompts.MITRE_ATTACK_TACTICS]) + "."
         description += "\nMITRE ATT&CK techniques being used: " + ", ".join(
             incident[Prompts.MITRE_ATTACK_TECHNIQUES]) + "."
@@ -173,7 +177,7 @@ class RecoveryAIUtil:
         return logs
 
     @staticmethod
-    def recovery_loop(model: PreTrainedModel, tokenizer: PreTrainedTokenizer, system: str, logs: str,
+    def recovery_loop(model: Union[PreTrainedModel, PeftModel], tokenizer: PreTrainedTokenizer, system: str, logs: str,
                       incident_str: str, action_prompt_template: str, state_prompt_template: str,
                       num_optimization_steps: int = 3, temperature: float = 1, lookahead_horizon: int = 1,
                       rollout_horizon: int = 1) -> Generator[str, None, None]:
@@ -201,17 +205,21 @@ class RecoveryAIUtil:
             Prompts.IS_HARDENED: False,
             Prompts.IS_RECOVERED: False
         }
-        previous_actions = []
+        previous_actions: List[Dict[str, str]] = []
         while not RecoveryAIUtil.is_state_terminal(state):
             previous_actions_str = RecoveryAIUtil.generate_previous_actions_str(previous_actions)
             action_input = action_prompt_template.format(system, logs, incident_str, json.dumps(state, indent=4),
                                                          previous_actions_str)
-            action = yield from RecoveryAIUtil.action_selection(action_input=action_input, model=model,
-                                                                tokenizer=tokenizer,
-                                                                state=state,
-                                                                state_prompt_template=state_prompt_template,
-                                                                system=system, logs=logs, incident_str=incident_str,
-                                                                num_optimization_steps=num_optimization_steps)
+            action: Optional[Dict[str, str]] = yield from RecoveryAIUtil.action_selection(action_input=action_input,
+                                                                                          model=model,
+                                                                                          tokenizer=tokenizer,
+                                                                                          state=state,
+                                                                                          state_prompt_template=state_prompt_template,
+                                                                                          system=system, logs=logs,
+                                                                                          incident_str=incident_str,
+                                                                                          num_optimization_steps=num_optimization_steps)
+            if action is None:
+                raise ValueError("There was an error generating the action.")
             previous_actions.append(action)
 
             action_str = (f"{Prompts.ACTION}: {action[Prompts.ACTION]}\n{Prompts.EXPLANATION}: "
@@ -220,6 +228,7 @@ class RecoveryAIUtil:
                                                        action_str)
             _, state_output_str = yield from RecoveryAIUtil.generate_output(model, tokenizer, state_input)
             state = json.loads(state_output_str)
+        return None
 
     @staticmethod
     def gemini_rag(logs: str) -> Generator[str, Any, None | Tuple[list[Any], list[Any]] | Tuple[Any, Any]]:
@@ -247,6 +256,8 @@ class RecoveryAIUtil:
             raise ValueError(f"{api_constants.RAG.GEMINI_API_KEY} environment variable is not set")
         client = genai.Client(api_key=api_key)
         response = client.models.generate_content(model=api_constants.RAG.MODEL, contents=instruction)
+        if response is None or response.text is None:
+            raise ValueError("There was an error generating the response.")
         try:
             json_str = response.text.replace("```json\n", "")
             json_str = json_str.replace("```", "")
@@ -269,6 +280,7 @@ class RecoveryAIUtil:
         except Exception as e:
             Logger.__call__().get_logger().warning(f"RAG exception: {str(e)}, {repr(e)}.")
             return [], []
+        return None
 
     @staticmethod
     def enrich_logs(logs: str, identifiers: List[str], contexts: List[str]) -> str:
@@ -287,7 +299,7 @@ class RecoveryAIUtil:
         return enriched_logs
 
     @staticmethod
-    def action_selection(action_input: str, model: PreTrainedModel, tokenizer: PreTrainedTokenizer,
+    def action_selection(action_input: str, model: Union[PreTrainedModel, PeftModel], tokenizer: PreTrainedTokenizer,
                          state: Dict[str, bool], state_prompt_template: str, system: str, logs: str,
                          incident_str: str, num_optimization_steps: int = 3, temperature: float = 1,
                          lookahead_horizon: int = 1, rollout_horizon: int = 1) \
@@ -312,10 +324,10 @@ class RecoveryAIUtil:
         if num_optimization_steps == 1:
             _, action_output_str = yield from RecoveryAIUtil.generate_output(model, tokenizer, action_input,
                                                                              no_think=False)
-            action = json.loads(action_output_str)
+            action: Dict[str, str] = json.loads(action_output_str)
             return action
 
-        candidate_actions = []
+        candidate_actions: List[Dict[str, str]] = []
         rewards = []
         for i in range(num_optimization_steps):
             for token in f"Evaluating action {i + 1}/{num_optimization_steps}":
@@ -347,7 +359,7 @@ class RecoveryAIUtil:
             #         reward += 1
             #     if state[k] and not new_state[k]:
             #         reward -= 1
-            reward = 0
+            reward = 0.0
 
             try:
                 api_key = os.environ.get(api_constants.RAG.GEMINI_API_KEY)
@@ -355,6 +367,8 @@ class RecoveryAIUtil:
                 instruction = Prompts.GEMINI_ACTION_EVAL.format(system, logs, incident_str,
                                                                 json.dumps(state, indent=4), action[Prompts.ACTION])
                 response = client.models.generate_content(model=api_constants.RAG.MODEL, contents=instruction)
+                if response is None or response.text is None:
+                    raise ValueError("Failed to generate response")
                 response_score = float(response.text.strip())
                 reward += response_score
             except Exception:
@@ -383,7 +397,8 @@ class RecoveryAIUtil:
         return candidate_actions[selected_action_idx]
 
     @staticmethod
-    def incident_classification(incident_input: str, model: PreTrainedModel, tokenizer: PreTrainedTokenizer,
+    def incident_classification(incident_input: str, model: Union[PreTrainedModel, PeftModel],
+                                tokenizer: PreTrainedTokenizer,
                                 system: str, logs: str, num_optimization_steps: int = 3, temperature: float = 1,
                                 lookahead_horizon: int = 1, rollout_horizon: int = 1) \
             -> Generator[str, Any, None | Dict[str, str]]:
@@ -402,64 +417,64 @@ class RecoveryAIUtil:
         :return:
         """
         _, incident_output_str = yield from RecoveryAIUtil.generate_output(model, tokenizer, incident_input)
-        incident_classification = json.loads(incident_output_str)
+        incident_classification: Dict[str, str] = json.loads(incident_output_str)
         return incident_classification
         # if num_optimization_steps == 1:
         #     _, incident_output_str = yield from RecoveryAIUtil.generate_output(model, tokenizer, incident_input)
         #     incident_classification = json.loads(incident_output_str)
         #     return incident_classification
 
-        candidate_classifications = []
-        rewards = []
-        for i in range(num_optimization_steps):
-            for token in f"Evaluating incident classification {i + 1}/{num_optimization_steps}":
-                time.sleep(0.05)
-                yield f"{api_constants.MGMT_WEBAPP.RECOVERY_AI_DATA_DELIMITER} {token}\n\n"
-            yield f"{api_constants.MGMT_WEBAPP.RECOVERY_AI_DATA_DELIMITER} \\n\\n\n\n"
-            if i == 0:
-                temp = 0.6
-            else:
-                temp = temperature
-            _, incident_output_str = yield from RecoveryAIUtil.generate_output(
-                model, tokenizer, incident_input, no_think=True, temperature=temp)
-            yield f"{api_constants.MGMT_WEBAPP.RECOVERY_AI_DATA_DELIMITER} \\n\n\n"
-            for token in "The expected reward of this incident classification is..  ":
-                time.sleep(0.05)
-                yield f"{api_constants.MGMT_WEBAPP.RECOVERY_AI_DATA_DELIMITER} {token}\n\n"
-
-            incident_classification = json.loads(incident_output_str)
-            incident_str = incident_classification[Prompts.INCIDENT_DESCRIPTION]
-            reward = 0
-            try:
-                api_key = os.environ.get(api_constants.RAG.GEMINI_API_KEY)
-                client = genai.Client(api_key=api_key)
-                instruction = Prompts.GEMINI_INCIDENT_EVAL.format(system, logs, incident_str)
-                response = client.models.generate_content(model=api_constants.RAG.MODEL, contents=instruction)
-                response_score = float(response.text.strip())
-                reward += response_score
-            except Exception:
-                pass
-            rewards.append(reward)
-            candidate_classifications.append(incident_classification)
-            for token in f"{reward}.":
-                time.sleep(0.05)
-                yield f"{api_constants.MGMT_WEBAPP.RECOVERY_AI_DATA_DELIMITER} {token}\n\n"
-            yield f"{api_constants.MGMT_WEBAPP.RECOVERY_AI_DATA_DELIMITER} \\n\\n\n\n"
-        selected_incident_idx = np.argmax(rewards)
-        for token in (
-                f"I choose incident classification {selected_incident_idx + 1} since it yields the highest expected "
-                f"reward, namely {rewards[selected_incident_idx]}."):
-            time.sleep(0.05)
-            yield f"{api_constants.MGMT_WEBAPP.RECOVERY_AI_DATA_DELIMITER} {token}\n\n"
-        yield f"{api_constants.MGMT_WEBAPP.RECOVERY_AI_DATA_DELIMITER} \\n\\n\n\n"
-        selected_incident = candidate_classifications[selected_incident_idx]
-
-        yield (f"{api_constants.MGMT_WEBAPP.RECOVERY_AI_DATA_DELIMITER} "
-               f"{api_constants.MGMT_WEBAPP.RECOVERY_AI_THINK_END_DELIMITER}\n\n")
-        selected_incident_str = json.dumps(selected_incident, indent=4)
-        selected_incident_str = selected_incident_str.replace("\n", "\\n")
-        tokens = re.findall(r'\\n|.', selected_incident_str)
-        for token in tokens:
-            time.sleep(0.05)
-            yield f"{api_constants.MGMT_WEBAPP.RECOVERY_AI_DATA_DELIMITER} {token}\n\n"
-        return candidate_classifications[selected_incident_idx]
+        # candidate_classifications = []
+        # rewards = []
+        # for i in range(num_optimization_steps):
+        #     for token in f"Evaluating incident classification {i + 1}/{num_optimization_steps}":
+        #         time.sleep(0.05)
+        #         yield f"{api_constants.MGMT_WEBAPP.RECOVERY_AI_DATA_DELIMITER} {token}\n\n"
+        #     yield f"{api_constants.MGMT_WEBAPP.RECOVERY_AI_DATA_DELIMITER} \\n\\n\n\n"
+        #     if i == 0:
+        #         temp = 0.6
+        #     else:
+        #         temp = temperature
+        #     _, incident_output_str = yield from RecoveryAIUtil.generate_output(
+        #         model, tokenizer, incident_input, no_think=True, temperature=temp)
+        #     yield f"{api_constants.MGMT_WEBAPP.RECOVERY_AI_DATA_DELIMITER} \\n\n\n"
+        #     for token in "The expected reward of this incident classification is..  ":
+        #         time.sleep(0.05)
+        #         yield f"{api_constants.MGMT_WEBAPP.RECOVERY_AI_DATA_DELIMITER} {token}\n\n"
+        #
+        #     incident_classification = json.loads(incident_output_str)
+        #     incident_str = incident_classification[Prompts.INCIDENT_DESCRIPTION]
+        #     reward = 0
+        #     try:
+        #         api_key = os.environ.get(api_constants.RAG.GEMINI_API_KEY)
+        #         client = genai.Client(api_key=api_key)
+        #         instruction = Prompts.GEMINI_INCIDENT_EVAL.format(system, logs, incident_str)
+        #         response = client.models.generate_content(model=api_constants.RAG.MODEL, contents=instruction)
+        #         response_score = float(response.text.strip())
+        #         reward += response_score
+        #     except Exception:
+        #         pass
+        #     rewards.append(reward)
+        #     candidate_classifications.append(incident_classification)
+        #     for token in f"{reward}.":
+        #         time.sleep(0.05)
+        #         yield f"{api_constants.MGMT_WEBAPP.RECOVERY_AI_DATA_DELIMITER} {token}\n\n"
+        #     yield f"{api_constants.MGMT_WEBAPP.RECOVERY_AI_DATA_DELIMITER} \\n\\n\n\n"
+        # selected_incident_idx = np.argmax(rewards)
+        # for token in (
+        #         f"I choose incident classification {selected_incident_idx + 1} since it yields the highest expected "
+        #         f"reward, namely {rewards[selected_incident_idx]}."):
+        #     time.sleep(0.05)
+        #     yield f"{api_constants.MGMT_WEBAPP.RECOVERY_AI_DATA_DELIMITER} {token}\n\n"
+        # yield f"{api_constants.MGMT_WEBAPP.RECOVERY_AI_DATA_DELIMITER} \\n\\n\n\n"
+        # selected_incident = candidate_classifications[selected_incident_idx]
+        #
+        # yield (f"{api_constants.MGMT_WEBAPP.RECOVERY_AI_DATA_DELIMITER} "
+        #        f"{api_constants.MGMT_WEBAPP.RECOVERY_AI_THINK_END_DELIMITER}\n\n")
+        # selected_incident_str = json.dumps(selected_incident, indent=4)
+        # selected_incident_str = selected_incident_str.replace("\n", "\\n")
+        # tokens = re.findall(r'\\n|.', selected_incident_str)
+        # for token in tokens:
+        #     time.sleep(0.05)
+        #     yield f"{api_constants.MGMT_WEBAPP.RECOVERY_AI_DATA_DELIMITER} {token}\n\n"
+        # return candidate_classifications[selected_incident_idx]

@@ -149,11 +149,6 @@ class KieferWolfowitzAgent(BaseAgent):
             exp_result = self.kiefer_wolfowitz(exp_result=exp_result, seed=seed, training_job=self.training_job,
                                                random_seeds=self.experiment_config.random_seeds)
 
-            # Save latest trace
-            if self.save_to_metastore:
-                MetastoreFacade.save_simulation_trace(self.env.unwrapped.get_traces()[-1])
-            self.env.unwrapped.reset_traces()
-
         # Calculate average and std metrics
         exp_result.avg_metrics = {}
         exp_result.std_metrics = {}
@@ -188,9 +183,6 @@ class KieferWolfowitzAgent(BaseAgent):
                 exp_result.avg_metrics[metric] = avg_metrics
                 exp_result.std_metrics[metric] = std_metrics
 
-        traces = self.env.unwrapped.get_traces()
-        if len(traces) > 0 and self.save_to_metastore:
-            MetastoreFacade.save_simulation_trace(traces[-1])
         ts = time.time()
         self.exp_execution.timestamp = ts
         self.exp_execution.result = exp_result
@@ -337,8 +329,6 @@ class KieferWolfowitzAgent(BaseAgent):
                 progress = round(iterations_done / total_iterations, 2)
                 training_job.progress_percentage = progress
                 training_job.experiment_result = exp_result
-                if self.env is not None and len(self.env.unwrapped.get_traces()) > 0:
-                    training_job.simulation_traces.append(self.env.unwrapped.get_traces()[-1])
                 if len(training_job.simulation_traces) > training_job.num_cached_traces:
                     training_job.simulation_traces = training_job.simulation_traces[1:]
                 if self.save_to_metastore:

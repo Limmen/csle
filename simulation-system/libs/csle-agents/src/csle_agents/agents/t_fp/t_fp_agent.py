@@ -480,7 +480,7 @@ class TFPAgent(BaseAgent):
         :param num_iterations: number of iterations to evaluate
         :return: the average reward
         """
-        metrics: Dict[str, Any] = {}
+        metrics: Dict[str, List[Union[float, int]]] = {}
         for j in range(num_iterations):
             done = False
             o, _ = env.reset()

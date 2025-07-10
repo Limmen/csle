@@ -153,6 +153,10 @@ class DockerUtil:
                         constants.DOCKER.MAC_ADDRESS_INFO]
                     ip_prefix_len = inspect_info[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.NETWORKS][net][
                         constants.DOCKER.IP_PREFIX_LEN_INFO]
+                if net is None:
+                    net_str = ""
+                else:
+                    net_str = net
                 parsed_c = DockerContainerMetadata(
                     name=c.name, status=c.status, short_id=c.short_id, image_short_id=c.image.short_id,
                     image_tags=c.image.tags, id=c.id,
@@ -161,7 +165,7 @@ class DockerUtil:
                     name2=container_name_2, level=level,
                     hostname=inspect_info[constants.DOCKER.CONFIG][constants.DOCKER.HOSTNAME_INFO],
                     image_name=inspect_info[constants.DOCKER.CONFIG][constants.DOCKER.IMAGE],
-                    net=net, dir=dir_path, config_path=config_path,
+                    net=net_str, dir=dir_path, config_path=config_path,
                     container_handle=c, emulation=emulation, kafka_container=kafka_config)
                 parsed_containers.append(parsed_c)
         return parsed_containers

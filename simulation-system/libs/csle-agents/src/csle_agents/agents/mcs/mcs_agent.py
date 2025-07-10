@@ -257,9 +257,6 @@ class MCSAgent(BaseAgent):
                                   training_job=self.training_job, u=u, v=v, smax=smax, nf=nf, stop=stop, iinit=iinit,
                                   local=local, gamma=gamma, hess=hess, stopping_actions=stopping_actions, eps=eps,
                                   n=n)
-            if self.save_to_metastore:
-                MetastoreFacade.save_simulation_trace(self.env.unwrapped.get_traces()[-1])
-            self.env.unwrapped.reset_traces()
 
         # Calculate average and std metrics
         exp_result.avg_metrics = {}
@@ -298,9 +295,6 @@ class MCSAgent(BaseAgent):
                 exp_result.avg_metrics[metric] = avg_metrics
                 exp_result.std_metrics[metric] = std_metrics
 
-        traces = self.env.unwrapped.get_traces()
-        if len(traces) > 0 and self.save_to_metastore:
-            MetastoreFacade.save_simulation_trace(traces[-1])
         ts = time.time()
         self.exp_execution.timestamp = ts
         self.exp_execution.result = exp_result
@@ -340,7 +334,7 @@ class MCSAgent(BaseAgent):
     def init_list(self, theta0: NDArray[np.int32], l: NDArray[np.int32], L: NDArray[np.int32],
                   stopping_actions: int, n: int, ncall: int = 0) \
             -> Tuple[NDArray[np.float32], NDArray[np.float32], int,
-                     Union[MultiThresholdStoppingPolicy, LinearThresholdStoppingPolicy]]:
+            Union[MultiThresholdStoppingPolicy, LinearThresholdStoppingPolicy]]:
         """
         Computes the function values corresponding to the initialization list
         and the pointer istar to the final best point x^* of the init. list
@@ -384,7 +378,7 @@ class MCSAgent(BaseAgent):
                         istar[i] = j
 
             theta[i] = theta0[i, istar[i]]
-        return J0, istar, ncall, policy # type: ignore
+        return J0, istar, ncall, policy  # type: ignore
 
     def MCS(self, exp_result: ExperimentResult, seed: int, random_seeds: List[int], training_job: TrainingJobConfig,
             u: List[int], v: List[int], smax: int, nf: int, stop: List[Union[float, int]], iinit: int, local: int,
@@ -422,9 +416,9 @@ class MCSAgent(BaseAgent):
 
         l = np.multiply(1, np.ones(n)).astype(int)
         L = np.multiply(2, np.ones(n)).astype(int)
-        theta0 = MCSUtils().get_theta0(iinit, u, v, n) # type: ignore
+        theta0 = MCSUtils().get_theta0(iinit, u, v, n)  # type: ignore
         if iinit != 3:
-            f0, istar, ncall1, policy = self.init_list(theta0, l, L, stopping_actions, n) # type: ignore
+            f0, istar, ncall1, policy = self.init_list(theta0, l, L, stopping_actions, n)  # type: ignore
             ncall = ncall + ncall1
         theta = np.zeros(n)
         for i in range(n):
@@ -460,15 +454,15 @@ class MCSAgent(BaseAgent):
         nloc = 0
         xloc: List[float] = []
         flag = 1
-        ipar, level, ichild, f, isplit, p, xbest, fbest, nboxes = MCSUtils().initbox( # type: ignore
-            theta0, f0, l, L, istar, u, v, isplit, level, ipar, ichild, f, nboxes, prt) # type: ignore
+        ipar, level, ichild, f, isplit, p, xbest, fbest, nboxes = MCSUtils().initbox(  # type: ignore
+            theta0, f0, l, L, istar, u, v, isplit, level, ipar, ichild, f, nboxes, prt)  # type: ignore
         f0min = fbest
         if stop[0] > 0 and stop[0] < 1:
             flag = MCSUtils().chrelerr(fbest, stop)
         elif stop[0] == 0:
             flag = MCSUtils().chvtr(fbest, stop[1])
 
-        s, record = MCSUtils().strtsw(smax, level, f[0, :], nboxes, record) # type: ignore
+        s, record = MCSUtils().strtsw(smax, level, f[0, :], nboxes, record)  # type: ignore
         nsweep = nsweep + 1
         xmin: List[Union[float, List[float], NDArray[np.float64]]] = []
         fmi: List[float] = []
@@ -488,8 +482,6 @@ class MCSAgent(BaseAgent):
                 progress = round(iterations_done / total_iterations, 2)
                 training_job.progress_percentage = progress
                 training_job.experiment_result = exp_result
-                if self.env is not None and len(self.env.unwrapped.get_traces()) > 0:
-                    training_job.simulation_traces.append(self.env.unwrapped.get_traces()[-1])
                 if len(training_job.simulation_traces) > training_job.num_cached_traces:
                     training_job.simulation_traces = training_job.simulation_traces[1:]
                 if self.save_to_metastore:
@@ -510,8 +502,8 @@ class MCSAgent(BaseAgent):
                     f"sigmoid(theta):{policy.thresholds()}, progress: {round(progress * 100, 2)}%")
 
             par = record[s]
-            n0, x, y, x1, x2, f1, f2 = MCSUtils().vertex(par, n, u, v, v1, theta0, f0, ipar, isplit, # type: ignore
-                                                         ichild, z, f, l, L) # type: ignore
+            n0, x, y, x1, x2, f1, f2 = MCSUtils().vertex(par, n, u, v, v1, theta0, f0, ipar, isplit,  # type: ignore
+                                                         ichild, z, f, l, L)  # type: ignore
 
             if s > 2 * n * (min(n0) + 1):
                 isplit[par], z[1, par] = MCSUtils().splrnk(n, n0, p, x, y)
@@ -537,11 +529,11 @@ class MCSAgent(BaseAgent):
                     (xbest, fbest, policy, f01, xmin, fmi, ipar, level,
                      ichild, f, flag, ncall1, record, nboxes,
                      nbasket, nsweepbest, nsweep) = \
-                        self.splinit(i, s, smax, par, theta0, n0, u, v, x, y, x1, x2, L, l, xmin, # type: ignore
-                                     fmi, ipar, level, # type: ignore
-                                     ichild, f, xbest, fbest, stop, prt, record, nboxes, nbasket, # type: ignore
-                                     nsweepbest, nsweep, # type: ignore
-                                     stopping_actions) # type: ignore
+                        self.splinit(i, s, smax, par, theta0, n0, u, v, x, y, x1, x2, L, l, xmin,  # type: ignore
+                                     fmi, ipar, level,  # type: ignore
+                                     ichild, f, xbest, fbest, stop, prt, record, nboxes, nbasket,  # type: ignore
+                                     nsweepbest, nsweep,  # type: ignore
+                                     stopping_actions)  # type: ignore
                     f01 = f01.reshape(len(f01), 1)
                     f0 = np.concatenate((f0, f01), axis=1)
                     ncall = ncall + ncall1
@@ -570,7 +562,7 @@ class MCSAgent(BaseAgent):
             else:
                 if s + 1 < smax:
                     level[par] = s + 1
-                    record = MCSUtils().updtrec(par, s + 1, f[0, :], record) # type: ignore
+                    record = MCSUtils().updtrec(par, s + 1, f[0, :], record)  # type: ignore
                 else:
                     level[par] = 0
                     nbasket = nbasket + 1
@@ -600,9 +592,9 @@ class MCSAgent(BaseAgent):
                     for j_iter in range(nbasket0 + 1, nbasket + 1):
                         x = copy.deepcopy(xmin[j_iter])
                         f1 = copy.deepcopy(fmi[j_iter])
-                        loc = MCSUtils().chkloc(nloc, xloc, x)
+                        loc = MCSUtils().chkloc(nloc, xloc, x)  # type: ignore
                         if loc:
-                            nloc, xloc = MCSUtils().addloc(nloc, xloc, x)
+                            nloc, xloc = MCSUtils().addloc(nloc, xloc, x)  # type: ignore
 
                             if not nbasket0 or nbasket0 == -1:
                                 (xbest, fbest, policy, avg_metrics, xmin,
@@ -610,17 +602,18 @@ class MCSAgent(BaseAgent):
                                  ncall1, nsweep,
                                  nsweepbest) = \
                                     self.basket(
-                                        x, f1, policy, avg_metrics, xmin, fmi,
-                                        xbest, fbest, stop,
+                                        x, f1, policy, avg_metrics, xmin, fmi, # type: ignore
+                                        xbest, fbest, stop,  # type: ignore
                                         nbasket0, nsweep,
                                         nsweepbest,
-                                        stopping_actions)
+                                        stopping_actions)  # type: ignore
                             else:
                                 (xbest, fbest, policy, avg_metrics,
                                  xmin, fmi, x, f1, loc, flag,
-                                 ncall1, nsweep, nsweepbest) = self.basket(x, f1, policy, avg_metrics, xmin, fmi, xbest,
+                                 ncall1, nsweep, nsweepbest) = self.basket(x, f1, policy, avg_metrics,  # type: ignore
+                                                                           xmin, fmi, xbest,  # type: ignore
                                                                            fbest, stop, nbasket0, nsweep, nsweepbest,
-                                                                           stopping_actions)
+                                                                           stopping_actions)  # type: ignore
                             ncall = ncall + ncall1
                             if not flag:
                                 break
@@ -670,8 +663,8 @@ class MCSAgent(BaseAgent):
                                     else:
                                         xmin[nbasket0] = copy.deepcopy(xmin1)
                                         fmi[nbasket0] = copy.deepcopy(fmi1)
-                                    fbest, xbest = MCSUtils().fbestloc(fmi, fbest, xmin, xbest, # type: ignore
-                                                                       nbasket0, stop) # type: ignore
+                                    fbest, xbest = MCSUtils().fbestloc(fmi, fbest, xmin, xbest,  # type: ignore
+                                                                       nbasket0, stop)  # type: ignore
                                     if not flag:
                                         break
                     nbasket = copy.deepcopy(nbasket0)
