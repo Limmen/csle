@@ -32,7 +32,7 @@ import {
   SERVER_CLUSTER_PAGE_RESOURCE,
   CREATE_EMULATION_PAGE_RESOURCE,
   RECOVERY_AI_PAGE_RESOURCE,
-  HTTP_PREFIX, HTTP_REST_GET, CONFIG_RESOURCE,
+  API_BASE_URL, HTTP_REST_GET, CONFIG_RESOURCE,
   REGISTRATION_ALLOWED_SUBRESOURCE, REGISTRATION_ALLOWED_PROPERTY
 } from '../../Common/constants'
 
@@ -59,7 +59,7 @@ const Header = (props) => {
 
   const fetchVersion = useCallback(() => {
     fetch(
-      `/${VERSION_RESOURCE}`,
+      `${API_BASE_URL}/${VERSION_RESOURCE}`,
       {
         method: HTTP_REST_GET,
         headers: new Headers({
@@ -78,7 +78,7 @@ const Header = (props) => {
 
   const fetchRegistrationAllowed = useCallback(() => {
     fetch(
-      `/${CONFIG_RESOURCE}/${REGISTRATION_ALLOWED_SUBRESOURCE}`,
+      `${API_BASE_URL}/${CONFIG_RESOURCE}/${REGISTRATION_ALLOWED_SUBRESOURCE}`,
       {
         method: HTTP_REST_GET,
         headers: new Headers({

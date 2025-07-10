@@ -21,7 +21,7 @@ import AlphaVecPolicy from "./AlphaVecPolicy/AlphaVecPolicy";
 import PWLCValueFun from './PWLCValueFun.png'
 import {
     ALPHA_VEC_POLICIES_RESOURCE,
-    HTTP_PREFIX,
+    API_BASE_URL,
     HTTP_REST_DELETE,
     HTTP_REST_GET,
     LOGIN_PAGE_RESOURCE,
@@ -49,7 +49,7 @@ const AlphaVecPolicies = (props) => {
 
     const fetchAlphaVecPolicy = useCallback((alpha_vec_policy_id) => {
         fetch(
-            (`/${ALPHA_VEC_POLICIES_RESOURCE}/${alpha_vec_policy_id.value}`
+            (`${API_BASE_URL}/${ALPHA_VEC_POLICIES_RESOURCE}/${alpha_vec_policy_id.value}`
                 + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_GET,
@@ -80,7 +80,7 @@ const AlphaVecPolicies = (props) => {
 
     const fetchAlphaVecPoliciesIds = useCallback(() => {
         fetch(
-            `/${ALPHA_VEC_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `${API_BASE_URL}/${ALPHA_VEC_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -125,7 +125,7 @@ const AlphaVecPolicies = (props) => {
 
     const removeAlphaVecPoliciesRequest = useCallback((alpha_vec_policies_id) => {
         fetch(
-            (`/${ALPHA_VEC_POLICIES_RESOURCE}/${alpha_vec_policies_id}`
+            (`${API_BASE_URL}/${ALPHA_VEC_POLICIES_RESOURCE}/${alpha_vec_policies_id}`
                 + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_DELETE,
@@ -154,7 +154,7 @@ const AlphaVecPolicies = (props) => {
 
     const removeAllAlphaVecPoliciesRequest = useCallback(() => {
         fetch(
-            `/${ALPHA_VEC_POLICIES_RESOURCE}`
+            `${API_BASE_URL}/${ALPHA_VEC_POLICIES_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,

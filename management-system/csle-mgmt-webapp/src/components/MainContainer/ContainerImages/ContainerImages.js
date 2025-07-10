@@ -16,7 +16,7 @@ import { useAlert } from "react-alert";
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
 import formatBytes from "../../Common/formatBytes";
-import {HTTP_PREFIX, IMAGES_RESOURCE, LOGIN_PAGE_RESOURCE, TOKEN_QUERY_PARAM} from "../../Common/constants";
+import {API_BASE_URL, IMAGES_RESOURCE, LOGIN_PAGE_RESOURCE, TOKEN_QUERY_PARAM} from "../../Common/constants";
 
 const ContainerImages = (props) => {
     /**
@@ -43,7 +43,7 @@ const ContainerImages = (props) => {
          * @type {(function(): void)|*}
          */
         fetch(
-            `/${IMAGES_RESOURCE}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${API_BASE_URL}/${IMAGES_RESOURCE}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: "GET",
                 headers: new Headers({

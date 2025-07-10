@@ -15,7 +15,7 @@ import { useAlert } from "react-alert";
 import serverIp from "../../../../Common/serverIp";
 import serverPort from "../../../../Common/serverPort";
 import {
-    HTTP_PREFIX,
+    API_BASE_URL,
     HTTP_REST_POST,
     LOGIN_PAGE_RESOURCE,
     FILE_RESOURCE,
@@ -41,7 +41,7 @@ const TrainingJob = (props) => {
 
     const fetchLogs = useCallback(() => {
         fetch(
-            `/${FILE_RESOURCE}`
+            `${API_BASE_URL}/${FILE_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_POST,

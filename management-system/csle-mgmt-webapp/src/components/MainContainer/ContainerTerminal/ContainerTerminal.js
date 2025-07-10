@@ -31,7 +31,7 @@ import {
     WS_CONTAINER_TERMINAL_NAMESPACE,
     WS_CONTAINER_TERMINAL_OUTPUT_MSG,
     WS_RESIZE_MSG,
-    HTTP_PREFIX,
+    API_BASE_URL,
     EMULATION_EXECUTIONS_RESOURCE,
     EMULATION_QUERY_PARAM,
     HTTP_REST_GET,
@@ -78,7 +78,7 @@ const ContainerTerminal = (props) => {
 
     const fetchSelectedExecution = useCallback((id_obj) => {
         fetch(
-            (`/${EMULATION_EXECUTIONS_RESOURCE}/${id_obj.value.id}?`
+            (`${API_BASE_URL}/${EMULATION_EXECUTIONS_RESOURCE}/${id_obj.value.id}?`
                 + `${EMULATION_QUERY_PARAM}=${id_obj.value.emulation}&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_GET,

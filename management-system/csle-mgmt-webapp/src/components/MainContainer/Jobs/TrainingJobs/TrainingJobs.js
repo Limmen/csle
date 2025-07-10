@@ -19,7 +19,7 @@ import { useAlert } from "react-alert";
 import serverIp from "../../../Common/serverIp";
 import serverPort from "../../../Common/serverPort";
 import {
-    HTTP_PREFIX, HTTP_REST_DELETE,
+    API_BASE_URL, HTTP_REST_DELETE,
     HTTP_REST_GET,
     LOGIN_PAGE_RESOURCE,
     TOKEN_QUERY_PARAM,
@@ -50,7 +50,7 @@ const TrainingJobs = (props) => {
 
     const fetchTrainingJob = useCallback((training_job_id) => {
         fetch(
-            `/${TRAINING_JOBS_RESOURCE}/${training_job_id.value}`
+            `${API_BASE_URL}/${TRAINING_JOBS_RESOURCE}/${training_job_id.value}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -80,7 +80,7 @@ const TrainingJobs = (props) => {
 
     const fetchTrainingJobsIds = useCallback(() => {
         fetch(
-            `/${TRAINING_JOBS_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `${API_BASE_URL}/${TRAINING_JOBS_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -134,7 +134,7 @@ const TrainingJobs = (props) => {
 
     const removeTrainingJobRequest = useCallback((training_job_id) => {
         fetch(
-            `/${TRAINING_JOBS_RESOURCE}/${training_job_id}`
+            `${API_BASE_URL}/${TRAINING_JOBS_RESOURCE}/${training_job_id}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,
@@ -164,7 +164,7 @@ const TrainingJobs = (props) => {
 
     const removeAllTrainingJobsRequest = useCallback(() => {
         fetch(
-            `/${TRAINING_JOBS_RESOURCE}`
+            `${API_BASE_URL}/${TRAINING_JOBS_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,
@@ -304,7 +304,7 @@ const TrainingJobs = (props) => {
 
     const stopTrainingJobRequest = useCallback((training_job_id) => {
         fetch(
-            (`/${TRAINING_JOBS_RESOURCE}/${training_job_id}`
+            (`${API_BASE_URL}/${TRAINING_JOBS_RESOURCE}/${training_job_id}`
                 + `?${STOP_PROPERTY}=true&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_POST,
@@ -341,7 +341,7 @@ const TrainingJobs = (props) => {
 
     const startTrainingJobRequest = useCallback((training_job_id) => {
         fetch(
-            `/${TRAINING_JOBS_RESOURCE}/${training_job_id}`
+            `${API_BASE_URL}/${TRAINING_JOBS_RESOURCE}/${training_job_id}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_POST,

@@ -1,5 +1,6 @@
 import csle_rest_api.constants.constants as constants
 import requests
+import os
 
 
 class OTXLookup:
@@ -16,7 +17,9 @@ class OTXLookup:
         :return: the information returned by the OTX API
         """
         url = f"{constants.RAG.OTX_BASE_URL}/IPv4/{ip}/general"
-        return requests.get(url, headers=constants.RAG.OTX_HEADERS).json()
+        api_key = os.environ.get(constants.RAG.OTX_API_KEY)
+        headers = {constants.RAG.OTX_API_KEY_HEADER: api_key}
+        return requests.get(url, headers=headers).json()
 
     @staticmethod
     def lookup_domain(domain: str) -> requests.Response:
@@ -27,7 +30,9 @@ class OTXLookup:
         :return: the information returned by the OTX API
         """
         url = f"{constants.RAG.OTX_BASE_URL}/domain/{domain}/general"
-        return requests.get(url, headers=constants.RAG.OTX_HEADERS).json()
+        api_key = os.environ.get(constants.RAG.OTX_API_KEY)
+        headers = {constants.RAG.OTX_API_KEY_HEADER: api_key}
+        return requests.get(url, headers=headers).json()
 
     @staticmethod
     def lookup_url(url: str) -> requests.Response:
@@ -38,7 +43,9 @@ class OTXLookup:
         :return: the information returned by the OTX API
         """
         url = f"{constants.RAG.OTX_BASE_URL}/url/{url}/general"
-        return requests.get(url, headers=constants.RAG.OTX_HEADERS).json()
+        api_key = os.environ.get(constants.RAG.OTX_API_KEY)
+        headers = {constants.RAG.OTX_API_KEY_HEADER: api_key}
+        return requests.get(url, headers=headers).json()
 
     @staticmethod
     def lookup_hostname(hostname: str) -> requests.Response:
@@ -49,7 +56,9 @@ class OTXLookup:
         :return: the information returned by the OTX API
         """
         url = f"{constants.RAG.OTX_BASE_URL}/hostname/{hostname}/general"
-        return requests.get(url, headers=constants.RAG.OTX_HEADERS).json()
+        api_key = os.environ.get(constants.RAG.OTX_API_KEY)
+        headers = {constants.RAG.OTX_API_KEY_HEADER: api_key}
+        return requests.get(url, headers=headers).json()
 
     @staticmethod
     def lookup_cve(cve: str) -> requests.Response:
@@ -60,4 +69,6 @@ class OTXLookup:
         :return: the information returned by the OTX API
         """
         url = f"{constants.RAG.OTX_BASE_URL}/cve/{cve}"
-        return requests.get(url, headers=constants.RAG.OTX_HEADERS).json()
+        api_key = os.environ.get(constants.RAG.OTX_API_KEY)
+        headers = {constants.RAG.OTX_API_KEY_HEADER: api_key}
+        return requests.get(url, headers=headers).json()

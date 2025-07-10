@@ -17,7 +17,7 @@ import { useAlert } from "react-alert";
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
 import {
-    HTTP_PREFIX,
+    API_BASE_URL,
     HTTP_REST_GET,
     LOGIN_PAGE_RESOURCE,
     TOKEN_QUERY_PARAM,
@@ -50,7 +50,7 @@ const SDNControllers = (props) => {
 
     const fetchEmulationExecutionWithSdnController = useCallback((id_obj) => {
         fetch(
-            (`/${EMULATION_EXECUTIONS_RESOURCE}/${id_obj.value.id}`
+            (`${API_BASE_URL}/${EMULATION_EXECUTIONS_RESOURCE}/${id_obj.value.id}`
                 + `?${EMULATION_QUERY_PARAM}=${id_obj.value.emulation}`
                 + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
@@ -81,7 +81,7 @@ const SDNControllers = (props) => {
 
     const fetchEmulationExecutionsWithSdnControllersIds = useCallback(() => {
         fetch(
-            `/${SDN_CONTROLLERS_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `${API_BASE_URL}/${SDN_CONTROLLERS_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,

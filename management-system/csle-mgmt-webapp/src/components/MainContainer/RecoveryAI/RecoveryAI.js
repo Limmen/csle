@@ -3,111 +3,184 @@ import {
   InputGroup,
   FormControl,
   Button,
-  Form,
   Card,
-  Spinner
+  Spinner,
+  Tooltip,
+  OverlayTrigger,
+  Modal,
+  ListGroup,
+  ProgressBar,
+  Form
 } from 'react-bootstrap'
 import './RecoveryAI.css'
 import 'react-confirm-alert/src/react-confirm-alert.css'
-import serverIp from '../../Common/serverIp'
-import serverPort from '../../Common/serverPort'
 import { useNavigate } from 'react-router-dom'
 import { useAlert } from 'react-alert'
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import Tooltip from 'react-bootstrap/Tooltip'
-import Modal from 'react-bootstrap/Modal'
 import RecoveryAIPic from './RecoveryAI.png'
 import {
-  HTTP_PREFIX,
   LOGIN_PAGE_RESOURCE,
   TOKEN_QUERY_PARAM,
   HTTP_REST_POST,
   RECOVERY_AI_RESOURCE,
   RECOVERY_AI_EXAMPLE_RESOURCE,
-  RECOVERY_AI_INCIDENT_DESCRIPTION_FIELD,
-  RECOVERY_AI_INCIDENT_FIELD,
-  RECOVERY_AI_ACTION_EXPLANATIONS_FIELD,
-  RECOVERY_AI_MITRE_ATTACK_TECHNIQUES_FIELD,
-  RECOVERY_AI_MITRE_ATTACK_TACTICS_FIELD,
-  RECOVERY_AI_RECOVERY_ACTIONS_FIELD
+  API_BASE_URL
 } from '../../Common/constants'
 
-const FIELDS = [
-  RECOVERY_AI_INCIDENT_FIELD,
-  RECOVERY_AI_INCIDENT_DESCRIPTION_FIELD,
-  RECOVERY_AI_MITRE_ATTACK_TACTICS_FIELD,
-  RECOVERY_AI_MITRE_ATTACK_TECHNIQUES_FIELD,
-  RECOVERY_AI_RECOVERY_ACTIONS_FIELD,
-  RECOVERY_AI_ACTION_EXPLANATIONS_FIELD
-]
+const usePrevious = (value) => {
+  const ref = useRef()
+  useEffect(() => {
+    ref.current = value
+  }, [value])
+  return ref.current
+}
 
-const initialPlan = {
-  incident: false,
-  incidentDescription: '',
-  mitreTactics: [],
-  mitreTechniques: [],
-  recoveryActions: [],
-  actionExplanations: []
+const downloadJson = (data, filename) => {
+  const jsonString = `data:text/json;charset=utf-8,${encodeURIComponent(
+    JSON.stringify(data, null, 2)
+  )}`
+  const link = document.createElement('a')
+  link.href = jsonString
+  link.download = filename
+  link.click()
+}
+
+const RecoveryProgress = ({ systemState, recoveryActions }) => {
+  const TOTAL_STAGES = 6
+
+  const completedStages = systemState ? Object.values(systemState).filter(v => v === true).length : 0
+  const progressPercentage = (completedStages / TOTAL_STAGES) * 100
+  const progressLabel = `${completedStages} / ${TOTAL_STAGES} recovery stages complete (${recoveryActions.length} recovery actions taken)`
+
+  return (
+    <Card className="shadow-sm mb-4">
+      <Card.Header as="h5" className="text-center fw-bold">
+        <div className="d-flex justify-content-center align-items-center">
+          <Spinner animation="border" size="sm" variant="secondary" className="me-2 spinnerMarginRight" />
+          Generating recovery plan..
+        </div>
+      </Card.Header>
+      <Card.Body>
+        <ProgressBar
+          className="black-progress-label"
+          now={progressPercentage}
+          label={progressLabel}
+          animated
+          variant="success"
+          style={{ height: '25px', fontSize: '0.9rem' }}
+        />
+      </Card.Body>
+    </Card>
+  )
+}
+
+const initialSystemState = {
+  is_attack_contained: false,
+  is_knowledge_sufficient: false,
+  are_forensics_preserved: false,
+  is_eradicated: false,
+  is_hardened: false,
+  is_recovered: false
 }
 
 const RecoveryAI = (props) => {
   const [systemDescription, setSystemDescription] = useState('')
   const [networkLogs, setNetworkLogs] = useState('')
-  const [reasoning, setReasoning] = useState('')
-  const [waitingforUserInput, setWaitingForUserInput] = useState(true)
-  const [generatingAnalysis, setGeneratingAnalysis] = useState(false)
-  const [loadingAnalysis, setLoadingAnalysis] = useState(false)
-  const [loadingPlan, setLoadingPlan] = useState(false)
-  const [planProgress, setPlanProgress] = useState(0)
-  const [recoveryPlan, setRecoveryPlan] = useState(initialPlan)
-  const [showInfoModal, setShowInfoModal] = useState(false)
+  const [currentReasoning, setCurrentReasoning] = useState('')
+  const [isProcessing, setIsProcessing] = useState(false)
   const [loadingExample, setLoadingExample] = useState(false)
+  const [showInfoModal, setShowInfoModal] = useState(false)
+
+  const [incidentClassification, setIncidentClassification] = useState(null)
+  const [recoveryActions, setRecoveryActions] = useState([])
+  const [systemState, setSystemState] = useState(null)
+  const [historicalData, setHistoricalData] = useState([])
+  const [noIncidentFound, setNoIncidentFound] = useState(false)
+
   const [partialJson, setPartialJson] = useState('')
-  const ip = serverIp
-  const port = serverPort
+  const [processingDescr, setProcessingDescr] = useState('')
+  const [reasoningDescr, setReasoningDescr] = useState('')
+  const parsingStateRef = useRef('REASONING')
+  const jsonBuffer = useRef('')
+
+  const [rag, setRag] = useState(true)
+  const [optimizationSteps, setOptimizationSteps] = useState(1)
+  const [lookaheadHorizon, setLookaheadHorizon] = useState(1)
+  const [rolloutHorizon, setRolloutHorizon] = useState(0)
+  const [temperature, setTemperature] = useState(1.0)
+
+  const reasoningPreRef = useRef(null)
+  const jsonPreRef = useRef(null)
+
   const setSessionData = props.setSessionData
   const alert = useAlert()
   const navigate = useNavigate()
   const abortRef = useRef(null)
-  const capturedRef = useRef(new Set())
-  const stepBufferRef = useRef(null);
 
   const abortCurrentStream = () => {
     if (abortRef.current) {
       abortRef.current.abort()
       abortRef.current = null
     }
-    setLoadingAnalysis(false)
-    setLoadingPlan(false)
-  }
-
-  const resetAll = () => {
-    abortCurrentStream()
-    setSystemDescription('')
-    setNetworkLogs('')
-    setReasoning('')
-    setWaitingForUserInput(true)
-    setGeneratingAnalysis(false)
-    setRecoveryPlan(initialPlan)
-    setPlanProgress(0)
+    setIsProcessing(false)
+    setProcessingDescr('')
+    setCurrentReasoning('')
+    setReasoningDescr('')
+    jsonBuffer.current = ''
     setPartialJson('')
-    capturedRef.current = new Set()
   }
 
-  const handleDownloadPlan = () => {
-    const dataStr =
-      'data:text/json;charset=utf-8,' +
-      encodeURIComponent(JSON.stringify(recoveryPlan, null, 2))
-    const dl = document.createElement('a')
-    dl.setAttribute('href', dataStr)
-    dl.setAttribute('download', 'recovery_plan.json')
-    document.body.appendChild(dl)
-    dl.click()
-    dl.remove()
+  const resetAll = (keepLogs) => {
+    abortCurrentStream()
+    if (!keepLogs) {
+      setSystemDescription('')
+      setNetworkLogs('')
+    }
+    setCurrentReasoning('')
+    setIncidentClassification(null)
+    setRecoveryActions([])
+    setSystemState(null)
+    setPartialJson('')
+    parsingStateRef.current = 'REASONING'
+    setIsProcessing(false)
+    setProcessingDescr('')
+    setReasoningDescr('')
+    setHistoricalData([])
+    setNoIncidentFound(false)
   }
 
   const handleSystemDescriptionChange = (e) => setSystemDescription(e.target.value)
   const handleNetworkLogsChange = (e) => setNetworkLogs(e.target.value)
+
+  const handleDownloadIncidentReport = () => {
+    const incidentReportStep = historicalData.find(step => step.data && step.data.Entities)
+    if (incidentReportStep) {
+      const dataToDownload = {
+        reasoning: incidentReportStep.reasoning,
+        report: incidentReportStep.data
+      }
+      downloadJson(dataToDownload, 'incident_report.json')
+    } else {
+      alert.error('Could not find incident report data to download.')
+    }
+  }
+
+  const handleDownloadRecoveryPlan = () => {
+    if (historicalData.length > 0) {
+      const allActions = historicalData.filter(step => step.data && step.data.Action).map(step => step.data)
+      const allStates = historicalData.filter(step => step.data && Object.prototype.hasOwnProperty.call(step.data, 'is_recovered')).map(step => step.data)
+      const allReasonings = historicalData.map(step => step.reasoning).filter(Boolean)
+
+      const dataToDownload = {
+        recovery_actions: allActions,
+        system_states: allStates,
+        reasonings: allReasonings,
+        full_history: historicalData
+      }
+      downloadJson(dataToDownload, 'recovery_plan.json')
+    } else {
+      alert.error('No recovery plan data available to download.')
+    }
+  }
 
   const handleFetchExample = () => {
     const token = props.sessionData?.token || sessionStorage.getItem('token')
@@ -116,7 +189,7 @@ const RecoveryAI = (props) => {
       navigate(`/${LOGIN_PAGE_RESOURCE}`)
       return
     }
-    const url = `/${RECOVERY_AI_RESOURCE}/${RECOVERY_AI_EXAMPLE_RESOURCE}?${TOKEN_QUERY_PARAM}=${token}`
+    const url = `${API_BASE_URL}/${RECOVERY_AI_RESOURCE}/${RECOVERY_AI_EXAMPLE_RESOURCE}?${TOKEN_QUERY_PARAM}=${token}`
     setLoadingExample(true)
     fetch(url)
       .then((res) => {
@@ -136,7 +209,6 @@ const RecoveryAI = (props) => {
         if (!data) return
         setSystemDescription(data.systemDescription || '')
         setNetworkLogs(data.networkLogs || '')
-        setWaitingForUserInput(true)
       })
       .catch(() => {
         alert.error('Unable to connect to the Recovery AI service')
@@ -145,16 +217,11 @@ const RecoveryAI = (props) => {
   }
 
   const handleGeneratePlan = () => {
-    setWaitingForUserInput(false)
-    setReasoning('')
-    setRecoveryPlan(initialPlan)
-    setLoadingPlan(false)
-    setGeneratingAnalysis(false)
-    setPlanProgress(0)
-    setPartialJson('')
-    capturedRef.current = new Set()
-    abortCurrentStream()
-    setLoadingAnalysis(true)
+    resetAll(true)
+    setIsProcessing(true)
+    setProcessingDescr('Generating incident report..')
+    setReasoningDescr('Analyzing the logs and the system description..')
+    parsingStateRef.current = 'REASONING'
 
     const token = props.sessionData?.token || sessionStorage.getItem('token')
     if (!token) {
@@ -163,7 +230,7 @@ const RecoveryAI = (props) => {
       return
     }
 
-    const url = `/${RECOVERY_AI_RESOURCE}?${TOKEN_QUERY_PARAM}=${token}`
+    const url = `${API_BASE_URL}/${RECOVERY_AI_RESOURCE}?${TOKEN_QUERY_PARAM}=${token}`
     const controller = new AbortController()
     abortRef.current = controller
 
@@ -173,7 +240,15 @@ const RecoveryAI = (props) => {
         'Content-Type': 'application/json',
         Accept: 'text/event-stream'
       },
-      body: JSON.stringify({ systemDescription, networkLogs }),
+      body: JSON.stringify({
+        systemDescription,
+        networkLogs,
+        rag,
+        optimizationSteps: optimizationSteps,
+        lookaheadHorizon: lookaheadHorizon,
+        rolloutHorizon: rolloutHorizon,
+        temperature
+      }),
       signal: controller.signal
     })
       .then((res) => {
@@ -185,6 +260,7 @@ const RecoveryAI = (props) => {
         }
         if (!res.ok) {
           alert.error(`Recovery AI returned status ${res.status}`)
+          setIsProcessing(false)
           return null
         }
         return res.body
@@ -195,92 +271,86 @@ const RecoveryAI = (props) => {
         const reader = body.getReader()
         const decoder = new TextDecoder('utf-8')
         let buffer = ''
-        const lastTokens = []
+        let reasoningForCurrentStep = ''
+        const processJson = (jsonString, reasoningText) => {
+          try {
+            const obj = JSON.parse(jsonString)
+            setHistoricalData(prev => [...prev, { reasoning: reasoningText, data: obj }])
+            if (obj.Entities) {
+              if (Object.keys(obj.Entities).length === 0) {
+                obj.Entities.Attacker = []
+                obj.Entities.System = []
+                obj.Entities.Targeted = []
+              }
+              setIncidentClassification(obj)
 
-        let capturingJson = false
-        let jsonTokens = []
+              if (obj.Incident === 'No') {
+                setNoIncidentFound(true)
+                abortCurrentStream()
+                return
+              }
 
+              setSystemState(initialSystemState)
+              setReasoningDescr('Selecting the next recovery action..')
+              setProcessingDescr('Generating the recovery action..')
+            } else if (obj.Action) {
+              setRecoveryActions((prev) => [...prev, obj])
+              setReasoningDescr(`Analyzing the effect of the action '${obj.Action}' and predicting the next state..`)
+              setProcessingDescr(`Generating the next state after taking action '${obj.Action}'..`)
+            } else if (Object.prototype.hasOwnProperty.call(obj, 'is_recovered')) {
+              setSystemState(obj)
+              setReasoningDescr('Selecting the next recovery action..')
+              setProcessingDescr('Generating the recovery action..')
+            }
+            jsonBuffer.current = ''
+            setCurrentReasoning('')
+            setPartialJson('')
+            parsingStateRef.current = 'REASONING'
+          } catch (e) {
+            console.error('Failed to parse JSON chunk:', jsonString, e)
+          }
+        }
         const pump = () =>
           reader.read().then(({ value, done }) => {
-            if (done) return
+            if (done) {
+              setIsProcessing(false)
+              return
+            }
 
             buffer += decoder.decode(value, { stream: true })
-
             let nl
             while ((nl = buffer.indexOf('\n')) >= 0) {
-              const rawLine = buffer.slice(0, nl).trim()
+              let line = buffer.slice(0, nl)
               buffer = buffer.slice(nl + 1)
+              if (line.endsWith('\r')) {
+                line = line.slice(0, -1)
+              }
+              if (!line.startsWith('data: ')) continue
+              const token = line.slice(6)
 
-              if (!rawLine.startsWith('data:')) continue
-              const token = rawLine.slice(5).trim()
-
-              if (!capturingJson) {
-                setLoadingAnalysis(false)
-                setGeneratingAnalysis(true)
-                if (token === '</think>') {
-                  capturingJson = true
-                  setLoadingPlan(true)
-                  lastTokens.length = 0
-                  continue
+              if (token.trim() === '</think>') {
+                if (parsingStateRef.current === 'REASONING') {
+                  parsingStateRef.current = 'JSON'
                 }
-                setReasoning((prev) => {
-                  const cleanToken = token.replace(/\\n/g, '\n');
-
-                  if (stepBufferRef.current) {
-                    if (/^\d+[:.]?$/.test(cleanToken)) {
-                      const stepToken = `\n\n${stepBufferRef.current}`;
-                      stepBufferRef.current = null;
-                      return prev ? `${prev} ${stepToken} ${cleanToken}` : `${stepToken} ${cleanToken}`;
-                    } else {
-                      const stepToken = stepBufferRef.current;
-                      stepBufferRef.current = null;
-                      return prev ? `${prev} ${stepToken} ${cleanToken}` : `${stepToken} ${cleanToken}`;
-                    }
-                  }
-
-                  if (cleanToken === 'Step') {
-                    stepBufferRef.current = cleanToken;
-                    return prev || '';
-                  }
-
-                  return prev ? `${prev} ${cleanToken}` : cleanToken;
-                });
-
                 continue
               }
-              setGeneratingAnalysis(false)
 
-              lastTokens.push(token)
-              if (lastTokens.length > 3) lastTokens.shift()
-              const merged = lastTokens.join(' ').trim()
-
-              FIELDS.forEach((f) => {
-                if (!capturedRef.current.has(f) && (token.includes(f) || merged.includes(f))) {
-                  capturedRef.current.add(f)
-                  setPlanProgress(capturedRef.current.size)
+              if (parsingStateRef.current === 'REASONING') {
+                const cleanToken = token.replace(/\\n/g, '\n')
+                setCurrentReasoning((prev) => (prev ? `${prev}${cleanToken}` : cleanToken))
+                reasoningForCurrentStep += cleanToken
+              } else if (parsingStateRef.current === 'JSON') {
+                const token2 = token.replace(/\\n/g, '\n')
+                const sanitizedToken = token2.replace(/\u00A0/g, ' ')
+                setPartialJson(prev => prev + sanitizedToken)
+                jsonBuffer.current += sanitizedToken.replace(/\r?\n|\r/g, ' ')
+                try {
+                  JSON.parse(jsonBuffer.current)
+                  processJson(jsonBuffer.current, reasoningForCurrentStep)
+                  reasoningForCurrentStep = ''
+                } catch (e) {
+                  // Not a complete JSON object yet, continue buffering
                 }
-              })
-
-              jsonTokens.push(token)
-              setPartialJson(jsonTokens.join(' '))
-              if (!token.endsWith('}')) continue
-              const jsonStr = jsonTokens.join(' ')
-              try {
-                const obj = JSON.parse(jsonStr)
-                setRecoveryPlan({
-                  incident: obj[RECOVERY_AI_INCIDENT_FIELD] || '',
-                  incidentDescription: obj[RECOVERY_AI_INCIDENT_DESCRIPTION_FIELD] || '',
-                  mitreTactics: obj[RECOVERY_AI_MITRE_ATTACK_TACTICS_FIELD] || [],
-                  mitreTechniques: obj[RECOVERY_AI_MITRE_ATTACK_TECHNIQUES_FIELD] || [],
-                  recoveryActions: obj[RECOVERY_AI_RECOVERY_ACTIONS_FIELD] || [],
-                  actionExplanations: obj[RECOVERY_AI_ACTION_EXPLANATIONS_FIELD] || []
-                })
-              } catch (e) {
-                console.log(jsonStr)
-                alert.error('Failed to parse recovery plan')
-              } finally {
-                setLoadingPlan(false)
-                abortCurrentStream()
               }
             }
             return pump()
@@ -289,131 +359,157 @@ const RecoveryAI = (props) => {
         pump().catch((err) => {
           if (err.name !== 'AbortError') {
             alert.error('Connection to Recovery AI lost')
+            setIsProcessing(false)
           }
         })
       })
       .catch((error) => {
         if (error.name !== 'AbortError') {
           alert.error('Unable to connect to Recovery AI service')
+          setIsProcessing(false)
         }
       })
   }
 
-  useEffect(() => () => abortCurrentStream(), [])
+  const prevReasoning = usePrevious(currentReasoning)
+  const prevPartialJson = usePrevious(partialJson)
+
+  useEffect(() => {
+    if (currentReasoning && !prevReasoning && reasoningPreRef.current) {
+      reasoningPreRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+    if (partialJson && !prevPartialJson && jsonPreRef.current) {
+      jsonPreRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+  }, [currentReasoning, partialJson, prevReasoning, prevPartialJson])
 
   const BulletList = ({ items }) => (
-    <ul
-      className="mb-0 ps-3"
-      style={{
-        listStyleType: 'disc',
-        listStylePosition: 'outside',
-        paddingLeft: '1.25rem',
-        margin: 0,
-        textAlign: 'left'
-      }}
-    >
-      {items.map((it, idx) => (
-        <li key={idx} style={{ textAlign: 'left' }}>
-          {it}
-        </li>
-      ))}
+    <ul className="mb-0 ps-3" style={{
+      listStyleType: 'disc',
+      listStylePosition: 'outside',
+      paddingLeft: '1.25rem',
+      margin: 0,
+      textAlign: 'left'
+    }}>
+      {items.map((it, idx) => (<li key={idx} style={{ textAlign: 'left' }}>{it}</li>))}
     </ul>
   )
 
-  const NumberedList = ({ items }) => (
-    <ol
-      className="mb-0 ps-3"
-      style={{
-        listStyleType: 'decimal',
-        listStylePosition: 'outside',
-        paddingLeft: '1.25rem',
-        margin: 0,
-        textAlign: 'left'
-      }}
-    >
-      {items.map((it, idx) => (
-        <li key={idx} style={{ textAlign: 'left' }}>
-          {it}
-        </li>
-      ))}
-    </ol>
+  const InfoModal = (props) => (
+    <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+      <Modal.Header closeButton><Modal.Title id="contained-modal-title-vcenter" className="modalTitle">Recovery
+        AI</Modal.Title></Modal.Header>
+      <Modal.Body>
+        <p className="modalText">
+          RecoveryAI is a a decision-theoretic framework to enable effective use of LLMs for
+          attack recovery. The key insight that underlies our framework is that the extensive knowledge about
+          cyberattacks
+          available in current LLMs can be used as a substitute for a system model. We exploit this insight to design
+          a novel
+          decision-theoretic framework for recovery planning, which does not require full knowledge of the system
+          dynamics. As a
+          consequence, we avoid the limitations of current recovery methods that rely on manually-designed models,
+          which often
+          are overly simplistic. Our framework includes three parts: (i) offline fine-tuning of the LLM to align it
+          with the attack
+          recovery objective; (ii) retrieval-augmented generation (RAG) to ground the LLM in current threat
+          information and system
+          knowledge; and (iii) in-context learning based on decision-theoretic planning to synthesize effective
+          recovery strategies.
+        </p>
+        <div className="text-center"><img src={RecoveryAIPic} alt="Recovery AI" className="img-fluid" /></div>
+      </Modal.Body>
+      <Modal.Footer className="modalFooter"><Button onClick={props.onHide} size="sm">Close</Button></Modal.Footer>
+    </Modal>
   )
 
-  const info = () => {
-    setShowInfoModal(true)
-  }
-
-  const renderInfoTooltip = (props) => (
-    <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-      More information about Recovery AI
-    </Tooltip>
-  )
-
-  const renderResetTooltip = (props) => (
-    <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-      Remove the recovery plan and reset the system/log description.
-    </Tooltip>
-  )
-
-  const renderGenerateTooltip = (props) => (
-    <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-      Ask Recovery AI to generate a recovery plan based on the provided information.
-    </Tooltip>
-  )
-
-  const renderDownloadTooltip = (props) => (
-    <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-      Download the recovery plan in JSON format.
-    </Tooltip>
-  )
-
-  const renderExampleTooltip = (props) => (
-    <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-      Load an example system description and network logs.
-    </Tooltip>
-  )
-
-  const InfoModal = (props) => {
+  const StateVisualizer = ({ state }) => {
+    if (!state) return null
+    const stateEntries = [
+      {
+        key: 'is_attack_contained',
+        label: 'Attack contained',
+        tooltip: 'Has the immediate threat been stopped from spreading?'
+      },
+      {
+        key: 'is_knowledge_sufficient',
+        label: 'Information sufficient',
+        tooltip: 'Have we gathered enough data to effectively contain and eradicate the attack?'
+      },
+      {
+        key: 'are_forensics_preserved',
+        label: 'Forensics preserved',
+        tooltip: 'Has evidence been captured and stored in a forensically sound manner?'
+      },
+      {
+        key: 'is_eradicated',
+        label: 'Attack eradicated',
+        tooltip: 'Is the attacker and any malware completely removed from the system?'
+      },
+      {
+        key: 'is_hardened',
+        label: 'System hardened',
+        tooltip: 'Has the root cause of the attack been remediated? i.e., are future attacks of the same type prevented?'
+      },
+      { key: 'is_recovered', label: 'Services restored', tooltip: 'Are operational services restored for users?' }
+    ]
     return (
-      <Modal
-        {...props}
-        size="lg"
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-      >
-        <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
-            Recovery AI
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p className="modalText">
-            RecoveryAI is a a decision-theoretic framework to enable effective use of LLMs for
-            attack recovery. The key insight that underlies our framework is that the extensive knowledge about
-            cyberattacks
-            available in current LLMs can be used as a substitute for a system model. We exploit this insight to design
-            a novel
-            decision-theoretic framework for recovery planning, which does not require full knowledge of the system
-            dynamics. As a
-            consequence, we avoid the limitations of current recovery methods that rely on manually-designed models,
-            which often
-            are overly simplistic. Our framework includes three parts: (i) offline fine-tuning of the LLM to align it
-            with the attack
-            recovery objective; (ii) retrieval-augmented generation (RAG) to ground the LLM in current threat
-            information and system
-            knowledge; and (iii) in-context learning based on decision-theoretic planning to synthesize effective
-            recovery strategies.
-          </p>
-          <div className="text-center">
-            <img src={RecoveryAIPic} alt="Recovery AI" className="img-fluid" />
-          </div>
-        </Modal.Body>
-        <Modal.Footer className="modalFooter">
-          <Button onClick={props.onHide} size="sm">Close</Button>
-        </Modal.Footer>
-      </Modal>
+      <Card>
+        <Card.Header as="h6" className="text-center fw-bold">Recovery State</Card.Header>
+        <Card.Body className="p-0">
+          <ListGroup variant="flush">
+            {stateEntries.map(entry => (
+              <ListGroup.Item key={entry.key} className="d-flex justify-content-between align-items-center">
+                <OverlayTrigger placement="top" overlay={renderTooltip(entry.tooltip)}>
+                  <span><i className="fa fa-info-circle me-1 spinnerMarginRight"
+                           aria-hidden="true" />{entry.label}:</span>
+                </OverlayTrigger>
+                {state[entry.key]
+                  ? <i className="fa fa-check-circle text-success fa-lg" aria-hidden="true"></i>
+                  : <i className="fa fa-times-circle text-danger fa-lg" aria-hidden="true"></i>}
+              </ListGroup.Item>
+            ))}
+          </ListGroup>
+        </Card.Body>
+      </Card>
     )
   }
+
+  const renderTooltip = (text) => (props) => <Tooltip {...props}>{text}</Tooltip>
+
+  const StreamingUI = ({ reasoningRef, jsonRef }) => (
+    <>
+      {currentReasoning && (
+        <div className="mb-4">
+          <h4 className={`fw-bold ${currentReasoning && !partialJson ? 'reasoning-text-animated' : ''}`}>
+            {reasoningDescr}
+          </h4>
+          <pre
+            ref={reasoningRef}
+            className="bg-light p-3 rounded border text-start"
+            style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', textAlign: 'left' }}>
+            {currentReasoning && !partialJson && <Spinner animation="grow" size="sm" className="me-2" />}
+            {currentReasoning}
+          </pre>
+        </div>
+      )}
+
+      {isProcessing && partialJson && (
+        <div className="mb-4">
+          <h4 className={`fw-bold ${partialJson ? 'reasoning-text-animated' : ''}`}>
+            {processingDescr}
+          </h4>
+          <pre
+            ref={jsonRef}
+            className="bg-dark text-white p-3 rounded text-start"
+            style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', textAlign: 'left' }}>
+            <Spinner animation="grow" variant="light" size="sm" className="me-2" />
+            {partialJson}
+          </pre>
+        </div>
+      )}
+    </>
+  )
 
   return (
     <div className="recoveryAI container py-5">
@@ -427,12 +523,9 @@ const RecoveryAI = (props) => {
         of your system and paste in relevant network logs. Then click the
         <strong> "Generate Recovery Plan"</strong> button to receive a detailed
         recovery plan based on the provided data.
-        <OverlayTrigger
-          placement="top"
-          delay={{ show: 0, hide: 0 }}
-          overlay={renderInfoTooltip}
-        >
-          <Button variant="button" onClick={info}>
+        <OverlayTrigger placement="top" delay={{ show: 0, hide: 0 }}
+                        overlay={renderTooltip('More information about Recovery AI')}>
+          <Button variant="button" onClick={() => setShowInfoModal(true)}>
             <i className="fa fa-info-circle infoButton" aria-hidden="true" />
           </Button>
         </OverlayTrigger>
@@ -440,218 +533,206 @@ const RecoveryAI = (props) => {
       </p>
 
       <InputGroup className="mb-3">
-        <InputGroup.Text id="systemDescriptionLabel">
-          <span className="d-flex align-items-center">
-            <i className="fa fa-cogs faSymbolLabel" aria-hidden="true" />
-            <span className="ms-2">System Description</span>
-          </span>
-        </InputGroup.Text>
-        <FormControl
-          as="textarea"
-          rows={10}
-          placeholder="Enter system description here"
-          aria-label="System Description"
-          aria-describedby="systemDescriptionLabel"
-          value={systemDescription}
-          onChange={handleSystemDescriptionChange}
-        />
+        <InputGroup.Text><i className="fa fa-cogs faSymbolLabel" aria-hidden="true" /><span className="ms-2">System Description</span></InputGroup.Text>
+        <FormControl as="textarea" rows={10} placeholder="Enter system description here" value={systemDescription}
+                     onChange={handleSystemDescriptionChange} readOnly={isProcessing} />
       </InputGroup>
 
       <InputGroup className="mb-4">
-        <InputGroup.Text id="networkLogsLabel">
-          <span className="d-flex align-items-center">
-            <i className="fa fa-file-text faSymbolLabel" aria-hidden="true" />
-            <span className="ms-2">Network Logs</span>
-          </span>
+        <InputGroup.Text><i className="fa fa-file-text faSymbolLabel" aria-hidden="true" /><span className="ms-2">Network Logs</span></InputGroup.Text>
+        <FormControl as="textarea" rows={10} placeholder="Paste network logs here" value={networkLogs}
+                     onChange={handleNetworkLogsChange} readOnly={isProcessing} />
+      </InputGroup>
+
+      <InputGroup className="mb-4">
+        <InputGroup.Text className="d-flex align-items-center">
+          <label htmlFor="rag-checkbox" className="me-2 mb-0">RAG</label>
+          <Form.Check
+            type="checkbox"
+            checked={rag}
+            onChange={(e) => setRag(e.target.checked)}
+            disabled={isProcessing}
+            id="rag-checkbox"
+          />
         </InputGroup.Text>
+        <InputGroup.Text id="opt-steps-label">Optimization steps</InputGroup.Text>
         <FormControl
-          as="textarea"
-          rows={10}
-          placeholder="Paste network logs here"
-          aria-label="Network Logs"
-          aria-describedby="networkLogsLabel"
-          value={networkLogs}
-          onChange={handleNetworkLogsChange}
+          type="number"
+          aria-describedby="opt-steps-label"
+          value={optimizationSteps}
+          onChange={(e) => setOptimizationSteps(parseInt(e.target.value, 10) || 0)}
+          disabled={isProcessing}
+        />
+        <InputGroup.Text id="lookahead-label">Lookahead horizon</InputGroup.Text>
+        <FormControl
+          type="number"
+          aria-describedby="lookahead-label"
+          value={lookaheadHorizon}
+          onChange={(e) => setLookaheadHorizon(parseInt(e.target.value, 10) || 0)}
+          disabled={isProcessing}
+        />
+        <InputGroup.Text id="rollout-label">Rollout horizon</InputGroup.Text>
+        <FormControl
+          type="number"
+          aria-describedby="rollout-label"
+          value={rolloutHorizon}
+          onChange={(e) => setRolloutHorizon(parseInt(e.target.value, 10) || 0)}
+          disabled={isProcessing}
+        />
+        <InputGroup.Text id="temp-label">Temperature</InputGroup.Text>
+        <FormControl
+          type="number"
+          step="0.1"
+          aria-describedby="temp-label"
+          value={temperature}
+          onChange={(e) => setTemperature(parseFloat(e.target.value) || 0)}
+          disabled={isProcessing}
         />
       </InputGroup>
 
       <div className="d-flex justify-content-center mb-5">
-        <OverlayTrigger
-          placement="top"
-          delay={{ show: 0, hide: 0 }}
-          overlay={renderGenerateTooltip}
-        >
-          <Button variant="primary" size="md" onClick={handleGeneratePlan}>
-            {loadingAnalysis || generatingAnalysis || loadingPlan ? (
-              <Spinner animation="border" size="sm" className="me-2 generateSpinner" />
-            ) : (
-              <i className="fa fa-magic me-2 faSymbolLabel" aria-hidden="true" />
-            )}
-            Generate Recovery Plan
+        <OverlayTrigger placement="top" overlay={renderTooltip('Ask Recovery AI to generate a recovery plan.')}>
+          <Button variant="primary" size="md" onClick={handleGeneratePlan}
+                  disabled={isProcessing || !systemDescription || !networkLogs} className="buttonMarginRight">
+            {isProcessing ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true"
+                                     className="me-2 spinnerMarginRight" /> :
+              <i className="fa fa-magic me-2 faSymbolLabel" />}
+            {isProcessing ? 'Generating...' : 'Generate Recovery Plan'}
           </Button>
         </OverlayTrigger>
-        <OverlayTrigger
-          placement="top"
-          delay={{ show: 0, hide: 0 }}
-          overlay={renderExampleTooltip}
-        >
-          <Button variant="outline-info" size="md" disabled={loadingExample} className="me-3 resetButton"
-                  onClick={handleFetchExample}>
-            {loadingExample ? (
-              <Spinner animation="border" size="sm" className="me-2 exampleSpinner" />
-            ) : (
-              <i className="fa fa-lightbulb-o me-2 faSymbolLabel" aria-hidden="true" />
-            )}
+        <OverlayTrigger placement="top" overlay={renderTooltip('Load an example system description and logs.')}>
+          <Button variant="outline-info" size="md" onClick={handleFetchExample}
+                  disabled={loadingExample || isProcessing} className="ms-3 buttonMarginRight">
+            {loadingExample ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true"
+                                       className="me-2 spinnerMarginRight" /> :
+              <i className="fa fa-lightbulb-o me-2 faSymbolLabel" />}
             Example
           </Button>
         </OverlayTrigger>
-        <OverlayTrigger
-          placement="top"
-          delay={{ show: 0, hide: 0 }}
-          overlay={renderResetTooltip}
-        >
-          <Button variant="outline-secondary" size="md" className="ms-3 resetButton" onClick={resetAll}>
-            Reset
-          </Button>
+        <OverlayTrigger placement="top" overlay={renderTooltip('Reset all fields and the generated plan.')}>
+          <Button variant="outline-secondary" size="md" className="ms-3" onClick={() => resetAll(false)}>Reset</Button>
         </OverlayTrigger>
       </div>
 
-      {!waitingforUserInput && loadingAnalysis && (
-        <div className="d-flex justify-content-center align-items-center mb-5">
-          <Spinner animation="border" role="status" className="me-3" />
-          <span className="fs-5 analysisSpinner">Contacting the server...</span>
-        </div>
-      )}
+      {!incidentClassification && <StreamingUI reasoningRef={reasoningPreRef} jsonRef={jsonPreRef} />}
 
-      {!waitingforUserInput && !loadingAnalysis && (
-        <div className="mb-4 reasoning">
-          <h3 className="managementTitleNoUnderline mb-3 fw-bold">
-            Analysis of the provided information
-          </h3>
-          <pre
-            className="bg-light p-3 rounded border reasoningTitle"
-            style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
-          >
-            {reasoning}
-          </pre>
-        </div>
-      )}
-
-      {!waitingforUserInput && loadingPlan && (
-        <div className="d-flex flex-column justify-content-center align-items-center mb-5">
-          <div className="d-flex align-items-center mb-2">
-            <Spinner animation="border" role="status" className="me-3" />
-            <span className="fs-5 analysisSpinner">
-              Analysis complete, generating recovery plan... (Progress: {planProgress}/6)
-            </span>
-          </div>
-          <pre
-            className="text-muted small mb-0"
-            style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
-          >
-            {partialJson}
-          </pre>
-        </div>
-      )}
-
-      {!waitingforUserInput && !loadingAnalysis && !generatingAnalysis && !loadingPlan && (
-        <Card className="shadow-lg border-0">
-          <Card.Header className="bg-white text-center py-5 border-0">
-            <div
-              className="mx-auto mb-3 d-flex align-items-center justify-content-center rounded-circle bg-primary text-white shieldIcon"
-              style={{ width: 72, height: 72 }}>
-              <i className="fa fa-shield fa-2x" aria-hidden="true" />
-            </div>
-            <div className="d-flex align-items-center justify-content-center">
-              <h3 className="managementTitleNoUnderline mb-0 fw-bold">Recovery Plan</h3>
-              <OverlayTrigger
-                placement="top"
-                delay={{ show: 0, hide: 0 }}
-                overlay={renderDownloadTooltip}
-              >
-                <Button variant="outline-primary" size="sm" className="ms-3 border-0 shadow-none"
-                        onClick={handleDownloadPlan}>
-                  <i className="fa fa-download" aria-hidden="true" />
-                </Button>
-              </OverlayTrigger>
-            </div>
+      {incidentClassification && (
+        <Card className="shadow-lg border-0 mb-4">
+          <Card.Header
+            className="bg-primary text-white text-center py-3 d-flex justify-content-between align-items-center">
+            <h3 className="mb-0 fw-bold">Incident Report</h3>
+            {!isProcessing && (
+              <Button variant="light" size="sm" onClick={handleDownloadIncidentReport}>
+                <i className="fa fa-download me-2 spinnerMarginRight" />
+                Download report (JSON)
+              </Button>
+            )}
           </Card.Header>
-
-          <Card.Body className="p-4 planCard">
-            <div className="border rounded mb-5 p-4 bg-light">
-              <h3 className="text-uppercase fw-bold text-center fs-4 mb-4 border-bottom pb-3 incTitle">
-                Incident Classification
-              </h3>
-
-              <div className="row align-items-center gx-2 gy-3 mb-4">
-                <div className="col-auto text-muted incidentDescription">
-                  Incident: {recoveryPlan.incident}. Description: {recoveryPlan.incidentDescription}
-                </div>
+          <Card.Body className="p-4">
+            <p><strong>Incident detected:</strong> {incidentClassification.Incident}</p>
+            <p><strong>Description:</strong> {incidentClassification['Incident description']}</p>
+            {incidentClassification.Entities && (
+              <div className="row g-3 mb-3">
+                {incidentClassification.Entities.Attacker && incidentClassification.Entities.Attacker.length > 0 && (
+                  <div key="attacker" className="col-md-4">
+                    <Card className="h-100">
+                      <Card.Header className="fw-bold">IPs and hostnames of the attacker</Card.Header>
+                      <Card.Body><BulletList items={incidentClassification.Entities.Attacker} /></Card.Body>
+                    </Card>
+                  </div>
+                )}
+                {incidentClassification.Entities.System && incidentClassification.Entities.System.length > 0 && (
+                  <div key="system" className="col-md-4">
+                    <Card className="h-100">
+                      <Card.Header className="fw-bold">System components</Card.Header>
+                      <Card.Body><BulletList items={incidentClassification.Entities.System} /></Card.Body>
+                    </Card>
+                  </div>
+                )}
+                {incidentClassification.Entities.Targeted && incidentClassification.Entities.Targeted.length > 0 && (
+                  <div key="targeted" className="col-md-4">
+                    <Card className="h-100">
+                      <Card.Header className="fw-bold">Components targeted by the attack</Card.Header>
+                      <Card.Body><BulletList items={incidentClassification.Entities.Targeted} /></Card.Body>
+                    </Card>
+                  </div>
+                )}
               </div>
-
-              {(recoveryPlan.mitreTactics.length > 0 || recoveryPlan.mitreTechniques.length > 0) && (
-                <div className="row g-4">
-                  {recoveryPlan.mitreTactics.length > 0 && (
-                    <div className="col-md-6">
-                      <Card className="h-100 shadow-sm">
-                        <Card.Body className="p-3">
-                          <h6 className="fw-bold text-center mb-3 incDetected">
-                            MITRE ATT&CK Tactics
-                          </h6>
-                          <BulletList items={recoveryPlan.mitreTactics} />
-                        </Card.Body>
-                      </Card>
-                    </div>
-                  )}
-                  {recoveryPlan.mitreTechniques.length > 0 && (
-                    <div className="col-md-6">
-                      <Card className="h-100 shadow-sm">
-                        <Card.Body className="p-3">
-                          <h6 className="fw-bold text-center mb-3 incDetected">
-                            MITRE ATT&CK Techniques
-                          </h6>
-                          <BulletList items={recoveryPlan.mitreTechniques} />
-                        </Card.Body>
-                      </Card>
-                    </div>
-                  )}
+            )}
+            <div className="row g-3">
+              {incidentClassification['MITRE ATT&CK Tactics'] && incidentClassification['MITRE ATT&CK Tactics'].length > 0 && (
+                <div className="col-md-6">
+                  <Card>
+                    <Card.Header className="fw-bold">MITRE ATT&CK Tactics</Card.Header>
+                    <Card.Body><BulletList items={incidentClassification['MITRE ATT&CK Tactics']} /></Card.Body>
+                  </Card>
+                </div>
+              )}
+              {incidentClassification['MITRE ATT&CK Techniques'] && incidentClassification['MITRE ATT&CK Techniques'].length > 0 && (
+                <div className="col-md-6">
+                  <Card>
+                    <Card.Header className="fw-bold">MITRE ATT&CK Techniques</Card.Header>
+                    <Card.Body><BulletList items={incidentClassification['MITRE ATT&CK Techniques']} /></Card.Body>
+                  </Card>
                 </div>
               )}
             </div>
-            {(recoveryPlan.recoveryActions.length > 0 || recoveryPlan.actionExplanations.length > 0) && (
-              <div className="border rounded p-4 bg-light incResponse">
-                <h3 className="text-uppercase fw-bold text-center fs-4 mb-4 border-bottom pb-3 incTitle">
-                  Incident Response
-                </h3>
+          </Card.Body>
+        </Card>
+      )}
 
-                <div className="row g-4">
-                  {recoveryPlan.recoveryActions.length > 0 && (
-                    <div className="col-md-6">
-                      <Card className="h-100 shadow-sm">
-                        <Card.Body className="p-3">
-                          <h6 className="fw-bold text-center mb-3 incDetected">
-                            Recovery Actions
-                          </h6>
-                          <NumberedList items={recoveryPlan.recoveryActions} />
-                        </Card.Body>
-                      </Card>
-                    </div>
-                  )}
-                  {recoveryPlan.actionExplanations.length > 0 && (
-                    <div className="col-md-6">
-                      <Card className="h-100 shadow-sm">
-                        <Card.Body className="p-3">
-                          <h6 className="fw-bold text-center mb-3 incDetected">
-                            Action Explanations
-                          </h6>
-                          <NumberedList items={recoveryPlan.actionExplanations} />
-                        </Card.Body>
-                      </Card>
-                    </div>
-                  )}
-                </div>
-              </div>
+      {noIncidentFound && (
+        <Card border="danger" className="text-center shadow-sm mt-4">
+          <Card.Header className="bg-danger text-white fw-bold">Recovery complete.</Card.Header>
+          <Card.Body className="text-danger">
+            <Card.Text>
+              No recovery plan is needed since the logs do not indicate an incident.
+            </Card.Text>
+          </Card.Body>
+        </Card>
+      )}
+
+      {incidentClassification && isProcessing && (
+        <RecoveryProgress systemState={systemState} recoveryActions={recoveryActions} />
+      )}
+
+      <div>
+        {incidentClassification && <StreamingUI reasoningRef={reasoningPreRef} jsonRef={jsonPreRef} />}
+      </div>
+
+      {(recoveryActions.length > 0 || systemState) && (
+        <Card className="shadow-lg border-0 mb-4">
+          <Card.Header
+            className="bg-primary text-white text-center py-3 d-flex justify-content-between align-items-center">
+            <h3 className="mb-0 fw-bold"><strong>Recovery Plan</strong></h3>
+            {!isProcessing && (recoveryActions.length > 0 || systemState) && (
+              <Button variant="light" size="sm" onClick={handleDownloadRecoveryPlan}>
+                <i className="fa fa-download me-2 spinnerMarginRight" />
+                Download plan (JSON)
+              </Button>
             )}
+          </Card.Header>
+          <Card.Body className="p-4">
+            <div className="row g-4">
+              <div className="col-lg-8">
+                {recoveryActions.length > 0 && (
+                  <Card>
+                    <Card.Header as="h6" className="text-center fw-bold">Recovery Actions</Card.Header>
+                    <Card.Body>
+                      {recoveryActions.map((action, index) => (
+                        <div key={index} className="mb-3 p-3 border rounded bg-light">
+                          <p><strong>Action {index + 1}</strong>: {action.Action}</p>
+                          <p className="mb-0"><strong>Motivation: </strong>{action.Explanation}</p>
+                        </div>
+                      ))}
+                    </Card.Body>
+                  </Card>
+                )}
+              </div>
+              <div className="col-lg-4">
+                <StateVisualizer state={systemState} />
+              </div>
+            </div>
           </Card.Body>
         </Card>
       )}
@@ -659,6 +740,4 @@ const RecoveryAI = (props) => {
   )
 }
 
-RecoveryAI.propTypes = {}
-RecoveryAI.defaultProps = {}
 export default RecoveryAI

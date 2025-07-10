@@ -26,7 +26,7 @@ import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
 import {
     EMULATION_STATISTICS_RESOURCE,
-    HTTP_PREFIX,
+    API_BASE_URL,
     HTTP_REST_DELETE,
     HTTP_REST_GET,
     LOGIN_PAGE_RESOURCE,
@@ -74,7 +74,7 @@ const EmulationStatistics = (props) => {
 
     const fetchEmulationStatistic = useCallback((statistic_id) => {
         fetch(
-            (`/${EMULATION_STATISTICS_RESOURCE}/${statistic_id.value}` +
+            (`${API_BASE_URL}/${EMULATION_STATISTICS_RESOURCE}/${statistic_id.value}` +
                 `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_GET,
@@ -254,7 +254,7 @@ const EmulationStatistics = (props) => {
 
     const fetchEmulationStatisticsIds = useCallback(() => {
         fetch(
-            `/${EMULATION_STATISTICS_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `${API_BASE_URL}/${EMULATION_STATISTICS_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -322,7 +322,7 @@ const EmulationStatistics = (props) => {
 
     const removeEmulationStatisticRequest = useCallback((statistic_id) => {
         fetch(
-            `/${EMULATION_STATISTICS_RESOURCE}/${statistic_id}` +
+            `${API_BASE_URL}/${EMULATION_STATISTICS_RESOURCE}/${statistic_id}` +
             `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,

@@ -27,7 +27,7 @@ import NginxImg from './Nginx.png'
 import PostgresImg from './Postgres.png'
 import NodeExporterImg from './NodeExporter.png'
 import {
-    HTTP_PREFIX, HTTP_REST_GET, LOGIN_PAGE_RESOURCE, GRAFANA_RESOURCE, PGADMIN_RESOURCE,
+    API_BASE_URL, HTTP_REST_GET, LOGIN_PAGE_RESOURCE, GRAFANA_RESOURCE, PGADMIN_RESOURCE,
     PROMETHEUS_RESOURCE, NODE_EXPORTER_RESOURCE, NGINX_RESOURCE, POSTGRESQL_RESOURCE, CLUSTER_STATUS_RESOURCE,
     FLASK_RESOURCE, DOCKER_RESOURCE,
     CADVISOR_RESOURCE, TOKEN_QUERY_PARAM, HTTP_REST_POST,
@@ -69,7 +69,7 @@ const ServerCluster = (props) => {
 
     const fetchServerCluster = useCallback((path) => {
         fetch(
-            `/${CLUSTER_STATUS_RESOURCE}`
+            `${API_BASE_URL}/${CLUSTER_STATUS_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -97,7 +97,7 @@ const ServerCluster = (props) => {
 
     const startOrStopGrafanaRequest = useCallback((node_ip) => {
         fetch(
-            `/${GRAFANA_RESOURCE}`
+            `${API_BASE_URL}/${GRAFANA_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_POST,
@@ -130,7 +130,7 @@ const ServerCluster = (props) => {
 
     const startOrStopNginxRequest = useCallback((node_ip) => {
         fetch(
-            `/${NGINX_RESOURCE}`
+            `${API_BASE_URL}/${NGINX_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_POST,
@@ -162,7 +162,7 @@ const ServerCluster = (props) => {
 
     const startOrStopDockerRequest = useCallback((node_ip) => {
         fetch(
-            `/${DOCKER_RESOURCE}`
+            `${API_BASE_URL}/${DOCKER_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_POST,
@@ -194,7 +194,7 @@ const ServerCluster = (props) => {
 
     const startOrStopPostgreSQLRequest = useCallback((node_ip) => {
         fetch(
-            `/${POSTGRESQL_RESOURCE}`
+            `${API_BASE_URL}/${POSTGRESQL_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_POST,
@@ -226,7 +226,7 @@ const ServerCluster = (props) => {
 
     const startOrStopFlaskRequest = useCallback((node_ip) => {
         fetch(
-            `/${FLASK_RESOURCE}`
+            `${API_BASE_URL}/${FLASK_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_POST,
@@ -258,7 +258,7 @@ const ServerCluster = (props) => {
 
     const startOrStopPgAdminRequest = useCallback((node_ip) => {
         fetch(
-            `/${PGADMIN_RESOURCE}`
+            `${API_BASE_URL}/${PGADMIN_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_POST,
@@ -290,7 +290,7 @@ const ServerCluster = (props) => {
 
     const startOrStopcAdvisorRequest = useCallback((node_ip) => {
         fetch(
-            `/${CADVISOR_RESOURCE}`
+            `${API_BASE_URL}/${CADVISOR_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_POST,
@@ -322,7 +322,7 @@ const ServerCluster = (props) => {
 
     const startOrStopNodeExporterRequest = useCallback((node_ip) => {
         fetch(
-            `/${NODE_EXPORTER_RESOURCE}`
+            `${API_BASE_URL}/${NODE_EXPORTER_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_POST,
@@ -354,7 +354,7 @@ const ServerCluster = (props) => {
 
     const startOrStopPrometheusRequest = useCallback((node_ip) => {
         fetch(
-            `/${PROMETHEUS_RESOURCE}`
+            `${API_BASE_URL}/${PROMETHEUS_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_POST,

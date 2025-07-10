@@ -19,7 +19,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 import {
-    HTTP_PREFIX,
+    API_BASE_URL,
     HTTP_REST_DELETE,
     HTTP_REST_GET,
     LOGIN_PAGE_RESOURCE,
@@ -48,7 +48,7 @@ const VectorPolicies = (props) => {
 
     const fetchVectorPolicy = useCallback((vector_policy_id) => {
         fetch(
-            (`/${VECTOR_POLICIES_RESOURCE}/${vector_policy_id.value}`
+            (`${API_BASE_URL}/${VECTOR_POLICIES_RESOURCE}/${vector_policy_id.value}`
                 + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_GET,
@@ -79,7 +79,7 @@ const VectorPolicies = (props) => {
 
     const fetchVectorPoliciesIds = useCallback(() => {
         fetch(
-            `/${VECTOR_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `${API_BASE_URL}/${VECTOR_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -124,7 +124,7 @@ const VectorPolicies = (props) => {
 
     const removeVectorPoliciesRequest = useCallback((vector_policy_id) => {
         fetch(
-            `/${VECTOR_POLICIES_RESOURCE}/${vector_policy_id}`
+            `${API_BASE_URL}/${VECTOR_POLICIES_RESOURCE}/${vector_policy_id}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,
@@ -153,7 +153,7 @@ const VectorPolicies = (props) => {
 
     const removeAllVectorPoliciesRequest = useCallback(() => {
         fetch(
-            `/${VECTOR_POLICIES_RESOURCE}`
+            `${API_BASE_URL}/${VECTOR_POLICIES_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,

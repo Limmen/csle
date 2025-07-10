@@ -19,7 +19,7 @@ import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
-import {HTTP_PREFIX, HTTP_REST_DELETE, HTTP_REST_GET,
+import {API_BASE_URL, HTTP_REST_DELETE, HTTP_REST_GET,
     LOGIN_PAGE_RESOURCE, TOKEN_QUERY_PARAM, EXPERIMENTS_RESOURCE, IDS_QUERY_PARAM} from "../../Common/constants";
 
 
@@ -43,7 +43,7 @@ const TrainingResults = (props) => {
 
     const fetchExperiment = useCallback((experiment_id) => {
         fetch(
-            `/${EXPERIMENTS_RESOURCE}/${experiment_id.value}`
+            `${API_BASE_URL}/${EXPERIMENTS_RESOURCE}/${experiment_id.value}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -74,7 +74,7 @@ const TrainingResults = (props) => {
 
     const fetchExperiments = useCallback(() => {
         fetch(
-            `/${EXPERIMENTS_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `${API_BASE_URL}/${EXPERIMENTS_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -119,7 +119,7 @@ const TrainingResults = (props) => {
 
     const removeExperimentRequest = useCallback((experiment_id) => {
         fetch(
-            `/${EXPERIMENTS_RESOURCE}/${experiment_id}`
+            `${API_BASE_URL}/${EXPERIMENTS_RESOURCE}/${experiment_id}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,
@@ -148,7 +148,7 @@ const TrainingResults = (props) => {
 
     const removeAllExperimentsRequest = useCallback(() => {
         fetch(
-            `/${EXPERIMENTS_RESOURCE}`
+            `${API_BASE_URL}/${EXPERIMENTS_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,

@@ -20,7 +20,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 import {
-    HTTP_PREFIX,
+    API_BASE_URL,
     HTTP_REST_DELETE,
     HTTP_REST_GET,
     LOGIN_PAGE_RESOURCE,
@@ -50,7 +50,7 @@ const LinearThresholdPolicies = (props) => {
 
     const fetchLinearThresholdPolicy = useCallback((linear_threshold_policy_id) => {
         fetch(
-            (`/${LINEAR_THRESHOLD_POLICIES_RESOURCE}/${linear_threshold_policy_id.value}` +
+            (`${API_BASE_URL}/${LINEAR_THRESHOLD_POLICIES_RESOURCE}/${linear_threshold_policy_id.value}` +
                 `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_GET,
@@ -80,7 +80,7 @@ const LinearThresholdPolicies = (props) => {
 
     const fetchLinearThresholdPoliciesIds = useCallback(() => {
         fetch(
-            `/${LINEAR_THRESHOLD_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `${API_BASE_URL}/${LINEAR_THRESHOLD_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -125,7 +125,7 @@ const LinearThresholdPolicies = (props) => {
 
     const removeLinearThresholdPoliciesRequest = useCallback((linear_threshold_policy_id) => {
         fetch(
-            (`/${LINEAR_THRESHOLD_POLICIES_RESOURCE}/${linear_threshold_policy_id}`
+            (`${API_BASE_URL}/${LINEAR_THRESHOLD_POLICIES_RESOURCE}/${linear_threshold_policy_id}`
                 + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_DELETE,
@@ -154,7 +154,7 @@ const LinearThresholdPolicies = (props) => {
 
     const removeAllLinearThresholdPoliciesRequest = useCallback(() => {
         fetch(
-            `/${LINEAR_THRESHOLD_POLICIES_RESOURCE}`
+            `${API_BASE_URL}/${LINEAR_THRESHOLD_POLICIES_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,

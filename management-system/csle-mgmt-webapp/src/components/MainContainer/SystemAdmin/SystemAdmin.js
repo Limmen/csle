@@ -12,7 +12,7 @@ import cellEditFactory from 'react-bootstrap-table2-editor';
 import { Type } from 'react-bootstrap-table2-editor';
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
-import {HTTP_PREFIX, HTTP_REST_GET, HTTP_REST_PUT, CONFIG_RESOURCE,
+import {API_BASE_URL, HTTP_REST_GET, HTTP_REST_PUT, CONFIG_RESOURCE,
     TOKEN_QUERY_PARAM, LOGIN_PAGE_RESOURCE} from "../../Common/constants";
 
 
@@ -64,7 +64,7 @@ const SystemAdmin = (props) => {
 
     const fetchConfig = useCallback(() => {
         fetch(
-            `/${CONFIG_RESOURCE}`
+            `${API_BASE_URL}/${CONFIG_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -97,7 +97,7 @@ const SystemAdmin = (props) => {
 
     const updateConfig = useCallback((config) => {
         fetch(
-            `/${CONFIG_RESOURCE}`
+            `${API_BASE_URL}/${CONFIG_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_PUT,

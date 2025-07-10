@@ -20,7 +20,7 @@ import serverIp from "../../../Common/serverIp";
 import serverPort from "../../../Common/serverPort";
 import TraceImg from './TracesLoop.png'
 import {
-    HTTP_PREFIX, HTTP_REST_DELETE,
+    API_BASE_URL, HTTP_REST_DELETE,
     HTTP_REST_GET,
     LOGIN_PAGE_RESOURCE,
     TOKEN_QUERY_PARAM,
@@ -48,7 +48,7 @@ const EmulationTraces = (props) => {
 
     const fetchEmulationTrace = useCallback((trace_id) => {
         fetch(
-            `/${EMULATION_TRACES_RESOURCE}/${trace_id.value}`
+            `${API_BASE_URL}/${EMULATION_TRACES_RESOURCE}/${trace_id.value}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -78,7 +78,7 @@ const EmulationTraces = (props) => {
 
     const fetchEmulationTracesIds = useCallback(() => {
         fetch(
-            `/${EMULATION_TRACES_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `${API_BASE_URL}/${EMULATION_TRACES_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -122,7 +122,7 @@ const EmulationTraces = (props) => {
 
     const removeEmulationTraceRequest = useCallback((emulation_trace_id) => {
         fetch(
-            `/${EMULATION_TRACES_RESOURCE}/${emulation_trace_id}`
+            `${API_BASE_URL}/${EMULATION_TRACES_RESOURCE}/${emulation_trace_id}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,
@@ -151,7 +151,7 @@ const EmulationTraces = (props) => {
 
     const removeAllEmulationTracesRequest = useCallback(() => {
         fetch(
-            `/${EMULATION_TRACES_RESOURCE}`
+            `${API_BASE_URL}/${EMULATION_TRACES_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,

@@ -29,7 +29,7 @@ import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
-import {HTTP_PREFIX, HTTP_REST_GET, LOGIN_PAGE_RESOURCE,
+import {API_BASE_URL, HTTP_REST_GET, LOGIN_PAGE_RESOURCE,
     EMULATION_SIMULATION_TRACES_RESOURCE, TOKEN_QUERY_PARAM} from "../../Common/constants";
 
 
@@ -154,7 +154,7 @@ const PolicyExamination = (props) => {
     }, [])
 
     const fetchTraces = useCallback(() => {
-        fetch(`/${EMULATION_SIMULATION_TRACES_RESOURCE}`
+        fetch(`${API_BASE_URL}/${EMULATION_SIMULATION_TRACES_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`, {
             method: HTTP_REST_GET,
             headers: new Headers({

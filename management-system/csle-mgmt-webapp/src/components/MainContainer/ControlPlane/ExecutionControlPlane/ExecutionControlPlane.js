@@ -20,7 +20,7 @@ import ElkManagersInfo from "./ElkManagersInfo/ElkManagersInfo";
 import RyuManagersInfo from "./RyuManagersInfo/RyuManagersInfo";
 import TrafficManagersInfo from "./TrafficManagersInfo/TrafficManagersInfo";
 import {
-    HTTP_PREFIX,
+    API_BASE_URL,
     CLIENT_MANAGER_SUBRESOURCE,
     CLIENT_POPULATION_SUBRESOURCE,
     CLIENT_PRODUCER_SUBRESOURCE,
@@ -112,7 +112,7 @@ const ExecutionControlPlane = (props) => {
 
     const fetchLogs = useCallback((name, entity) => {
         fetch(
-            `/${LOGS_RESOURCE}/${entity}?${TOKEN_QUERY_PARAM}=`
+            `${API_BASE_URL}/${LOGS_RESOURCE}/${entity}?${TOKEN_QUERY_PARAM}=`
             +`${props.sessionData.token}&${EMULATION_QUERY_PARAM}=${props.execution.emulation_name}&`
             +`${EXECUTION_ID_QUERY_PARAM}=${props.execution.ip_first_octet}`,
             {
@@ -142,7 +142,7 @@ const ExecutionControlPlane = (props) => {
 
     const startOrStopEntity = useCallback((id, emulation, start, stop, entity, name, node_ip) => {
         fetch(
-            `/${EMULATION_EXECUTIONS_RESOURCE}/${id}/${entity}?`
+            `${API_BASE_URL}/${EMULATION_EXECUTIONS_RESOURCE}/${id}/${entity}?`
             +`${EMULATION_QUERY_PARAM}=${emulation}&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_POST,

@@ -5,7 +5,7 @@ import './Register.css';
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
 import {
-    HTTP_PREFIX,
+    API_BASE_URL,
     LOGIN_PAGE_RESOURCE,
     USERS_RESOURCE,
     CREATE_SUBRESOURCE,
@@ -29,7 +29,7 @@ const Register = () => {
 
     const createUser = useCallback((userConfiguration) => {
         fetch(
-            `/${USERS_RESOURCE}/${CREATE_SUBRESOURCE}`,
+            `${API_BASE_URL}/${USERS_RESOURCE}/${CREATE_SUBRESOURCE}`,
             {
                 method: HTTP_REST_POST,
                 headers: new Headers({

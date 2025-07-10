@@ -344,3 +344,5 @@ export const RECOVERY_AI_MITRE_ATTACK_TACTICS_FIELD = "MITRE ATT&CK Tactics"
 export const RECOVERY_AI_MITRE_ATTACK_TECHNIQUES_FIELD = "MITRE ATT&CK Techniques"
 export const RECOVERY_AI_RECOVERY_ACTIONS_FIELD = "Recovery actions"
 export const RECOVERY_AI_ACTION_EXPLANATIONS_FIELD = "Action explanations"
+export const REACT_APP_API_BASE_URL = "http://172.31.212.92:7777"
+export const API_BASE_URL = REACT_APP_API_BASE_URL || window.location.origin;

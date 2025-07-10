@@ -57,3 +57,49 @@
 .exampleSpinner {
     margin-right: 10px;
 }
+
+.buttonMarginRight {
+    margin-right: 20px;
+}
+
+.spinnerMarginRight {
+    margin-right: 10px;
+}
+
+/* Add this to your RecoveryAI.css file */
+
+.reasoning-text-animated {
+    /* 1. Create a gradient background that will be our "wave" */
+    background: linear-gradient(
+            90deg,
+            #6c757d,
+            #ced4da,
+            #6c757d
+    );
+
+    /* 2. Make the gradient much wider than the text area */
+    background-size: 200% auto;
+
+    /* 3. "Clip" the background to the text, making the text transparent */
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text; /* For Safari/Chrome compatibility */
+
+    /* 4. Apply the animation that moves the background */
+    animation: text-wave-animation 2s linear infinite;
+}
+
+@keyframes text-wave-animation {
+    from {
+        /* Start with the gradient on the right */
+        background-position: 0% center;
+    }
+    to {
+        /* Slide the gradient all the way to the left */
+        background-position: -200% center;
+    }
+}
+
+.black-progress-label .progress-bar {
+    color: black !important;
+}

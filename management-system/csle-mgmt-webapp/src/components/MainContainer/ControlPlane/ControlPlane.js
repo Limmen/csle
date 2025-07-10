@@ -21,7 +21,7 @@ import serverPort from "../../Common/serverPort";
 import {
     EMULATION_EXECUTIONS_RESOURCE,
     EMULATION_QUERY_PARAM,
-    HTTP_PREFIX, HTTP_REST_GET,
+    API_BASE_URL, HTTP_REST_GET,
     INFO_SUBRESOURCE, LOGIN_PAGE_RESOURCE, TOKEN_QUERY_PARAM, IDS_QUERY_PARAM
 } from "../../Common/constants";
 
@@ -46,7 +46,7 @@ const ControlPlane = (props) => {
 
     const fetchSelectedExecution = useCallback((id_obj) => {
         fetch(
-            (`/${EMULATION_EXECUTIONS_RESOURCE}/${id_obj.value.id}?`
+            (`${API_BASE_URL}/${EMULATION_EXECUTIONS_RESOURCE}/${id_obj.value.id}?`
                 + `${EMULATION_QUERY_PARAM}=${id_obj.value.emulation}&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_GET,
@@ -117,7 +117,7 @@ const ControlPlane = (props) => {
     );
 
     const fetchExecutionInfo = useCallback((id_obj) => fetch(
-        (`/${EMULATION_EXECUTIONS_RESOURCE}/${id_obj.value.id}/${INFO_SUBRESOURCE}?`
+        (`${API_BASE_URL}/${EMULATION_EXECUTIONS_RESOURCE}/${id_obj.value.id}/${INFO_SUBRESOURCE}?`
             +`${EMULATION_QUERY_PARAM}=${id_obj.value.emulation}&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
         {
             method: HTTP_REST_GET,
@@ -186,7 +186,7 @@ const ControlPlane = (props) => {
 
     const fetchEmulationExecutionIds = useCallback(() => {
         fetch(
-            `/${EMULATION_EXECUTIONS_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `${API_BASE_URL}/${EMULATION_EXECUTIONS_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,

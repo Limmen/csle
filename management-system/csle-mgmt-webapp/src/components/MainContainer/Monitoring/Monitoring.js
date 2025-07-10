@@ -22,7 +22,7 @@ import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
 import {
     EMULATION_EXECUTIONS_RESOURCE, EMULATION_QUERY_PARAM, EMULATIONS_RESOURCE, EXECUTIONS_SUBRESOURCE,
-    HTTP_PREFIX,
+    API_BASE_URL,
     HTTP_REST_GET,
     LOGIN_PAGE_RESOURCE, MONITOR_SUBRESOURCE,
     TOKEN_QUERY_PARAM, IDS_QUERY_PARAM
@@ -123,7 +123,7 @@ const Monitoring = (props) => {
 
 
     const fetchMonitoringData = useCallback((len, execution) => fetch(
-            (`/${EMULATIONS_RESOURCE}/${execution.emulation_env_config.id}` +
+            (`${API_BASE_URL}/${EMULATIONS_RESOURCE}/${execution.emulation_env_config.id}` +
                 `/${EXECUTIONS_SUBRESOURCE}/${execution.ip_first_octet}/${MONITOR_SUBRESOURCE}/${len}`
                 + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
@@ -177,7 +177,7 @@ const Monitoring = (props) => {
 
     const fetchSelectedExecution = useCallback((id_obj) => {
         fetch(
-            (`/${EMULATION_EXECUTIONS_RESOURCE}/${id_obj.value.id}`
+            (`${API_BASE_URL}/${EMULATION_EXECUTIONS_RESOURCE}/${id_obj.value.id}`
                 + `?${EMULATION_QUERY_PARAM}=${id_obj.value.emulation}`
                 + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
@@ -432,7 +432,7 @@ const Monitoring = (props) => {
 
     const fetchEmulationExecutionIds = useCallback(() => {
         fetch(
-            `/${EMULATION_EXECUTIONS_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `${API_BASE_URL}/${EMULATION_EXECUTIONS_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,

@@ -12,6 +12,7 @@ import {useNavigate} from "react-router-dom";
 import {useAlert} from "react-alert";
 import {
     HTTP_PREFIX,
+    API_BASE_URL,
     HTTP_REST_GET,
     SWITCHES_SUBRESOURCE,
     EMULATION_QUERY_PARAM,
@@ -46,7 +47,7 @@ const SDNController = (props) => {
 
     const fetchSwitches = useCallback((emulation_name, exec_id) => {
         fetch(
-            (`/${EMULATION_EXECUTIONS_RESOURCE}/${exec_id}` +
+            (`${API_BASE_URL}/${EMULATION_EXECUTIONS_RESOURCE}/${exec_id}` +
                 `/${SWITCHES_SUBRESOURCE}` +
                 `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}&${EMULATION_QUERY_PARAM}=${emulation_name}`),
             {

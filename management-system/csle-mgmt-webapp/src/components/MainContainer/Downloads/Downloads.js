@@ -17,7 +17,7 @@ import fileDownload from 'react-file-download'
 import {useAlert} from "react-alert";
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
-import {HTTP_PREFIX, HTTP_REST_DELETE, HTTP_REST_GET, LOGIN_PAGE_RESOURCE,
+import {API_BASE_URL, HTTP_REST_DELETE, HTTP_REST_GET, LOGIN_PAGE_RESOURCE,
     STATISTICS_DATASETS_RESOURCE, TRACES_DATASETS_RESOURCE, TOKEN_QUERY_PARAM} from "../../Common/constants";
 
 /**
@@ -44,7 +44,7 @@ const Downloads = (props) => {
 
     const fetchTracesDatasets = useCallback(() => {
         fetch(
-            `/${TRACES_DATASETS_RESOURCE}`,
+            `${API_BASE_URL}/${TRACES_DATASETS_RESOURCE}`,
             {
                 method: HTTP_REST_GET,
                 headers: new Headers({
@@ -66,7 +66,7 @@ const Downloads = (props) => {
 
     const removeAllTracesDatasetsRequest = useCallback(() => {
         fetch(
-            `/${TRACES_DATASETS_RESOURCE}?${TOKEN_QUERY_PARAM}=`
+            `${API_BASE_URL}/${TRACES_DATASETS_RESOURCE}?${TOKEN_QUERY_PARAM}=`
                 +`${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,
@@ -95,7 +95,7 @@ const Downloads = (props) => {
 
     const removeTracesDatasetRequest = useCallback((tracesDataset) => {
         fetch(
-            `/${TRACES_DATASETS_RESOURCE}/${tracesDataset.id}?`
+            `${API_BASE_URL}/${TRACES_DATASETS_RESOURCE}/${tracesDataset.id}?`
                 +`${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,
@@ -567,7 +567,7 @@ const Downloads = (props) => {
 
     const removeAllStatisticsDatasetsRequest = useCallback(() => {
         fetch(
-            `/${STATISTICS_DATASETS_RESOURCE}?`
+            `${API_BASE_URL}/${STATISTICS_DATASETS_RESOURCE}?`
                 + `${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,
@@ -596,7 +596,7 @@ const Downloads = (props) => {
 
     const removeStatisticsDatasetRequest = useCallback((statisticsDataset) => {
         fetch(
-            `/${STATISTICS_DATASETS_RESOURCE}/${statisticsDataset.id}`
+            `${API_BASE_URL}/${STATISTICS_DATASETS_RESOURCE}/${statisticsDataset.id}`
                 + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,

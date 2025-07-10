@@ -19,7 +19,7 @@ import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
-import {HTTP_PREFIX, HTTP_REST_DELETE, HTTP_REST_GET,
+import {API_BASE_URL, HTTP_REST_DELETE, HTTP_REST_GET,
     LOGIN_PAGE_RESOURCE, TOKEN_QUERY_PARAM, SIMULATIONS_RESOURCE, IDS_QUERY_PARAM} from "../../Common/constants";
 
 
@@ -42,7 +42,7 @@ const Simulations = (props) => {
 
     const fetchSimulation = useCallback((simulation_id) => {
         fetch(
-            `/${SIMULATIONS_RESOURCE}/${simulation_id.value}`
+            `${API_BASE_URL}/${SIMULATIONS_RESOURCE}/${simulation_id.value}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -72,7 +72,7 @@ const Simulations = (props) => {
 
     const fetchSimulationsIds = useCallback(() => {
         fetch(
-            `/${SIMULATIONS_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `${API_BASE_URL}/${SIMULATIONS_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -117,7 +117,7 @@ const Simulations = (props) => {
 
     const removeAllSimulationsRequest = useCallback(() => {
         fetch(
-            `/${SIMULATIONS_RESOURCE}`
+            `${API_BASE_URL}/${SIMULATIONS_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,
@@ -152,7 +152,7 @@ const Simulations = (props) => {
 
     const removeSimulationRequest = useCallback((simulation_id) => {
         fetch(
-            `/${SIMULATIONS_RESOURCE}/${simulation_id}`
+            `${API_BASE_URL}/${SIMULATIONS_RESOURCE}/${simulation_id}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,

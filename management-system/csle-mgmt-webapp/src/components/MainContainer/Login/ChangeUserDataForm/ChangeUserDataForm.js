@@ -5,7 +5,7 @@ import {useNavigate} from "react-router-dom";
 import serverIp from "../../../Common/serverIp";
 import serverPort from "../../../Common/serverPort";
 import {
-    HTTP_PREFIX,
+    API_BASE_URL,
     HTTP_REST_PUT,
     LOGIN_PAGE_RESOURCE,
     USERS_RESOURCE,
@@ -33,7 +33,7 @@ const ChangeUserDataForm = (props) => {
 
     const updateUser = useCallback((user) => {
         fetch(
-            `/${USERS_RESOURCE}/${user.id}?${TOKEN_QUERY_PARAM}=${token}`,
+            `${API_BASE_URL}/${USERS_RESOURCE}/${user.id}?${TOKEN_QUERY_PARAM}=${token}`,
             {
                 method: HTTP_REST_PUT,
                 headers: new Headers({

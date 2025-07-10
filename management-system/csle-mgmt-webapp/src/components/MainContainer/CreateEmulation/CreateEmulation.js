@@ -6,7 +6,7 @@ import Accordion from 'react-bootstrap/Accordion'
 import Collapse from 'react-bootstrap/Collapse'
 import Select from 'react-select'
 import {
-    HTTP_PREFIX,
+    API_BASE_URL,
     CREATE_EMULATION_RESOURCE,
     LOGIN_PAGE_RESOURCE,
     TOKEN_QUERY_PARAM,
@@ -325,7 +325,7 @@ const CreateEmulation = (props) => {
       };
 
       fetch(
-        `/${CREATE_EMULATION_RESOURCE}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+        `${API_BASE_URL}/${CREATE_EMULATION_RESOURCE}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
         {
           method: "POST",
           headers: new Headers({

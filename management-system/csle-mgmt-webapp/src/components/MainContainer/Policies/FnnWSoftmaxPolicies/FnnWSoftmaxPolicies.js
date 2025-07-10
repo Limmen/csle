@@ -20,7 +20,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 import {
-    HTTP_PREFIX,
+    API_BASE_URL,
     HTTP_REST_DELETE,
     HTTP_REST_GET,
     LOGIN_PAGE_RESOURCE,
@@ -50,7 +50,7 @@ const FnnWSoftmaxPolicies = (props) => {
 
     const fetchFnnWSoftmaxPolicy = useCallback((fnn_w_softmax_policy_id) => {
         fetch(
-            (`/${FNN_W_SOFTMAX_POLICIES_RESOURCE}/${fnn_w_softmax_policy_id.value}` +
+            (`${API_BASE_URL}/${FNN_W_SOFTMAX_POLICIES_RESOURCE}/${fnn_w_softmax_policy_id.value}` +
                 `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_GET,
@@ -81,7 +81,7 @@ const FnnWSoftmaxPolicies = (props) => {
 
     const fetchFnnWSoftmaxPoliciesIds = useCallback(() => {
         fetch(
-            `/${FNN_W_SOFTMAX_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `${API_BASE_URL}/${FNN_W_SOFTMAX_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -126,7 +126,7 @@ const FnnWSoftmaxPolicies = (props) => {
 
     const removeFnnWSoftmaxPoliciesRequest = useCallback((fnn_w_softmax_policy_id) => {
         fetch(
-            (`/${FNN_W_SOFTMAX_POLICIES_RESOURCE}/${fnn_w_softmax_policy_id}` +
+            (`${API_BASE_URL}/${FNN_W_SOFTMAX_POLICIES_RESOURCE}/${fnn_w_softmax_policy_id}` +
                 `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_DELETE,
@@ -155,7 +155,7 @@ const FnnWSoftmaxPolicies = (props) => {
 
     const removeAllFnnWSoftmaxPoliciesRequest = useCallback(() => {
         fetch(
-            (`/${FNN_W_SOFTMAX_POLICIES_RESOURCE}`
+            (`${API_BASE_URL}/${FNN_W_SOFTMAX_POLICIES_RESOURCE}`
                 + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_DELETE,

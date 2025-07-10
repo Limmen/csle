@@ -27,7 +27,7 @@ import {
     EMPIRICAL_SYSTEM_MODELS_RESOURCE,
     GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE, GP_SYSTEM_MODELS_RESOURCE,
     MCMC_SYSTEM_MODELS_RESOURCE,
-    HTTP_PREFIX, HTTP_REST_DELETE,
+    API_BASE_URL, HTTP_REST_DELETE,
     HTTP_REST_GET,
     LOGIN_PAGE_RESOURCE,
     TOKEN_QUERY_PARAM,
@@ -182,7 +182,7 @@ const SystemModels = (props) => {
 
     const fetchEmpiricalSystemModel = useCallback((model_id_obj) => {
         fetch(
-            (`/${EMPIRICAL_SYSTEM_MODELS_RESOURCE}/`
+            (`${API_BASE_URL}/${EMPIRICAL_SYSTEM_MODELS_RESOURCE}/`
                 + `${parseInt(model_id_obj.value.split("_")[0])}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_GET,
@@ -236,7 +236,7 @@ const SystemModels = (props) => {
 
     const fetchMCMCSystemModel = useCallback((model_id_obj) => {
         fetch(
-            (`/${MCMC_SYSTEM_MODELS_RESOURCE}/`
+            (`${API_BASE_URL}/${MCMC_SYSTEM_MODELS_RESOURCE}/`
                 + `${parseInt(model_id_obj.value.split("_")[0])}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_GET,
@@ -287,7 +287,7 @@ const SystemModels = (props) => {
 
     const fetchGPSystemModel = useCallback((model_id_obj) => {
         fetch(
-            (`/${GP_SYSTEM_MODELS_RESOURCE}/`
+            (`${API_BASE_URL}/${GP_SYSTEM_MODELS_RESOURCE}/`
                 + `${parseInt(model_id_obj.value.split("_")[0])} ?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_GET,
@@ -343,7 +343,7 @@ const SystemModels = (props) => {
 
     const fetchGaussianMixtureSystemModel = useCallback((model_id_obj) => {
         fetch(
-            (`/${GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE}/`
+            (`${API_BASE_URL}/${GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE}/`
                 + `${parseInt(model_id_obj.value.split("_")[0])}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_GET,
@@ -398,7 +398,7 @@ const SystemModels = (props) => {
 
     const fetchSystemModelsIds = useCallback(() => {
         fetch(
-            `/${SYSTEM_MODELS_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `${API_BASE_URL}/${SYSTEM_MODELS_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -463,7 +463,7 @@ const SystemModels = (props) => {
 
     const removeGaussianMixtureSystemModelRequest = useCallback((model_id) => {
         fetch(
-            (`/${GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE}/${model_id}`
+            (`${API_BASE_URL}/${GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE}/${model_id}`
                 + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_DELETE,
@@ -492,7 +492,7 @@ const SystemModels = (props) => {
 
     const removeEmpiricalSystemModelRequest = useCallback((model_id) => {
         fetch(
-            (`/${EMPIRICAL_SYSTEM_MODELS_RESOURCE}/${model_id}`
+            (`${API_BASE_URL}/${EMPIRICAL_SYSTEM_MODELS_RESOURCE}/${model_id}`
                 + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_DELETE,
@@ -521,7 +521,7 @@ const SystemModels = (props) => {
 
     const removeMCMCSystemModelRequest = useCallback((model_id) => {
         fetch(
-            (`/${MCMC_SYSTEM_MODELS_RESOURCE}/${model_id}`
+            (`${API_BASE_URL}/${MCMC_SYSTEM_MODELS_RESOURCE}/${model_id}`
                 + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_DELETE,
@@ -550,7 +550,7 @@ const SystemModels = (props) => {
 
     const removeGpSystemModelRequest = useCallback((model_id) => {
         fetch(
-            (`/${GP_SYSTEM_MODELS_RESOURCE}/${model_id}`
+            (`${API_BASE_URL}/${GP_SYSTEM_MODELS_RESOURCE}/${model_id}`
                 + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_DELETE,

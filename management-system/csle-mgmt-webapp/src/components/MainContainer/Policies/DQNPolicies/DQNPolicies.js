@@ -20,7 +20,7 @@ import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 import DQNPolicy from "./DQNPolicy/DQNPolicy";
 import {
-    HTTP_PREFIX,
+    API_BASE_URL,
     HTTP_REST_DELETE,
     HTTP_REST_GET,
     LOGIN_PAGE_RESOURCE,
@@ -49,7 +49,7 @@ const DQNPolicies = (props) => {
 
     const fetchDQNPolicy = useCallback((dqn_policy_id) => {
         fetch(
-            `/${DQN_POLICIES_RESOURCE}/${dqn_policy_id.value}`
+            `${API_BASE_URL}/${DQN_POLICIES_RESOURCE}/${dqn_policy_id.value}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -80,7 +80,7 @@ const DQNPolicies = (props) => {
 
     const fetchDQNPoliciesIds = useCallback(() => {
         fetch(
-            `/${DQN_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `${API_BASE_URL}/${DQN_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -126,7 +126,7 @@ const DQNPolicies = (props) => {
 
     const removeDQNPoliciesRequest = useCallback((dqn_policy_id) => {
         fetch(
-            `/${DQN_POLICIES_RESOURCE}/${dqn_policy_id}`
+            `${API_BASE_URL}/${DQN_POLICIES_RESOURCE}/${dqn_policy_id}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,
@@ -253,7 +253,7 @@ const DQNPolicies = (props) => {
 
     const removeAllDQNPoliciesRequest = useCallback(() => {
         fetch(
-            `/${DQN_POLICIES_RESOURCE}`
+            `${API_BASE_URL}/${DQN_POLICIES_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,

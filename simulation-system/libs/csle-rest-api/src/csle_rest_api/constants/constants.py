@@ -1,7 +1,6 @@
 """
 Constants for csle-rest-api
 """
-import re
 
 
 class MGMT_WEBAPP:
@@ -247,6 +246,11 @@ class MGMT_WEBAPP:
     RECOVERY_AI_JSON_LOGS = "networkLogs"
     RECOVERY_AI_DATA_DELIMITER = "data:"
     EVENT_STREAM_CONTENT_TYPE = "text/event-stream"
+    RECOVERY_AI_TEMPERATURE = "temperature"
+    RECOVERY_AI_OPTIMIZATION_STEPS = "optimizationSteps"
+    RECOVERY_AI_LOOKAHEAD_HORIZON = "lookaheadHorizon"
+    RECOVERY_AI_ROLLOUT_HORIZON = "rolloutHorizon"
+    RECOVERY_AI_RAG = "rag"
 
 
 class SESSION_TOKENS:
@@ -351,6 +355,10 @@ class RAG:
     """
     String constants related to RAG
     """
-    OTX_API_KEY = "d6110d660939deabf8103294a0e39f91553c3cab3ba340e3b9d0a62fb68a4cfe"
+    OTX_API_KEY = "OTX_API_KEY"
     OTX_BASE_URL = "https://otx.alienvault.com/api/v1/indicators"
-    OTX_HEADERS = {"X-OTX-API-KEY": OTX_API_KEY}
+    OTX_API_KEY_HEADER = "X-OTX-API-KEY"
+    MODEL = "gemini-2.5-pro"
+    IDENTIFIERS = "Identifiers"
+    CONTEXT = "Context"
+    GEMINI_API_KEY = "GEMINI_API_KEY"

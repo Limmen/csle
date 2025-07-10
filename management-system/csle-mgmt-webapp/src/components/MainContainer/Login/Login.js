@@ -9,9 +9,9 @@ import ChangeUserDataForm from "./ChangeUserDataForm/ChangeUserDataForm";
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
 import {
-    HTTP_PREFIX,
     HTTP_REST_POST,
-    LOGIN_RESOURCE
+    LOGIN_RESOURCE,
+    API_BASE_URL
 } from "../../Common/constants";
 
 /**
@@ -28,7 +28,7 @@ const Login = (props) => {
 
     const loginUser = useCallback((credentials) => {
         fetch(
-           `/${LOGIN_RESOURCE}`,
+           `${API_BASE_URL}/${LOGIN_RESOURCE}`,
             {
                 method: HTTP_REST_POST,
                 headers: new Headers({
