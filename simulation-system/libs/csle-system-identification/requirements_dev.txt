@@ -4,7 +4,7 @@ tox==4.24.1
 pytest==6.2.5
 pytest-cov==2.12.1
 pytest-mock==3.10.0
-mypy==1.16 .1
+mypy==1.16.1
 mypy-extensions==1.0.0
 mypy-protobuf==3.5.0
 types-paramiko==3.2.0.0
