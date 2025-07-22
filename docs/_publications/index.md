@@ -8,35 +8,79 @@ permalink: /publications/
 
 The following publications are based on CSLE:
 
-##### **Automated Security Response through Online Learning with Adaptive Conjectures**
-**Conference**: IEEE/IFIP Dependable Systems and Networks Conference (DSN’24).
-[Preprint.](https://arxiv.org/abs/2404.01741)
+##### **Adaptive Network Security Policies via Belief Aggregation and Rollout**
+**Journal paper (under review)**
+[Preprint.](https://arxiv.org/abs/2502.02541)
 
 **Bibtex**:
 ```bash
-@INPROCEEDINGS{dsn24_hammar_stadler,
-  author={Kim Hammar and Rolf Stadler},
-  booktitle={2024 54th Annual IEEE/IFIP International Conference on Dependable Systems and Networks (DSN)},
-  title={Intrusion Tolerance for Networked Systems through Two-Level Feedback Control},
-  year={2024},
-  note={\url{https://arxiv.org/abs/2404.01741}}
+@misc{hammar2025adaptivenetworksecuritypolicies,
+      title={Adaptive Network Security Policies via Belief Aggregation and Rollout}, 
+      author={Kim Hammar and Yuchao Li and Tansu Alpcan and Emil C. Lupu and Dimitri Bertsekas},
+      year={2025},
+      eprint={2507.15163},
+      archivePrefix={arXiv},
+      primaryClass={eess.SY},
+      url={https://arxiv.org/abs/2507.15163}, 
+}
+```
+
+##### **Optimal Security Response to Network Intrusions in IT Systems**
+**Doctoral thesis** in electrical engineering, KTH, School of Electrical Engineering and Computer Science (EECS).
+[PDF.](https://arxiv.org/abs/2502.02541)
+
+**Bibtex**:
+```bash
+@phdthesis{kim_phd_thesis,
+   author = {Hammar, Kim},
+   institution = {KTH, Network and Systems Engineering},
+   note = {Academic Dissertation which, with due permission of the KTH Royal Institute of Technology, is submitted for public defence for the Degree of Doctor of Philosophy on Thursday the 5th December 2024, at 14:00 in F3, Lindstedtsv{\"a}gen 26, Stockholm.The defense will be streamed via Zoom: https://kth-se.zoom.us/j/64592772191Candidate: Kim HammarSupervisor: Professor Rolf Stadler, KTH, SwedenOpponent: Professor Tansu Alpcan, The University of Melbourne, AustraliaGrading committee: Professor Emil Lupu, Imperial College London, UK; Professor Alina Oprea, Northeastern University, USA; Professor Karl H. Johansson, KTH, Sweden; Reviewer: Professor Henrik Sandberg, KTH, SwedenQC 20241111},
+   pages = {338},
+   school = {KTH, Network and Systems Engineering},
+   title = {Optimal Security Response to Network Intrusions in IT Systems},
+   series = {TRITA-EECS-AVL},
+   number = {2024:85},
+   keywords = {Cybersecurity, Game theory, Decision theory, Control theory, Causality, Optimal stopping, security response},
+   abstract = {Cybersecurity is one of the most pressing technological challenges of our time and requires measures from all sectors of society. A key measure is automated security response, which enables automated mitigation and recovery from cyber attacks. Significant strides toward such automation have been made due to the development of rule-based response systems. However, these systems have a critical drawback: they depend on domain experts to configure the rules, a process that is both error-prone and inefficient. Framing security response as an optimal control problem shows promise in addressing this limitation but introduces new challenges. Chief among them is bridging the gap between theoretical optimality and operational performance. Current response systems with theoretical optimality guarantees have only been validated analytically or in simulation, leaving their practical utility unproven. This thesis tackles the aforementioned challenges by developing a practical methodology for optimal security response in IT infrastructures. It encompasses two systems. First, it includes an emulation system that replicates key components of the target infrastructure. We use this system to gather measurements and logs, based on which we identify a game-theoretic model. Second, it includes a simulation system where game-theoretic response strategies are optimized through stochastic approximation to meet a given objective, such as quickly mitigating potential attacks while maintaining operational services. These strategies are then evaluated and refined in the emulation system to close the gap between theoretical and operational performance. We present CSLE, an open-source platform that implements our methodology. This platform allows us to experimentally validate the methodology on several instances of the security response problem, including intrusion prevention, intrusion response, intrusion tolerance, and defense against advanced persistent threats. We prove structural properties of optimal response strategies and derive efficient algorithms for computing them. This enables us to solve a previously unsolved problem: demonstrating optimal security response against network intrusions on an IT infrastructure. },
+   ISBN = {978-91-8106-093-5},
+   year = {2024}
 }
 ```
 
 ##### **Automated Security Response through Online Learning with Adaptive Conjectures**
-**Journal**: Under review, IEEE Transactions on Information Forensics and Security.
-[Preprint.](https://arxiv.org/abs/2402.12499)
+**Conference**: IEEE/IFIP Dependable Systems and Networks Conference (DSN’24).
+[Proceedings.](https://ieeexplore.ieee.org/document/10647020)
 
 **Bibtex**:
 ```bash
-@misc{kim_tifs_24,
-      title={Automated Security Response through Online Learning with Adaptive Conjectures},
-      author={Kim Hammar and Tao Li and Rolf Stadler and Quanyan Zhu},
-      year={2024},
-      eprint={2402.12499},
-      archivePrefix={arXiv},
-      primaryClass={cs.GT}
-}
+@INPROCEEDINGS{10647020,
+  author={Hammar, Kim and Stadler, Rolf},
+  booktitle={2024 54th Annual IEEE/IFIP International Conference on Dependable Systems and Networks (DSN)},
+  title={Intrusion Tolerance for Networked Systems through Two-Level Feedback Control},
+  year={2024},
+  volume={},
+  number={},
+  pages={338-352},
+  keywords={Fault tolerance;Operations research;Costs;Fault tolerant systems;Emulation;Optimal control;Computer architecture;Intrusion tolerance;Byzantine fault tolerance;BFT;intrusion recovery;optimal control;POMDP;MDP;CMDP},
+  doi={10.1109/DSN58291.2024.00042}}
+```
+
+##### **Adaptive Security Response Strategies Through Conjectural Online Learning**
+**Journal**: Under review, IEEE Transactions on Information Forensics and Security.
+[Proceedings.](https://ieeexplore.ieee.org/document/10955193)
+
+**Bibtex**:
+```bash
+@ARTICLE{10955193,
+  author={Hammar, Kim and Li, Tao and Stadler, Rolf and Zhu, Quanyan},
+  journal={IEEE Transactions on Information Forensics and Security},
+  title={Adaptive Security Response Strategies Through Conjectural Online Learning},
+  year={2025},
+  volume={20},
+  number={},
+  pages={4055-4070},
+  keywords={Games;Security;Adaptation models;Computational modeling;Servers;History;Bayes methods;Digital twins;Steady-state;Probabilistic logic;Cybersecurity;network security;game theory;Berk-Nash equilibrium;Bayesian learning;rollout},
+  doi={10.1109/TIFS.2025.3558600}}
 ```
 
 ##### **IT Intrusion Detection Using Statistical Learning and Testbed Measurements**
