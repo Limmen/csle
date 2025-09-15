@@ -37,7 +37,7 @@ csle start grafana
 csle start cadvisor
 csle start prometheus
 csle start nodeexporter
-csle start managementsystem
+csle start flask
 ```
 
 <p class="captionFig">
