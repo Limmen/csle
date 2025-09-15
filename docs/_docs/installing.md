@@ -47,7 +47,7 @@ Listing 8: Commands to install build tools and version management tools.
 Next, clone the CSLE repository and setup environment variables by running the commands:
 
 ```bash
-git clone https://github.com/Limmen/clse
+git clone https://github.com/Limmen/csle
 export CSLE_HOME=/path/to/csle/ # for bash
 set -gx CSLE_HOME "/path/to/csle"  # for fish
 ```
