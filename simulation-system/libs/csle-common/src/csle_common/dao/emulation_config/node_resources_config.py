@@ -12,7 +12,8 @@ class NodeResourcesConfig(JSONSerializable):
     def __init__(self, container_name: str,
                  num_cpus: int, available_memory_gb: int,
                  ips_and_network_configs: List[Tuple[str, NodeNetworkConfig]],
-                 docker_gw_bridge_ip: str = "", physical_host_ip: str = ""):
+                 docker_gw_bridge_ip: str = "", physical_host_ip: str = "",
+                 disk_space_gb: int = 100):
         """
         Initializes the DTO
 
@@ -22,6 +23,7 @@ class NodeResourcesConfig(JSONSerializable):
         :param ips_and_network_configs: list of ip adresses and network configurations
         :param docker_gw_bridge_ip: IP to reach the container from the host network
         :param physical_host_ip: IP of the physical host where the container is running
+        :param disk_space_gb: the amount of disk space in GB available to the node
         """
         self.container_name = container_name
         self.num_cpus = num_cpus
@@ -29,6 +31,7 @@ class NodeResourcesConfig(JSONSerializable):
         self.ips_and_network_configs = ips_and_network_configs
         self.docker_gw_bridge_ip = docker_gw_bridge_ip
         self.physical_host_ip = physical_host_ip
+        self.disk_space_gb = disk_space_gb
 
     def get_ips(self) -> List[str]:
         """
@@ -55,7 +58,8 @@ class NodeResourcesConfig(JSONSerializable):
             container_name=d["container_name"],
             ips_and_network_configs=ips_and_network_configs,
             num_cpus=d["num_cpus"], available_memory_gb=d["available_memory_gb"],
-            docker_gw_bridge_ip=d["docker_gw_bridge_ip"], physical_host_ip=d["physical_host_ip"]
+            docker_gw_bridge_ip=d["docker_gw_bridge_ip"], physical_host_ip=d["physical_host_ip"],
+            disk_space_gb=d["disk_space_gb"]
         )
         return obj
 
@@ -73,6 +77,7 @@ class NodeResourcesConfig(JSONSerializable):
         d["available_memory_gb"] = self.available_memory_gb
         d["docker_gw_bridge_ip"] = self.docker_gw_bridge_ip
         d["physical_host_ip"] = self.physical_host_ip
+        d["disk_space_gb"] = self.disk_space_gb
         return d
 
     def __str__(self) -> str:
@@ -81,7 +86,8 @@ class NodeResourcesConfig(JSONSerializable):
         """
         return f"num_cpus: {self.num_cpus}, available_memory_gb:{self.available_memory_gb}, " \
                f"container_name:{self.container_name}, ips_and_network_configs: {self.ips_and_network_configs}," \
-               f"docker_gw_bridge_ip: {self.docker_gw_bridge_ip}, physical_host_ip: {self.physical_host_ip}"
+               f"docker_gw_bridge_ip: {self.docker_gw_bridge_ip}, physical_host_ip: {self.physical_host_ip}," \
+               f"disk_space_gb: {self.disk_space_gb}"
 
     @staticmethod
     def from_json_file(json_file_path: str) -> "NodeResourcesConfig":
@@ -122,4 +128,4 @@ class NodeResourcesConfig(JSONSerializable):
         :return: get the schema of the DTO
         """
         return NodeResourcesConfig(container_name="", num_cpus=1, available_memory_gb=1,
-                                   ips_and_network_configs=[("", NodeNetworkConfig.schema())])
+                                   ips_and_network_configs=[("", NodeNetworkConfig.schema())], disk_space_gb=100)
