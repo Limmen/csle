@@ -450,7 +450,7 @@ def default_resource_constraints_config(network_id: int, level: int) -> Resource
                      packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
                      rate_limit_mbit=100, packet_overhead_bytes=0,
                      cell_overhead_bytes=0
-                 ))]),
+                 ))], disk_space_gb=10),
         NodeResourcesConfig(
             container_name=f"{constants.CSLE.NAME}-"
                            f"{constants.CONTAINER_IMAGES.CLIENT_1}_1-{constants.CSLE.LEVEL}{level}",
@@ -471,7 +471,7 @@ def default_resource_constraints_config(network_id: int, level: int) -> Resource
                      packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
                      rate_limit_mbit=10000, packet_overhead_bytes=0,
                      cell_overhead_bytes=0
-                 ))]),
+                 ))], disk_space_gb=10),
         NodeResourcesConfig(
             container_name=f"{constants.CSLE.NAME}-"
                            f"{constants.CONTAINER_IMAGES.HONEYPOT_1}_1-{constants.CSLE.LEVEL}{level}",
@@ -491,7 +491,7 @@ def default_resource_constraints_config(network_id: int, level: int) -> Resource
                      packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
                      rate_limit_mbit=1000, packet_overhead_bytes=0,
                      cell_overhead_bytes=0
-                 ))]),
+                 ))], disk_space_gb=10),
         NodeResourcesConfig(
             container_name=f"{constants.CSLE.NAME}-"
                            f"{constants.CONTAINER_IMAGES.ROUTER_2}_1-{constants.CSLE.LEVEL}{level}",
@@ -527,7 +527,7 @@ def default_resource_constraints_config(network_id: int, level: int) -> Resource
                      packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
                      rate_limit_mbit=100, packet_overhead_bytes=0,
                      cell_overhead_bytes=0
-                 ))]),
+                 ))], disk_space_gb=10),
         NodeResourcesConfig(
             container_name=f"{constants.CSLE.NAME}-"
                            f"{constants.CONTAINER_IMAGES.SSH_1}_1-{constants.CSLE.LEVEL}{level}",
@@ -547,7 +547,7 @@ def default_resource_constraints_config(network_id: int, level: int) -> Resource
                      packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
                      rate_limit_mbit=1000, packet_overhead_bytes=0,
                      cell_overhead_bytes=0
-                 ))]),
+                 ))], disk_space_gb=10),
         NodeResourcesConfig(
             container_name=f"{constants.CSLE.NAME}-"
                            f"{constants.CONTAINER_IMAGES.TELNET_1}_1-{constants.CSLE.LEVEL}{level}",
@@ -567,7 +567,7 @@ def default_resource_constraints_config(network_id: int, level: int) -> Resource
                      packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
                      rate_limit_mbit=1000, packet_overhead_bytes=0,
                      cell_overhead_bytes=0
-                 ))]),
+                 ))], disk_space_gb=10),
         NodeResourcesConfig(
             container_name=f"{constants.CSLE.NAME}-"
                            f"{constants.CONTAINER_IMAGES.FTP_1}_1-{constants.CSLE.LEVEL}{level}",
@@ -587,7 +587,7 @@ def default_resource_constraints_config(network_id: int, level: int) -> Resource
                      packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
                      rate_limit_mbit=1000, packet_overhead_bytes=0,
                      cell_overhead_bytes=0
-                 ))])
+                 ))], disk_space_gb=10)
     ]
     resources_config = ResourcesConfig(node_resources_configurations=node_resources_configurations)
     return resources_config
@@ -1316,7 +1316,7 @@ def default_kafka_config(network_id: int, level: int, version: str, time_step_le
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
              f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
              f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
-             None)])
+             None)], disk_space_gb=10)
 
     firewall_config = NodeFirewallConfig(
         hostname=f"{constants.CONTAINER_IMAGES.KAFKA_1}_1",
@@ -1801,7 +1801,7 @@ def default_elk_config(network_id: int, level: int, version: str, time_step_len_
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
              f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
              f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}",
-             None)])
+             None)], disk_space_gb=10)
 
     firewall_config = NodeFirewallConfig(
         hostname=f"{constants.CONTAINER_IMAGES.ELK_1}_1",

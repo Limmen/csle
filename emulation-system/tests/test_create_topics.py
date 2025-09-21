@@ -122,7 +122,7 @@ def test_start_kafka_manager(container_setup) -> None:
         available_memory_gb=4,
         ips_and_network_configs=ips_and_networks,
         docker_gw_bridge_ip=container_setup.attrs[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.IP_ADDRESS_INFO],
-        physical_host_ip="192.168.1.1"
+        physical_host_ip="192.168.1.1", disk_space_gb=10
     )
 
     firewall_config = NodeFirewallConfig(
@@ -293,7 +293,7 @@ def test_start_kafka_server(container_setup) -> None:
         available_memory_gb=4,
         ips_and_network_configs=ips_and_networks,
         docker_gw_bridge_ip=container_setup.attrs[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.IP_ADDRESS_INFO],
-        physical_host_ip="192.168.1.1"
+        physical_host_ip="192.168.1.1", disk_space_gb=10
     )
 
     firewall_config = NodeFirewallConfig(
@@ -454,7 +454,7 @@ def test_create_topics(container_setup) -> None:
         available_memory_gb=4,
         ips_and_network_configs=ips_and_networks,
         docker_gw_bridge_ip=container_setup.attrs[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.IP_ADDRESS_INFO],
-        physical_host_ip="192.168.1.1"
+        physical_host_ip="192.168.1.1", disk_space_gb=10
     )
 
     firewall_config = NodeFirewallConfig(
