@@ -211,8 +211,12 @@ at &nbsp; <a href="https://www.kth.se/" target="_blank">
 &nbsp;<a href="https://www.kth.se/cdis" target="_blank">
 <img align="absmiddle" src="docs/img/cdis_logo_transparent.png" width="10%" height="10%">
 </a>
-and
+,
 &nbsp;<a href="https://www.darpa.mil/program/cyber-agents-for-security-testing-and-learning-environments" target="_blank">
 <img align="absmiddle" src="docs/img/darpa.png" width="10%" height="10%">
+</a>
+and
+<a href="https://www.vr.se/english/applying-for-funding/decisions/2024-06-20-international-postdoc-within-natural-and-engineering-sciences-autumn-call.html" target="_blank">
+<img align="absmiddle" src="docs/img/vr.png" width="10%" height="10%">
 </a>
 </p>
