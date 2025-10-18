@@ -217,6 +217,6 @@ at &nbsp; <a href="https://www.kth.se/" target="_blank">
 </a>
 and
 <a href="https://www.vr.se/english/applying-for-funding/decisions/2024-06-20-international-postdoc-within-natural-and-engineering-sciences-autumn-call.html" target="_blank">
-<img align="absmiddle" src="docs/img/vr.png" width="10%" height="10%">
+<img align="absmiddle" src="docs/img/vr.png" width="15%" height="15%">
 </a>
 </p>
