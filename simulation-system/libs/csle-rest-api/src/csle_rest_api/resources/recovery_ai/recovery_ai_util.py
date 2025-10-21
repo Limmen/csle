@@ -71,7 +71,7 @@ class RecoveryAIUtil:
     @staticmethod
     def generate_output(model: Union[PreTrainedModel, PeftModel], tokenizer: PreTrainedTokenizer, prompt: str,
                         no_think: bool = False, temperature: float = 0.6) \
-            -> Generator[str, Any, List[str] | Tuple[str, str]]:
+            -> Generator[str, Any, Union[List[str], Tuple[str, str]]]:
         """
         Uses a given LLM, tokenizer, and prompt to generate a stream of outputs
 
@@ -227,7 +227,7 @@ class RecoveryAIUtil:
         return None
 
     @staticmethod
-    def gemini_rag(logs: str) -> Generator[str, Any, None | Tuple[list[Any], list[Any]] | Tuple[Any, Any]]:
+    def gemini_rag(logs: str) -> Generator[str, Any, Union[None, Tuple[list[Any]], Union[list[Any]], Tuple[Any, Any]]]:
         """
         Retrieves information abut threat identifiers in the logs/system description.
 
@@ -299,7 +299,7 @@ class RecoveryAIUtil:
                          state: Dict[str, bool], state_prompt_template: str, system: str, logs: str,
                          incident_str: str, num_optimization_steps: int = 3, temperature: float = 1,
                          lookahead_horizon: int = 1, rollout_horizon: int = 1) \
-            -> Generator[str, Any, None | Dict[str, str]]:
+            -> Generator[str, Any, Union[None, Dict[str, str]]]:
         """
         Lookahead optimization to select the next action to perform.
 
@@ -397,7 +397,7 @@ class RecoveryAIUtil:
                                 tokenizer: PreTrainedTokenizer,
                                 system: str, logs: str, num_optimization_steps: int = 3, temperature: float = 1,
                                 lookahead_horizon: int = 1, rollout_horizon: int = 1) \
-            -> Generator[str, Any, None | Dict[str, str]]:
+            -> Generator[str, Any, Union[None, Dict[str, str]]]:
         """
         Lookahead optimization to classify the incident
 
