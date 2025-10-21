@@ -60,6 +60,11 @@ To install CSLE with ansible, run the following playbook:
 ```bash
 ansible-playbook --ask-become-pass install.yml
 ```
+(If you have passwordless sudo, you can run the following command:)
+```bash
+ansible-playbook -u <myuser> --become install.yml
+```
+
 Alternatively, you can run each playbook manually by executing the commands:
 ```bash
 ansible-playbook --ask-become-pass install_setup.yml

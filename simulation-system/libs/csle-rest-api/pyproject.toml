@@ -38,7 +38,8 @@ dependencies = [
     "types-paramiko>=3.2.0.0",
     "requests>=2.31.0",
     "types-requests>=2.31.0.1",
-    "peft>=0.15.2"
+    "peft>=0.15.2",
+    "google-genai>=1.45.0"
 ]
 
 [project.optional-dependencies]

@@ -217,6 +217,7 @@ A REST API for the CSLE management platform.
 - `transformers` (for serving LLMs)
 - `accelerate` (for serving LLMs)
 - `bitsandbytes` (for serving LLMs)
+- `google-genai` (for serving LLMs)
 
 ## Development Requirements
 
