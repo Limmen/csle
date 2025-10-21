@@ -9,7 +9,7 @@ from peft import PeftModel
 import torch
 import json
 import threading
-from google import genai
+from google import genai # type: ignore
 import numpy as np
 import re
 from csle_common.logging.log import Logger
