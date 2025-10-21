@@ -227,7 +227,7 @@ class RecoveryAIUtil:
         return None
 
     @staticmethod
-    def gemini_rag(logs: str) -> Generator[str, Any, Union[None, Tuple[list[Any]], Union[list[Any]], Tuple[Any, Any]]]:
+    def gemini_rag(logs: str) -> Generator[str, Any, Union[None, Tuple[list[Any], list[Any]], Tuple[Any, Any]]]:
         """
         Retrieves information abut threat identifiers in the logs/system description.
 
