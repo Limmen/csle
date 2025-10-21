@@ -1,7 +1,7 @@
 csle-cyborg==0.0.3
-csle-base==0.8.2
-csle-common==0.8.2
-csle-collector==0.8.2
-csle-attacker==0.8.2
-csle-defender==0.8.2
+csle-base==0.8.3
+csle-common==0.8.3
+csle-collector==0.8.3
+csle-attacker==0.8.3
+csle-defender==0.8.3
 gymnasium==0.27.1

@@ -3,6 +3,15 @@ Constants for gym-csle-cyborg
 """
 
 
+class COMMON:
+    """
+    Common string constants
+    """
+    STATE = "s"
+    OBSERVATION = "o"
+    REWARD = "r"
+
+
 class STATIC_DEFENDER_STRATEGIES:
     """
     String constants representing static defender strategies

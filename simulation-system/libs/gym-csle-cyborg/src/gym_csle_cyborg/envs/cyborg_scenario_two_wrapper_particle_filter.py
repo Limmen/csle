@@ -4,7 +4,7 @@ import gymnasium as gym
 from collections import Counter
 from csle_common.dao.simulation_config.base_env import BaseEnv
 from gym_csle_cyborg.dao.csle_cyborg_wrapper_config import CSLECyborgWrapperConfig
-import csle_agents.constants.constants as agents_constants
+import gym_csle_cyborg.constants.constants as constants
 from gym_csle_cyborg.envs.cyborg_scenario_two_wrapper import CyborgScenarioTwoWrapper
 from gym_csle_cyborg.dao.cyborg_wrapper_state import CyborgWrapperState
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
@@ -43,7 +43,7 @@ class CyborgScenarioTwoWrapperParticleFilter(BaseEnv):
         _, r, done, _, info = self.env.step(action=action)
         self.particles = self.particle_filter(
             particles=self.particles, max_num_particles=50, train_env=self.train_env,
-            obs=info[agents_constants.COMMON.OBSERVATION], control_sequence=self.control_sequence)
+            obs=info[constants.COMMON.OBSERVATION], control_sequence=self.control_sequence)
         monte_carlo_particle = self.monte_carlo_most_frequent_particle(particles=self.particles, N=50)
         obs = monte_carlo_particle.to_vector()
         return np.array(obs), r, done, done, info
@@ -85,8 +85,8 @@ class CyborgScenarioTwoWrapperParticleFilter(BaseEnv):
             x = random.choice(particles)
             train_env.set_state(state=x)
             _, _, _, _, info = train_env.step(u)
-            x_prime = info[agents_constants.COMMON.STATE]
-            o = info[agents_constants.COMMON.OBSERVATION]
+            x_prime = info[constants.COMMON.STATE]
+            o = info[constants.COMMON.OBSERVATION]
             if int(o) == int(obs):
                 failed_samples = 0
                 new_particles.append(x_prime)
@@ -99,9 +99,9 @@ class CyborgScenarioTwoWrapperParticleFilter(BaseEnv):
                         train_env.reset()
                         while t < len(control_sequence):
                             _, _, _, _, info = train_env.step(control_sequence[t])
-                            o = info[agents_constants.COMMON.OBSERVATION]
+                            o = info[constants.COMMON.OBSERVATION]
                             if int(o) == int(obs):
-                                return [info[agents_constants.COMMON.STATE]]
+                                return [info[constants.COMMON.STATE]]
                             t += 1
                 else:
                     return new_particles
