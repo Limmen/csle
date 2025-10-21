@@ -210,14 +210,10 @@ class RecoveryAIUtil:
             previous_actions_str = RecoveryAIUtil.generate_previous_actions_str(previous_actions)
             action_input = action_prompt_template.format(system, logs, incident_str, json.dumps(state, indent=4),
                                                          previous_actions_str)
-            action: Optional[Dict[str, str]] = yield from RecoveryAIUtil.action_selection(action_input=action_input,
-                                                                                          model=model,
-                                                                                          tokenizer=tokenizer,
-                                                                                          state=state,
-                                                                                          state_prompt_template=state_prompt_template,
-                                                                                          system=system, logs=logs,
-                                                                                          incident_str=incident_str,
-                                                                                          num_optimization_steps=num_optimization_steps)
+            action: Optional[Dict[str, str]] = yield from RecoveryAIUtil.action_selection(
+                action_input=action_input, model=model, tokenizer=tokenizer, state=state,
+                state_prompt_template=state_prompt_template, system=system, logs=logs, incident_str=incident_str,
+                num_optimization_steps=num_optimization_steps)
             if action is None:
                 raise ValueError("There was an error generating the action.")
             previous_actions.append(action)

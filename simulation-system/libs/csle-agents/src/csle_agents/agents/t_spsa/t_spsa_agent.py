@@ -594,8 +594,8 @@ class TSPSAAgent(BaseAgent):
         """
         return list(map(lambda x: round(x, 3), vec))
 
-    def get_policy(self, theta: List[float], L: int) -> Union[MultiThresholdStoppingPolicy,
-    LinearThresholdStoppingPolicy]:
+    def get_policy(self, theta: List[float], L: int) \
+            -> Union[MultiThresholdStoppingPolicy, LinearThresholdStoppingPolicy]:
         """
         Gets the policy from a parameter vector
 

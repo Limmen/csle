@@ -449,8 +449,8 @@ class SimulatedAnnealingAgent(BaseAgent):
             theta_1.append(np.random.uniform(-3, 3))
         return np.array(theta_1)
 
-    def get_policy(self, theta: List[float], L: int) -> Union[MultiThresholdStoppingPolicy,
-    LinearThresholdStoppingPolicy]:
+    def get_policy(self, theta: List[float], L: int) \
+            -> Union[MultiThresholdStoppingPolicy, LinearThresholdStoppingPolicy]:
         """
         Gets the policy of a given parameter vector
 

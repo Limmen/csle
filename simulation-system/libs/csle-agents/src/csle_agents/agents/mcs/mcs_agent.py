@@ -333,8 +333,8 @@ class MCSAgent(BaseAgent):
 
     def init_list(self, theta0: NDArray[np.int32], l: NDArray[np.int32], L: NDArray[np.int32],
                   stopping_actions: int, n: int, ncall: int = 0) \
-            -> Tuple[NDArray[np.float32], NDArray[np.float32], int,
-            Union[MultiThresholdStoppingPolicy, LinearThresholdStoppingPolicy]]:
+            -> Tuple[NDArray[np.float32], NDArray[np.float32], int, Union[
+                MultiThresholdStoppingPolicy, LinearThresholdStoppingPolicy]]:
         """
         Computes the function values corresponding to the initialization list
         and the pointer istar to the final best point x^* of the init. list
@@ -602,7 +602,7 @@ class MCSAgent(BaseAgent):
                                  ncall1, nsweep,
                                  nsweepbest) = \
                                     self.basket(
-                                        x, f1, policy, avg_metrics, xmin, fmi, # type: ignore
+                                        x, f1, policy, avg_metrics, xmin, fmi,  # type: ignore
                                         xbest, fbest, stop,  # type: ignore
                                         nbasket0, nsweep,
                                         nsweepbest,

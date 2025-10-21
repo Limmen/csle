@@ -572,8 +572,8 @@ class DifferentialEvolutionAgent(BaseAgent):
 
         return vec_new
 
-    def get_policy(self, theta: List[float], L: int) -> Union[MultiThresholdStoppingPolicy,
-    LinearThresholdStoppingPolicy]:
+    def get_policy(self, theta: List[float], L: int) \
+            -> Union[MultiThresholdStoppingPolicy, LinearThresholdStoppingPolicy]:
         """
         Utility method for getting the policy from a parameter vector
 
