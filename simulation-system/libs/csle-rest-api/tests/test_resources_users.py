@@ -494,7 +494,10 @@ class TestResourcesUsersSuite:
             flask_log_file="null",
             cluster_manager_log_file="null",
             version="0.8.0",
-            localhost=False
+            localhost=False,
+            recovery_ai=False,
+            recovery_ai_output_dir="",
+            recovery_ai_examples_path=""
         )
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_management_users",
                      side_effect=management_users)

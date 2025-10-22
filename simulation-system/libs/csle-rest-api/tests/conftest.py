@@ -169,7 +169,10 @@ def example_config() -> Config:
         flask_log_file="null",
         cluster_manager_log_file="null",
         version="0.8.0",
-        localhost=False
+        localhost=False,
+        recovery_ai=False,
+        recovery_ai_examples_path="",
+        recovery_ai_output_dir=""
     )
     return config
 
