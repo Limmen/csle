@@ -219,6 +219,7 @@ A REST API for the CSLE management platform.
 - `bitsandbytes` (for serving LLMs)
 - `google-genai` (for serving LLMs)
 - `urllib3` (for serving LLMs)
+- `bitsandbytes` (for serving LLMs)
 
 ## Development Requirements
 
