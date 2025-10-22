@@ -8,7 +8,12 @@
     node_exporter: "node_exporter"
 
   tasks:
-
+    - name: Modify server.py file
+      replace:
+        path: "/home/{{ user }}/csle/management-system/csle-mgmt-webapp/server/server.py"
+        regexp: '172.31.212.92'
+        replace: "{{ leader_ip }}"
+        
     - name: Check if nvm is installed; if you see error, ignore it!
       shell: "source /home/{{ user }}/.nvm/nvm.sh && nvm -v"
       args:
