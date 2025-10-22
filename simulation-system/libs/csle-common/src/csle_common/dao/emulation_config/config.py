@@ -64,7 +64,10 @@ class Config(JSONSerializable):
             flask_log_file: str,
             cluster_manager_log_file: str,
             version: str,
-            localhost: bool
+            localhost: bool,
+            recovery_ai: bool,
+            recovery_ai_output_dir: str,
+            recovery_ai_examples_path: str
     ):
         """
         Initializes the DTO
@@ -121,6 +124,9 @@ class Config(JSONSerializable):
         :param cluster_manager_log_file: the log file of the cluster manager
         :param version: the CSLE version in the format: "major.minor.patch"
         :param localhost: whether to use localhost ips or the public ips
+        :param recovery_ai: whether to use recovery AI or not
+        :param recovery_ai_output_dir: the directory to load the LLM from for recovery AI
+        :param recovery_ai_examples_path: the directory to load the recovery AI examples from
         """
         self.management_admin_username_default = management_admin_username_default
         self.management_admin_password_default = management_admin_password_default
@@ -174,6 +180,9 @@ class Config(JSONSerializable):
         self.id = 1
         self.version = version
         self.localhost = localhost
+        self.recovery_ai = recovery_ai
+        self.recovery_ai_output_dir = recovery_ai_output_dir
+        self.recovery_ai_examples_path = recovery_ai_examples_path
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -234,6 +243,9 @@ class Config(JSONSerializable):
         d["version"] = self.version
         d["id"] = 1
         d["localhost"] = self.localhost
+        d["recovery_ai"] = self.recovery_ai
+        d["recovery_ai_output_dir"] = self.recovery_ai_output_dir
+        d["recovery_ai_examples_path"] = self.recovery_ai_examples_path
         return d
 
     def to_param_dict(self) -> Dict[str, Any]:
@@ -455,6 +467,9 @@ class Config(JSONSerializable):
         d["cluster_config"] = self.cluster_config.to_dict()
         d["version"] = self.version
         d["localhost"] = self.localhost
+        d["recovery_ai"] = self.recovery_ai
+        d["recovery_ai_output_dir"] = self.recovery_ai_output_dir
+        d["recovery_ai_examples_path"] = self.recovery_ai_examples_path
         return d
 
     @staticmethod
@@ -515,7 +530,10 @@ class Config(JSONSerializable):
             flask_log_file=d["flask_log_file"],
             cluster_manager_log_file=d["cluster_manager_log_file"],
             version=d["version"],
-            localhost=d["localhost"]
+            localhost=d["localhost"],
+            recovery_ai=d["recovery_ai"],
+            recovery_ai_output_dir=d["recovery_ai_output_dir"],
+            recovery_ai_examples_path=d["recovery_ai_examples_path"]
         )
         if "id" in d:
             dto.id = d["id"]
@@ -531,6 +549,9 @@ class Config(JSONSerializable):
         d = {}
         d["version"] = d2["version"]
         d["localhost"] = d2["localhost"]
+        d["recovery_ai"] = d2["recovery_ai"]
+        d["recovery_ai_output_dir"] = d2["recovery_ai_output_dir"]
+        d["recovery_ai_examples_path"] = d2["recovery_ai_examples_path"]
         d["cluster_config"] = d2["cluster_config"]
         for param_value in d2["parameters"]:
             d[param_value["param"]] = param_value["value"]
@@ -586,7 +607,10 @@ class Config(JSONSerializable):
             flask_log_file=d["flask_log_file"],
             cluster_manager_log_file=d["cluster_manager_log_file"],
             version=d["version"],
-            localhost=d["localhost"]
+            localhost=d["localhost"],
+            recovery_ai=d["recovery_ai"],
+            recovery_ai_output_dir=d["recovery_ai_output_dir"],
+            recovery_ai_examples_path=d["recovery_ai_examples_path"]
         )
         if "id" in d:
             dto.id = d["id"]
@@ -635,7 +659,9 @@ class Config(JSONSerializable):
             f"pgadmin_username: {self.pgadmin_username}, pgadmin_password: {self.pgadmin_password},"
             f"postgresql_log_dir: {self.postgresql_log_dir}, nginx_log_dir: {self.nginx_log_dir},"
             f"flask_log_file: {self.flask_log_file}, cluster_manager_log_file: {self.cluster_manager_log_file},"
-            f"version: {self.version}, localhost: {self.localhost}"
+            f"version: {self.version}, localhost: {self.localhost}, recovery_ai: {self.recovery_ai}, "
+            f"recovery_ai_output_dir: {self.recovery_ai_output_dir}, "
+            f"recovery_ai_examples_path: {self.recovery_ai_examples_path},"
         )
 
     @staticmethod

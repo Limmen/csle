@@ -9,5 +9,10 @@ if __name__ == '__main__':
     ssh_client = paramiko.SSHClient()
     ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh_client.connect(hostname=ip, port=22, username=user)
-    stdin, stdout, stderr = ssh_client.exec_command(f"bash -ic 'nohup ~/csle/ansible/start.sh {conda_env} &'", get_pty=True)
+    stdin, stdout, stderr = ssh_client.exec_command(f"bash -ic 'nohup ~/csle/ansible/start.sh {conda_env} &'",
+                                                    get_pty=True)
     time.sleep(120)
+    import csle_common.constants.constants as constants
+    print(constants.METADATA_STORE.USER)
+    print(constants.METADATA_STORE.PASSWORD)
+    print(constants.METADATA_STORE.HOST)

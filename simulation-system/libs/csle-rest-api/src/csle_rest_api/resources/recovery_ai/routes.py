@@ -15,20 +15,23 @@ import csle_rest_api.util.rest_api_util as rest_api_util
 from csle_common.logging.log import Logger
 from csle_rest_api.resources.recovery_ai.prompts import Prompts
 from csle_rest_api.resources.recovery_ai.recovery_ai_util import RecoveryAIUtil
+from csle_common.metastore.metastore_facade import MetastoreFacade
 
 recovery_ai_bp = Blueprint(
     api_constants.MGMT_WEBAPP.RECOVERY_AI_RESOURCE, __name__,
     url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.RECOVERY_AI_RESOURCE}")
 
 try:
-    tokenizer, llm = RecoveryAIUtil.load_llm()
-    output_dir = "/home/kim/recovery_backups/backup_17_june/checkpoint-1704"
-    peft_config = PeftConfig.from_pretrained(output_dir)
-    assert isinstance(llm, torch.nn.Module)
-    model = PeftModel.from_pretrained(llm, output_dir)
-    model.eval()
-    with open("/home/kim/examples2.json", "r") as f:
-        examples = json.load(f)
+    config = MetastoreFacade.get_config()
+    if config.recovery_ai:
+        tokenizer, llm = RecoveryAIUtil.load_llm()
+        output_dir = config.recovery_ai_output_dir
+        peft_config = PeftConfig.from_pretrained(output_dir)
+        assert isinstance(llm, torch.nn.Module)
+        model = PeftModel.from_pretrained(llm, output_dir)
+        model.eval()
+        with open(config.recovery_ai_examples_path, "r") as f:
+            examples = json.load(f)
 except Exception as e:
     Logger.__call__().get_logger().warning(f"There was an exception loading LLM for RecoveryAI. "
                                            f"Exception: {str(e)}, {repr(e)}")
