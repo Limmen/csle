@@ -27,6 +27,19 @@ class ClusterUtil:
         return leader
 
     @staticmethod
+    def get_leader_ip(config: Config) -> str:
+        """
+        Returns the IP of the leader node
+
+        :param config: the cluster configuration
+        :return: The IP address of the leader node
+        """
+        for node in config.cluster_config.cluster_nodes:
+            if node.leader:
+                return node.ip
+        raise ValueError("No leader node found")
+
+    @staticmethod
     def get_config() -> Config:
         """
         Gets the current cluster config from the metastore or from disk depending on if it is the leader node or
@@ -45,12 +58,17 @@ class ClusterUtil:
         leader = ClusterUtil.am_i_leader(ip=ip, config=config)
         constants.CLUSTER_CONFIG.LEADER = leader
         if leader:
+            Logger.__call__().get_logger().info("Saving config to metastore")
             config = Config.read_config_file()
             current_config = MetastoreFacade.get_config(id=1)
             if current_config is None:
                 MetastoreFacade.save_config(config)
             else:
                 MetastoreFacade.update_config(config=config, id=1)
+        else:
+            Logger.__call__().get_logger().info(f"Not saving config to metastore since I am not leader. "
+                                                f"My IP is: {ip}, the leader IP is: "
+                                                f"{ClusterUtil.get_leader_ip(config=config)}")
         return config
 
     @staticmethod

@@ -51,8 +51,11 @@ def init() -> None:
     start_cluster_manager(host_ip=host_ip)
     leader = ClusterUtil.am_i_leader(ip=host_ip, config=constants.CONFIG_FILE.PARSED_CONFIG)
     if leader:
+        click.secho("Saving management accounts to metastore")
         ManagementUtil.create_default_management_admin_account()
         ManagementUtil.create_default_management_guest_account()
+    click.secho(f"Since I am not leader, I am not initializing CSLE. My IP is: {host_ip}, "
+                f"the leader IP is: {ClusterUtil.get_leader_ip(config=config)}", bold=False)
 
 
 def start_cluster_manager(host_ip: str) -> None:
@@ -3830,7 +3833,7 @@ def list_heartbeats(ip: str, emulation: str, ip_first_octet: int) -> None:
                 click.secho(f'{status:^29}', nl=False, fg=status_color)
                 click.secho('|', fg='white')
                 click.secho('+' + '-' * 60 + '+', fg='white')
-                
+
 
 def list_packetbeats(ip: str, emulation: str, ip_first_octet: int) -> None:
     """
