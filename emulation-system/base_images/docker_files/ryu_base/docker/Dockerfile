@@ -1,5 +1,5 @@
 # OS
-FROM kimham/csle_ubuntu_20_base:0.8.0
+FROM kimham/csle_ubuntu_20_base:0.9.0
 USER root
 
 # RYU
