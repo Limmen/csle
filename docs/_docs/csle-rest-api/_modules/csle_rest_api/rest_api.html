@@ -145,6 +145,8 @@
 <span class="kn">from</span> <span class="nn">csle_rest_api.resources.logs.routes</span> <span class="kn">import</span> <span class="n">logs_bp</span>
 <span class="kn">from</span> <span class="nn">csle_rest_api.resources.create_emulation.routes</span> <span class="kn">import</span> <span class="n">create_emulation_bp</span>
 <span class="kn">from</span> <span class="nn">csle_rest_api.web_sockets.container_terminal.container_terminal</span> <span class="kn">import</span> <span class="n">get_container_terminal_bp</span>
+<span class="kn">from</span> <span class="nn">csle_rest_api.pages.recovery_ai.routes</span> <span class="kn">import</span> <span class="n">get_recovery_ai_page_bp</span>
+<span class="kn">from</span> <span class="nn">csle_rest_api.resources.recovery_ai.routes</span> <span class="kn">import</span> <span class="n">recovery_ai_bp</span>
 <span class="kn">import</span> <span class="nn">csle_rest_api.constants.constants</span> <span class="k">as</span> <span class="nn">api_constants</span>
 
 
@@ -156,7 +158,7 @@
 <span class="sd">    :return: the flask app</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">static_url_path</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">static_folder</span><span class="o">=</span><span class="n">static_folder</span><span class="p">)</span>
-    <span class="n">CORS</span><span class="p">(</span><span class="n">app</span><span class="p">)</span> <span class="c1"># allow CORS for all domains on all routes.</span>
+    <span class="n">CORS</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>  <span class="c1"># allow CORS for all domains on all routes.</span>
     <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">CORS_HEADERS</span><span class="p">]</span> <span class="o">=</span> <span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">CONTENT_TYPE</span>
 
     <span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">get_emulations_page_bp</span><span class="p">(</span><span class="n">static_folder</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;../../</span><span class="si">{</span><span class="n">static_folder</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">),</span>
@@ -251,6 +253,9 @@
     <span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">get_register_page_bp</span><span class="p">(</span><span class="n">static_folder</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;../../</span><span class="si">{</span><span class="n">static_folder</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">),</span>
                            <span class="n">url_prefix</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}</span><span class="s2">&quot;</span>
                                       <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">REGISTER_PAGE_RESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">get_recovery_ai_page_bp</span><span class="p">(</span><span class="n">static_folder</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;../../</span><span class="si">{</span><span class="n">static_folder</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">),</span>
+                           <span class="n">url_prefix</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}</span><span class="s2">&quot;</span>
+                                      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">RECOVERY_AI_PAGE_RESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">emulations_bp</span><span class="p">,</span>
                            <span class="n">url_prefix</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}</span><span class="s2">&quot;</span>
                                       <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">EMULATIONS_RESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -358,6 +363,9 @@
     <span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">create_emulation_bp</span><span class="p">,</span>
                            <span class="n">url_prefix</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}</span><span class="s2">&quot;</span>
                                       <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">CREATE_EMULATION_RESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span>
+        <span class="n">recovery_ai_bp</span><span class="p">,</span>
+        <span class="n">url_prefix</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">RECOVERY_AI_RESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="n">web_sockets_container_terminal_bp</span> <span class="o">=</span> <span class="n">get_container_terminal_bp</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
     <span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">web_sockets_container_terminal_bp</span><span class="p">)</span>
 
@@ -367,6 +375,7 @@
 <span class="sd">        :return: the root page of the management application</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">app</span><span class="o">.</span><span class="n">send_static_file</span><span class="p">(</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">STATIC_RESOURCE_INDEX</span><span class="p">)</span>
+
     <span class="n">socketio</span><span class="o">.</span><span class="n">init_app</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">app</span></div>
 

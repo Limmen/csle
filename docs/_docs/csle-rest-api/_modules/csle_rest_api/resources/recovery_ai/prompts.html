@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_rest_api.resources.recovery_ai.prompts &mdash; csle-rest-api 0.8.0 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> csle-rest-api
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_rest_api.constants.html">csle_rest_api.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_rest_api.pages.html">csle_rest_api.pages package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_rest_api.resources.html">csle_rest_api.resources package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_rest_api.util.html">csle_rest_api.util package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_rest_api.web_sockets.html">csle_rest_api.web_sockets package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">csle-rest-api</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_rest_api.resources.recovery_ai.prompts</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_rest_api.resources.recovery_ai.prompts</h1><div class="highlight"><pre>
+<div class="viewcode-block" id="Prompts"><a class="viewcode-back" href="../../../../csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.prompts.Prompts">[docs]</a><span></span><span class="k">class</span> <span class="nc">Prompts</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class with string constants related to LLM-prompting</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">INCIDENT_PROMPT_TEMPLATE</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;Below is a system description, a sequence of network logs (e.g., from an intrusion detection system), &quot;</span>
+        <span class="s2">&quot;and an instruction that describes a task.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Write a response that appropriately completes the request.</span><span class="se">\n</span><span class="s2">Before generating the response, &quot;</span>
+        <span class="s2">&quot;think carefully about the system, the logs, and the instruction, then create a step-by-step &quot;</span>
+        <span class="s2">&quot;chain of thoughts to ensure a logical and accurate response.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;### System:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;### Logs:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;### Instruction:</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;You are a security operator with advanced knowledge in cybersecurity &quot;</span>
+        <span class="s2">&quot;and IT systems.</span><span class="se">\n</span><span class="s2">You have been given information about a system and some logs generated by it, &quot;</span>
+        <span class="s2">&quot;e.g., security alerts.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Your task is to determine if the logs indicate a cyber incident (i.e., attack) &quot;</span>
+        <span class="s2">&quot;that requires recovery actions.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;If the logs are just indicative of normal system activity or if they are unrelated to security, then you &quot;</span>
+        <span class="s2">&quot;should classify the logs/system as not being an incident that requires recovery.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Similarly, if the logs contain very minor security alerts that do not warrant any recovery action, &quot;</span>
+        <span class="s2">&quot;then you should classify the logs/system as not being an incident that requires recovery.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;If there is an incident that requires action, you should concisely describe the incident and explain &quot;</span>
+        <span class="s2">&quot;why it is an incident, i.e., you should indicate which parts of the logs or system description indicate &quot;</span>
+        <span class="s2">&quot;an incident that requires immediate action.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;It is important that any conclusions you make in the incident description are supported by the &quot;</span>
+        <span class="s2">&quot;logs/system description, don&#39;t make guesses.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;You should also associate the incident with tactics and techniques from the MITRE ATT&amp;CK taxonomy. &quot;</span>
+        <span class="s2">&quot;You should also identify entities involved in the incident.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Return a JSON object with five fields: &#39;Incident&#39;, &#39;Incident description&#39;, &#39;MITRE ATT&amp;CK Tactics&#39;, &quot;</span>
+        <span class="s2">&quot;&#39;MITRE ATT&amp;CK Techniques&#39;, and &#39;Entities&#39;.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;&#39;Incident&#39; should be a string that is either &#39;Yes&#39; or &#39;No&#39;.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;&#39;Incident description&#39; should be a string with a concise summary of the incident and explanation of &quot;</span>
+        <span class="s2">&quot;why the logs/system description indicate that there is a incident.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;&#39;MITRE ATT&amp;CK Tactics&#39; should be an array of strings, each of which corresponds to one tactic used by &quot;</span>
+        <span class="s2">&quot;the attacker in the incident.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;&#39;MITRE ATT&amp;CK Techniques&#39; should be an array of strings, each of which corresponds to one technique used &quot;</span>
+        <span class="s2">&quot;by the attacker in the incident.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;&#39;Entities&#39; should be a JSON object with three properties: &#39;Attacker&#39;, &#39;System&#39;, and &#39;Targeted&#39;, where &quot;</span>
+        <span class="s2">&quot;&#39;Attacker&#39; should be an array of strings, each of which is either an IP or a hostname that is related to &quot;</span>
+        <span class="s2">&quot;the attacker/adversary, &#39;System&#39; should be an array of strings, each of which is either an IP or a hostname &quot;</span>
+        <span class="s2">&quot;that corresponds to some component in the system, and &#39;Targeted&#39; should be an array of strings, each of which &quot;</span>
+        <span class="s2">&quot;is either an IP or a hostname that corresponds to some component in the system that is under attack.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;If the &#39;Incident&#39; field is set to &#39;No&#39;, then &#39;Incident description&#39; should be &#39;No incident can be inferred &quot;</span>
+        <span class="s2">&quot;from the logs because they contain no substantial information.&#39;, &#39;MITRE ATT&amp;CK Tactics&#39; should be an empty &quot;</span>
+        <span class="s2">&quot;array, &#39;MITRE ATT&amp;CK Techniques&#39; should be an empty array, and &#39;Entities&#39; should be an empty JSON object.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Return only the JSON with the above five fields, nothing else.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;### Response:</span><span class="se">\n</span><span class="s2">&lt;think&gt;&quot;</span><span class="p">)</span>
+
+    <span class="n">ACTION_PROMPT_TEMPLATE</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;Below is a system description, a sequence of network logs (e.g., from an intrusion detection system), &quot;</span>
+        <span class="s2">&quot;a description of a cybersecurity incident, the current state of the recovery from the incident, &quot;</span>
+        <span class="s2">&quot;a list of previously executed recovery actions, &quot;</span>
+        <span class="s2">&quot;and an instruction that describes a task.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Write a response that appropriately completes the request.</span><span class="se">\n</span><span class="s2">Before generating the response, &quot;</span>
+        <span class="s2">&quot;think carefully about the system, the logs, and the instruction, then create a step-by-step &quot;</span>
+        <span class="s2">&quot;chain of thoughts to ensure a logical and accurate response.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;### System:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;### Logs:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;### Incident:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;### State:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;The meaning of the state fields are as follows.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;is_attack_contained: Has the immediate threat been stopped from spreading?</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;is_knowledge_sufficient: Have we gathered enough data to effectively contain and eradicate the attack?</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;are_forensics_preserved: Has evidence been captured and stored in a forensically sound manner?</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;is_eradicated: Is the adversary completely removed from the system?</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;is_hardened: Has the root cause of the attack been remediated? i.e., are future attacks of the same &quot;</span>
+        <span class="s2">&quot;type prevented?</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;is_recovered: Are primary services restored for users?</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;### Previous recovery actions:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;### Instruction:</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;You are a security operator with advanced knowledge in cybersecurity &quot;</span>
+        <span class="s2">&quot;and IT systems. You have been given information about a security incident and should&quot;</span>
+        <span class="s2">&quot; generate the next suitable action for recovering the system from the incident. &quot;</span>
+        <span class="s2">&quot;Your suggested action should be based on the logs, the system description only, the current state, and the &quot;</span>
+        <span class="s2">&quot;previous recovery actions.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Make sure that the suggested recovery action is consistent with the system description and the logs and that &quot;</span>
+        <span class="s2">&quot;you do not repeat any action that has already been performed.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;The goal when selecting the recovery action is to change the state so that one of the state-properties that &quot;</span>
+        <span class="s2">&quot;is currently &#39;false&#39; &quot;</span>
+        <span class="s2">&quot;becomes &#39;true&#39;. The ideal recovery action sequence is: 1. contain the attack 2. gather information 3. &quot;</span>
+        <span class="s2">&quot;preserve evidence &quot;</span>
+        <span class="s2">&quot;4. eradicate the attacker 5. harden the system 6. recover operational services.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;When selecting the recovery action, make sure that it is concrete and actionable and minimizes unnecessary &quot;</span>
+        <span class="s2">&quot;service disruptions. &quot;</span>
+        <span class="s2">&quot;Vague or unnecessary actions will not change the state and should be avoided.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Return a JSON object with two properties: &#39;Action&#39; and &#39;Explanation&#39;, both of which should be strings.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;The property &#39;Action&#39; should be a string that concisely describes the concrete recovery action.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;The property &#39;Explanation&#39; should be a string that concisely explains why you selected the recovery action &quot;</span>
+        <span class="s2">&quot;and motivates why the action is needed.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;### Response:</span><span class="se">\n</span><span class="s2">&lt;think&gt;&quot;</span><span class="p">)</span>
+
+    <span class="n">STATE_PROMPT_TEMPLATE</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;Below is a system description, a sequence of network logs (e.g., from an intrusion detection system), &quot;</span>
+        <span class="s2">&quot;a description of a cybersecurity incident, the current state of the recovery from the incident, &quot;</span>
+        <span class="s2">&quot;a proposed recovery action, and an instruction that describes a task.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Write a response that appropriately completes the request.</span><span class="se">\n</span><span class="s2">Before generating the response, &quot;</span>
+        <span class="s2">&quot;think carefully about the system, the logs, and the instruction, then create a step-by-step &quot;</span>
+        <span class="s2">&quot;chain of thoughts to ensure a logical and accurate response.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;### System:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;### Logs:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;### Incident:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;### State:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;The meaning of the state fields are as follows.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;is_attack_contained: Has the immediate threat been stopped from spreading?</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;is_knowledge_sufficient: Have we gathered enough data to effectively contain and eradicate the attack?</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;are_forensics_preserved: Has evidence been captured and stored in a forensically sound manner?</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;is_eradicated: Is the adversary completely removed from the system?</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;is_hardened: Has the root cause of the attack been remediated? i.e., are future attacks of the same &quot;</span>
+        <span class="s2">&quot;type prevented?</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;is_recovered: Are primary services restored for users?</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;### Recovery action:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;### Instruction:</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;You are a security operator with advanced knowledge in cybersecurity &quot;</span>
+        <span class="s2">&quot;and IT systems.</span><span class="se">\n</span><span class="s2">You have been given information about a security incident, the state of recovery from &quot;</span>
+        <span class="s2">&quot;the incident, &quot;</span>
+        <span class="s2">&quot;and a recovery action.</span><span class="se">\n</span><span class="s2">Your task is to predict what the next state of the recovery will be after applying &quot;</span>
+        <span class="s2">&quot;the recovery action.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;For example, if the given recovery action effectively contains the attack and &#39;is_attack_contained&#39; is &quot;</span>
+        <span class="s2">&quot;&#39;false&#39; in the &quot;</span>
+        <span class="s2">&quot;current state, then the next state should have &#39;is_attack_contained&#39; set to &#39;true&#39;.</span><span class="se">\n</span><span class="s2">Similarly, if &quot;</span>
+        <span class="s2">&quot;&#39;is_recovered&#39; is &#39;false&#39; &quot;</span>
+        <span class="s2">&quot;in the current state and the given recovery action effectively recovers operational services of the system,&quot;</span>
+        <span class="s2">&quot; then the next state &quot;</span>
+        <span class="s2">&quot;should have &#39;is_recovered&#39; set to &#39;true&#39;, etc.</span><span class="se">\n</span><span class="s2">It is also possible that multiple state properties change &quot;</span>
+        <span class="s2">&quot;values from false to true. &quot;</span>
+        <span class="s2">&quot;It is also possible that the state remains the same, i.e., no property changes.</span><span class="se">\n</span><span class="s2">It is important that the &quot;</span>
+        <span class="s2">&quot;state only changes if the &quot;</span>
+        <span class="s2">&quot;action is effective in achieving one of the recovery goals: containment, information gathering, preserving &quot;</span>
+        <span class="s2">&quot;evidence, eradication, &quot;</span>
+        <span class="s2">&quot;hardening, or recovery.</span><span class="se">\n</span><span class="s2">A state variable can only change from &#39;false&#39; to &#39;true&#39;, it cannot be changed from &quot;</span>
+        <span class="s2">&quot;&#39;true&#39; to &#39;false&#39;.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Return a JSON object that defines the next state and contains the Boolean fields &#39;is_attack_contained&#39;, &quot;</span>
+        <span class="s2">&quot;&#39;is_knowledge_sufficient&#39;, &#39;are_forensics_preserved&#39;, &#39;is_eradicated&#39;, &#39;is_hardened&#39;, &#39;is_recovered&#39;.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;### Response:</span><span class="se">\n</span><span class="s2">&lt;think&gt;&quot;</span><span class="p">)</span>
+
+    <span class="n">RAG_PROMPT_TEMPLATE</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Below is a sequenc of logs and an instruction. Complete the instruction.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                           <span class="s2">&quot;### Logs:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                           <span class="s2">&quot;### Instruction:</span><span class="se">\n</span><span class="s2">&quot;</span>
+                           <span class="s2">&quot;Extract a list of threat identifiers, e.g., cve-identifiers, cwe-identifiers, identifiers &quot;</span>
+                           <span class="s2">&quot;for alerts (e.g., snort SIDs), or simply names of known vulnerabilities that occur in the &quot;</span>
+                           <span class="s2">&quot;logs. It can be any identifier that you think it is possible to &quot;</span>
+                           <span class="s2">&quot;use to fetch more relevant information about a potential incident.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                           <span class="s2">&quot;For each of the identifiers that you extract, fetch brief and concise &quot;</span>
+                           <span class="s2">&quot;information/context about what it means.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                           <span class="s2">&quot;Return a JSON object with two properties:</span><span class="se">\n</span><span class="s2">&quot;</span>
+                           <span class="s2">&quot;&#39;Identifiers&#39;, which is a list of strings with the identifiers.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                           <span class="s2">&quot;&#39;Context&#39;, which is a list of strings with the context/description of each identifier.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                           <span class="s2">&quot;These two lists should have the same length. Return only the valid JSON, nothing else.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                           <span class="s2">&quot;It is important that each string in the &#39;Identifiers&#39; list appears verbatim in the &quot;</span>
+                           <span class="s2">&quot;logs. Moreover, the context about each identifier should be &quot;</span>
+                           <span class="s2">&quot;maximum 2 sentences.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                           <span class="s2">&quot;### Response: &quot;</span><span class="p">)</span>
+
+    <span class="n">GEMINI_ACTION_EVAL</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Below is a system description, logs, an incident description, a recovery state, and a &quot;</span>
+                          <span class="s2">&quot;recovery action, and an instruction. Complete the instruction.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                          <span class="s2">&quot;### System:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                          <span class="s2">&quot;### Logs:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                          <span class="s2">&quot;### Incident:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                          <span class="s2">&quot;### State:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                          <span class="s2">&quot;The meaning of the state fields are as follows.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                          <span class="s2">&quot;is_attack_contained: Has the immediate threat been stopped from spreading?</span><span class="se">\n</span><span class="s2">&quot;</span>
+                          <span class="s2">&quot;is_knowledge_sufficient: Have we gathered enough data to effectively contain and &quot;</span>
+                          <span class="s2">&quot;eradicate the attack?</span><span class="se">\n</span><span class="s2">&quot;</span>
+                          <span class="s2">&quot;are_forensics_preserved: Has evidence been captured and stored in a forensically &quot;</span>
+                          <span class="s2">&quot;sound manner?</span><span class="se">\n</span><span class="s2">&quot;</span>
+                          <span class="s2">&quot;is_eradicated: Is the adversary completely removed from the system?</span><span class="se">\n</span><span class="s2">&quot;</span>
+                          <span class="s2">&quot;is_hardened: Has the root cause of the attack been remediated? i.e., are future attacks &quot;</span>
+                          <span class="s2">&quot;of the same type prevented?</span><span class="se">\n</span><span class="s2">&quot;</span>
+                          <span class="s2">&quot;is_recovered: Are primary services restored for users?</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                          <span class="s2">&quot;### Recovery action:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                          <span class="s2">&quot;### Instruction:</span><span class="se">\n</span><span class="s2">&quot;</span>
+                          <span class="s2">&quot;Give a score between 0 and 1 that quantifies how good the recovery action is. These &quot;</span>
+                          <span class="s2">&quot;are the goals of &quot;</span>
+                          <span class="s2">&quot;the recovery action:</span><span class="se">\n</span><span class="s2">&quot;</span>
+                          <span class="s2">&quot;- It should be concrete and actionable, i.e., it should clearly explain what the security &quot;</span>
+                          <span class="s2">&quot;operator should do, ideally with details like specific &quot;</span>
+                          <span class="s2">&quot;IP addresses/hostnames/configurations/&quot;</span>
+                          <span class="s2">&quot;vulnerabilities.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                          <span class="s2">&quot;- It should avoid unnecessary recovery measures (e.g., shutting down services that are not &quot;</span>
+                          <span class="s2">&quot;affected by the incident or blocking unnecessary IPs).</span><span class="se">\n</span><span class="s2">&quot;</span>
+                          <span class="s2">&quot;- It should cause the recovery state to change so that at least one state-property &quot;</span>
+                          <span class="s2">&quot;that is currently False becomes True.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                          <span class="s2">&quot;Return just the score between 0 and 1 that indicates how well the action meets the &quot;</span>
+                          <span class="s2">&quot;above criteria.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                          <span class="s2">&quot;### Response: &quot;</span><span class="p">)</span>
+
+    <span class="n">GEMINI_INCIDENT_EVAL</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Below is a system description, logs, a suggested incident classification, &quot;</span>
+                            <span class="s2">&quot;and an instruction. Complete the instruction.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                            <span class="s2">&quot;### System:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                            <span class="s2">&quot;### Logs:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                            <span class="s2">&quot;### Incident classification:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                            <span class="s2">&quot;### Instruction:</span><span class="se">\n</span><span class="s2">&quot;</span>
+                            <span class="s2">&quot;Give a score between 0 and 1 that quantifies how good the incident classification is &quot;</span>
+                            <span class="s2">&quot;based on the logs and the system description. &quot;</span>
+                            <span class="s2">&quot;These are the goals of the incident classification: </span><span class="se">\n</span><span class="s2">&quot;</span>
+                            <span class="s2">&quot;- The logs/system description should be classified as an incident only if some recovery &quot;</span>
+                            <span class="s2">&quot;action is needed, if it is not severe enough to warrant any action at all, then it should &quot;</span>
+                            <span class="s2">&quot;be classified as &#39;No incident&#39;.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                            <span class="s2">&quot;- If all of the logs are just indicate of normal system activity (e.g., false positives) &quot;</span>
+                            <span class="s2">&quot;or the logs are indicating alerts with low severity, then it should *not* be classified &quot;</span>
+                            <span class="s2">&quot;as an incident. </span><span class="se">\n</span><span class="s2">&quot;</span>
+                            <span class="s2">&quot;- If the logs contain some false alerts or alerts that are indicative of &quot;</span>
+                            <span class="s2">&quot;normal operation but contains at least 1 severe alert that is unusual, then it should be &quot;</span>
+                            <span class="s2">&quot;classified as an incident based on the severe alerts. </span><span class="se">\n</span><span class="s2">&quot;</span>
+                            <span class="s2">&quot;- The incident report should focus on the important (severe) alerts. </span><span class="se">\n</span><span class="s2">&quot;</span>
+                            <span class="s2">&quot;Return just the score between 0 and 1 that indicates how well the incident classification &quot;</span>
+                            <span class="s2">&quot;meets the above criteria.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                            <span class="s2">&quot;### Response: &quot;</span><span class="p">)</span>
+
+    <span class="n">INCIDENT</span> <span class="o">=</span> <span class="s2">&quot;Incident&quot;</span>
+    <span class="n">INCIDENT_YES</span> <span class="o">=</span> <span class="s2">&quot;Yes&quot;</span>
+    <span class="n">INCIDENT_DESCRIPTION</span> <span class="o">=</span> <span class="s2">&quot;Incident description&quot;</span>
+    <span class="n">MITRE_ATTACK_TACTICS</span> <span class="o">=</span> <span class="s2">&quot;MITRE ATT&amp;CK Tactics&quot;</span>
+    <span class="n">MITRE_ATTACK_TECHNIQUES</span> <span class="o">=</span> <span class="s2">&quot;MITRE ATT&amp;CK Techniques&quot;</span>
+    <span class="n">ENTITIES</span> <span class="o">=</span> <span class="s2">&quot;Entities&quot;</span>
+    <span class="n">ATTACKER</span> <span class="o">=</span> <span class="s2">&quot;Attacker&quot;</span>
+    <span class="n">TARGETED</span> <span class="o">=</span> <span class="s2">&quot;Targeted&quot;</span>
+    <span class="n">SYSTEM</span> <span class="o">=</span> <span class="s2">&quot;System&quot;</span>
+    <span class="n">ACTION</span> <span class="o">=</span> <span class="s2">&quot;Action&quot;</span>
+    <span class="n">EXPLANATION</span> <span class="o">=</span> <span class="s2">&quot;Explanation&quot;</span>
+    <span class="n">IS_ATTACK_CONTAINED</span> <span class="o">=</span> <span class="s2">&quot;is_attack_contained&quot;</span>
+    <span class="n">IS_KNOWLEDGE_SUFFICIENT</span> <span class="o">=</span> <span class="s2">&quot;is_knowledge_sufficient&quot;</span>
+    <span class="n">ARE_FORENSICS_PRESERVED</span> <span class="o">=</span> <span class="s2">&quot;are_forensics_preserved&quot;</span>
+    <span class="n">IS_ERADICATED</span> <span class="o">=</span> <span class="s2">&quot;is_eradicated&quot;</span>
+    <span class="n">IS_HARDENED</span> <span class="o">=</span> <span class="s2">&quot;is_hardened&quot;</span>
+    <span class="n">IS_RECOVERED</span> <span class="o">=</span> <span class="s2">&quot;is_recovered&quot;</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2025, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

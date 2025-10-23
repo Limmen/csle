@@ -21,6 +21,7 @@ Subpackages
    csle_rest_api.pages.monitoring
    csle_rest_api.pages.policies
    csle_rest_api.pages.policy_examination
+   csle_rest_api.pages.recovery_ai
    csle_rest_api.pages.register
    csle_rest_api.pages.sdn_controllers
    csle_rest_api.pages.server_cluster

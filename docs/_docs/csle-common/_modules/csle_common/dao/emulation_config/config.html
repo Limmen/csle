@@ -138,7 +138,10 @@
             <span class="n">flask_log_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
             <span class="n">cluster_manager_log_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
             <span class="n">version</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-            <span class="n">localhost</span><span class="p">:</span> <span class="nb">bool</span>
+            <span class="n">localhost</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+            <span class="n">recovery_ai</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+            <span class="n">recovery_ai_output_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+            <span class="n">recovery_ai_examples_path</span><span class="p">:</span> <span class="nb">str</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the DTO</span>
@@ -195,6 +198,9 @@
 <span class="sd">        :param cluster_manager_log_file: the log file of the cluster manager</span>
 <span class="sd">        :param version: the CSLE version in the format: &quot;major.minor.patch&quot;</span>
 <span class="sd">        :param localhost: whether to use localhost ips or the public ips</span>
+<span class="sd">        :param recovery_ai: whether to use recovery AI or not</span>
+<span class="sd">        :param recovery_ai_output_dir: the directory to load the LLM from for recovery AI</span>
+<span class="sd">        :param recovery_ai_examples_path: the directory to load the recovery AI examples from</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">management_admin_username_default</span> <span class="o">=</span> <span class="n">management_admin_username_default</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">management_admin_password_default</span> <span class="o">=</span> <span class="n">management_admin_password_default</span>
@@ -248,6 +254,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">version</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">localhost</span> <span class="o">=</span> <span class="n">localhost</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">recovery_ai</span> <span class="o">=</span> <span class="n">recovery_ai</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">recovery_ai_output_dir</span> <span class="o">=</span> <span class="n">recovery_ai_output_dir</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">recovery_ai_examples_path</span> <span class="o">=</span> <span class="n">recovery_ai_examples_path</span>
 
 <div class="viewcode-block" id="Config.to_dict"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.config.Config.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -308,6 +317,9 @@
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;localhost&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">localhost</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;recovery_ai&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">recovery_ai</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;recovery_ai_output_dir&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">recovery_ai_output_dir</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;recovery_ai_examples_path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">recovery_ai_examples_path</span>
         <span class="k">return</span> <span class="n">d</span></div>
 
 <div class="viewcode-block" id="Config.to_param_dict"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.config.Config.to_param_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_param_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
@@ -529,6 +541,9 @@
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;cluster_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cluster_config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;localhost&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">localhost</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;recovery_ai&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">recovery_ai</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;recovery_ai_output_dir&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">recovery_ai_output_dir</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;recovery_ai_examples_path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">recovery_ai_examples_path</span>
         <span class="k">return</span> <span class="n">d</span></div>
 
 <div class="viewcode-block" id="Config.from_dict"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.config.Config.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
@@ -589,7 +604,10 @@
             <span class="n">flask_log_file</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;flask_log_file&quot;</span><span class="p">],</span>
             <span class="n">cluster_manager_log_file</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;cluster_manager_log_file&quot;</span><span class="p">],</span>
             <span class="n">version</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">],</span>
-            <span class="n">localhost</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;localhost&quot;</span><span class="p">]</span>
+            <span class="n">localhost</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;localhost&quot;</span><span class="p">],</span>
+            <span class="n">recovery_ai</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;recovery_ai&quot;</span><span class="p">],</span>
+            <span class="n">recovery_ai_output_dir</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;recovery_ai_output_dir&quot;</span><span class="p">],</span>
+            <span class="n">recovery_ai_examples_path</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;recovery_ai_examples_path&quot;</span><span class="p">]</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;id&quot;</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span>
             <span class="n">dto</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
@@ -605,6 +623,9 @@
         <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">d2</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">]</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;localhost&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">d2</span><span class="p">[</span><span class="s2">&quot;localhost&quot;</span><span class="p">]</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;recovery_ai&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">d2</span><span class="p">[</span><span class="s2">&quot;recovery_ai&quot;</span><span class="p">]</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;recovery_ai_output_dir&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">d2</span><span class="p">[</span><span class="s2">&quot;recovery_ai_output_dir&quot;</span><span class="p">]</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;recovery_ai_examples_path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">d2</span><span class="p">[</span><span class="s2">&quot;recovery_ai_examples_path&quot;</span><span class="p">]</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;cluster_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">d2</span><span class="p">[</span><span class="s2">&quot;cluster_config&quot;</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">param_value</span> <span class="ow">in</span> <span class="n">d2</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]:</span>
             <span class="n">d</span><span class="p">[</span><span class="n">param_value</span><span class="p">[</span><span class="s2">&quot;param&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">param_value</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
@@ -660,7 +681,10 @@
             <span class="n">flask_log_file</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;flask_log_file&quot;</span><span class="p">],</span>
             <span class="n">cluster_manager_log_file</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;cluster_manager_log_file&quot;</span><span class="p">],</span>
             <span class="n">version</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">],</span>
-            <span class="n">localhost</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;localhost&quot;</span><span class="p">]</span>
+            <span class="n">localhost</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;localhost&quot;</span><span class="p">],</span>
+            <span class="n">recovery_ai</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;recovery_ai&quot;</span><span class="p">],</span>
+            <span class="n">recovery_ai_output_dir</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;recovery_ai_output_dir&quot;</span><span class="p">],</span>
+            <span class="n">recovery_ai_examples_path</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;recovery_ai_examples_path&quot;</span><span class="p">]</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;id&quot;</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span>
             <span class="n">dto</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
@@ -709,7 +733,9 @@
             <span class="sa">f</span><span class="s2">&quot;pgadmin_username: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pgadmin_username</span><span class="si">}</span><span class="s2">, pgadmin_password: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pgadmin_password</span><span class="si">}</span><span class="s2">,&quot;</span>
             <span class="sa">f</span><span class="s2">&quot;postgresql_log_dir: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">postgresql_log_dir</span><span class="si">}</span><span class="s2">, nginx_log_dir: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nginx_log_dir</span><span class="si">}</span><span class="s2">,&quot;</span>
             <span class="sa">f</span><span class="s2">&quot;flask_log_file: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">flask_log_file</span><span class="si">}</span><span class="s2">, cluster_manager_log_file: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cluster_manager_log_file</span><span class="si">}</span><span class="s2">,&quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;version: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2">, localhost: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">localhost</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;version: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2">, localhost: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">localhost</span><span class="si">}</span><span class="s2">, recovery_ai: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">recovery_ai</span><span class="si">}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;recovery_ai_output_dir: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">recovery_ai_output_dir</span><span class="si">}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;recovery_ai_examples_path: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">recovery_ai_examples_path</span><span class="si">}</span><span class="s2">,&quot;</span>
         <span class="p">)</span>
 
 <div class="viewcode-block" id="Config.from_json_file"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.config.Config.from_json_file">[docs]</a>    <span class="nd">@staticmethod</span>

@@ -86,7 +86,8 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                  <span class="n">num_cpus</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">available_memory_gb</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                  <span class="n">ips_and_network_configs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">NodeNetworkConfig</span><span class="p">]],</span>
-                 <span class="n">docker_gw_bridge_ip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">physical_host_ip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+                 <span class="n">docker_gw_bridge_ip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">physical_host_ip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">disk_space_gb</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the DTO</span>
 
@@ -96,6 +97,7 @@
 <span class="sd">        :param ips_and_network_configs: list of ip adresses and network configurations</span>
 <span class="sd">        :param docker_gw_bridge_ip: IP to reach the container from the host network</span>
 <span class="sd">        :param physical_host_ip: IP of the physical host where the container is running</span>
+<span class="sd">        :param disk_space_gb: the amount of disk space in GB available to the node</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">container_name</span> <span class="o">=</span> <span class="n">container_name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_cpus</span> <span class="o">=</span> <span class="n">num_cpus</span>
@@ -103,6 +105,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">ips_and_network_configs</span> <span class="o">=</span> <span class="n">ips_and_network_configs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span> <span class="o">=</span> <span class="n">docker_gw_bridge_ip</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">physical_host_ip</span> <span class="o">=</span> <span class="n">physical_host_ip</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">disk_space_gb</span> <span class="o">=</span> <span class="n">disk_space_gb</span>
 
 <div class="viewcode-block" id="NodeResourcesConfig.get_ips"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.node_resources_config.NodeResourcesConfig.get_ips">[docs]</a>    <span class="k">def</span> <span class="nf">get_ips</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -129,7 +132,8 @@
             <span class="n">container_name</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;container_name&quot;</span><span class="p">],</span>
             <span class="n">ips_and_network_configs</span><span class="o">=</span><span class="n">ips_and_network_configs</span><span class="p">,</span>
             <span class="n">num_cpus</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_cpus&quot;</span><span class="p">],</span> <span class="n">available_memory_gb</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;available_memory_gb&quot;</span><span class="p">],</span>
-            <span class="n">docker_gw_bridge_ip</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;docker_gw_bridge_ip&quot;</span><span class="p">],</span> <span class="n">physical_host_ip</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;physical_host_ip&quot;</span><span class="p">]</span>
+            <span class="n">docker_gw_bridge_ip</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;docker_gw_bridge_ip&quot;</span><span class="p">],</span> <span class="n">physical_host_ip</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;physical_host_ip&quot;</span><span class="p">],</span>
+            <span class="n">disk_space_gb</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;disk_space_gb&quot;</span><span class="p">]</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">obj</span></div>
 
@@ -147,6 +151,7 @@
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;available_memory_gb&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">available_memory_gb</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;docker_gw_bridge_ip&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;physical_host_ip&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">physical_host_ip</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;disk_space_gb&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">disk_space_gb</span>
         <span class="k">return</span> <span class="n">d</span></div>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -155,7 +160,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;num_cpus: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_cpus</span><span class="si">}</span><span class="s2">, available_memory_gb:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">available_memory_gb</span><span class="si">}</span><span class="s2">, &quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;container_name:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">container_name</span><span class="si">}</span><span class="s2">, ips_and_network_configs: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ips_and_network_configs</span><span class="si">}</span><span class="s2">,&quot;</span> \
-               <span class="sa">f</span><span class="s2">&quot;docker_gw_bridge_ip: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="si">}</span><span class="s2">, physical_host_ip: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">physical_host_ip</span><span class="si">}</span><span class="s2">&quot;</span>
+               <span class="sa">f</span><span class="s2">&quot;docker_gw_bridge_ip: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="si">}</span><span class="s2">, physical_host_ip: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">physical_host_ip</span><span class="si">}</span><span class="s2">,&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;disk_space_gb: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">disk_space_gb</span><span class="si">}</span><span class="s2">&quot;</span>
 
 <div class="viewcode-block" id="NodeResourcesConfig.from_json_file"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.node_resources_config.NodeResourcesConfig.from_json_file">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_json_file</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;NodeResourcesConfig&quot;</span><span class="p">:</span>
@@ -196,7 +202,7 @@
 <span class="sd">        :return: get the schema of the DTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">NodeResourcesConfig</span><span class="p">(</span><span class="n">container_name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">num_cpus</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">available_memory_gb</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                                   <span class="n">ips_and_network_configs</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">NodeNetworkConfig</span><span class="o">.</span><span class="n">schema</span><span class="p">())])</span></div></div>
+                                   <span class="n">ips_and_network_configs</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">NodeNetworkConfig</span><span class="o">.</span><span class="n">schema</span><span class="p">())],</span> <span class="n">disk_space_gb</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

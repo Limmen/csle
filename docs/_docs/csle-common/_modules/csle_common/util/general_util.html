@@ -72,8 +72,10 @@
            <div itemprop="articleBody">
              
   <h1>Source code for csle_common.util.general_util</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span>
 <span class="kn">import</span> <span class="nn">socket</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy.typing</span> <span class="k">as</span> <span class="nn">npt</span>
 
 
 <div class="viewcode-block" id="GeneralUtil"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.general_util.GeneralUtil">[docs]</a><span class="k">class</span> <span class="nc">GeneralUtil</span><span class="p">:</span>
@@ -142,7 +144,42 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
             <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">GeneralUtil</span><span class="o">.</span><span class="n">list_to_tuple</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">L</span><span class="p">)</span>  <span class="c1"># Recursively convert lists to tuples</span>
-        <span class="k">return</span> <span class="n">L</span></div></div>
+        <span class="k">return</span> <span class="n">L</span></div>
+
+<div class="viewcode-block" id="GeneralUtil.one_hot_encode_integer"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.general_util.GeneralUtil.one_hot_encode_integer">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">one_hot_encode_integer</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">max_value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        One-hot encodes an integer</span>
+
+<span class="sd">        :param value: the interger value</span>
+<span class="sd">        :param max_value: the maximum value</span>
+<span class="sd">        :return: the one-hot encoded vector</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="n">max_value</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Value is: </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">, Value must be between 0 and </span><span class="si">{</span><span class="n">max_value</span><span class="si">}</span><span class="s2"> (inclusive).&quot;</span><span class="p">)</span>
+        <span class="n">one_hot_vector</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">max_value</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+        <span class="n">one_hot_vector</span><span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">one_hot_vector</span></div>
+
+<div class="viewcode-block" id="GeneralUtil.one_hot_encode_vector"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.general_util.GeneralUtil.one_hot_encode_vector">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">one_hot_encode_vector</span><span class="p">(</span><span class="n">vector</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">max_value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        One-hot encodes a vector</span>
+
+<span class="sd">        :param vector: the vector to one-hot encode</span>
+<span class="sd">        :param max_value: the maximum value in each entry of the vector</span>
+<span class="sd">        :return: the one-hot encoded vector</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">np_vector</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vector</span><span class="p">)</span>
+
+        <span class="c1"># Validate input values</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">((</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">np_vector</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">np_vector</span> <span class="o">&lt;=</span> <span class="n">max_value</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Vector is: </span><span class="si">{</span><span class="n">np_vector</span><span class="si">}</span><span class="s2">. Input vector can only contain values between 0 and </span><span class="si">{</span><span class="n">max_value</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Create one-hot encoding dynamically based on max_value</span>
+        <span class="n">one_hot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">max_value</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)[</span><span class="n">np_vector</span><span class="p">]</span>  <span class="c1"># Identity matrix of size (max_value + 1)</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">one_hot</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span></div></div>
 </pre></div>
 
            </div>

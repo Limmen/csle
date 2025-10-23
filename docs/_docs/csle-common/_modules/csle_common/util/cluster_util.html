@@ -100,6 +100,19 @@
                 <span class="n">leader</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">leader</span>
         <span class="k">return</span> <span class="n">leader</span></div>
 
+<div class="viewcode-block" id="ClusterUtil.get_leader_ip"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.cluster_util.ClusterUtil.get_leader_ip">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_leader_ip</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">Config</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the IP of the leader node</span>
+
+<span class="sd">        :param config: the cluster configuration</span>
+<span class="sd">        :return: The IP address of the leader node</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">cluster_config</span><span class="o">.</span><span class="n">cluster_nodes</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">leader</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">node</span><span class="o">.</span><span class="n">ip</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No leader node found&quot;</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="ClusterUtil.get_config"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.cluster_util.ClusterUtil.get_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Config</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -119,12 +132,17 @@
         <span class="n">leader</span> <span class="o">=</span> <span class="n">ClusterUtil</span><span class="o">.</span><span class="n">am_i_leader</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
         <span class="n">constants</span><span class="o">.</span><span class="n">CLUSTER_CONFIG</span><span class="o">.</span><span class="n">LEADER</span> <span class="o">=</span> <span class="n">leader</span>
         <span class="k">if</span> <span class="n">leader</span><span class="p">:</span>
+            <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Saving config to metastore&quot;</span><span class="p">)</span>
             <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">read_config_file</span><span class="p">()</span>
             <span class="n">current_config</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">get_config</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">current_config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">save_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">update_config</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Not saving config to metastore since I am not leader. &quot;</span>
+                                                <span class="sa">f</span><span class="s2">&quot;My IP is: </span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s2">, the leader IP is: &quot;</span>
+                                                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ClusterUtil</span><span class="o">.</span><span class="n">get_leader_ip</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">config</span></div>
 
 <div class="viewcode-block" id="ClusterUtil.set_config_parameters_from_config_file"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.cluster_util.ClusterUtil.set_config_parameters_from_config_file">[docs]</a>    <span class="nd">@staticmethod</span>

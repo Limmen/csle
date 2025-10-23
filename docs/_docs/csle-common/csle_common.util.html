@@ -52,6 +52,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#csle_common.util.cluster_util.ClusterUtil"><code class="docutils literal notranslate"><span class="pre">ClusterUtil</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.util.cluster_util.ClusterUtil.am_i_leader"><code class="docutils literal notranslate"><span class="pre">ClusterUtil.am_i_leader()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.util.cluster_util.ClusterUtil.get_config"><code class="docutils literal notranslate"><span class="pre">ClusterUtil.get_config()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_common.util.cluster_util.ClusterUtil.get_leader_ip"><code class="docutils literal notranslate"><span class="pre">ClusterUtil.get_leader_ip()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.util.cluster_util.ClusterUtil.set_config_parameters_from_config_file"><code class="docutils literal notranslate"><span class="pre">ClusterUtil.set_config_parameters_from_config_file()</span></code></a></li>
 </ul>
 </li>
@@ -190,6 +191,8 @@
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.util.general_util.GeneralUtil.get_host_ip"><code class="docutils literal notranslate"><span class="pre">GeneralUtil.get_host_ip()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.util.general_util.GeneralUtil.get_latest_table_id"><code class="docutils literal notranslate"><span class="pre">GeneralUtil.get_latest_table_id()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.util.general_util.GeneralUtil.list_to_tuple"><code class="docutils literal notranslate"><span class="pre">GeneralUtil.list_to_tuple()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_common.util.general_util.GeneralUtil.one_hot_encode_integer"><code class="docutils literal notranslate"><span class="pre">GeneralUtil.one_hot_encode_integer()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_common.util.general_util.GeneralUtil.one_hot_encode_vector"><code class="docutils literal notranslate"><span class="pre">GeneralUtil.one_hot_encode_vector()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.util.general_util.GeneralUtil.replace_first_octet_of_ip"><code class="docutils literal notranslate"><span class="pre">GeneralUtil.replace_first_octet_of_ip()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.util.general_util.GeneralUtil.replace_first_octet_of_ip_tuple"><code class="docutils literal notranslate"><span class="pre">GeneralUtil.replace_first_octet_of_ip_tuple()</span></code></a></li>
 </ul>
@@ -324,6 +327,20 @@
 <dd><p>Gets the current cluster config from the metastore or from disk depending on if it is the leader node or
 not
 :return: the cluster config</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_common.util.cluster_util.ClusterUtil.get_leader_ip">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_leader_ip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.config.Config" title="csle_common.dao.emulation_config.config.Config"><span class="pre">Config</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_common/util/cluster_util.html#ClusterUtil.get_leader_ip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.util.cluster_util.ClusterUtil.get_leader_ip" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the IP of the leader node</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>config</strong> – the cluster configuration</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The IP address of the leader node</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -1910,6 +1927,40 @@ num_attributes_per_time_step, added_by, columns</p>
 <dt class="sig sig-object py" id="csle_common.util.general_util.GeneralUtil.list_to_tuple">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">list_to_tuple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/util/general_util.html#GeneralUtil.list_to_tuple"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.util.general_util.GeneralUtil.list_to_tuple" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a nested list to a tuple</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_common.util.general_util.GeneralUtil.one_hot_encode_integer">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">one_hot_encode_integer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">int32</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_common/util/general_util.html#GeneralUtil.one_hot_encode_integer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.util.general_util.GeneralUtil.one_hot_encode_integer" title="Permalink to this definition"></a></dt>
+<dd><p>One-hot encodes an integer</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> – the interger value</p></li>
+<li><p><strong>max_value</strong> – the maximum value</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the one-hot encoded vector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_common.util.general_util.GeneralUtil.one_hot_encode_vector">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">one_hot_encode_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">int32</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_common/util/general_util.html#GeneralUtil.one_hot_encode_vector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.util.general_util.GeneralUtil.one_hot_encode_vector" title="Permalink to this definition"></a></dt>
+<dd><p>One-hot encodes a vector</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vector</strong> – the vector to one-hot encode</p></li>
+<li><p><strong>max_value</strong> – the maximum value in each entry of the vector</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the one-hot encoded vector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">

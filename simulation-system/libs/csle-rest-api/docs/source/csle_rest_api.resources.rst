@@ -40,6 +40,7 @@ Subpackages
    csle_rest_api.resources.postgresql
    csle_rest_api.resources.ppo_policies
    csle_rest_api.resources.prometheus
+   csle_rest_api.resources.recovery_ai
    csle_rest_api.resources.sdn_controllers
    csle_rest_api.resources.server_cluster
    csle_rest_api.resources.simulation_traces

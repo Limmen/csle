@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_rest_api.resources.recovery_ai.recovery_ai_util &mdash; csle-rest-api 0.8.0 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> csle-rest-api
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_rest_api.constants.html">csle_rest_api.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_rest_api.pages.html">csle_rest_api.pages package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_rest_api.resources.html">csle_rest_api.resources package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_rest_api.util.html">csle_rest_api.util package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_rest_api.web_sockets.html">csle_rest_api.web_sockets package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">csle-rest-api</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_rest_api.resources.recovery_ai.recovery_ai_util</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_rest_api.resources.recovery_ai.recovery_ai_util</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">cast</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">AutoTokenizer</span><span class="p">,</span> <span class="n">AutoModelForCausalLM</span><span class="p">,</span> <span class="n">PreTrainedModel</span>
+<span class="kn">from</span> <span class="nn">transformers.tokenization_utils</span> <span class="kn">import</span> <span class="n">PreTrainedTokenizer</span>
+<span class="kn">from</span> <span class="nn">transformers.utils.quantization_config</span> <span class="kn">import</span> <span class="n">BitsAndBytesConfig</span>
+<span class="kn">from</span> <span class="nn">transformers.generation.streamers</span> <span class="kn">import</span> <span class="n">TextIteratorStreamer</span>
+<span class="kn">from</span> <span class="nn">peft</span> <span class="kn">import</span> <span class="n">PeftModel</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">from</span> <span class="nn">google</span> <span class="kn">import</span> <span class="n">genai</span> <span class="c1"># type: ignore</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">csle_common.logging.log</span> <span class="kn">import</span> <span class="n">Logger</span>
+<span class="kn">import</span> <span class="nn">csle_rest_api.constants.constants</span> <span class="k">as</span> <span class="nn">api_constants</span>
+<span class="kn">from</span> <span class="nn">csle_rest_api.resources.recovery_ai.rag.ioc_analyzer</span> <span class="kn">import</span> <span class="n">IOCAnalyzer</span>
+<span class="kn">from</span> <span class="nn">csle_rest_api.resources.recovery_ai.prompts</span> <span class="kn">import</span> <span class="n">Prompts</span>
+
+
+<div class="viewcode-block" id="RecoveryAIUtil"><a class="viewcode-back" href="../../../../csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.recovery_ai_util.RecoveryAIUtil">[docs]</a><span class="k">class</span> <span class="nc">RecoveryAIUtil</span><span class="p">:</span>
+
+<div class="viewcode-block" id="RecoveryAIUtil.load_llm"><a class="viewcode-back" href="../../../../csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.recovery_ai_util.RecoveryAIUtil.load_llm">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">load_llm</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">PreTrainedTokenizer</span><span class="p">,</span> <span class="n">PreTrainedModel</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Utility function for loading the pre-trained LLM from disk.</span>
+
+<span class="sd">        :return: the loaded LLM as well as the corresponding tokenizer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">api_constants</span><span class="o">.</span><span class="n">LLM</span><span class="o">.</span><span class="n">DEEPSEEK_14B_QWEN</span><span class="p">,</span> <span class="n">use_fast</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">tokenizer</span><span class="o">.</span><span class="n">pad_token</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">eos_token</span>
+        <span class="n">quantization_config</span> <span class="o">=</span> <span class="n">BitsAndBytesConfig</span><span class="p">(</span>
+            <span class="n">load_in_4bit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">bnb_4bit_use_double_quant</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">bnb_4bit_quant_type</span><span class="o">=</span><span class="n">api_constants</span><span class="o">.</span><span class="n">LLM</span><span class="o">.</span><span class="n">NF4</span><span class="p">,</span>
+            <span class="n">bnb_4bit_compute_dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">bfloat16</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">llm</span> <span class="o">=</span> <span class="n">AutoModelForCausalLM</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">api_constants</span><span class="o">.</span><span class="n">LLM</span><span class="o">.</span><span class="n">DEEPSEEK_14B_QWEN</span><span class="p">,</span>
+                                                   <span class="n">device_map</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
+                                                   <span class="n">quantization_config</span><span class="o">=</span><span class="n">quantization_config</span><span class="p">,</span>
+                                                   <span class="n">attn_implementation</span><span class="o">=</span><span class="n">api_constants</span><span class="o">.</span><span class="n">LLM</span><span class="o">.</span><span class="n">SDPA</span><span class="p">,</span>
+                                                   <span class="n">torch_dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">bfloat16</span><span class="p">)</span>
+        <span class="n">llm</span><span class="o">.</span><span class="n">use_memory_efficient_attention</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">llm</span></div>
+
+<div class="viewcode-block" id="RecoveryAIUtil.is_state_terminal"><a class="viewcode-back" href="../../../../csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.recovery_ai_util.RecoveryAIUtil.is_state_terminal">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">is_state_terminal</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Utility function that checks whether a given recovery state is terminal or not.</span>
+
+<span class="sd">        :param state: the state to check</span>
+<span class="sd">        :return: True if it is terminal, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="n">Prompts</span><span class="o">.</span><span class="n">IS_ATTACK_CONTAINED</span><span class="p">]</span> <span class="ow">and</span> <span class="n">state</span><span class="p">[</span><span class="n">Prompts</span><span class="o">.</span><span class="n">IS_KNOWLEDGE_SUFFICIENT</span><span class="p">]</span>
+                <span class="ow">and</span> <span class="n">state</span><span class="p">[</span><span class="n">Prompts</span><span class="o">.</span><span class="n">ARE_FORENSICS_PRESERVED</span><span class="p">]</span>
+                <span class="ow">and</span> <span class="n">state</span><span class="p">[</span><span class="n">Prompts</span><span class="o">.</span><span class="n">IS_ERADICATED</span><span class="p">]</span> <span class="ow">and</span> <span class="n">state</span><span class="p">[</span><span class="n">Prompts</span><span class="o">.</span><span class="n">IS_HARDENED</span><span class="p">]</span> <span class="ow">and</span> <span class="n">state</span><span class="p">[</span><span class="n">Prompts</span><span class="o">.</span><span class="n">IS_RECOVERED</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="RecoveryAIUtil.generate_previous_actions_str"><a class="viewcode-back" href="../../../../csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.recovery_ai_util.RecoveryAIUtil.generate_previous_actions_str">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">generate_previous_actions_str</span><span class="p">(</span><span class="n">previous_actions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Utility functions for formatting the list of previous recovery actions into a string suitable for a prompt.</span>
+
+<span class="sd">        :param previous_actions: the list of previous recovery actions</span>
+<span class="sd">        :return: the formatted string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">previous_actions</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;None.&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;Action: </span><span class="si">{</span><span class="n">a</span><span class="p">[</span><span class="n">Prompts</span><span class="o">.</span><span class="n">ACTION</span><span class="p">]</span><span class="si">}</span><span class="s2"> Explanation: </span><span class="si">{</span><span class="n">a</span><span class="p">[</span><span class="n">Prompts</span><span class="o">.</span><span class="n">EXPLANATION</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+                          <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">previous_actions</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="RecoveryAIUtil.generate_output"><a class="viewcode-back" href="../../../../csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.recovery_ai_util.RecoveryAIUtil.generate_output">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">generate_output</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">PreTrainedModel</span><span class="p">,</span> <span class="n">PeftModel</span><span class="p">],</span> <span class="n">tokenizer</span><span class="p">:</span> <span class="n">PreTrainedTokenizer</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                        <span class="n">no_think</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.6</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Uses a given LLM, tokenizer, and prompt to generate a stream of outputs</span>
+
+<span class="sd">        :param model: the pre-trained LLM</span>
+<span class="sd">        :param tokenizer: the tokenizer</span>
+<span class="sd">        :param prompt: the prompt</span>
+<span class="sd">        :param no_think: boolean flag indicating whether to skip the &lt;think&gt; token.</span>
+<span class="sd">        :param temperature: parameter that controls the stochasticity of the output (higher means more stochastic)</span>
+<span class="sd">        :return: the reasoning string and the answer string by the LLM.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+        <span class="n">inputs</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">return_tensors</span><span class="o">=</span><span class="s2">&quot;pt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">streamer</span> <span class="o">=</span> <span class="n">TextIteratorStreamer</span><span class="p">(</span><span class="n">cast</span><span class="p">(</span><span class="n">AutoTokenizer</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">),</span> <span class="n">skip_special_tokens</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">skip_prompt</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
+                                  <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="o">**</span><span class="n">inputs</span><span class="p">,</span> <span class="s2">&quot;max_new_tokens&quot;</span><span class="p">:</span> <span class="mi">6000</span><span class="p">,</span> <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="n">temperature</span><span class="p">,</span>
+                                          <span class="s2">&quot;do_sample&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;streamer&quot;</span><span class="p">:</span> <span class="n">streamer</span><span class="p">})</span>
+        <span class="n">thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">streamer</span><span class="p">:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="n">output</span> <span class="o">+</span> <span class="n">text</span>
+            <span class="k">if</span> <span class="n">text</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+                <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">n&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">RECOVERY_AI_THINK_END_DELIMITER</span> <span class="ow">in</span> <span class="n">text</span><span class="p">:</span>
+                    <span class="n">split_parts</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">RECOVERY_AI_THINK_END_DELIMITER</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">RECOVERY_AI_DATA_DELIMITER</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">split_parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="se">\\</span><span class="s2">n</span><span class="se">\\</span><span class="s2">n</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">no_think</span><span class="p">:</span>
+                        <span class="k">yield</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">RECOVERY_AI_DATA_DELIMITER</span><span class="si">}</span><span class="s2"> &quot;</span>
+                               <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">RECOVERY_AI_THINK_END_DELIMITER</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">RECOVERY_AI_DATA_DELIMITER</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">output</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;&lt;/think&gt;&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RecoveryAIUtil.format_incident_description"><a class="viewcode-back" href="../../../../csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.recovery_ai_util.RecoveryAIUtil.format_incident_description">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">format_incident_description</span><span class="p">(</span><span class="n">incident</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Utility function for formatting an incident report as a string suitable as a prompt.</span>
+
+<span class="sd">        :param incident: the incident report</span>
+<span class="sd">        :return: the formatted string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">incident</span><span class="p">[</span><span class="n">Prompts</span><span class="o">.</span><span class="n">INCIDENT_DESCRIPTION</span><span class="p">]</span>
+        <span class="n">description</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">MITRE ATT&amp;CK tactics being used: &quot;</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">incident</span><span class="p">[</span><span class="n">Prompts</span><span class="o">.</span><span class="n">MITRE_ATTACK_TACTICS</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span>
+        <span class="n">description</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">MITRE ATT&amp;CK techniques being used: &quot;</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">incident</span><span class="p">[</span><span class="n">Prompts</span><span class="o">.</span><span class="n">MITRE_ATTACK_TECHNIQUES</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span>
+        <span class="n">description</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Attacker IPs/hostnames identified: &quot;</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">incident</span><span class="p">[</span><span class="n">Prompts</span><span class="o">.</span><span class="n">ENTITIES</span><span class="p">][</span><span class="n">Prompts</span><span class="o">.</span><span class="n">ATTACKER</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span>
+        <span class="n">description</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">System IPs/hostnames identified: &quot;</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">incident</span><span class="p">[</span><span class="n">Prompts</span><span class="o">.</span><span class="n">ENTITIES</span><span class="p">][</span><span class="n">Prompts</span><span class="o">.</span><span class="n">SYSTEM</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span>
+        <span class="n">description</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">IPs/hostnames targeted by the attack: &quot;</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">incident</span><span class="p">[</span><span class="n">Prompts</span><span class="o">.</span><span class="n">ENTITIES</span><span class="p">][</span><span class="n">Prompts</span><span class="o">.</span><span class="n">TARGETED</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span>
+        <span class="k">return</span> <span class="n">description</span></div>
+
+<div class="viewcode-block" id="RecoveryAIUtil.create_incident_prompt"><a class="viewcode-back" href="../../../../csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.recovery_ai_util.RecoveryAIUtil.create_incident_prompt">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">create_incident_prompt</span><span class="p">(</span><span class="n">system</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logs</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">template</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Utiltiy function for creating the incident prompt from the template given a system description</span>
+<span class="sd">        and a logs description.</span>
+<span class="sd">        :param system: the system description</span>
+<span class="sd">        :param logs: the logs description</span>
+<span class="sd">        :param template: the prompt template</span>
+<span class="sd">        :return: the prompt</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="n">logs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RecoveryAIUtil.otx_rag"><a class="viewcode-back" href="../../../../csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.recovery_ai_util.RecoveryAIUtil.otx_rag">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">otx_rag</span><span class="p">(</span><span class="n">logs</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Utility function for retrieval-augmented generation</span>
+
+<span class="sd">        :param logs: the logs to enrich with retrieved infromation</span>
+<span class="sd">        :return: the enriched logs</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">urls</span><span class="p">,</span> <span class="n">ips</span><span class="p">,</span> <span class="n">hostnames</span><span class="p">,</span> <span class="n">domains</span><span class="p">,</span> <span class="n">cves</span><span class="p">,</span> <span class="n">nids</span> <span class="o">=</span> <span class="n">IOCAnalyzer</span><span class="o">.</span><span class="n">find_iocs</span><span class="p">(</span><span class="n">log_text</span><span class="o">=</span><span class="n">logs</span><span class="p">)</span>
+        <span class="n">num_iocs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">urls</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">ips</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">hostnames</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">domains</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">cves</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">nids</span><span class="p">)</span>
+        <span class="n">ioc_text</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">urls</span><span class="p">)</span><span class="si">}</span><span class="s2"> URLs, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">ips</span><span class="p">)</span><span class="si">}</span><span class="s2"> IPs, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">hostnames</span><span class="p">)</span><span class="si">}</span><span class="s2"> hostnames, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">domains</span><span class="p">)</span><span class="si">}</span><span class="s2"> domains, &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">cves</span><span class="p">)</span><span class="si">}</span><span class="s2"> CVEs, and </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">nids</span><span class="p">)</span><span class="si">}</span><span class="s2"> NIDS in the logs.</span><span class="se">\\</span><span class="s2">n</span><span class="se">\\</span><span class="s2">n&quot;</span><span class="p">)</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="n">ioc_text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">token</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">RECOVERY_AI_DATA_DELIMITER</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="n">num_iocs</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">ioc_text</span> <span class="o">=</span> <span class="s2">&quot;Retrieving threat information...</span><span class="se">\\</span><span class="s2">n</span><span class="se">\\</span><span class="s2">n&quot;</span>
+            <span class="n">tokens</span> <span class="o">=</span> <span class="n">ioc_text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">)):</span>
+                    <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">token</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">RECOVERY_AI_DATA_DELIMITER</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+            <span class="n">threat_intel</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">threat_intel</span> <span class="o">=</span> <span class="n">IOCAnalyzer</span><span class="o">.</span><span class="n">analyze</span><span class="p">(</span><span class="n">urls</span><span class="o">=</span><span class="n">urls</span><span class="p">,</span> <span class="n">ips</span><span class="o">=</span><span class="n">ips</span><span class="p">,</span> <span class="n">hostnames</span><span class="o">=</span><span class="n">hostnames</span><span class="p">,</span> <span class="n">domains</span><span class="o">=</span><span class="n">domains</span><span class="p">,</span> <span class="n">cves</span><span class="o">=</span><span class="n">cves</span><span class="p">,</span>
+                                                   <span class="n">nids</span><span class="o">=</span><span class="n">nids</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="n">ioc_text</span> <span class="o">=</span> <span class="s2">&quot;Information retrieval complete.</span><span class="se">\\</span><span class="s2">n</span><span class="se">\\</span><span class="s2">n&quot;</span>
+            <span class="n">tokens</span> <span class="o">=</span> <span class="n">ioc_text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">RECOVERY_AI_DATA_DELIMITER</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+            <span class="k">if</span> <span class="n">threat_intel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">logs</span> <span class="o">=</span> <span class="n">IOCAnalyzer</span><span class="o">.</span><span class="n">enrich_logs</span><span class="p">(</span><span class="n">log_text</span><span class="o">=</span><span class="n">logs</span><span class="p">,</span> <span class="n">analysis</span><span class="o">=</span><span class="n">threat_intel</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">logs</span></div>
+
+<div class="viewcode-block" id="RecoveryAIUtil.recovery_loop"><a class="viewcode-back" href="../../../../csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.recovery_ai_util.RecoveryAIUtil.recovery_loop">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">recovery_loop</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">PreTrainedModel</span><span class="p">,</span> <span class="n">PeftModel</span><span class="p">],</span> <span class="n">tokenizer</span><span class="p">:</span> <span class="n">PreTrainedTokenizer</span><span class="p">,</span> <span class="n">system</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logs</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                      <span class="n">incident_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">action_prompt_template</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">state_prompt_template</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                      <span class="n">num_optimization_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">lookahead_horizon</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                      <span class="n">rollout_horizon</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Loop that generates the recovery plan from a given incident report.</span>
+
+<span class="sd">        :param model: the LLM</span>
+<span class="sd">        :param tokenizer: the tokenizer of the LLM</span>
+<span class="sd">        :param system: the system description</span>
+<span class="sd">        :param logs: the logs description</span>
+<span class="sd">        :param incident_str: the incident report</span>
+<span class="sd">        :param action_prompt_template:  the prompt template for generating actions</span>
+<span class="sd">        :param state_prompt_template: the prompt template for generating states</span>
+<span class="sd">        :param num_optimization_steps: the number of actions to evaluate before selecting one</span>
+<span class="sd">        :param temperature: the temperature for action generation when num_optimization_steps &gt; 1</span>
+<span class="sd">        :param lookahead_horizon: the lookahead horizon for the action selection</span>
+<span class="sd">        :param rollout_horizon: the rollout horizon for the action selection</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">Prompts</span><span class="o">.</span><span class="n">IS_ATTACK_CONTAINED</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="n">Prompts</span><span class="o">.</span><span class="n">IS_KNOWLEDGE_SUFFICIENT</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="n">Prompts</span><span class="o">.</span><span class="n">ARE_FORENSICS_PRESERVED</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="n">Prompts</span><span class="o">.</span><span class="n">IS_ERADICATED</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="n">Prompts</span><span class="o">.</span><span class="n">IS_HARDENED</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="n">Prompts</span><span class="o">.</span><span class="n">IS_RECOVERED</span><span class="p">:</span> <span class="kc">False</span>
+        <span class="p">}</span>
+        <span class="n">previous_actions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="n">RecoveryAIUtil</span><span class="o">.</span><span class="n">is_state_terminal</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+            <span class="n">previous_actions_str</span> <span class="o">=</span> <span class="n">RecoveryAIUtil</span><span class="o">.</span><span class="n">generate_previous_actions_str</span><span class="p">(</span><span class="n">previous_actions</span><span class="p">)</span>
+            <span class="n">action_input</span> <span class="o">=</span> <span class="n">action_prompt_template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="n">logs</span><span class="p">,</span> <span class="n">incident_str</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span>
+                                                         <span class="n">previous_actions_str</span><span class="p">)</span>
+            <span class="n">action</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="k">yield from</span> <span class="n">RecoveryAIUtil</span><span class="o">.</span><span class="n">action_selection</span><span class="p">(</span>
+                <span class="n">action_input</span><span class="o">=</span><span class="n">action_input</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">tokenizer</span><span class="o">=</span><span class="n">tokenizer</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="n">state</span><span class="p">,</span>
+                <span class="n">state_prompt_template</span><span class="o">=</span><span class="n">state_prompt_template</span><span class="p">,</span> <span class="n">system</span><span class="o">=</span><span class="n">system</span><span class="p">,</span> <span class="n">logs</span><span class="o">=</span><span class="n">logs</span><span class="p">,</span> <span class="n">incident_str</span><span class="o">=</span><span class="n">incident_str</span><span class="p">,</span>
+                <span class="n">num_optimization_steps</span><span class="o">=</span><span class="n">num_optimization_steps</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">action</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;There was an error generating the action.&quot;</span><span class="p">)</span>
+            <span class="n">previous_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+
+            <span class="n">action_str</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">Prompts</span><span class="o">.</span><span class="n">ACTION</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">action</span><span class="p">[</span><span class="n">Prompts</span><span class="o">.</span><span class="n">ACTION</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">Prompts</span><span class="o">.</span><span class="n">EXPLANATION</span><span class="si">}</span><span class="s2">: &quot;</span>
+                          <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">action</span><span class="p">[</span><span class="n">Prompts</span><span class="o">.</span><span class="n">EXPLANATION</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">state_input</span> <span class="o">=</span> <span class="n">state_prompt_template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="n">logs</span><span class="p">,</span> <span class="n">incident_str</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span>
+                                                       <span class="n">action_str</span><span class="p">)</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">state_output_str</span> <span class="o">=</span> <span class="k">yield from</span> <span class="n">RecoveryAIUtil</span><span class="o">.</span><span class="n">generate_output</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">state_input</span><span class="p">)</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">state_output_str</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="RecoveryAIUtil.gemini_rag"><a class="viewcode-back" href="../../../../csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.recovery_ai_util.RecoveryAIUtil.gemini_rag">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">gemini_rag</span><span class="p">(</span><span class="n">logs</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]],</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves information abut threat identifiers in the logs/system description.</span>
+
+<span class="sd">        :param logs: the logs</span>
+<span class="sd">        :return: a list of threat identifiers and a list of contexts for those identifiers</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">urls</span><span class="p">,</span> <span class="n">ips</span><span class="p">,</span> <span class="n">hostnames</span><span class="p">,</span> <span class="n">domains</span><span class="p">,</span> <span class="n">cves</span><span class="p">,</span> <span class="n">nids</span> <span class="o">=</span> <span class="n">IOCAnalyzer</span><span class="o">.</span><span class="n">find_iocs</span><span class="p">(</span><span class="n">log_text</span><span class="o">=</span><span class="n">logs</span><span class="p">)</span>
+        <span class="n">ioc_text</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">urls</span><span class="p">)</span><span class="si">}</span><span class="s2"> URLs, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">ips</span><span class="p">)</span><span class="si">}</span><span class="s2"> IPs, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">hostnames</span><span class="p">)</span><span class="si">}</span><span class="s2"> hostnames, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">domains</span><span class="p">)</span><span class="si">}</span><span class="s2"> domains, &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">cves</span><span class="p">)</span><span class="si">}</span><span class="s2"> CVEs, and </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">nids</span><span class="p">)</span><span class="si">}</span><span class="s2"> NIDS in the logs.</span><span class="se">\\</span><span class="s2">n</span><span class="se">\\</span><span class="s2">n&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;Retrieving information about threat identifiers in the logs...</span><span class="se">\\</span><span class="s2">n</span><span class="se">\\</span><span class="s2">n&quot;</span><span class="p">)</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="n">ioc_text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">)):</span>
+            <span class="n">token</span> <span class="o">=</span> <span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">token</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">RECOVERY_AI_DATA_DELIMITER</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+
+        <span class="n">instruction</span> <span class="o">=</span> <span class="n">Prompts</span><span class="o">.</span><span class="n">RAG_PROMPT_TEMPLATE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">logs</span><span class="p">)</span>
+        <span class="n">api_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">api_constants</span><span class="o">.</span><span class="n">RAG</span><span class="o">.</span><span class="n">GEMINI_API_KEY</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">api_key</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">RAG</span><span class="o">.</span><span class="n">GEMINI_API_KEY</span><span class="si">}</span><span class="s2"> environment variable is not set&quot;</span><span class="p">)</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">genai</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">api_key</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">generate_content</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">api_constants</span><span class="o">.</span><span class="n">RAG</span><span class="o">.</span><span class="n">MODEL</span><span class="p">,</span> <span class="n">contents</span><span class="o">=</span><span class="n">instruction</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">response</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;There was an error generating the response.&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">json_str</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;```json</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">json_str</span> <span class="o">=</span> <span class="n">json_str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;```&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">response_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_str</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">api_constants</span><span class="o">.</span><span class="n">RAG</span><span class="o">.</span><span class="n">IDENTIFIERS</span> <span class="ow">in</span> <span class="n">response_json</span> <span class="ow">and</span> <span class="n">api_constants</span><span class="o">.</span><span class="n">RAG</span><span class="o">.</span><span class="n">CONTEXT</span> <span class="ow">in</span> <span class="n">response_json</span><span class="p">:</span>
+                <span class="n">identifiers</span> <span class="o">=</span> <span class="n">response_json</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">RAG</span><span class="o">.</span><span class="n">IDENTIFIERS</span><span class="p">]</span>
+                <span class="n">contexts</span> <span class="o">=</span> <span class="n">response_json</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">RAG</span><span class="o">.</span><span class="n">CONTEXT</span><span class="p">]</span>
+                <span class="n">rag_str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">identifiers</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">contexts</span><span class="p">))):</span>
+                    <span class="n">rag_str</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;Identifier: </span><span class="si">{</span><span class="n">identifiers</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="si">}</span><span class="s2">.</span><span class="se">\\</span><span class="s2">n Retrieved information: </span><span class="si">{</span><span class="n">contexts</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="si">}</span><span class="se">\\</span><span class="s2">n</span><span class="se">\\</span><span class="s2">n&quot;</span>
+                <span class="n">rag_str</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">n&quot;</span>
+                <span class="n">tokens</span> <span class="o">=</span> <span class="n">rag_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">)):</span>
+                    <span class="n">token</span> <span class="o">=</span> <span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">token</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span>
+                    <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">RECOVERY_AI_DATA_DELIMITER</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                <span class="k">return</span> <span class="n">identifiers</span><span class="p">,</span> <span class="n">contexts</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;RAG exception: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">[],</span> <span class="p">[]</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="RecoveryAIUtil.enrich_logs"><a class="viewcode-back" href="../../../../csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.recovery_ai_util.RecoveryAIUtil.enrich_logs">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">enrich_logs</span><span class="p">(</span><span class="n">logs</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">identifiers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">contexts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Enriches the logs with context about therat identifiers</span>
+
+<span class="sd">        :param logs: the logs to enrich</span>
+<span class="sd">        :param identifiers: the identifiers to provide contexts for</span>
+<span class="sd">        :param contexts: the contexts for the identifiers</span>
+<span class="sd">        :return: the enriched logs</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">context_str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">identifiers</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">contexts</span><span class="p">))):</span>
+            <span class="n">context_str</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;The meaning of the identifier: &#39;</span><span class="si">{</span><span class="n">identifiers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39; is: </span><span class="si">{</span><span class="n">contexts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">enriched_logs</span> <span class="o">=</span> <span class="n">logs</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">context_str</span>
+        <span class="k">return</span> <span class="n">enriched_logs</span></div>
+
+<div class="viewcode-block" id="RecoveryAIUtil.action_selection"><a class="viewcode-back" href="../../../../csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.recovery_ai_util.RecoveryAIUtil.action_selection">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">action_selection</span><span class="p">(</span><span class="n">action_input</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">PreTrainedModel</span><span class="p">,</span> <span class="n">PeftModel</span><span class="p">],</span> <span class="n">tokenizer</span><span class="p">:</span> <span class="n">PreTrainedTokenizer</span><span class="p">,</span>
+                         <span class="n">state</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">],</span> <span class="n">state_prompt_template</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">system</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logs</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                         <span class="n">incident_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">num_optimization_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                         <span class="n">lookahead_horizon</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">rollout_horizon</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Lookahead optimization to select the next action to perform.</span>
+
+<span class="sd">        :param action_input: the action prompt</span>
+<span class="sd">        :param model: the LLM</span>
+<span class="sd">        :param tokenizer: the tokenizer of the LLM</span>
+<span class="sd">        :param state: the current state</span>
+<span class="sd">        :param state_prompt_template: the prompt template for the state</span>
+<span class="sd">        :param system: the system description</span>
+<span class="sd">        :param logs: the logs</span>
+<span class="sd">        :param incident_str: description of the incident</span>
+<span class="sd">        :param num_optimization_steps: the number of actions to evaluate before selecting the next action</span>
+<span class="sd">        :param temperature: the temperature for action generation when num_optimization_steps &gt; 1</span>
+<span class="sd">        :param lookahead_horizon: the lookahead horizon for the action selection</span>
+<span class="sd">        :param rollout_horizon: the rollout horizon for the action selection</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">num_optimization_steps</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">action_output_str</span> <span class="o">=</span> <span class="k">yield from</span> <span class="n">RecoveryAIUtil</span><span class="o">.</span><span class="n">generate_output</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">action_input</span><span class="p">,</span>
+                                                                             <span class="n">no_think</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">action</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">action_output_str</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">action</span>
+
+        <span class="n">candidate_actions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">rewards</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_optimization_steps</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="sa">f</span><span class="s2">&quot;Evaluating action </span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">num_optimization_steps</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span>
+                <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">RECOVERY_AI_DATA_DELIMITER</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+            <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">RECOVERY_AI_DATA_DELIMITER</span><span class="si">}</span><span class="s2"> </span><span class="se">\\</span><span class="s2">n</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">temp</span> <span class="o">=</span> <span class="mf">0.6</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">temp</span> <span class="o">=</span> <span class="n">temperature</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">action_output_str</span> <span class="o">=</span> <span class="k">yield from</span> <span class="n">RecoveryAIUtil</span><span class="o">.</span><span class="n">generate_output</span><span class="p">(</span>
+                <span class="n">model</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">action_input</span><span class="p">,</span> <span class="n">no_think</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="n">temp</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">RECOVERY_AI_DATA_DELIMITER</span><span class="si">}</span><span class="s2"> </span><span class="se">\\</span><span class="s2">n</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+            <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="s2">&quot;The expected reward of taking this action is..  &quot;</span><span class="p">:</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span>
+                <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">RECOVERY_AI_DATA_DELIMITER</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+
+            <span class="n">action</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">action_output_str</span><span class="p">)</span>
+            <span class="c1"># action_str = (f&quot;{Prompts.ACTION}: {action[Prompts.ACTION]}\n{Prompts.EXPLANATION}: &quot;</span>
+            <span class="c1">#               f&quot;{action[Prompts.EXPLANATION]}&quot;)</span>
+            <span class="c1"># state_input = state_prompt_template.format(system, logs, incident_str, json.dumps(state, indent=4),</span>
+            <span class="c1">#                                            action_str)</span>
+            <span class="c1"># _, state_output_str = yield from RecoveryAIUtil.generate_output(model, tokenizer, state_input, no_think</span>
+            <span class="c1"># =False)</span>
+            <span class="c1"># new_state = json.loads(state_output_str)</span>
+            <span class="c1"># reward = 0</span>
+            <span class="c1"># for k, v in new_state.items():</span>
+            <span class="c1">#     if new_state[k] and not state[k]:</span>
+            <span class="c1">#         reward += 1</span>
+            <span class="c1">#     if state[k] and not new_state[k]:</span>
+            <span class="c1">#         reward -= 1</span>
+            <span class="n">reward</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">api_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">api_constants</span><span class="o">.</span><span class="n">RAG</span><span class="o">.</span><span class="n">GEMINI_API_KEY</span><span class="p">)</span>
+                <span class="n">client</span> <span class="o">=</span> <span class="n">genai</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">api_key</span><span class="p">)</span>
+                <span class="n">instruction</span> <span class="o">=</span> <span class="n">Prompts</span><span class="o">.</span><span class="n">GEMINI_ACTION_EVAL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="n">logs</span><span class="p">,</span> <span class="n">incident_str</span><span class="p">,</span>
+                                                                <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span> <span class="n">action</span><span class="p">[</span><span class="n">Prompts</span><span class="o">.</span><span class="n">ACTION</span><span class="p">])</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">generate_content</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">api_constants</span><span class="o">.</span><span class="n">RAG</span><span class="o">.</span><span class="n">MODEL</span><span class="p">,</span> <span class="n">contents</span><span class="o">=</span><span class="n">instruction</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">response</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Failed to generate response&quot;</span><span class="p">)</span>
+                <span class="n">response_score</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+                <span class="n">reward</span> <span class="o">+=</span> <span class="n">response_score</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="n">rewards</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">reward</span><span class="p">)</span>
+            <span class="n">candidate_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">reward</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">:</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span>
+                <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">RECOVERY_AI_DATA_DELIMITER</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+            <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">RECOVERY_AI_DATA_DELIMITER</span><span class="si">}</span><span class="s2"> </span><span class="se">\\</span><span class="s2">n</span><span class="se">\\</span><span class="s2">n</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="n">selected_action_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">rewards</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;I choose action </span><span class="si">{</span><span class="n">selected_action_idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> since it yields the highest expected &quot;</span>
+                      <span class="sa">f</span><span class="s2">&quot;reward, namely </span><span class="si">{</span><span class="n">rewards</span><span class="p">[</span><span class="n">selected_action_idx</span><span class="p">]</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">):</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">RECOVERY_AI_DATA_DELIMITER</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">RECOVERY_AI_DATA_DELIMITER</span><span class="si">}</span><span class="s2"> </span><span class="se">\\</span><span class="s2">n</span><span class="se">\\</span><span class="s2">n</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="n">selected_action</span> <span class="o">=</span> <span class="n">candidate_actions</span><span class="p">[</span><span class="n">selected_action_idx</span><span class="p">]</span>
+        <span class="k">yield</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">RECOVERY_AI_DATA_DELIMITER</span><span class="si">}</span><span class="s2"> &quot;</span>
+               <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">RECOVERY_AI_THINK_END_DELIMITER</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">selected_action_str</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">selected_action</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+        <span class="n">selected_action_str</span> <span class="o">=</span> <span class="n">selected_action_str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">n&quot;</span><span class="p">)</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">n|.&#39;</span><span class="p">,</span> <span class="n">selected_action_str</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">RECOVERY_AI_DATA_DELIMITER</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">candidate_actions</span><span class="p">[</span><span class="n">selected_action_idx</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="RecoveryAIUtil.incident_classification"><a class="viewcode-back" href="../../../../csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.recovery_ai_util.RecoveryAIUtil.incident_classification">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">incident_classification</span><span class="p">(</span><span class="n">incident_input</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">PreTrainedModel</span><span class="p">,</span> <span class="n">PeftModel</span><span class="p">],</span>
+                                <span class="n">tokenizer</span><span class="p">:</span> <span class="n">PreTrainedTokenizer</span><span class="p">,</span>
+                                <span class="n">system</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logs</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">num_optimization_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                                <span class="n">lookahead_horizon</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">rollout_horizon</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Lookahead optimization to classify the incident</span>
+
+<span class="sd">        :param incident_input: the incident prompt</span>
+<span class="sd">        :param model: the LLM</span>
+<span class="sd">        :param tokenizer: the tokenizer of the LLM</span>
+<span class="sd">        :param system: the system description</span>
+<span class="sd">        :param logs: the logs</span>
+<span class="sd">        :param num_optimization_steps: the number of incident classification to evaluate before selecting one</span>
+<span class="sd">        :param temperature: the temperature for incident classification generation when num_optimization_steps &gt; 1</span>
+<span class="sd">        :param lookahead_horizon: the lookahead horizon for the incident classification selection</span>
+<span class="sd">        :param rollout_horizon: the rollout horizon for the incident classification selection</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">incident_output_str</span> <span class="o">=</span> <span class="k">yield from</span> <span class="n">RecoveryAIUtil</span><span class="o">.</span><span class="n">generate_output</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">incident_input</span><span class="p">)</span>
+        <span class="n">incident_classification</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">incident_output_str</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">incident_classification</span></div></div>
+        <span class="c1"># if num_optimization_steps == 1:</span>
+        <span class="c1">#     _, incident_output_str = yield from RecoveryAIUtil.generate_output(model, tokenizer, incident_input)</span>
+        <span class="c1">#     incident_classification = json.loads(incident_output_str)</span>
+        <span class="c1">#     return incident_classification</span>
+
+        <span class="c1"># candidate_classifications = []</span>
+        <span class="c1"># rewards = []</span>
+        <span class="c1"># for i in range(num_optimization_steps):</span>
+        <span class="c1">#     for token in f&quot;Evaluating incident classification {i + 1}/{num_optimization_steps}&quot;:</span>
+        <span class="c1">#         time.sleep(0.05)</span>
+        <span class="c1">#         yield f&quot;{api_constants.MGMT_WEBAPP.RECOVERY_AI_DATA_DELIMITER} {token}\n\n&quot;</span>
+        <span class="c1">#     yield f&quot;{api_constants.MGMT_WEBAPP.RECOVERY_AI_DATA_DELIMITER} \\n\\n\n\n&quot;</span>
+        <span class="c1">#     if i == 0:</span>
+        <span class="c1">#         temp = 0.6</span>
+        <span class="c1">#     else:</span>
+        <span class="c1">#         temp = temperature</span>
+        <span class="c1">#     _, incident_output_str = yield from RecoveryAIUtil.generate_output(</span>
+        <span class="c1">#         model, tokenizer, incident_input, no_think=True, temperature=temp)</span>
+        <span class="c1">#     yield f&quot;{api_constants.MGMT_WEBAPP.RECOVERY_AI_DATA_DELIMITER} \\n\n\n&quot;</span>
+        <span class="c1">#     for token in &quot;The expected reward of this incident classification is..  &quot;:</span>
+        <span class="c1">#         time.sleep(0.05)</span>
+        <span class="c1">#         yield f&quot;{api_constants.MGMT_WEBAPP.RECOVERY_AI_DATA_DELIMITER} {token}\n\n&quot;</span>
+        <span class="c1">#</span>
+        <span class="c1">#     incident_classification = json.loads(incident_output_str)</span>
+        <span class="c1">#     incident_str = incident_classification[Prompts.INCIDENT_DESCRIPTION]</span>
+        <span class="c1">#     reward = 0</span>
+        <span class="c1">#     try:</span>
+        <span class="c1">#         api_key = os.environ.get(api_constants.RAG.GEMINI_API_KEY)</span>
+        <span class="c1">#         client = genai.Client(api_key=api_key)</span>
+        <span class="c1">#         instruction = Prompts.GEMINI_INCIDENT_EVAL.format(system, logs, incident_str)</span>
+        <span class="c1">#         response = client.models.generate_content(model=api_constants.RAG.MODEL, contents=instruction)</span>
+        <span class="c1">#         response_score = float(response.text.strip())</span>
+        <span class="c1">#         reward += response_score</span>
+        <span class="c1">#     except Exception:</span>
+        <span class="c1">#         pass</span>
+        <span class="c1">#     rewards.append(reward)</span>
+        <span class="c1">#     candidate_classifications.append(incident_classification)</span>
+        <span class="c1">#     for token in f&quot;{reward}.&quot;:</span>
+        <span class="c1">#         time.sleep(0.05)</span>
+        <span class="c1">#         yield f&quot;{api_constants.MGMT_WEBAPP.RECOVERY_AI_DATA_DELIMITER} {token}\n\n&quot;</span>
+        <span class="c1">#     yield f&quot;{api_constants.MGMT_WEBAPP.RECOVERY_AI_DATA_DELIMITER} \\n\\n\n\n&quot;</span>
+        <span class="c1"># selected_incident_idx = np.argmax(rewards)</span>
+        <span class="c1"># for token in (</span>
+        <span class="c1">#         f&quot;I choose incident classification {selected_incident_idx + 1} since it yields the highest expected &quot;</span>
+        <span class="c1">#         f&quot;reward, namely {rewards[selected_incident_idx]}.&quot;):</span>
+        <span class="c1">#     time.sleep(0.05)</span>
+        <span class="c1">#     yield f&quot;{api_constants.MGMT_WEBAPP.RECOVERY_AI_DATA_DELIMITER} {token}\n\n&quot;</span>
+        <span class="c1"># yield f&quot;{api_constants.MGMT_WEBAPP.RECOVERY_AI_DATA_DELIMITER} \\n\\n\n\n&quot;</span>
+        <span class="c1"># selected_incident = candidate_classifications[selected_incident_idx]</span>
+        <span class="c1">#</span>
+        <span class="c1"># yield (f&quot;{api_constants.MGMT_WEBAPP.RECOVERY_AI_DATA_DELIMITER} &quot;</span>
+        <span class="c1">#        f&quot;{api_constants.MGMT_WEBAPP.RECOVERY_AI_THINK_END_DELIMITER}\n\n&quot;)</span>
+        <span class="c1"># selected_incident_str = json.dumps(selected_incident, indent=4)</span>
+        <span class="c1"># selected_incident_str = selected_incident_str.replace(&quot;\n&quot;, &quot;\\n&quot;)</span>
+        <span class="c1"># tokens = re.findall(r&#39;\\n|.&#39;, selected_incident_str)</span>
+        <span class="c1"># for token in tokens:</span>
+        <span class="c1">#     time.sleep(0.05)</span>
+        <span class="c1">#     yield f&quot;{api_constants.MGMT_WEBAPP.RECOVERY_AI_DATA_DELIMITER} {token}\n\n&quot;</span>
+        <span class="c1"># return candidate_classifications[selected_incident_idx]</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2025, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
