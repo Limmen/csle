@@ -19,19 +19,19 @@ classifiers = [
 ]
 dependencies = [
     "click>=8.1.3",
-    "csle-base>=0.8.7",
-    "csle-common>=0.8.7",
-    "csle-cluster>=0.8.7",
-    "csle-collector>=0.8.7",
-    "csle-attacker>=0.8.7",
-    "csle-defender>=0.8.7",
-    "csle-system-identification>=0.8.7",
-    "gym-csle-stopping-game>=0.8.7",
-    "gym-csle-apt-game>=0.8.7",
-    "gym-csle-cyborg>=0.8.7",
-    "gym-csle-intrusion-response-game>=0.8.7",
-    "csle-agents>=0.8.7",
-    "csle-tolerance>=0.8.7"
+    "csle-base>=0.9.0",
+    "csle-common>=0.9.0",
+    "csle-cluster>=0.9.0",
+    "csle-collector>=0.9.0",
+    "csle-attacker>=0.9.0",
+    "csle-defender>=0.9.0",
+    "csle-system-identification>=0.9.0",
+    "gym-csle-stopping-game>=0.9.0",
+    "gym-csle-apt-game>=0.9.0",
+    "gym-csle-cyborg>=0.9.0",
+    "gym-csle-intrusion-response-game>=0.9.0",
+    "csle-agents>=0.9.0",
+    "csle-tolerance>=0.9.0"
 ]
 
 [project.optional-dependencies]

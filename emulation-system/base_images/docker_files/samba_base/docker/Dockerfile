@@ -1,6 +1,6 @@
 # OS
 # Debian 10.2
-FROM kimham/csle_cve_2017_7494:0.8.0
+FROM kimham/csle_cve_2017_7494:0.9.0
 USER root
 
 # Install dependencies

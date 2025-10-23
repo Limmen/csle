@@ -1,6 +1,6 @@
 # OS
 # Debian 10.2
-FROM kimham/csle_debian_10_base:0.8.0
+FROM kimham/csle_debian_10_base:0.9.0
 USER root
 
 # configure vuln application

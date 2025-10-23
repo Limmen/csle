@@ -3,7 +3,10 @@ FROM debian:10.2
 USER root
 
 # Install dependencies
-RUN apt-get update
+RUN sed -i 's|deb.debian.org/debian|archive.debian.org/debian|g' /etc/apt/sources.list && \
+    sed -i '/security.debian.org/s|security.debian.org|archive.debian.org/debian-security|g' /etc/apt/sources.list && \
+    sed -i '/updates/d' /etc/apt/sources.list && \
+    apt-get -o Acquire::Check-Valid-Until=false update
 RUN echo "postfix postfix/mailname string csle" | debconf-set-selections &&\
         echo "postfix postfix/main_mailer_type string 'Internet Site'" | debconf-set-selections &&\
         apt-get install -y lsb-release apt-utils sudo openssl net-tools iputils-ping emacs curl htop ssh openssh-server \

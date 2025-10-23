@@ -105,6 +105,12 @@
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER">ACCESS_CONTROL_ALLOW_ORIGIN_HEADER (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
 </li>
+      <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.prompts.Prompts.ACTION">ACTION (csle_rest_api.resources.recovery_ai.prompts.Prompts attribute)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.prompts.Prompts.ACTION_PROMPT_TEMPLATE">ACTION_PROMPT_TEMPLATE (csle_rest_api.resources.recovery_ai.prompts.Prompts attribute)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.recovery_ai_util.RecoveryAIUtil.action_selection">action_selection() (csle_rest_api.resources.recovery_ai.recovery_ai_util.RecoveryAIUtil static method)</a>
+</li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.ACTIVE_COUNT_PROPERTY">ACTIVE_COUNT_PROPERTY (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.ADMIN_PROPERTY">ADMIN_PROPERTY (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
@@ -121,7 +127,13 @@
 </li>
       <li><a href="csle_rest_api.resources.alpha_vec_policies.html#csle_rest_api.resources.alpha_vec_policies.routes.alpha_vec_policy">alpha_vec_policy() (in module csle_rest_api.resources.alpha_vec_policies.routes)</a>
 </li>
+      <li><a href="csle_rest_api.resources.recovery_ai.rag.html#csle_rest_api.resources.recovery_ai.rag.ioc_analyzer.IOCAnalyzer.analyze">analyze() (csle_rest_api.resources.recovery_ai.rag.ioc_analyzer.IOCAnalyzer static method)</a>
+</li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.APPLICATION_JSON_DATA_TYPE">APPLICATION_JSON_DATA_TYPE (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.prompts.Prompts.ARE_FORENSICS_PRESERVED">ARE_FORENSICS_PRESERVED (csle_rest_api.resources.recovery_ai.prompts.Prompts attribute)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.prompts.Prompts.ATTACKER">ATTACKER (csle_rest_api.resources.recovery_ai.prompts.Prompts attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -199,6 +211,8 @@
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.CONTENT_TYPE_HEADER">CONTENT_TYPE_HEADER (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
 </li>
+      <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.RAG.CONTEXT">CONTEXT (csle_rest_api.constants.constants.RAG attribute)</a>
+</li>
       <li><a href="csle_defender.emulation.html#csle_defender.emulation.defender_stopping_middleware.DefenderStoppingMiddleware.continue_monitor">continue_monitor() (csle_defender.emulation.defender_stopping_middleware.DefenderStoppingMiddleware static method)</a>
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.CONTROL_PLANE_PAGE_RESOURCE">CONTROL_PLANE_PAGE_RESOURCE (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
@@ -256,6 +270,8 @@
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.CREATE_EMULATION_PAGE_RESOURCE">CREATE_EMULATION_PAGE_RESOURCE (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.CREATE_EMULATION_RESOURCE">CREATE_EMULATION_RESOURCE (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.recovery_ai_util.RecoveryAIUtil.create_incident_prompt">create_incident_prompt() (csle_rest_api.resources.recovery_ai.recovery_ai_util.RecoveryAIUtil static method)</a>
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.CREATE_SUBRESOURCE">CREATE_SUBRESOURCE (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
 </li>
@@ -521,6 +537,20 @@
 </li>
       </ul></li>
       <li>
+    csle_rest_api.pages.recovery_ai
+
+      <ul>
+        <li><a href="csle_rest_api.pages.recovery_ai.html#module-csle_rest_api.pages.recovery_ai">module</a>
+</li>
+      </ul></li>
+      <li>
+    csle_rest_api.pages.recovery_ai.routes
+
+      <ul>
+        <li><a href="csle_rest_api.pages.recovery_ai.html#module-csle_rest_api.pages.recovery_ai.routes">module</a>
+</li>
+      </ul></li>
+      <li>
     csle_rest_api.pages.register
 
       <ul>
@@ -695,8 +725,6 @@
         <li><a href="csle_rest_api.resources.cluster_status.html#module-csle_rest_api.resources.cluster_status.routes">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     csle_rest_api.resources.config
 
@@ -711,6 +739,8 @@
         <li><a href="csle_rest_api.resources.config.html#module-csle_rest_api.resources.config.routes">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     csle_rest_api.resources.create_emulation
 
@@ -1118,6 +1148,62 @@
 </li>
       </ul></li>
       <li>
+    csle_rest_api.resources.recovery_ai
+
+      <ul>
+        <li><a href="csle_rest_api.resources.recovery_ai.html#module-csle_rest_api.resources.recovery_ai">module</a>
+</li>
+      </ul></li>
+      <li>
+    csle_rest_api.resources.recovery_ai.prompts
+
+      <ul>
+        <li><a href="csle_rest_api.resources.recovery_ai.html#module-csle_rest_api.resources.recovery_ai.prompts">module</a>
+</li>
+      </ul></li>
+      <li>
+    csle_rest_api.resources.recovery_ai.rag
+
+      <ul>
+        <li><a href="csle_rest_api.resources.recovery_ai.rag.html#module-csle_rest_api.resources.recovery_ai.rag">module</a>
+</li>
+      </ul></li>
+      <li>
+    csle_rest_api.resources.recovery_ai.rag.ioc_analyzer
+
+      <ul>
+        <li><a href="csle_rest_api.resources.recovery_ai.rag.html#module-csle_rest_api.resources.recovery_ai.rag.ioc_analyzer">module</a>
+</li>
+      </ul></li>
+      <li>
+    csle_rest_api.resources.recovery_ai.rag.ioc_extractor
+
+      <ul>
+        <li><a href="csle_rest_api.resources.recovery_ai.rag.html#module-csle_rest_api.resources.recovery_ai.rag.ioc_extractor">module</a>
+</li>
+      </ul></li>
+      <li>
+    csle_rest_api.resources.recovery_ai.rag.otx_lookup
+
+      <ul>
+        <li><a href="csle_rest_api.resources.recovery_ai.rag.html#module-csle_rest_api.resources.recovery_ai.rag.otx_lookup">module</a>
+</li>
+      </ul></li>
+      <li>
+    csle_rest_api.resources.recovery_ai.recovery_ai_util
+
+      <ul>
+        <li><a href="csle_rest_api.resources.recovery_ai.html#module-csle_rest_api.resources.recovery_ai.recovery_ai_util">module</a>
+</li>
+      </ul></li>
+      <li>
+    csle_rest_api.resources.recovery_ai.routes
+
+      <ul>
+        <li><a href="csle_rest_api.resources.recovery_ai.html#module-csle_rest_api.resources.recovery_ai.routes">module</a>
+</li>
+      </ul></li>
+      <li>
     csle_rest_api.resources.sdn_controllers
 
       <ul>
@@ -1355,6 +1441,16 @@
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE">DATA_COLLECTION_JOBS_RESOURCE (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
 </li>
+      <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.LLM.DEEPSEEK_14B_QWEN">DEEPSEEK_14B_QWEN (csle_rest_api.constants.constants.LLM attribute)</a>
+</li>
+      <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.LLM.DEEPSEEK_1_5B_QWEN">DEEPSEEK_1_5B_QWEN (csle_rest_api.constants.constants.LLM attribute)</a>
+</li>
+      <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.LLM.DEEPSEEK_32B_QWEN">DEEPSEEK_32B_QWEN (csle_rest_api.constants.constants.LLM attribute)</a>
+</li>
+      <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.LLM.DEEPSEEK_7B_QWEN">DEEPSEEK_7B_QWEN (csle_rest_api.constants.constants.LLM attribute)</a>
+</li>
+      <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.LLM.DEEPSEEK_8B_LLAMA">DEEPSEEK_8B_LLAMA (csle_rest_api.constants.constants.LLM attribute)</a>
+</li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.CREATE_EMULATION_PAGE.DEFAULT_FORWARD">DEFAULT_FORWARD (csle_rest_api.constants.constants.CREATE_EMULATION_PAGE attribute)</a>
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.CREATE_EMULATION_PAGE.DEFAULT_GATEWAY">DEFAULT_GATEWAY (csle_rest_api.constants.constants.CREATE_EMULATION_PAGE attribute)</a>
@@ -1373,14 +1469,14 @@
         <li><a href="csle_defender.emulation.html#csle_defender.emulation.emulated_defender.EmulatedDefender.defender_transition">(csle_defender.emulation.emulated_defender.EmulatedDefender static method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_defender.emulation.html#csle_defender.emulation.defender_stopping_middleware.DefenderStoppingMiddleware">DefenderStoppingMiddleware (class in csle_defender.emulation.defender_stopping_middleware)</a>
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.DESC_PROPERTY">DESC_PROPERTY (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
 </li>
       <li><a href="csle_rest_api.resources.docker.html#csle_rest_api.resources.docker.routes.docker">docker() (in module csle_rest_api.resources.docker.routes)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.DOCKER_ENGINE_RUNNING_PROPERTY">DOCKER_ENGINE_RUNNING_PROPERTY (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
 </li>
       <li><a href="csle_rest_api.resources.logs.html#csle_rest_api.resources.logs.routes.docker_logs">docker_logs() (in module csle_rest_api.resources.logs.routes)</a>
@@ -1473,8 +1569,6 @@
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.EMULATION_PROPERTY">EMULATION_PROPERTY (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM">EMULATION_QUERY_PARAM (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
 </li>
       <li><a href="csle_rest_api.resources.emulation_simulation_traces.html#csle_rest_api.resources.emulation_simulation_traces.routes.emulation_simulation_traces">emulation_simulation_traces() (in module csle_rest_api.resources.emulation_simulation_traces.routes)</a>
@@ -1487,6 +1581,8 @@
 </li>
       <li><a href="csle_rest_api.resources.emulation_statistics.html#csle_rest_api.resources.emulation_statistics.routes.emulation_statistics">emulation_statistics() (in module csle_rest_api.resources.emulation_statistics.routes)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_rest_api.resources.emulation_statistics.html#csle_rest_api.resources.emulation_statistics.routes.emulation_statistics_ids">emulation_statistics_ids() (in module csle_rest_api.resources.emulation_statistics.routes)</a>
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.EMULATION_STATISTICS_PAGE_RESOURCE">EMULATION_STATISTICS_PAGE_RESOURCE (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
@@ -1515,6 +1611,18 @@
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.EMULATIONS_RESOURCE">EMULATIONS_RESOURCE (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
 </li>
+      <li><a href="csle_rest_api.resources.recovery_ai.rag.html#csle_rest_api.resources.recovery_ai.rag.ioc_analyzer.IOCAnalyzer.enrich_logs">enrich_logs() (csle_rest_api.resources.recovery_ai.rag.ioc_analyzer.IOCAnalyzer static method)</a>
+
+      <ul>
+        <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.recovery_ai_util.RecoveryAIUtil.enrich_logs">(csle_rest_api.resources.recovery_ai.recovery_ai_util.RecoveryAIUtil static method)</a>
+</li>
+      </ul></li>
+      <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.prompts.Prompts.ENTITIES">ENTITIES (csle_rest_api.resources.recovery_ai.prompts.Prompts attribute)</a>
+</li>
+      <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.EVENT_STREAM_CONTENT_TYPE">EVENT_STREAM_CONTENT_TYPE (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.routes.example">example() (in module csle_rest_api.resources.recovery_ai.routes)</a>
+</li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.EXEC_ID_PROPERTY">EXEC_ID_PROPERTY (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.EXECUTION_ID_QUERY_PARAM">EXECUTION_ID_QUERY_PARAM (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
@@ -1531,6 +1639,20 @@
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.SESSION_TOKENS.EXPIRE_TIME_HOURS">EXPIRE_TIME_HOURS (csle_rest_api.constants.constants.SESSION_TOKENS attribute)</a>
 </li>
+      <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.prompts.Prompts.EXPLANATION">EXPLANATION (csle_rest_api.resources.recovery_ai.prompts.Prompts attribute)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.rag.html#csle_rest_api.resources.recovery_ai.rag.ioc_extractor.IOCExtractor.extract_cves">extract_cves() (csle_rest_api.resources.recovery_ai.rag.ioc_extractor.IOCExtractor static method)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.rag.html#csle_rest_api.resources.recovery_ai.rag.ioc_extractor.IOCExtractor.extract_domains">extract_domains() (csle_rest_api.resources.recovery_ai.rag.ioc_extractor.IOCExtractor static method)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.rag.html#csle_rest_api.resources.recovery_ai.rag.ioc_extractor.IOCExtractor.extract_hostnames">extract_hostnames() (csle_rest_api.resources.recovery_ai.rag.ioc_extractor.IOCExtractor static method)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.rag.html#csle_rest_api.resources.recovery_ai.rag.ioc_extractor.IOCExtractor.extract_ips">extract_ips() (csle_rest_api.resources.recovery_ai.rag.ioc_extractor.IOCExtractor static method)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.rag.html#csle_rest_api.resources.recovery_ai.rag.ioc_extractor.IOCExtractor.extract_nids">extract_nids() (csle_rest_api.resources.recovery_ai.rag.ioc_extractor.IOCExtractor static method)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.rag.html#csle_rest_api.resources.recovery_ai.rag.ioc_extractor.IOCExtractor.extract_urls">extract_urls() (csle_rest_api.resources.recovery_ai.rag.ioc_extractor.IOCExtractor static method)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -1540,6 +1662,8 @@
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.FILE_RESOURCE">FILE_RESOURCE (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.FILEBEAT_SUBRESOURCE">FILEBEAT_SUBRESOURCE (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.rag.html#csle_rest_api.resources.recovery_ai.rag.ioc_analyzer.IOCAnalyzer.find_iocs">find_iocs() (csle_rest_api.resources.recovery_ai.rag.ioc_analyzer.IOCAnalyzer static method)</a>
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.FIRST_NAME_PROPERTY">FIRST_NAME_PROPERTY (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
 </li>
@@ -1573,6 +1697,8 @@
 </li>
       <li><a href="csle_rest_api.resources.fnn_w_softmax_policies.html#csle_rest_api.resources.fnn_w_softmax_policies.routes.fnn_w_softmax_policy">fnn_w_softmax_policy() (in module csle_rest_api.resources.fnn_w_softmax_policies.routes)</a>
 </li>
+      <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.recovery_ai_util.RecoveryAIUtil.format_incident_description">format_incident_description() (csle_rest_api.resources.recovery_ai.recovery_ai_util.RecoveryAIUtil static method)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -1588,6 +1714,18 @@
       <li><a href="csle_rest_api.resources.gaussian_mixture_system_models.html#csle_rest_api.resources.gaussian_mixture_system_models.routes.gaussian_mixture_system_models_ids">gaussian_mixture_system_models_ids() (in module csle_rest_api.resources.gaussian_mixture_system_models.routes)</a>
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE">GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.prompts.Prompts.GEMINI_ACTION_EVAL">GEMINI_ACTION_EVAL (csle_rest_api.resources.recovery_ai.prompts.Prompts attribute)</a>
+</li>
+      <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.RAG.GEMINI_API_KEY">GEMINI_API_KEY (csle_rest_api.constants.constants.RAG attribute)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.prompts.Prompts.GEMINI_INCIDENT_EVAL">GEMINI_INCIDENT_EVAL (csle_rest_api.resources.recovery_ai.prompts.Prompts attribute)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.recovery_ai_util.RecoveryAIUtil.gemini_rag">gemini_rag() (csle_rest_api.resources.recovery_ai.recovery_ai_util.RecoveryAIUtil static method)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.recovery_ai_util.RecoveryAIUtil.generate_output">generate_output() (csle_rest_api.resources.recovery_ai.recovery_ai_util.RecoveryAIUtil static method)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.recovery_ai_util.RecoveryAIUtil.generate_previous_actions_str">generate_previous_actions_str() (csle_rest_api.resources.recovery_ai.recovery_ai_util.RecoveryAIUtil static method)</a>
 </li>
       <li><a href="csle_rest_api.pages.about.html#csle_rest_api.pages.about.routes.get_about_page_bp">get_about_page_bp() (in module csle_rest_api.pages.about.routes)</a>
 </li>
@@ -1621,14 +1759,16 @@
 </li>
       <li><a href="csle_rest_api.pages.policies.html#csle_rest_api.pages.policies.routes.get_policies_page_bp">get_policies_page_bp() (in module csle_rest_api.pages.policies.routes)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_rest_api.pages.policy_examination.html#csle_rest_api.pages.policy_examination.routes.get_policy_examination_page_bp">get_policy_examination_page_bp() (in module csle_rest_api.pages.policy_examination.routes)</a>
+</li>
+      <li><a href="csle_rest_api.pages.recovery_ai.html#csle_rest_api.pages.recovery_ai.routes.get_recovery_ai_page_bp">get_recovery_ai_page_bp() (in module csle_rest_api.pages.recovery_ai.routes)</a>
 </li>
       <li><a href="csle_rest_api.pages.register.html#csle_rest_api.pages.register.routes.get_register_page_bp">get_register_page_bp() (in module csle_rest_api.pages.register.routes)</a>
 </li>
       <li><a href="csle_rest_api.pages.sdn_controllers.html#csle_rest_api.pages.sdn_controllers.routes.get_sdn_controllers_page_bp">get_sdn_controllers_page_bp() (in module csle_rest_api.pages.sdn_controllers.routes)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_rest_api.resources.emulation_executions.html#csle_rest_api.resources.emulation_executions.routes.get_sdn_switches_of_execution">get_sdn_switches_of_execution() (in module csle_rest_api.resources.emulation_executions.routes)</a>
 </li>
       <li><a href="csle_rest_api.pages.server_cluster.html#csle_rest_api.pages.server_cluster.routes.get_server_cluster_page_bp">get_server_cluster_page_bp() (in module csle_rest_api.pages.server_cluster.routes)</a>
@@ -1711,6 +1851,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.ID_PROPERTY">ID_PROPERTY (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
 </li>
+      <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.RAG.IDENTIFIERS">IDENTIFIERS (csle_rest_api.constants.constants.RAG attribute)</a>
+</li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.IDS_QUERY_PARAM">IDS_QUERY_PARAM (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
 </li>
       <li><a href="csle_rest_api.resources.images.html#csle_rest_api.resources.images.routes.images">images() (in module csle_rest_api.resources.images.routes)</a>
@@ -1719,19 +1861,45 @@
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.IMAGES_RESOURCE">IMAGES_RESOURCE (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.prompts.Prompts.INCIDENT">INCIDENT (csle_rest_api.resources.recovery_ai.prompts.Prompts attribute)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.recovery_ai_util.RecoveryAIUtil.incident_classification">incident_classification() (csle_rest_api.resources.recovery_ai.recovery_ai_util.RecoveryAIUtil static method)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.prompts.Prompts.INCIDENT_DESCRIPTION">INCIDENT_DESCRIPTION (csle_rest_api.resources.recovery_ai.prompts.Prompts attribute)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.prompts.Prompts.INCIDENT_PROMPT_TEMPLATE">INCIDENT_PROMPT_TEMPLATE (csle_rest_api.resources.recovery_ai.prompts.Prompts attribute)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.prompts.Prompts.INCIDENT_YES">INCIDENT_YES (csle_rest_api.resources.recovery_ai.prompts.Prompts attribute)</a>
+</li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.INFO_SUBRESOURCE">INFO_SUBRESOURCE (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.INPUT_PROPERTY">INPUT_PROPERTY (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.CREATE_EMULATION_PAGE.INTERFACES">INTERFACES (csle_rest_api.constants.constants.CREATE_EMULATION_PAGE attribute)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.rag.html#csle_rest_api.resources.recovery_ai.rag.ioc_analyzer.IOCAnalyzer">IOCAnalyzer (class in csle_rest_api.resources.recovery_ai.rag.ioc_analyzer)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.rag.html#csle_rest_api.resources.recovery_ai.rag.ioc_extractor.IOCExtractor">IOCExtractor (class in csle_rest_api.resources.recovery_ai.rag.ioc_extractor)</a>
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.CREATE_EMULATION_PAGE.IP">IP (csle_rest_api.constants.constants.CREATE_EMULATION_PAGE attribute)</a>
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.IP_PROPERTY">IP_PROPERTY (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.IP_QUERY_PARAM">IP_QUERY_PARAM (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.prompts.Prompts.IS_ATTACK_CONTAINED">IS_ATTACK_CONTAINED (csle_rest_api.resources.recovery_ai.prompts.Prompts attribute)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.prompts.Prompts.IS_ERADICATED">IS_ERADICATED (csle_rest_api.resources.recovery_ai.prompts.Prompts attribute)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.prompts.Prompts.IS_HARDENED">IS_HARDENED (csle_rest_api.resources.recovery_ai.prompts.Prompts attribute)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.prompts.Prompts.IS_KNOWLEDGE_SUFFICIENT">IS_KNOWLEDGE_SUFFICIENT (csle_rest_api.resources.recovery_ai.prompts.Prompts attribute)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.prompts.Prompts.IS_RECOVERED">IS_RECOVERED (csle_rest_api.resources.recovery_ai.prompts.Prompts attribute)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.recovery_ai_util.RecoveryAIUtil.is_state_terminal">is_state_terminal() (csle_rest_api.resources.recovery_ai.recovery_ai_util.RecoveryAIUtil static method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1785,12 +1953,18 @@
 </li>
       <li><a href="csle_rest_api.resources.linear_threshold_policies.html#csle_rest_api.resources.linear_threshold_policies.routes.linear_threshold_policy">linear_threshold_policy() (in module csle_rest_api.resources.linear_threshold_policies.routes)</a>
 </li>
+      <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.LLM.LLAMA_1B_INSTRUCT">LLAMA_1B_INSTRUCT (csle_rest_api.constants.constants.LLM attribute)</a>
+</li>
+      <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.LLM">LLM (class in csle_rest_api.constants.constants)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.recovery_ai_util.RecoveryAIUtil.load_llm">load_llm() (csle_rest_api.resources.recovery_ai.recovery_ai_util.RecoveryAIUtil static method)</a>
+</li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.LOGIN_PAGE_RESOURCE">LOGIN_PAGE_RESOURCE (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
+</li>
+      <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.LOGIN_RESOURCE">LOGIN_RESOURCE (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.LOGIN_RESOURCE">LOGIN_RESOURCE (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
-</li>
       <li><a href="csle_rest_api.resources.logs.html#csle_rest_api.resources.logs.routes.logs">logs() (in module csle_rest_api.resources.logs.routes)</a>
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.LOGS_ADMIN_PAGE_RESOURCE">LOGS_ADMIN_PAGE_RESOURCE (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
@@ -1800,6 +1974,16 @@
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.LOGS_RESOURCE">LOGS_RESOURCE (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.LOGSTASH_SUBRESOURCE">LOGSTASH_SUBRESOURCE (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.rag.html#csle_rest_api.resources.recovery_ai.rag.otx_lookup.OTXLookup.lookup_cve">lookup_cve() (csle_rest_api.resources.recovery_ai.rag.otx_lookup.OTXLookup static method)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.rag.html#csle_rest_api.resources.recovery_ai.rag.otx_lookup.OTXLookup.lookup_domain">lookup_domain() (csle_rest_api.resources.recovery_ai.rag.otx_lookup.OTXLookup static method)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.rag.html#csle_rest_api.resources.recovery_ai.rag.otx_lookup.OTXLookup.lookup_hostname">lookup_hostname() (csle_rest_api.resources.recovery_ai.rag.otx_lookup.OTXLookup static method)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.rag.html#csle_rest_api.resources.recovery_ai.rag.otx_lookup.OTXLookup.lookup_ip">lookup_ip() (csle_rest_api.resources.recovery_ai.rag.otx_lookup.OTXLookup static method)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.rag.html#csle_rest_api.resources.recovery_ai.rag.otx_lookup.OTXLookup.lookup_url">lookup_url() (csle_rest_api.resources.recovery_ai.rag.otx_lookup.OTXLookup static method)</a>
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.CREATE_EMULATION_PAGE.LOSS_GE_MODEL_H">LOSS_GE_MODEL_H (csle_rest_api.constants.constants.CREATE_EMULATION_PAGE attribute)</a>
 </li>
@@ -1836,6 +2020,14 @@
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.METRICBEAT_SUBRESOURCE">METRICBEAT_SUBRESOURCE (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP">MGMT_WEBAPP (class in csle_rest_api.constants.constants)</a>
+</li>
+      <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.LLM.MISTRAL_7B_INSTRUCT">MISTRAL_7B_INSTRUCT (csle_rest_api.constants.constants.LLM attribute)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.prompts.Prompts.MITRE_ATTACK_TACTICS">MITRE_ATTACK_TACTICS (csle_rest_api.resources.recovery_ai.prompts.Prompts attribute)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.prompts.Prompts.MITRE_ATTACK_TECHNIQUES">MITRE_ATTACK_TECHNIQUES (csle_rest_api.resources.recovery_ai.prompts.Prompts attribute)</a>
+</li>
+      <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.RAG.MODEL">MODEL (csle_rest_api.constants.constants.RAG attribute)</a>
 </li>
       <li>
     module
@@ -1914,6 +2106,10 @@
         <li><a href="csle_rest_api.pages.policy_examination.html#module-csle_rest_api.pages.policy_examination">csle_rest_api.pages.policy_examination</a>
 </li>
         <li><a href="csle_rest_api.pages.policy_examination.html#module-csle_rest_api.pages.policy_examination.routes">csle_rest_api.pages.policy_examination.routes</a>
+</li>
+        <li><a href="csle_rest_api.pages.recovery_ai.html#module-csle_rest_api.pages.recovery_ai">csle_rest_api.pages.recovery_ai</a>
+</li>
+        <li><a href="csle_rest_api.pages.recovery_ai.html#module-csle_rest_api.pages.recovery_ai.routes">csle_rest_api.pages.recovery_ai.routes</a>
 </li>
         <li><a href="csle_rest_api.pages.register.html#module-csle_rest_api.pages.register">csle_rest_api.pages.register</a>
 </li>
@@ -2085,6 +2281,22 @@
 </li>
         <li><a href="csle_rest_api.resources.prometheus.html#module-csle_rest_api.resources.prometheus.routes">csle_rest_api.resources.prometheus.routes</a>
 </li>
+        <li><a href="csle_rest_api.resources.recovery_ai.html#module-csle_rest_api.resources.recovery_ai">csle_rest_api.resources.recovery_ai</a>
+</li>
+        <li><a href="csle_rest_api.resources.recovery_ai.html#module-csle_rest_api.resources.recovery_ai.prompts">csle_rest_api.resources.recovery_ai.prompts</a>
+</li>
+        <li><a href="csle_rest_api.resources.recovery_ai.rag.html#module-csle_rest_api.resources.recovery_ai.rag">csle_rest_api.resources.recovery_ai.rag</a>
+</li>
+        <li><a href="csle_rest_api.resources.recovery_ai.rag.html#module-csle_rest_api.resources.recovery_ai.rag.ioc_analyzer">csle_rest_api.resources.recovery_ai.rag.ioc_analyzer</a>
+</li>
+        <li><a href="csle_rest_api.resources.recovery_ai.rag.html#module-csle_rest_api.resources.recovery_ai.rag.ioc_extractor">csle_rest_api.resources.recovery_ai.rag.ioc_extractor</a>
+</li>
+        <li><a href="csle_rest_api.resources.recovery_ai.rag.html#module-csle_rest_api.resources.recovery_ai.rag.otx_lookup">csle_rest_api.resources.recovery_ai.rag.otx_lookup</a>
+</li>
+        <li><a href="csle_rest_api.resources.recovery_ai.html#module-csle_rest_api.resources.recovery_ai.recovery_ai_util">csle_rest_api.resources.recovery_ai.recovery_ai_util</a>
+</li>
+        <li><a href="csle_rest_api.resources.recovery_ai.html#module-csle_rest_api.resources.recovery_ai.routes">csle_rest_api.resources.recovery_ai.routes</a>
+</li>
         <li><a href="csle_rest_api.resources.sdn_controllers.html#module-csle_rest_api.resources.sdn_controllers">csle_rest_api.resources.sdn_controllers</a>
 </li>
         <li><a href="csle_rest_api.resources.sdn_controllers.html#module-csle_rest_api.resources.sdn_controllers.routes">csle_rest_api.resources.sdn_controllers.routes</a>
@@ -2178,16 +2390,18 @@
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.NAME_PROPERTY">NAME_PROPERTY (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
 </li>
+      <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.LLM.NF4">NF4 (csle_rest_api.constants.constants.LLM attribute)</a>
+</li>
       <li><a href="csle_rest_api.resources.nginx.html#csle_rest_api.resources.nginx.routes.nginx">nginx() (in module csle_rest_api.resources.nginx.routes)</a>
 </li>
       <li><a href="csle_rest_api.resources.logs.html#csle_rest_api.resources.logs.routes.nginx_logs">nginx_logs() (in module csle_rest_api.resources.logs.routes)</a>
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.NGINX_RESOURCE">NGINX_RESOURCE (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
 </li>
-      <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.NGINX_RUNNING_PROPERTY">NGINX_RUNNING_PROPERTY (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.NGINX_RUNNING_PROPERTY">NGINX_RUNNING_PROPERTY (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
+</li>
       <li><a href="csle_rest_api.resources.node_exporter.html#csle_rest_api.resources.node_exporter.routes.node_exporter">node_exporter() (in module csle_rest_api.resources.node_exporter.routes)</a>
 </li>
       <li><a href="csle_rest_api.resources.logs.html#csle_rest_api.resources.logs.routes.node_exporter_logs">node_exporter_logs() (in module csle_rest_api.resources.logs.routes)</a>
@@ -2214,13 +2428,23 @@
 </li>
       <li><a href="csle_rest_api.resources.logs.html#csle_rest_api.resources.logs.routes.ossec_ids_manager_logs">ossec_ids_manager_logs() (in module csle_rest_api.resources.logs.routes)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.OSSEC_IDS_MANAGER_SUBRESOURCE">OSSEC_IDS_MANAGER_SUBRESOURCE (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.OSSEC_IDS_MONITOR_SUBRESOURCE">OSSEC_IDS_MONITOR_SUBRESOURCE (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.OSSEC_IDS_SUBRESOURCE">OSSEC_IDS_SUBRESOURCE (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
+</li>
+      <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.RAG.OTX_API_KEY">OTX_API_KEY (csle_rest_api.constants.constants.RAG attribute)</a>
+</li>
+      <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.RAG.OTX_API_KEY_HEADER">OTX_API_KEY_HEADER (csle_rest_api.constants.constants.RAG attribute)</a>
+</li>
+      <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.RAG.OTX_BASE_URL">OTX_BASE_URL (csle_rest_api.constants.constants.RAG attribute)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.recovery_ai_util.RecoveryAIUtil.otx_rag">otx_rag() (csle_rest_api.resources.recovery_ai.recovery_ai_util.RecoveryAIUtil static method)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.rag.html#csle_rest_api.resources.recovery_ai.rag.otx_lookup.OTXLookup">OTXLookup (class in csle_rest_api.resources.recovery_ai.rag.otx_lookup)</a>
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.OUTPUT_PROPERTY">OUTPUT_PROPERTY (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
 </li>
@@ -2324,6 +2548,8 @@
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.PROMETHEUS_URL_PROPERTY">PROMETHEUS_URL_PROPERTY (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
 </li>
+      <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.prompts.Prompts">Prompts (class in csle_rest_api.resources.recovery_ai.prompts)</a>
+</li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.CREATE_EMULATION_PAGE.PROTOCOL">PROTOCOL (csle_rest_api.constants.constants.CREATE_EMULATION_PAGE attribute)</a>
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.CREATE_EMULATION_PAGE.PW">PW (csle_rest_api.constants.constants.CREATE_EMULATION_PAGE attribute)</a>
@@ -2340,12 +2566,18 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.QUEUES_PROPERTY">QUEUES_PROPERTY (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
 </li>
+      <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.LLM.QWEN_14B">QWEN_14B (csle_rest_api.constants.constants.LLM attribute)</a>
+</li>
   </ul></td>
 </tr></table>
 
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.RAG">RAG (class in csle_rest_api.constants.constants)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.prompts.Prompts.RAG_PROMPT_TEMPLATE">RAG_PROMPT_TEMPLATE (csle_rest_api.resources.recovery_ai.prompts.Prompts attribute)</a>
+</li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.RAM_PROPERTY">RAM_PROPERTY (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.CREATE_EMULATION_PAGE.RATE_LIMIT_MBIT">RATE_LIMIT_MBIT (csle_rest_api.constants.constants.CREATE_EMULATION_PAGE attribute)</a>
@@ -2355,6 +2587,36 @@
       <li><a href="csle_rest_api.resources.login.html#csle_rest_api.resources.login.routes.read_login">read_login() (in module csle_rest_api.resources.login.routes)</a>
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.REASON_PROPERTY">REASON_PROPERTY (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.routes.recovery_ai">recovery_ai() (in module csle_rest_api.resources.recovery_ai.routes)</a>
+</li>
+      <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.RECOVERY_AI_DATA_DELIMITER">RECOVERY_AI_DATA_DELIMITER (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
+</li>
+      <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.RECOVERY_AI_JSON_LOGS">RECOVERY_AI_JSON_LOGS (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
+</li>
+      <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.RECOVERY_AI_JSON_SYSTEM_DESCRIPTION">RECOVERY_AI_JSON_SYSTEM_DESCRIPTION (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
+</li>
+      <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.RECOVERY_AI_LOOKAHEAD_HORIZON">RECOVERY_AI_LOOKAHEAD_HORIZON (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
+</li>
+      <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.RECOVERY_AI_OPTIMIZATION_STEPS">RECOVERY_AI_OPTIMIZATION_STEPS (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
+</li>
+      <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.RECOVERY_AI_PAGE_RESOURCE">RECOVERY_AI_PAGE_RESOURCE (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
+</li>
+      <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.RECOVERY_AI_RAG">RECOVERY_AI_RAG (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
+</li>
+      <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.RECOVERY_AI_RESOURCE">RECOVERY_AI_RESOURCE (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
+</li>
+      <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.RECOVERY_AI_ROLLOUT_HORIZON">RECOVERY_AI_ROLLOUT_HORIZON (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
+</li>
+      <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.RECOVERY_AI_TEMPERATURE">RECOVERY_AI_TEMPERATURE (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.RECOVERY_AI_THINK_END_DELIMITER">RECOVERY_AI_THINK_END_DELIMITER (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.recovery_ai_util.RecoveryAIUtil.recovery_loop">recovery_loop() (csle_rest_api.resources.recovery_ai.recovery_ai_util.RecoveryAIUtil static method)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.recovery_ai_util.RecoveryAIUtil">RecoveryAIUtil (class in csle_rest_api.resources.recovery_ai.recovery_ai_util)</a>
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.REGISTER_PAGE_RESOURCE">REGISTER_PAGE_RESOURCE (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
 </li>
@@ -2366,8 +2628,6 @@
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.CREATE_EMULATION_PAGE.RESTART_POLICY">RESTART_POLICY (csle_rest_api.constants.constants.CREATE_EMULATION_PAGE attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.ROLES_PROPERTY">ROLES_PROPERTY (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.CREATE_EMULATION_PAGE.ROOT">ROOT (csle_rest_api.constants.constants.CREATE_EMULATION_PAGE attribute)</a>
@@ -2405,6 +2665,8 @@
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.SDN_CONTROLLERS_PAGE_RESOURCE">SDN_CONTROLLERS_PAGE_RESOURCE (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.SDN_CONTROLLERS_RESOURCE">SDN_CONTROLLERS_RESOURCE (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
+</li>
+      <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.LLM.SDPA">SDPA (csle_rest_api.constants.constants.LLM attribute)</a>
 </li>
       <li><a href="csle_rest_api.resources.server_cluster.html#csle_rest_api.resources.server_cluster.routes.server_cluster">server_cluster() (in module csle_rest_api.resources.server_cluster.routes)</a>
 </li>
@@ -2480,10 +2742,10 @@
 </li>
       <li><a href="csle_rest_api.resources.emulation_executions.html#csle_rest_api.resources.emulation_executions.routes.start_stop_heartbeat">start_stop_heartbeat() (in module csle_rest_api.resources.emulation_executions.routes)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_rest_api.resources.emulation_executions.html#csle_rest_api.resources.emulation_executions.routes.start_stop_host_manager">start_stop_host_manager() (in module csle_rest_api.resources.emulation_executions.routes)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_rest_api.resources.emulation_executions.html#csle_rest_api.resources.emulation_executions.routes.start_stop_host_monitor_thread">start_stop_host_monitor_thread() (in module csle_rest_api.resources.emulation_executions.routes)</a>
 </li>
       <li><a href="csle_rest_api.resources.emulation_executions.html#csle_rest_api.resources.emulation_executions.routes.start_stop_kafka">start_stop_kafka() (in module csle_rest_api.resources.emulation_executions.routes)</a>
@@ -2520,6 +2782,8 @@
 </li>
       <li><a href="csle_rest_api.resources.emulation_executions.html#csle_rest_api.resources.emulation_executions.routes.start_stop_traffic_manager">start_stop_traffic_manager() (in module csle_rest_api.resources.emulation_executions.routes)</a>
 </li>
+      <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.prompts.Prompts.STATE_PROMPT_TEMPLATE">STATE_PROMPT_TEMPLATE (csle_rest_api.resources.recovery_ai.prompts.Prompts attribute)</a>
+</li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.STATIC">STATIC (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.STATIC_RESOURCE_INDEX">STATIC_RESOURCE_INDEX (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
@@ -2549,6 +2813,8 @@
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.CREATE_EMULATION_PAGE.SUBNET_PREFIX">SUBNET_PREFIX (csle_rest_api.constants.constants.CREATE_EMULATION_PAGE attribute)</a>
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.SWITCHES_SUBRESOURCE">SWITCHES_SUBRESOURCE (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.prompts.Prompts.SYSTEM">SYSTEM (csle_rest_api.resources.recovery_ai.prompts.Prompts attribute)</a>
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.SYSTEM_ADMIN_PAGE_RESOURCE">SYSTEM_ADMIN_PAGE_RESOURCE (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
 </li>
@@ -2589,6 +2855,8 @@
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.TABULAR_POLICIES_RESOURCE">TABULAR_POLICIES_RESOURCE (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
 </li>
       <li><a href="csle_rest_api.resources.tabular_policies.html#csle_rest_api.resources.tabular_policies.routes.tabular_policy">tabular_policy() (in module csle_rest_api.resources.tabular_policies.routes)</a>
+</li>
+      <li><a href="csle_rest_api.resources.recovery_ai.html#csle_rest_api.resources.recovery_ai.prompts.Prompts.TARGETED">TARGETED (csle_rest_api.resources.recovery_ai.prompts.Prompts attribute)</a>
 </li>
       <li><a href="csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP.THREAD_PROPERTY">THREAD_PROPERTY (csle_rest_api.constants.constants.MGMT_WEBAPP attribute)</a>
 </li>

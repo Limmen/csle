@@ -110,7 +110,7 @@
                  <span class="n">experiment_config</span><span class="p">:</span> <span class="n">ExperimentConfig</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BaseEnv</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">training_job</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TrainingJobConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">save_to_metastore</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initializes the TSPSA agent</span>
+<span class="sd">        Initializes the T-SPSA agent</span>
 
 <span class="sd">        :param simulation_env_config: the simulation env config</span>
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -234,11 +234,6 @@
             <span class="n">exp_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spsa</span><span class="p">(</span><span class="n">exp_result</span><span class="o">=</span><span class="n">exp_result</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">training_job</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">training_job</span><span class="p">,</span>
                                    <span class="n">random_seeds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="o">.</span><span class="n">random_seeds</span><span class="p">)</span>
 
-            <span class="c1"># Save latest trace</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_to_metastore</span><span class="p">:</span>
-                <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">save_simulation_trace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">get_traces</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">reset_traces</span><span class="p">()</span>
-
         <span class="c1"># Calculate average and std metrics</span>
         <span class="n">exp_result</span><span class="o">.</span><span class="n">avg_metrics</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">exp_result</span><span class="o">.</span><span class="n">std_metrics</span> <span class="o">=</span> <span class="p">{}</span>
@@ -273,9 +268,6 @@
                 <span class="n">exp_result</span><span class="o">.</span><span class="n">avg_metrics</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span> <span class="o">=</span> <span class="n">avg_metrics</span>
                 <span class="n">exp_result</span><span class="o">.</span><span class="n">std_metrics</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span> <span class="o">=</span> <span class="n">std_metrics</span>
 
-        <span class="n">traces</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">get_traces</span><span class="p">()</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">traces</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_to_metastore</span><span class="p">:</span>
-            <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">save_simulation_trace</span><span class="p">(</span><span class="n">traces</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
         <span class="n">ts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">exp_execution</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="n">ts</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">exp_execution</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">exp_result</span>
@@ -466,8 +458,6 @@
                 <span class="n">progress</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">iterations_done</span> <span class="o">/</span> <span class="n">total_iterations</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
                 <span class="n">training_job</span><span class="o">.</span><span class="n">progress_percentage</span> <span class="o">=</span> <span class="n">progress</span>
                 <span class="n">training_job</span><span class="o">.</span><span class="n">experiment_result</span> <span class="o">=</span> <span class="n">exp_result</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">get_traces</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="n">training_job</span><span class="o">.</span><span class="n">simulation_traces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">get_traces</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">training_job</span><span class="o">.</span><span class="n">simulation_traces</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">training_job</span><span class="o">.</span><span class="n">num_cached_traces</span><span class="p">:</span>
                     <span class="n">training_job</span><span class="o">.</span><span class="n">simulation_traces</span> <span class="o">=</span> <span class="n">training_job</span><span class="o">.</span><span class="n">simulation_traces</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_to_metastore</span><span class="p">:</span>
@@ -558,10 +548,10 @@
 <span class="sd">        :param metrics: the dict with the aggregated metrics</span>
 <span class="sd">        :return: the average metrics</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">avg_metrics</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">avg_metrics</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">metrics</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">avg</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
-            <span class="n">avg_metrics</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">avg</span>
+            <span class="n">avg_metrics</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">avg</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">avg_metrics</span></div>
 
 <div class="viewcode-block" id="TSPSAAgent.standard_ak"><a class="viewcode-back" href="../../../../csle_agents.agents.t_spsa.html#csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.standard_ak">[docs]</a>    <span class="nd">@staticmethod</span>
@@ -674,8 +664,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">vec</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="TSPSAAgent.get_policy"><a class="viewcode-back" href="../../../../csle_agents.agents.t_spsa.html#csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.get_policy">[docs]</a>    <span class="k">def</span> <span class="nf">get_policy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">L</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">MultiThresholdStoppingPolicy</span><span class="p">,</span>
-                                                              <span class="n">LinearThresholdStoppingPolicy</span><span class="p">]:</span>
+<div class="viewcode-block" id="TSPSAAgent.get_policy"><a class="viewcode-back" href="../../../../csle_agents.agents.t_spsa.html#csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.get_policy">[docs]</a>    <span class="k">def</span> <span class="nf">get_policy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">L</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">MultiThresholdStoppingPolicy</span><span class="p">,</span> <span class="n">LinearThresholdStoppingPolicy</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the policy from a parameter vector</span>
 

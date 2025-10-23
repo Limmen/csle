@@ -309,14 +309,25 @@
     <span class="n">GP_SYSTEM_MODEL_TYPE</span> <span class="o">=</span> <span class="s2">&quot;gp&quot;</span>
     <span class="n">WS_CONTAINER_TERMINAL_NAMESPACE</span> <span class="o">=</span> <span class="s2">&quot;container-terminal&quot;</span>
     <span class="n">CONTAINER_TERMINAL_SSH_SHELL</span> <span class="o">=</span> <span class="s2">&quot;container-terminal-ssh-shell&quot;</span>
-    <span class="n">CONTAINER_TERMINAL_SSH_CONNECTION</span> <span class="o">=</span> <span class="s2">&quot;container-terminal-ssh-connection&quot;</span></div>
+    <span class="n">CONTAINER_TERMINAL_SSH_CONNECTION</span> <span class="o">=</span> <span class="s2">&quot;container-terminal-ssh-connection&quot;</span>
+    <span class="n">RECOVERY_AI_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;recovery-ai&quot;</span>
+    <span class="n">RECOVERY_AI_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;recovery-ai-page&quot;</span>
+    <span class="n">RECOVERY_AI_THINK_END_DELIMITER</span> <span class="o">=</span> <span class="s2">&quot;&lt;/think&gt;&quot;</span>
+    <span class="n">RECOVERY_AI_JSON_SYSTEM_DESCRIPTION</span> <span class="o">=</span> <span class="s2">&quot;systemDescription&quot;</span>
+    <span class="n">RECOVERY_AI_JSON_LOGS</span> <span class="o">=</span> <span class="s2">&quot;networkLogs&quot;</span>
+    <span class="n">RECOVERY_AI_DATA_DELIMITER</span> <span class="o">=</span> <span class="s2">&quot;data:&quot;</span>
+    <span class="n">EVENT_STREAM_CONTENT_TYPE</span> <span class="o">=</span> <span class="s2">&quot;text/event-stream&quot;</span>
+    <span class="n">RECOVERY_AI_TEMPERATURE</span> <span class="o">=</span> <span class="s2">&quot;temperature&quot;</span>
+    <span class="n">RECOVERY_AI_OPTIMIZATION_STEPS</span> <span class="o">=</span> <span class="s2">&quot;optimizationSteps&quot;</span>
+    <span class="n">RECOVERY_AI_LOOKAHEAD_HORIZON</span> <span class="o">=</span> <span class="s2">&quot;lookaheadHorizon&quot;</span>
+    <span class="n">RECOVERY_AI_ROLLOUT_HORIZON</span> <span class="o">=</span> <span class="s2">&quot;rolloutHorizon&quot;</span>
+    <span class="n">RECOVERY_AI_RAG</span> <span class="o">=</span> <span class="s2">&quot;rag&quot;</span></div>
 
 
 <div class="viewcode-block" id="SESSION_TOKENS"><a class="viewcode-back" href="../../../csle_rest_api.constants.html#csle_rest_api.constants.constants.SESSION_TOKENS">[docs]</a><span class="k">class</span> <span class="nc">SESSION_TOKENS</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to session tokens</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="n">EXPIRE_TIME_HOURS</span> <span class="o">=</span> <span class="mi">48</span></div>
 
 
@@ -393,6 +404,35 @@
     <span class="n">USERS</span> <span class="o">=</span> <span class="s2">&quot;users&quot;</span>
     <span class="n">PORT</span> <span class="o">=</span> <span class="s2">&quot;port&quot;</span>
     <span class="n">SERVICES</span> <span class="o">=</span> <span class="s2">&quot;services&quot;</span></div>
+
+
+<div class="viewcode-block" id="LLM"><a class="viewcode-back" href="../../../csle_rest_api.constants.html#csle_rest_api.constants.constants.LLM">[docs]</a><span class="k">class</span> <span class="nc">LLM</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    String constants related to LLMs</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">DEEPSEEK_32B_QWEN</span> <span class="o">=</span> <span class="s2">&quot;deepseek-ai/DeepSeek-R1-Distill-Qwen-32B&quot;</span>
+    <span class="n">DEEPSEEK_14B_QWEN</span> <span class="o">=</span> <span class="s2">&quot;deepseek-ai/DeepSeek-R1-Distill-Qwen-14B&quot;</span>
+    <span class="n">DEEPSEEK_7B_QWEN</span> <span class="o">=</span> <span class="s2">&quot;deepseek-ai/DeepSeek-R1-Distill-Qwen-7B&quot;</span>
+    <span class="n">DEEPSEEK_1_5B_QWEN</span> <span class="o">=</span> <span class="s2">&quot;deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B&quot;</span>
+    <span class="n">DEEPSEEK_8B_LLAMA</span> <span class="o">=</span> <span class="s2">&quot;deepseek-ai/DeepSeek-R1-Distill-Llama-8B&quot;</span>
+    <span class="n">LLAMA_1B_INSTRUCT</span> <span class="o">=</span> <span class="s2">&quot;meta-llama/Llama-3.2-1B-Instruct&quot;</span>
+    <span class="n">MISTRAL_7B_INSTRUCT</span> <span class="o">=</span> <span class="s2">&quot;mistralai/Mistral-7B-Instruct-v0.3&quot;</span>
+    <span class="n">QWEN_14B</span> <span class="o">=</span> <span class="s2">&quot;Qwen/Qwen3-14B&quot;</span>
+    <span class="n">SDPA</span> <span class="o">=</span> <span class="s2">&quot;sdpa&quot;</span>
+    <span class="n">NF4</span> <span class="o">=</span> <span class="s2">&quot;nf4&quot;</span></div>
+
+
+<div class="viewcode-block" id="RAG"><a class="viewcode-back" href="../../../csle_rest_api.constants.html#csle_rest_api.constants.constants.RAG">[docs]</a><span class="k">class</span> <span class="nc">RAG</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    String constants related to RAG</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">OTX_API_KEY</span> <span class="o">=</span> <span class="s2">&quot;OTX_API_KEY&quot;</span>
+    <span class="n">OTX_BASE_URL</span> <span class="o">=</span> <span class="s2">&quot;https://otx.alienvault.com/api/v1/indicators&quot;</span>
+    <span class="n">OTX_API_KEY_HEADER</span> <span class="o">=</span> <span class="s2">&quot;X-OTX-API-KEY&quot;</span>
+    <span class="n">MODEL</span> <span class="o">=</span> <span class="s2">&quot;gemini-2.5-pro&quot;</span>
+    <span class="n">IDENTIFIERS</span> <span class="o">=</span> <span class="s2">&quot;Identifiers&quot;</span>
+    <span class="n">CONTEXT</span> <span class="o">=</span> <span class="s2">&quot;Context&quot;</span>
+    <span class="n">GEMINI_API_KEY</span> <span class="o">=</span> <span class="s2">&quot;GEMINI_API_KEY&quot;</span></div>
 </pre></div>
 
            </div>

@@ -100,6 +100,7 @@ The following table details the last time ansible was tested and worked correctl
 
 | Setup                        | Last date tested |
 |------------------------------|------------------|
+| Single server, Ubuntu 22.04. | 2025-10-23 ✔     |
 | Single server, Ubuntu 22.04. | 2025-02-12 ✔     |
 | Two servers, Ubuntu 20.04.   | 2024-04-23 ✔     |
 

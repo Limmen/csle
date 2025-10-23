@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_rest_api.resources.recovery_ai.rag package &mdash; csle-rest-api 0.8.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="csle_rest_api.resources.sdn_controllers package" href="csle_rest_api.resources.sdn_controllers.html" />
+    <link rel="prev" title="csle_rest_api.resources.recovery_ai package" href="csle_rest_api.resources.recovery_ai.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> csle-rest-api
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="csle_rest_api.constants.html">csle_rest_api.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_rest_api.pages.html">csle_rest_api.pages package</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="csle_rest_api.resources.html">csle_rest_api.resources package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="csle_rest_api.resources.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.alpha_vec_policies.html">csle_rest_api.resources.alpha_vec_policies package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.cadvisor.html">csle_rest_api.resources.cadvisor package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.cluster_status.html">csle_rest_api.resources.cluster_status package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.config.html">csle_rest_api.resources.config package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.create_emulation.html">csle_rest_api.resources.create_emulation package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.data_collection_jobs.html">csle_rest_api.resources.data_collection_jobs package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.docker.html">csle_rest_api.resources.docker package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.dqn_policies.html">csle_rest_api.resources.dqn_policies package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.empirical_system_models.html">csle_rest_api.resources.empirical_system_models package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.emulation_executions.html">csle_rest_api.resources.emulation_executions package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.emulation_simulation_traces.html">csle_rest_api.resources.emulation_simulation_traces package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.emulation_statistics.html">csle_rest_api.resources.emulation_statistics package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.emulation_traces.html">csle_rest_api.resources.emulation_traces package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.emulations.html">csle_rest_api.resources.emulations package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.experiments.html">csle_rest_api.resources.experiments package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.file.html">csle_rest_api.resources.file package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.flask.html">csle_rest_api.resources.flask package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.fnn_w_softmax_policies.html">csle_rest_api.resources.fnn_w_softmax_policies package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.gaussian_mixture_system_models.html">csle_rest_api.resources.gaussian_mixture_system_models package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.gp_system_models.html">csle_rest_api.resources.gp_system_models package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.grafana.html">csle_rest_api.resources.grafana package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.images.html">csle_rest_api.resources.images package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.linear_threshold_policies.html">csle_rest_api.resources.linear_threshold_policies package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.login.html">csle_rest_api.resources.login package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.logs.html">csle_rest_api.resources.logs package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.mcmc_system_models.html">csle_rest_api.resources.mcmc_system_models package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.multi_threshold_policies.html">csle_rest_api.resources.multi_threshold_policies package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.nginx.html">csle_rest_api.resources.nginx package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.node_exporter.html">csle_rest_api.resources.node_exporter package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.pgadmin.html">csle_rest_api.resources.pgadmin package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.postgresql.html">csle_rest_api.resources.postgresql package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.ppo_policies.html">csle_rest_api.resources.ppo_policies package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.prometheus.html">csle_rest_api.resources.prometheus package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="csle_rest_api.resources.recovery_ai.html">csle_rest_api.resources.recovery_ai package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="csle_rest_api.resources.recovery_ai.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_rest_api.resources.recovery_ai.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_rest_api.resources.recovery_ai.html#module-csle_rest_api.resources.recovery_ai.prompts">csle_rest_api.resources.recovery_ai.prompts module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_rest_api.resources.recovery_ai.html#module-csle_rest_api.resources.recovery_ai.recovery_ai_util">csle_rest_api.resources.recovery_ai.recovery_ai_util module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_rest_api.resources.recovery_ai.html#module-csle_rest_api.resources.recovery_ai.routes">csle_rest_api.resources.recovery_ai.routes module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csle_rest_api.resources.recovery_ai.html#module-csle_rest_api.resources.recovery_ai">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.sdn_controllers.html">csle_rest_api.resources.sdn_controllers package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.server_cluster.html">csle_rest_api.resources.server_cluster package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.simulation_traces.html">csle_rest_api.resources.simulation_traces package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.simulations.html">csle_rest_api.resources.simulations package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.statistics_datasets.html">csle_rest_api.resources.statistics_datasets package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.system_identification_jobs.html">csle_rest_api.resources.system_identification_jobs package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.system_models.html">csle_rest_api.resources.system_models package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.tabular_policies.html">csle_rest_api.resources.tabular_policies package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.traces_datasets.html">csle_rest_api.resources.traces_datasets package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.training_jobs.html">csle_rest_api.resources.training_jobs package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.users.html">csle_rest_api.resources.users package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.vector_policies.html">csle_rest_api.resources.vector_policies package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.version.html">csle_rest_api.resources.version package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="csle_rest_api.resources.html#module-csle_rest_api.resources">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="csle_rest_api.util.html">csle_rest_api.util package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csle_rest_api.web_sockets.html">csle_rest_api.web_sockets package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">csle-rest-api</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="csle_rest_api.resources.html">csle_rest_api.resources package</a></li>
+          <li class="breadcrumb-item"><a href="csle_rest_api.resources.recovery_ai.html">csle_rest_api.resources.recovery_ai package</a></li>
+      <li class="breadcrumb-item active">csle_rest_api.resources.recovery_ai.rag package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/csle_rest_api.resources.recovery_ai.rag.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="csle-rest-api-resources-recovery-ai-rag-package">
+<h1>csle_rest_api.resources.recovery_ai.rag package<a class="headerlink" href="#csle-rest-api-resources-recovery-ai-rag-package" title="Permalink to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-csle_rest_api.resources.recovery_ai.rag.ioc_analyzer">
+<span id="csle-rest-api-resources-recovery-ai-rag-ioc-analyzer-module"></span><h2>csle_rest_api.resources.recovery_ai.rag.ioc_analyzer module<a class="headerlink" href="#module-csle_rest_api.resources.recovery_ai.rag.ioc_analyzer" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_rest_api.resources.recovery_ai.rag.ioc_analyzer.IOCAnalyzer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_rest_api.resources.recovery_ai.rag.ioc_analyzer.</span></span><span class="sig-name descname"><span class="pre">IOCAnalyzer</span></span><a class="reference internal" href="_modules/csle_rest_api/resources/recovery_ai/rag/ioc_analyzer.html#IOCAnalyzer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_rest_api.resources.recovery_ai.rag.ioc_analyzer.IOCAnalyzer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_rest_api.resources.recovery_ai.rag.ioc_analyzer.IOCAnalyzer.analyze">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">analyze</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">urls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ips</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hostnames</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domains</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cves</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_rest_api/resources/recovery_ai/rag/ioc_analyzer.html#IOCAnalyzer.analyze"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_rest_api.resources.recovery_ai.rag.ioc_analyzer.IOCAnalyzer.analyze" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_rest_api.resources.recovery_ai.rag.ioc_analyzer.IOCAnalyzer.enrich_logs">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">enrich_logs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">analysis</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_rest_api/resources/recovery_ai/rag/ioc_analyzer.html#IOCAnalyzer.enrich_logs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_rest_api.resources.recovery_ai.rag.ioc_analyzer.IOCAnalyzer.enrich_logs" title="Permalink to this definition"></a></dt>
+<dd><p>Enriches a given log text with threat intelligence</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>log_text</strong> – the log text to enrich</p></li>
+<li><p><strong>analysis</strong> – the threat intelligence analysis</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the enriched log text</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_rest_api.resources.recovery_ai.rag.ioc_analyzer.IOCAnalyzer.find_iocs">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">find_iocs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_rest_api/resources/recovery_ai/rag/ioc_analyzer.html#IOCAnalyzer.find_iocs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_rest_api.resources.recovery_ai.rag.ioc_analyzer.IOCAnalyzer.find_iocs" title="Permalink to this definition"></a></dt>
+<dd><p>Extracts IOCs from log text.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>log_text</strong> – the log text</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the list of IOCs</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_rest_api.resources.recovery_ai.rag.ioc_extractor">
+<span id="csle-rest-api-resources-recovery-ai-rag-ioc-extractor-module"></span><h2>csle_rest_api.resources.recovery_ai.rag.ioc_extractor module<a class="headerlink" href="#module-csle_rest_api.resources.recovery_ai.rag.ioc_extractor" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_rest_api.resources.recovery_ai.rag.ioc_extractor.IOCExtractor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_rest_api.resources.recovery_ai.rag.ioc_extractor.</span></span><span class="sig-name descname"><span class="pre">IOCExtractor</span></span><a class="reference internal" href="_modules/csle_rest_api/resources/recovery_ai/rag/ioc_extractor.html#IOCExtractor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_rest_api.resources.recovery_ai.rag.ioc_extractor.IOCExtractor" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class with regular expressions and utility functions for extracting IOCs from logs
+(e.g., CVEs, hostnames, IPs, etc.)</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_rest_api.resources.recovery_ai.rag.ioc_extractor.IOCExtractor.extract_cves">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">extract_cves</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_rest_api/resources/recovery_ai/rag/ioc_extractor.html#IOCExtractor.extract_cves"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_rest_api.resources.recovery_ai.rag.ioc_extractor.IOCExtractor.extract_cves" title="Permalink to this definition"></a></dt>
+<dd><p>Extracts all CVEs from a given text string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>text</strong> – the input text</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the list of CVEs</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_rest_api.resources.recovery_ai.rag.ioc_extractor.IOCExtractor.extract_domains">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">extract_domains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_rest_api/resources/recovery_ai/rag/ioc_extractor.html#IOCExtractor.extract_domains"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_rest_api.resources.recovery_ai.rag.ioc_extractor.IOCExtractor.extract_domains" title="Permalink to this definition"></a></dt>
+<dd><p>Extracts all domains from a given text string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>text</strong> – the input text</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the list of domains</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_rest_api.resources.recovery_ai.rag.ioc_extractor.IOCExtractor.extract_hostnames">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">extract_hostnames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_rest_api/resources/recovery_ai/rag/ioc_extractor.html#IOCExtractor.extract_hostnames"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_rest_api.resources.recovery_ai.rag.ioc_extractor.IOCExtractor.extract_hostnames" title="Permalink to this definition"></a></dt>
+<dd><p>Extracts all hostnames from a given text string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>text</strong> – the input text</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the list of hostnames</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_rest_api.resources.recovery_ai.rag.ioc_extractor.IOCExtractor.extract_ips">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">extract_ips</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_rest_api/resources/recovery_ai/rag/ioc_extractor.html#IOCExtractor.extract_ips"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_rest_api.resources.recovery_ai.rag.ioc_extractor.IOCExtractor.extract_ips" title="Permalink to this definition"></a></dt>
+<dd><p>Extracts all IPs from a given text string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>text</strong> – the input text</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the list of IPs</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_rest_api.resources.recovery_ai.rag.ioc_extractor.IOCExtractor.extract_nids">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">extract_nids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_rest_api/resources/recovery_ai/rag/ioc_extractor.html#IOCExtractor.extract_nids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_rest_api.resources.recovery_ai.rag.ioc_extractor.IOCExtractor.extract_nids" title="Permalink to this definition"></a></dt>
+<dd><p>Extracts all NIDs from a given text string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>text</strong> – the input text</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the list of NIDs</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_rest_api.resources.recovery_ai.rag.ioc_extractor.IOCExtractor.extract_urls">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">extract_urls</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_rest_api/resources/recovery_ai/rag/ioc_extractor.html#IOCExtractor.extract_urls"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_rest_api.resources.recovery_ai.rag.ioc_extractor.IOCExtractor.extract_urls" title="Permalink to this definition"></a></dt>
+<dd><p>Exctracts all URLs from a given text string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>text</strong> – the input text</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a list of found URLs</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_rest_api.resources.recovery_ai.rag.otx_lookup">
+<span id="csle-rest-api-resources-recovery-ai-rag-otx-lookup-module"></span><h2>csle_rest_api.resources.recovery_ai.rag.otx_lookup module<a class="headerlink" href="#module-csle_rest_api.resources.recovery_ai.rag.otx_lookup" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_rest_api.resources.recovery_ai.rag.otx_lookup.OTXLookup">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_rest_api.resources.recovery_ai.rag.otx_lookup.</span></span><span class="sig-name descname"><span class="pre">OTXLookup</span></span><a class="reference internal" href="_modules/csle_rest_api/resources/recovery_ai/rag/otx_lookup.html#OTXLookup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_rest_api.resources.recovery_ai.rag.otx_lookup.OTXLookup" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class with utility functions for fetching threat intelligence from the OTX API</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_rest_api.resources.recovery_ai.rag.otx_lookup.OTXLookup.lookup_cve">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lookup_cve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cve</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Response</span></span></span><a class="reference internal" href="_modules/csle_rest_api/resources/recovery_ai/rag/otx_lookup.html#OTXLookup.lookup_cve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_rest_api.resources.recovery_ai.rag.otx_lookup.OTXLookup.lookup_cve" title="Permalink to this definition"></a></dt>
+<dd><p>Sends a query to OTX to lookup information about a given CVE</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cve</strong> – the CVE to lookup</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the information returned by the OTX API</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_rest_api.resources.recovery_ai.rag.otx_lookup.OTXLookup.lookup_domain">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lookup_domain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">domain</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Response</span></span></span><a class="reference internal" href="_modules/csle_rest_api/resources/recovery_ai/rag/otx_lookup.html#OTXLookup.lookup_domain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_rest_api.resources.recovery_ai.rag.otx_lookup.OTXLookup.lookup_domain" title="Permalink to this definition"></a></dt>
+<dd><p>Sends a query to OTX to lookup information about a given domain</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>domain</strong> – the domain to lookup</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the information returned by the OTX API</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_rest_api.resources.recovery_ai.rag.otx_lookup.OTXLookup.lookup_hostname">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lookup_hostname</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hostname</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Response</span></span></span><a class="reference internal" href="_modules/csle_rest_api/resources/recovery_ai/rag/otx_lookup.html#OTXLookup.lookup_hostname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_rest_api.resources.recovery_ai.rag.otx_lookup.OTXLookup.lookup_hostname" title="Permalink to this definition"></a></dt>
+<dd><p>Sends a query to OTX to lookup information about a given hostname</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>hostname</strong> – the hostname to lookup</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the information returned by the OTX API</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_rest_api.resources.recovery_ai.rag.otx_lookup.OTXLookup.lookup_ip">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lookup_ip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Response</span></span></span><a class="reference internal" href="_modules/csle_rest_api/resources/recovery_ai/rag/otx_lookup.html#OTXLookup.lookup_ip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_rest_api.resources.recovery_ai.rag.otx_lookup.OTXLookup.lookup_ip" title="Permalink to this definition"></a></dt>
+<dd><p>Sends a query to OTX to lookup information about a given IP address</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ip</strong> – the IP to lookup</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the information returned by the OTX API</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_rest_api.resources.recovery_ai.rag.otx_lookup.OTXLookup.lookup_url">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lookup_url</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Response</span></span></span><a class="reference internal" href="_modules/csle_rest_api/resources/recovery_ai/rag/otx_lookup.html#OTXLookup.lookup_url"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_rest_api.resources.recovery_ai.rag.otx_lookup.OTXLookup.lookup_url" title="Permalink to this definition"></a></dt>
+<dd><p>Sends a query to OTX to lookup information about a given URL</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>url</strong> – the URL to lookup</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the information returned by the OTX API</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-csle_rest_api.resources.recovery_ai.rag">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_rest_api.resources.recovery_ai.rag" title="Permalink to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="csle_rest_api.resources.recovery_ai.html" class="btn btn-neutral float-left" title="csle_rest_api.resources.recovery_ai package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="csle_rest_api.resources.sdn_controllers.html" class="btn btn-neutral float-right" title="csle_rest_api.resources.sdn_controllers package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2025, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

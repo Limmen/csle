@@ -20,6 +20,14 @@ gym\_csle\_cyborg.envs.cyborg\_scenario\_two\_wrapper module
    :undoc-members:
    :show-inheritance:
 
+gym\_csle\_cyborg.envs.cyborg\_scenario\_two\_wrapper\_particle\_filter module
+------------------------------------------------------------------------------
+
+.. automodule:: gym_csle_cyborg.envs.cyborg_scenario_two_wrapper_particle_filter
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 
