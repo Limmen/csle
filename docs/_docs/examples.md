@@ -70,7 +70,7 @@ from csle_system_identification.expectation_maximization.expectation_maximizatio
 import csle_system_identification.constants.constants as sid_consts
 
 # Select emulation config
-emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-080")
+emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-090")
 
 # Extract statistics from the metastore
 emulation_statistic = MetastoreFacade.get_emulation_statistic(id=1)
