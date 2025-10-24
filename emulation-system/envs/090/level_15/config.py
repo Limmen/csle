@@ -1354,7 +1354,7 @@ if __name__ == '__main__':
     parser.add_argument("-u", "--uninstall", help="Boolean parameter, if true, uninstall config",
                         action="store_true")
     args = parser.parse_args()
-    config = default_config(name="csle-level15-080", network_id=15, level=15, version="0.9.0", time_step_len_seconds=30)
+    config = default_config(name="csle-level15-090", network_id=15, level=15, version="0.9.0", time_step_len_seconds=30)
     ExperimentUtil.write_emulation_config_file(config, ExperimentUtil.default_emulation_config_path())
 
     if args.install:

@@ -11,7 +11,7 @@ from csle_cluster.cluster_manager.cluster_controller import ClusterController
 from csle_common.logging.log import Logger
 
 if __name__ == '__main__':
-    emulation = "csle-level9-080"
+    emulation = "csle-level9-090"
     sleep_time_seconds = 45
     executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(emulation_name=emulation)
     if len(executions) == 0:

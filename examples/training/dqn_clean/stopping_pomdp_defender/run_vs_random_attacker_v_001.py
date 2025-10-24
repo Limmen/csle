@@ -9,7 +9,7 @@ from csle_common.dao.training.tabular_policy import TabularPolicy
 from csle_common.metastore.metastore_facade import MetastoreFacade
 
 if __name__ == "__main__":
-    emulation_name = "csle-level1-080"
+    emulation_name = "csle-level1-090"
     emulation_env_config = MetastoreFacade.get_emulation_by_name(emulation_name)
     if emulation_env_config is None:
         raise ValueError(

@@ -23,7 +23,7 @@ def game_matrix() -> np.ndarray:
 
 
 if __name__ == '__main__':
-    emulation_name = "csle-level9-080"
+    emulation_name = "csle-level9-090"
     emulation_env_config = MetastoreFacade.get_emulation_by_name(emulation_name)
     if emulation_env_config is None:
         raise ValueError(f"Could not find an emulation environment with the name: {emulation_name}")
