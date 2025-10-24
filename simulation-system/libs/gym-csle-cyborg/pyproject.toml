@@ -20,11 +20,11 @@ classifiers = [
 dependencies = [
     "gymnasium>=0.27.1",
     "csle-cyborg>=0.0.2",
-    "csle-base>=0.9.0",
-    "csle-common>=0.9.0",
-    "csle-attacker>=0.9.0",
-    "csle-defender>=0.9.0",
-    "csle-collector>=0.9.0"
+    "csle-base>=0.9.1",
+    "csle-common>=0.9.1",
+    "csle-attacker>=0.9.1",
+    "csle-defender>=0.9.1",
+    "csle-collector>=0.9.1"
 ]
 
 [project.optional-dependencies]

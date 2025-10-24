@@ -1,9 +1,9 @@
-csle-base==0.9.0
-csle-common==0.9.0
-csle-agents==0.9.0
-csle-cluster==0.9.0
-csle-system-identification==0.9.0
-csle-ryu==0.9.0
+csle-base==0.9.1
+csle-common==0.9.1
+csle-agents==0.9.1
+csle-cluster==0.9.1
+csle-system-identification==0.9.1
+csle-ryu==0.9.1
 flask==2.2.2
 flask-socketio==5.5.1
 flask-cors==5.0.0
