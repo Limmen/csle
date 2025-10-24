@@ -58,10 +58,10 @@ class ClusterUtil:
         leader = ClusterUtil.am_i_leader(ip=ip, config=config)
         constants.CLUSTER_CONFIG.LEADER = leader
         if leader:
-            Logger.__call__().get_logger().info("Saving config to metastore")
             config = Config.read_config_file()
             current_config = MetastoreFacade.get_config(id=1)
             if current_config is None:
+                Logger.__call__().get_logger().info("Saving config to metastore")
                 MetastoreFacade.save_config(config)
             else:
                 MetastoreFacade.update_config(config=config, id=1)

@@ -54,8 +54,9 @@ def init() -> None:
         click.secho("Saving management accounts to metastore")
         ManagementUtil.create_default_management_admin_account()
         ManagementUtil.create_default_management_guest_account()
-    click.secho(f"Since I am not leader, I am not initializing CSLE. My IP is: {host_ip}, "
-                f"the leader IP is: {ClusterUtil.get_leader_ip(config=config)}", bold=False)
+    else:
+        click.secho(f"Since I am not leader, I am not initializing CSLE. My IP is: {host_ip}, "
+                    f"the leader IP is: {ClusterUtil.get_leader_ip(config=config)}", bold=False)
 
 
 def start_cluster_manager(host_ip: str) -> None:
