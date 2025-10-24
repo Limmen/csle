@@ -22,7 +22,7 @@ recovery_ai_bp = Blueprint(
     url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.RECOVERY_AI_RESOURCE}")
 
 try:
-    config = MetastoreFacade.get_config()
+    config = MetastoreFacade.get_config(id=1)
     if config.recovery_ai:
         tokenizer, llm = RecoveryAIUtil.load_llm()
         output_dir = config.recovery_ai_output_dir
