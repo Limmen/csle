@@ -65,10 +65,6 @@ class ClusterUtil:
                 MetastoreFacade.save_config(config)
             else:
                 MetastoreFacade.update_config(config=config, id=1)
-        else:
-            Logger.__call__().get_logger().info(f"Not saving config to metastore since I am not leader. "
-                                                f"My IP is: {ip}, the leader IP is: "
-                                                f"{ClusterUtil.get_leader_ip(config=config)}")
         return config
 
     @staticmethod
