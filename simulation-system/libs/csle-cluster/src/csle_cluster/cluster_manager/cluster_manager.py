@@ -2954,15 +2954,14 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
         if execution is not None:
-            host_statuses_and_ips = \
+            host_statuses = \
                 HostController.get_host_monitor_threads_statuses(emulation_env_config=execution.emulation_env_config,
                                                                  physical_server_ip=GeneralUtil.get_host_ip(),
                                                                  logger=logging.getLogger())
-            host_statuses = list(map(lambda x: ClusterManagerUtil.convert_host_status_to_host_manager_status_dto(x),
-                                     host_statuses_and_ips))
+            host_manager_statuses = list(
+                map(lambda x: ClusterManagerUtil.convert_host_status_to_host_manager_status_dto(x), host_statuses))
             return csle_cluster.cluster_manager.cluster_manager_pb2.HostManagerStatusesDTO(
-                hostManagerStatuses=host_statuses
-            )
+                hostManagerStatuses=host_manager_statuses)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.HostManagerStatusesDTO(
                 hostManagerStatuses=[]

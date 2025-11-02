@@ -23,11 +23,15 @@ class TestOssecIdsSuite:
         container1 = MagicMock()
         container1.physical_host_ip = "192.168.1.10"
         container1.docker_gw_bridge_ip = "172.17.0.1"
+        container1.get_ips.return_value = ["172.18.0.1"]
+        container1.get_full_name.return_value = "container-1"
         container1.name = "container-1"
         container2 = MagicMock()
         container2.physical_host_ip = "192.168.1.10"
         container2.docker_gw_bridge_ip = "172.17.0.2"
         container2.name = "container-2"
+        container1.get_ips.return_value = ["172.18.0.2"]
+        container1.get_full_name.return_value = "container-2"
         container3 = MagicMock()
         container3.physical_host_ip = "192.168.1.11"
         container3.docker_gw_bridge_ip = "172.17.0.3"
@@ -49,8 +53,11 @@ class TestOssecIdsSuite:
         :param mock_stop_ossec_ids: mock stop_ossec_ids
         :return: None
         """
-        constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES = ["container-1", "container-2"]
-        physical_host_ip = "192.168.1.10"
+        constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES = [
+            self.emulation_env_config.containers_config.containers[0].name,
+            self.emulation_env_config.containers_config.containers[1].name
+        ]
+        physical_host_ip = self.emulation_env_config.containers_config.containers[0].physical_host_ip
         OSSECIDSController.stop_ossec_idses(emulation_env_config=self.emulation_env_config,
                                             physical_host_ip=physical_host_ip)
         assert mock_stop_ossec_ids.call_count == 2
@@ -63,12 +70,19 @@ class TestOssecIdsSuite:
         :param mock_start_ossec_ids: mock start_ossec_ids
         :return: None
         """
-        constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES = ["container-1", "container-2"]
-        physical_server_ip = "192.168.1.10"
+        constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES = [
+            self.emulation_env_config.containers_config.containers[0].name,
+            self.emulation_env_config.containers_config.containers[1].name
+        ]
+        physical_server_ip = self.emulation_env_config.containers_config.containers[0].physical_host_ip
         OSSECIDSController.start_ossec_idses(
             emulation_env_config=self.emulation_env_config, physical_server_ip=physical_server_ip, logger=self.logger)
-        self.logger.info.assert_any_call("Starting the OSSEC IDS on ip: 172.17.0.1")
-        self.logger.info.assert_any_call("Starting the OSSEC IDS on ip: 172.17.0.2")
+        for i in [0, 1]:
+            self.logger.info.assert_any_call(
+                f"Starting the OSSEC IDS on ip: "
+                f"{self.emulation_env_config.containers_config.containers[i].docker_gw_bridge_ip} "
+                f"({self.emulation_env_config.containers_config.containers[i].get_ips()[0]}, "
+                f"{self.emulation_env_config.containers_config.containers[i].get_full_name()})")
         assert mock_start_ossec_ids.call_count == 2
 
     @patch("csle_common.controllers.ossec_ids_controller.OSSECIDSController.start_ossec_ids_manager")
@@ -131,8 +145,11 @@ class TestOssecIdsSuite:
         :return: None
         """
         constants.CONTAINER_IMAGES = MagicMock()  # type: ignore
-        constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES = ["container-1", "container-2"]
-        physical_server_ip = "192.168.1.10"
+        constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES = [
+            self.emulation_env_config.containers_config.containers[0].name,
+            self.emulation_env_config.containers_config.containers[1].name
+        ]
+        physical_server_ip = self.emulation_env_config.containers_config.containers[0].physical_host_ip
         OSSECIDSController.start_ossec_idses_managers(
             emulation_env_config=self.emulation_env_config,
             physical_server_ip=physical_server_ip)
@@ -140,12 +157,14 @@ class TestOssecIdsSuite:
 
     @patch("csle_common.util.emulation_util.EmulationUtil.connect_admin")
     @patch("csle_common.util.emulation_util.EmulationUtil.execute_ssh_cmd")
-    def test_start_ossec_ids_manager(self, mock_execute_ssh_cmd, mock_connect_admin) -> None:
+    @patch("time.sleep", return_value=None)
+    def test_start_ossec_ids_manager(self, mock_sleep, mock_execute_ssh_cmd, mock_connect_admin) -> None:
         """
         Test method for starting the OSSEC IDS manager on a specific container
 
         :param mock_execute_ssh_cmd: mock execute_ssh_cmd
         :param mock_connect_admin: mock connect_admin
+        :param mock_sleep: mock sleep
         :return: None
         """
         ip = "192.168.1.10"
@@ -156,27 +175,34 @@ class TestOssecIdsSuite:
         mock_connect_admin.assert_called()
 
     @patch("csle_common.controllers.ossec_ids_controller.OSSECIDSController.stop_ossec_ids_manager")
-    def test_stop_ossec_idses_managers(self, mock_stop_manager) -> None:
+    @patch("time.sleep", return_value=None)
+    def test_stop_ossec_idses_managers(self, mock_sleep, mock_stop_manager) -> None:
         """
         Test method for stopping ossec ids managers
 
         :param mock_stop_manager: mock stop_manager
+        :param mock_sleep: mock sleep
         :return: None
         """
-        constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES = ["container-1", "container-2"]
-        physical_server_ip = "192.168.1.10"
+        constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES = [
+            self.emulation_env_config.containers_config.containers[0].name,
+            self.emulation_env_config.containers_config.containers[1].name
+        ]
+        physical_server_ip = self.emulation_env_config.containers_config.containers[0].physical_host_ip
         OSSECIDSController.stop_ossec_idses_managers(emulation_env_config=self.emulation_env_config,
                                                      physical_server_ip=physical_server_ip)
         assert mock_stop_manager.call_count == 2
 
     @patch("csle_common.util.emulation_util.EmulationUtil.connect_admin")
     @patch("csle_common.util.emulation_util.EmulationUtil.execute_ssh_cmd")
-    def test_stop_ossec_ids_manager(self, mock_execute_ssh_cmd, mock_connect_admin) -> None:
+    @patch("time.sleep", return_value=None)
+    def test_stop_ossec_ids_manager(self, mock_sleep, mock_execute_ssh_cmd, mock_connect_admin) -> None:
         """
         Test method for stopping the OSSEC IDS manager on a specific container
 
         :param mock_execute_ssh_cmd: mock execute_ssh_cmd
         :param mock_connect_admin: mock connect_admin
+        :param mock_sleep: mock sleep
         :return: None
         """
         ip = "192.168.1.10"

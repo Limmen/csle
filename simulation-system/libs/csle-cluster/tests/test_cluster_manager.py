@@ -1,4 +1,4 @@
-from typing import Any, List, Tuple
+from typing import Any, List
 import pytest
 import pytest_mock
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
@@ -314,15 +314,14 @@ class TestClusterManagerSuite:
         return nc_conf
 
     @staticmethod
-    def host_status_dto() -> List[Tuple[HostStatusDTO, str]]:
+    def host_status_dto() -> List[HostStatusDTO]:
         """
         Staic help method for obtaining a replicated list of host monitor statuses
         """
         host_stat_dto = HostStatusDTO(
             monitor_running=True, filebeat_running=True, packetbeat_running=True, metricbeat_running=True,
-            heartbeat_running=True)
-        lituple = [(host_stat_dto, "123.456.78.99")]
-        return lituple
+            heartbeat_running=True, ip="123.456.78.99")
+        return host_stat_dto
 
     @staticmethod
     def get_host_mng_info() -> HostManagersInfo:
@@ -333,7 +332,7 @@ class TestClusterManagerSuite:
         """
         h_m_info = HostManagersInfo(
             ips=["123.456.78.99"], ports=[1], emulation_name="JDoeEmulation", execution_id=1,
-            host_managers_statuses=[TestClusterManagerSuite.host_status_dto()[0]], host_managers_running=[True])
+            host_managers_statuses=[TestClusterManagerSuite.host_status_dto()], host_managers_running=[True])
         return h_m_info
 
     @staticmethod
@@ -3845,7 +3844,7 @@ class TestClusterManagerSuite:
                      return_value=get_ex_exec)
         mocker.patch("csle_common.controllers.host_controller."
                      "HostController.get_host_monitor_threads_statuses",
-                     return_value=TestClusterManagerSuite.host_status_dto())
+                     return_value=[TestClusterManagerSuite.host_status_dto()])
         mocker.patch("csle_common.util.general_util.GeneralUtil.get_host_ip",
                      return_value="123.456.78.99")
         response: HostManagerStatusesDTO = query_cluster_manager. \

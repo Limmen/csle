@@ -3,7 +3,7 @@
 import grpc
 import warnings
 
-import host_manager_pb2 as host__manager__pb2
+import csle_collector.host_manager.host_manager_pb2 as host__manager__pb2
 
 GRPC_GENERATED_VERSION = '1.69.0'
 GRPC_VERSION = grpc.__version__

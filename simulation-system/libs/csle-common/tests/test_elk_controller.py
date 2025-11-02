@@ -16,13 +16,16 @@ class TestElkControllerSuite:
 
     @patch("csle_common.util.emulation_util.EmulationUtil.connect_admin")
     @patch("csle_common.util.emulation_util.EmulationUtil.execute_ssh_cmd")
-    def test_start_stop_elk_manager(self, mock_execute_ssh_cmd, mock_connect_admin) -> None:
+    @patch("time.sleep", return_value=None)
+    def test_start_stop_elk_manager(self, mock_sleep, mock_execute_ssh_cmd, mock_connect_admin) -> None:
         """
         Test case for starting or stopping the ELK manager
 
         :param mock_disconnect_admin: Mocked disconnect_admin method
         :param mock_execute_ssh_cmd: Mocked execute_ssh_cmd method
         :param mock_connect_admin: Mocked connect_admin
+        :param mock_sleep: Mocked sleep method
+        :return: None
         """
         mock_connect_admin.return_value = None
         mock_execute_ssh_cmd.return_value = ("output", "error", 0)

@@ -16,13 +16,15 @@ class TestKafkaControllerSuite:
 
     @patch("csle_common.util.emulation_util.EmulationUtil.connect_admin")
     @patch("csle_common.util.emulation_util.EmulationUtil.execute_ssh_cmd")
-    def test_start_stop_kafka_manager(self, mock_execute_ssh_cmd, mock_connect_admin) -> None:
+    @patch("time.sleep", return_value=None)
+    def test_start_stop_kafka_manager(self, mock_sleep, mock_execute_ssh_cmd, mock_connect_admin) -> None:
         """
         Test case for starting or stopping the kafka manager
 
         :param mock_disconnect_admin: Mocked disconnect_admin method
         :param mock_execute_ssh_cmd: Mocked execute_ssh_cmd method
         :param mock_connect_admin: Mocked connect_admin
+        :param mock_sleep: Mocked sleep method
         :return: None
         """
         mock_connect_admin.return_value = None
@@ -64,9 +66,13 @@ class TestKafkaControllerSuite:
         mock_logger = MagicMock(spec=logging.Logger)
         emulation_env_config = MagicMock(spec=EmulationEnvConfig)
         kafka_config = MagicMock()
+        kafka_container_mock = MagicMock()
+        kafka_container_mock.docker_gw_bridge_ip = "127.0.0.1"
+        kafka_container_mock.get_ips.return_value = ["127.0.0.1"]
+        kafka_container_mock.get_full_name.return_value = "container_name"
+        kafka_config.container = kafka_container_mock
+        kafka_config.kafka_manager_port = 9092
         emulation_env_config.kafka_config = kafka_config
-        emulation_env_config.kafka_config.container.docker_gw_bridge_ip = "127.0.0.1"
-        emulation_env_config.kafka_config.kafka_manager_port = 9092
         topic1 = MagicMock()
         topic1.name = "topic1"
         topic1.num_partitions = 1
@@ -80,7 +86,10 @@ class TestKafkaControllerSuite:
         emulation_env_config.kafka_config.topics = [topic1, topic2]
         mock_get_kafka_status_by_port_and_ip.return_value.running = False
         KafkaController.create_topics(emulation_env_config=emulation_env_config, logger=mock_logger)
-        mock_logger.info.assert_any_call("creating kafka topics on container: 127.0.0.1")
+        mock_logger.info.assert_any_call(f"Creating kafka topics on container: "
+                                         f"{emulation_env_config.kafka_config.container.docker_gw_bridge_ip} "
+                                         f"({kafka_container_mock.get_ips()[0]}, "
+                                         f"{kafka_container_mock.get_full_name()})")
         mock_logger.info.assert_any_call("Kafka server is not running, starting it.")
         mock_logger.info.assert_any_call("Creating topic: topic1")
         mock_logger.info.assert_any_call("Creating topic: topic2")
@@ -165,11 +174,18 @@ class TestKafkaControllerSuite:
         mock_logger = MagicMock(spec=logging.Logger)
         emulation_env_config = MagicMock(spec=EmulationEnvConfig)
         kafka_config = MagicMock()
+        kafka_container_mock = MagicMock()
+        kafka_container_mock.docker_gw_bridge_ip = "127.0.0.1"
+        kafka_container_mock.get_ips.return_value = ["127.0.0.1"]
+        kafka_container_mock.get_full_name.return_value = "container_name"
+        kafka_config.container = kafka_container_mock
+        kafka_config.kafka_manager_port = 9092
         emulation_env_config.kafka_config = kafka_config
-        emulation_env_config.kafka_config.container.docker_gw_bridge_ip = "127.0.0.1"
-        emulation_env_config.kafka_config.kafka_manager_port = 9092
         result = KafkaController.stop_kafka_server(emulation_env_config=emulation_env_config, logger=mock_logger)
-        mock_logger.info.assert_any_call("Stopping kafka server on container: 127.0.0.1")
+        mock_logger.info.assert_any_call(f"Stopping Kafka server on container: "
+                                         f"{kafka_container_mock.docker_gw_bridge_ip} "
+                                         f"({kafka_container_mock.get_ips()[0]}, "
+                                         f"{kafka_container_mock.get_full_name()})")
         mock_start_kafka_manager.assert_called_once_with(emulation_env_config=emulation_env_config)
         mock_insecure_channel.assert_called_once_with(
             f"{emulation_env_config.kafka_config.container.docker_gw_bridge_ip}:"
@@ -202,11 +218,18 @@ class TestKafkaControllerSuite:
         mock_logger = MagicMock(spec=logging.Logger)
         emulation_env_config = MagicMock(spec=EmulationEnvConfig)
         kafka_config = MagicMock()
+        kafka_container_mock = MagicMock()
+        kafka_container_mock.docker_gw_bridge_ip = "127.0.0.1"
+        kafka_container_mock.get_ips.return_value = ["127.0.0.1"]
+        kafka_container_mock.get_full_name.return_value = "container_name"
+        kafka_config.container = kafka_container_mock
+        kafka_config.kafka_manager_port = 9092
         emulation_env_config.kafka_config = kafka_config
-        emulation_env_config.kafka_config.container.docker_gw_bridge_ip = "127.0.0.1"
-        emulation_env_config.kafka_config.kafka_manager_port = 9092
         result = KafkaController.start_kafka_server(emulation_env_config=emulation_env_config, logger=mock_logger)
-        mock_logger.info.assert_any_call("Starting kafka server on container: 127.0.0.1")
+        mock_logger.info.assert_any_call(f"Starting Kafka server on container: "
+                                         f"{kafka_config.container.docker_gw_bridge_ip} ("
+                                         f"{kafka_container_mock.get_ips()[0]}, "
+                                         f"{kafka_container_mock.get_full_name()})")
         mock_start_kafka_manager.assert_called_once_with(emulation_env_config=emulation_env_config)
         mock_insecure_channel.assert_called_once_with(
             f"{emulation_env_config.kafka_config.container.docker_gw_bridge_ip}:"
@@ -228,18 +251,26 @@ class TestKafkaControllerSuite:
         mock_logger = MagicMock(spec=logging.Logger)
         emulation_env_config = MagicMock(spec=EmulationEnvConfig)
         kafka_config = MagicMock()
+        kafka_container_mock = MagicMock()
+        kafka_container_mock.docker_gw_bridge_ip = "127.0.0.1"
+        kafka_container_mock.get_ips.return_value = ["127.0.0.1"]
+        kafka_container_mock.get_full_name.return_value = "container_name"
+        kafka_config.container = kafka_container_mock
+        kafka_config.kafka_manager_port = 9092
         emulation_env_config.kafka_config = kafka_config
-        emulation_env_config.kafka_config.container.docker_gw_bridge_ip = "127.0.0.1"
-        emulation_env_config.kafka_config.container.get_ips.return_value = ["192.168.1.100"]
         mock_sftp_client = MagicMock()
         mock_file = MagicMock()
         emulation_env_config.get_connection.return_value.open_sftp.return_value = (mock_sftp_client)
         mock_file.read.return_value = b"internal_ip_placeholder external_ip_placeholder"
         mock_sftp_client.open.side_effect = [mock_file, mock_file]  # for read and write
         KafkaController.configure_broker_ips(emulation_env_config=emulation_env_config, logger=mock_logger)
-        mock_logger.info.assert_any_call("Configuring broker IPs on container: 127.0.0.1")
-        mock_connect_admin.assert_called_once_with(emulation_env_config=emulation_env_config, ip="127.0.0.1")
-        emulation_env_config.get_connection.assert_called_once_with(ip="127.0.0.1")
+        mock_logger.info.assert_any_call(f"Configuring broker IPs on container: "
+                                         f"{kafka_container_mock.docker_gw_bridge_ip} "
+                                         f"({kafka_container_mock.get_ips()[0]}, "
+                                         f"{kafka_container_mock.get_full_name()})")
+        mock_connect_admin.assert_called_once_with(emulation_env_config=emulation_env_config,
+                                                   ip=kafka_container_mock.docker_gw_bridge_ip)
+        emulation_env_config.get_connection.assert_called_once_with(ip=kafka_container_mock.docker_gw_bridge_ip)
         mock_sftp_client.open.assert_any_call(mock_kafka_config_file, mode="r")
         mock_sftp_client.open.assert_any_call(mock_kafka_config_file, mode="w")
         mock_file.flush.assert_called_once()

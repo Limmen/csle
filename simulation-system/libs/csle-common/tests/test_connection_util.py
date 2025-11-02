@@ -45,11 +45,13 @@ class TestConnectionUtilSuite:
         assert result
 
     @patch("csle_common.util.emulation_util.EmulationUtil.execute_ssh_cmd")
-    def test_ssh_finalize_connection(self, mock_execute_ssh_cmd) -> None:
+    @patch("time.sleep", return_value=None)
+    def test_ssh_finalize_connection(self, mock_sleep, mock_execute_ssh_cmd) -> None:
         """
         Test the helper function for finalizing a SSH connection and setting up the DTO
 
         :param mock_execute_ssh_cmd: mock_execute_ssh_cmd
+        :param mock_sleep: mock_sleep
         :return: None
         """
         mock_execute_ssh_cmd.side_effect = [
@@ -76,11 +78,13 @@ class TestConnectionUtilSuite:
         mock_execute_ssh_cmd.assert_called()
 
     @patch("telnetlib.Telnet")
-    def test_telnet_setup_connection(self, mock_telnet) -> None:
+    @patch("time.sleep", return_value=None)
+    def test_telnet_setup_connection(self, mock_sleep, mock_telnet) -> None:
         """
         Test the helper function for setting up a Telnet connection to a target machine
 
         :param mock_telnet: mock_telnet
+        :param mock_sleep: mock_sleep
         :return: None
         """
         mock_telnet_conn = MagicMock()
@@ -111,10 +115,12 @@ class TestConnectionUtilSuite:
         mock_telnet.assert_called()
         assert result
 
-    def test_telnet_finalize_connection(self) -> None:
+    @patch("time.sleep", return_value=None)
+    def test_telnet_finalize_connection(self, mock_sleep) -> None:
         """
         Test the helper function for finalizing a Telnet connection to a target machine and creating the DTO
 
+        :param mock_sleep: mock_sleep
         :return: None
         """
         target_machine = MagicMock()

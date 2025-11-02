@@ -12,12 +12,14 @@ class TestSDNControllerSuite:
 
     @patch("csle_common.util.emulation_util.EmulationUtil.connect_admin")
     @patch("csle_common.util.emulation_util.EmulationUtil.execute_ssh_cmd")
-    def test_start_ryu_manager(self, mock_execute_ssh_cmd, mock_connect_admin) -> None:
+    @patch("time.sleep", return_value=None)
+    def test_start_ryu_manager(self, mock_sleep, mock_execute_ssh_cmd, mock_connect_admin) -> None:
         """
         Test method for starting the Ryu manager
 
         :param mock_execute_ssh_cmd: mock_execute_ssh_cmd
         :param mock_connect_admin: mock_connect_admin
+        :param mock_sleep: mock_sleep
         :return: None
         """
         logger = MagicMock()
@@ -37,12 +39,14 @@ class TestSDNControllerSuite:
 
     @patch("csle_common.util.emulation_util.EmulationUtil.connect_admin")
     @patch("csle_common.util.emulation_util.EmulationUtil.execute_ssh_cmd")
-    def test_stop_ryu_manager(self, mock_execute_ssh_cmd, mock_connect_admin) -> None:
+    @patch("time.sleep", return_value=None)
+    def test_stop_ryu_manager(self, mock_sleep, mock_execute_ssh_cmd, mock_connect_admin) -> None:
         """
         Test method for stopping the Ryu manager
 
         :param mock_execute_ssh_cmd: mock_execute_ssh_cmd
         :param mock_connect_admin: mock_connect_admin
+        :param mock_sleep: mock_sleep
         :return: None
         """
         logger = MagicMock()
@@ -99,13 +103,15 @@ class TestSDNControllerSuite:
     @patch("csle_common.controllers.sdn_controller_manager.SDNControllerManager.start_ryu_manager")
     @patch("grpc.insecure_channel")
     @patch("csle_collector.ryu_manager.query_ryu_manager.stop_ryu")
-    def test_stop_ryu(self, mock_stop_ryu, mock_insecure_channel, mock_start_manager) -> None:
+    @patch("time.sleep", return_value=None)
+    def test_stop_ryu(self, mock_sleep, mock_stop_ryu, mock_insecure_channel, mock_start_manager) -> None:
         """
         Test method for requesting the RyuManager to stop the RYU SDN controller
 
         :param mock_stop_ryu: mock_stop_ryu
         :param mock_insecure_channel: mock_insecure_channel
         :param mock_start_manager: mock_start_manager
+        :param mock_sleep: mock_sleep
         :return: None
         """
         logger = MagicMock()
@@ -126,13 +132,15 @@ class TestSDNControllerSuite:
     @patch("csle_common.controllers.sdn_controller_manager.SDNControllerManager.start_ryu_manager")
     @patch("grpc.insecure_channel")
     @patch("csle_collector.ryu_manager.query_ryu_manager.start_ryu")
-    def test_start_ryu(self, mock_start_ryu, mock_insecure_channel, mock_start_manager) -> None:
+    @patch("time.sleep", return_value=None)
+    def test_start_ryu(self, mock_sleep, mock_start_ryu, mock_insecure_channel, mock_start_manager) -> None:
         """
         Test method for requesting the RyuManager to start the RYU SDN controller
 
         :param mock_start_ryu: mock_start_ryu
         :param mock_insecure_channel: mock_insecure_channel
         :param mock_start_manager: mock_start_manager
+        :param mock_sleep: mock_sleep
         :return: None
         """
         logger = MagicMock()

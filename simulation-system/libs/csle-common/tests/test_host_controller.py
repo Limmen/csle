@@ -599,7 +599,8 @@ class TestHostControllerSuite:
         physical_server_ip = "192.168.1.10"
         HostController.start_sparks(
             emulation_env_config=self.emulation_env_config, physical_server_ip=physical_server_ip, logger=self.logger)
-        self.logger.info.assert_called_once_with(f"Starting Spark on IP: {container1.docker_gw_bridge_ip}")
+        self.logger.info.assert_called_once_with(f"Starting Spark on IP: {container1.docker_gw_bridge_ip} "
+                                                 f"({container1.get_ips()[0]}, {container1.get_full_name()})")
         mock_start_spark.assert_called_once_with(
             emulation_env_config=self.emulation_env_config, ips=[container1.docker_gw_bridge_ip], logger=self.logger)
         # Reset mocks to clear previous call history
@@ -625,7 +626,8 @@ class TestHostControllerSuite:
         HostController.stop_sparks(emulation_env_config=self.emulation_env_config,
                                    physical_server_ip=physical_server_ip,
                                    logger=self.logger)
-        self.logger.info.assert_called_once_with(f"Stopping Spark on IP: {container1.docker_gw_bridge_ip}")
+        self.logger.info.assert_called_once_with(f"Stopping Spark on IP: {container1.docker_gw_bridge_ip} "
+                                                 f"({container1.get_ips()[0]}, {container1.get_full_name()})")
         mock_stop_spark.assert_called_once_with(
             emulation_env_config=self.emulation_env_config, ips=[container1.docker_gw_bridge_ip], logger=self.logger)
         # Reset mocks to clear previous call history
@@ -1000,11 +1002,7 @@ class TestHostControllerSuite:
         mock_start_host_managers.assert_called_once_with(emulation_env_config=self.emulation_env_config,
                                                          logger=self.logger)
         assert mock_get_status.call_count == 3
-        expected_result = [
-            (status_mock, "172.17.0.1"),
-            (status_mock, "172.17.0.3"),
-            (status_mock, "172.17.0.4"),
-        ]
+        expected_result = [status_mock, status_mock, status_mock]
         assert result == expected_result
 
     @patch("csle_collector.host_manager.query_host_manager.get_host_status")

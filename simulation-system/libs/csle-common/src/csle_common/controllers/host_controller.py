@@ -1,5 +1,5 @@
 import logging
-from typing import List, Tuple
+from typing import List
 import grpc
 import time
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
@@ -822,7 +822,8 @@ class HostController:
                 continue
             for ids_image in constants.CONTAINER_IMAGES.SPARK_IMAGES:
                 if ids_image in c.name:
-                    logger.info(f"Starting Spark on IP: {c.docker_gw_bridge_ip} ({c.get_ips()[0], c.get_full_name()})")
+                    logger.info(f"Starting Spark on IP: {c.docker_gw_bridge_ip} ({c.get_ips()[0]}, "
+                                f"{c.get_full_name()})")
                     HostController.start_spark(emulation_env_config=emulation_env_config, ips=[c.docker_gw_bridge_ip],
                                                logger=logger)
 
@@ -841,7 +842,8 @@ class HostController:
                 continue
             for ids_image in constants.CONTAINER_IMAGES.SPARK_IMAGES:
                 if ids_image in c.name:
-                    logger.info(f"Stopping Spark on IP: {c.docker_gw_bridge_ip} ({c.get_ips()[0], c.get_full_name()})")
+                    logger.info(f"Stopping Spark on IP: {c.docker_gw_bridge_ip} ({c.get_ips()[0]}, "
+                                f"{c.get_full_name()})")
                     HostController.stop_spark(emulation_env_config=emulation_env_config,
                                               ips=[c.docker_gw_bridge_ip], logger=logger)
 
@@ -1166,8 +1168,8 @@ class HostController:
 
     @staticmethod
     def get_host_monitor_threads_statuses(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
-                                          logger: logging.Logger) -> \
-            List[Tuple[csle_collector.host_manager.host_manager_pb2.HostStatusDTO, str]]:
+                                          logger: logging.Logger) \
+            -> List[csle_collector.host_manager.host_manager_pb2.HostStatusDTO]:
         """
         A method that sends a request to the HostManager on every container to get the status of the Host monitor thread
 
@@ -1184,21 +1186,21 @@ class HostController:
             if c.physical_host_ip == physical_server_ip:
                 status = HostController.get_host_monitor_thread_status_by_port_and_ip(
                     ip=c.docker_gw_bridge_ip, port=emulation_env_config.host_manager_config.host_manager_port)
-                statuses.append((status, c.docker_gw_bridge_ip))
+                statuses.append(status)
 
         if emulation_env_config.kafka_config.container.physical_host_ip == physical_server_ip:
             # Get status of kafka container
             status = HostController.get_host_monitor_thread_status_by_port_and_ip(
                 ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip,
                 port=emulation_env_config.host_manager_config.host_manager_port)
-            statuses.append((status, emulation_env_config.kafka_config.container.docker_gw_bridge_ip))
+            statuses.append(status)
 
         if emulation_env_config.elk_config.container.physical_host_ip == physical_server_ip:
             # Get status of ELK container
             status = HostController.get_host_monitor_thread_status_by_port_and_ip(
                 ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip,
                 port=emulation_env_config.host_manager_config.host_manager_port)
-            statuses.append((status, emulation_env_config.elk_config.container.docker_gw_bridge_ip))
+            statuses.append(status)
 
         if emulation_env_config.sdn_controller_config is not None:
             if emulation_env_config.sdn_controller_config.container.physical_host_ip == physical_server_ip:
@@ -1206,7 +1208,7 @@ class HostController:
                 status = HostController.get_host_monitor_thread_status_by_port_and_ip(
                     ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip,
                     port=emulation_env_config.host_manager_config.host_manager_port)
-                statuses.append((status, emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip))
+                statuses.append(status)
 
         return statuses
 

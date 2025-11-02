@@ -101,7 +101,7 @@ class KafkaController:
         :return: None
         """
         logger.info(
-            f"creating kafka topics on container: {emulation_env_config.kafka_config.container.docker_gw_bridge_ip} "
+            f"Creating kafka topics on container: {emulation_env_config.kafka_config.container.docker_gw_bridge_ip} "
             f"({emulation_env_config.kafka_config.container.get_ips()[0]}, "
             f"{emulation_env_config.kafka_config.container.get_full_name()})")
         KafkaController.start_kafka_manager(emulation_env_config=emulation_env_config)
@@ -170,9 +170,9 @@ class KafkaController:
         :return: a KafkaDTO with the status of the server
         """
         logger.info(
-            f"Stopping kafka server on container: {emulation_env_config.kafka_config.container.docker_gw_bridge_ip} "
+            f"Stopping Kafka server on container: {emulation_env_config.kafka_config.container.docker_gw_bridge_ip} "
             f"({emulation_env_config.kafka_config.container.get_ips()[0]}, "
-            f"{emulation_env_config.kafka_config.container.get_full_name()}")
+            f"{emulation_env_config.kafka_config.container.get_full_name()})")
         KafkaController.start_kafka_manager(emulation_env_config=emulation_env_config)
 
         # Open a gRPC session
@@ -196,7 +196,7 @@ class KafkaController:
         logger.info(
             f"Configuring broker IPs on container: {emulation_env_config.kafka_config.container.docker_gw_bridge_ip} "
             f"({emulation_env_config.kafka_config.container.get_ips()[0]}, "
-            f"{emulation_env_config.kafka_config.container.get_full_name()}")
+            f"{emulation_env_config.kafka_config.container.get_full_name()})")
 
         EmulationUtil.connect_admin(emulation_env_config=emulation_env_config,
                                     ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip)
@@ -230,9 +230,9 @@ class KafkaController:
         :return: a KafkaDTO with the status of the server
         """
         logger.info(
-            f"Starting kafka server on container: {emulation_env_config.kafka_config.container.docker_gw_bridge_ip} "
+            f"Starting Kafka server on container: {emulation_env_config.kafka_config.container.docker_gw_bridge_ip} "
             f"({emulation_env_config.kafka_config.container.get_ips()[0]}, "
-            f"{emulation_env_config.kafka_config.container.get_full_name()}")
+            f"{emulation_env_config.kafka_config.container.get_full_name()})")
         KafkaController.start_kafka_manager(emulation_env_config=emulation_env_config)
 
         # Open a gRPC session

@@ -22,10 +22,14 @@ class TestSnortIdsControllerSuite:
         container1.name = "container1"
         container1.physical_host_ip = "192.168.1.1"
         container1.docker_gw_bridge_ip = "10.0.0.1"
+        container1.get_ips.return_value = ["10.0.1.1"]
+        container1.get_full_name.return_value = "container-1"
         container2 = MagicMock()
         container2.name = "container2"
         container2.physical_host_ip = "192.168.1.2"
         container2.docker_gw_bridge_ip = "10.0.0.2"
+        container2.get_ips.return_value = ["10.0.1.2"]
+        container2.get_full_name.return_value = "container-2"
         containers = [container1, container2]
         emulation_env_config = MagicMock()
         emulation_env_config.containers_config.containers = containers
@@ -36,7 +40,7 @@ class TestSnortIdsControllerSuite:
         self.logger = logger
 
     @patch("csle_common.controllers.snort_ids_controller.SnortIDSController.start_snort_ids")
-    def test_start_snort_ides(self, mock_start_snort_ids) -> None:
+    def test_start_snort_idses(self, mock_start_snort_ids) -> None:
         """
         Test utility function for starting the Snort IDSes
 
@@ -44,10 +48,18 @@ class TestSnortIdsControllerSuite:
         :return: None
         """
         SnortIDSController.start_snort_idses(
-            emulation_env_config=self.emulation_env_config, physical_server_ip="192.168.1.1", logger=self.logger)
-        self.logger.info.assert_called_once_with("Starting the Snort IDS on IP: 10.0.0.1")
-        mock_start_snort_ids.assert_called_once_with(emulation_env_config=self.emulation_env_config, ip="10.0.0.1",
-                                                     logger=self.logger)
+            emulation_env_config=self.emulation_env_config,
+            physical_server_ip=self.emulation_env_config.containers_config.containers[0].physical_host_ip,
+            logger=self.logger)
+        self.logger.info.assert_called_once_with(
+            f"Starting the Snort IDS on IP: "
+            f"{self.emulation_env_config.containers_config.containers[0].docker_gw_bridge_ip} ("
+            f"{self.emulation_env_config.containers_config.containers[0].get_ips()[0]}, "
+            f"{self.emulation_env_config.containers_config.containers[0].get_full_name()})")
+        mock_start_snort_ids.assert_called_once_with(
+            emulation_env_config=self.emulation_env_config,
+            ip=self.emulation_env_config.containers_config.containers[0].docker_gw_bridge_ip,
+            logger=self.logger)
 
     @patch("csle_common.controllers.snort_ids_controller.SnortIDSController.stop_snort_ids")
     def test_stop_snort_ides(self, mock_stop_snort_ids) -> None:
@@ -58,9 +70,13 @@ class TestSnortIdsControllerSuite:
         :return: None
         """
         SnortIDSController.stop_snort_idses(
-            emulation_env_config=self.emulation_env_config, physical_server_ip="192.168.1.1", logger=self.logger)
+            emulation_env_config=self.emulation_env_config,
+            physical_server_ip=self.emulation_env_config.containers_config.containers[0].physical_host_ip,
+            logger=self.logger)
         mock_stop_snort_ids.assert_called_once_with(
-            emulation_env_config=self.emulation_env_config, ip="10.0.0.1", logger=self.logger)
+            emulation_env_config=self.emulation_env_config,
+            ip=self.emulation_env_config.containers_config.containers[0].docker_gw_bridge_ip,
+            logger=self.logger)
 
     @patch("csle_common.controllers.snort_ids_controller.SnortIDSController.start_snort_manager")
     @patch("csle_common.controllers.snort_ids_controller.SnortIDSController."
@@ -88,10 +104,16 @@ class TestSnortIdsControllerSuite:
         mock_stub = MagicMock()
         mock_channel.__enter__.return_value = mock_stub
         SnortIDSController.start_snort_ids(
-            emulation_env_config=self.emulation_env_config, ip="10.0.0.1", logger=self.logger)
+            emulation_env_config=self.emulation_env_config,
+            ip=self.emulation_env_config.containers_config.containers[0].docker_gw_bridge_ip,
+            logger=self.logger)
         mock_start_manager.assert_called_once_with(
-            emulation_env_config=self.emulation_env_config, ip="10.0.0.1", logger=self.logger)
-        self.logger.info.assert_any_call("Snort IDS is not running on 10.0.0.1, starting it.")
+            emulation_env_config=self.emulation_env_config,
+            ip=self.emulation_env_config.containers_config.containers[0].docker_gw_bridge_ip,
+            logger=self.logger)
+        self.logger.info.assert_any_call(
+            f"Snort IDS is not running on "
+            f"{self.emulation_env_config.containers_config.containers[0].docker_gw_bridge_ip}, starting it.")
         mock_insecure_channel.assert_called()
         mock_start_snort_ids.assert_called()
 
@@ -118,33 +140,43 @@ class TestSnortIdsControllerSuite:
         mock_stub = MagicMock()
         mock_channel.__enter__.return_value = mock_stub
         SnortIDSController.stop_snort_ids(
-            emulation_env_config=self.emulation_env_config, ip="10.0.0.1", logger=self.logger)
+            emulation_env_config=self.emulation_env_config,
+            ip=self.emulation_env_config.containers_config.containers[0].docker_gw_bridge_ip, logger=self.logger)
         mock_start_manager.assert_called_once_with(
-            emulation_env_config=self.emulation_env_config, ip="10.0.0.1", logger=self.logger)
-        self.logger.info.assert_any_call("Snort IDS is running on 10.0.0.1, stopping it.")
+            emulation_env_config=self.emulation_env_config,
+            ip=self.emulation_env_config.containers_config.containers[0].docker_gw_bridge_ip, logger=self.logger)
+        self.logger.info.assert_any_call(
+            f"Snort IDS is running on {self.emulation_env_config.containers_config.containers[0].docker_gw_bridge_ip}, "
+            f"stopping it.")
         mock_insecure_channel.assert_called()
         mock_stop_snort_ids.assert_called()
 
     @patch("csle_common.controllers.snort_ids_controller.SnortIDSController.start_snort_manager")
-    def test_start_snort_managers(self, mock_start_manager) -> None:
+    @patch("time.sleep", return_value=None)
+    def test_start_snort_managers(self, mock_sleep, mock_start_manager) -> None:
         """
         Test utility function for starting snort IDS managers
 
         :param mock_start_manager: mock_start_manager
+        :param mock_sleep: mock_sleep
         :return: None
         """
         SnortIDSController.start_snort_managers(
-            emulation_env_config=self.emulation_env_config, physical_server_ip="192.168.1.1", logger=self.logger)
+            emulation_env_config=self.emulation_env_config,
+            physical_server_ip=self.emulation_env_config.containers_config.containers[0].physical_host_ip,
+            logger=self.logger)
         mock_start_manager.assert_called()
 
     @patch("csle_common.util.emulation_util.EmulationUtil.connect_admin")
     @patch("csle_common.util.emulation_util.EmulationUtil.execute_ssh_cmd")
-    def test_start_snort_manager(self, mock_execute_ssh_cmd, mock_connect_admin) -> None:
+    @patch("time.sleep", return_value=None)
+    def test_start_snort_manager(self, mock_sleep, mock_execute_ssh_cmd, mock_connect_admin) -> None:
         """
         Test utility function for starting the snort IDS manager on a specific IP
 
         :param mock_execute_ssh_cmd: mock_execute_ssh_cmd
         :param mock_connect_admin: mock_connect_admin
+        :param mock_sleep: mock_sleep
         :return: None
         """
         emulation_env_config = self.emulation_env_config
@@ -161,31 +193,42 @@ class TestSnortIdsControllerSuite:
             (b"", b"", 0),  # Output for starting the ids_manager
         ]
         SnortIDSController.start_snort_manager(
-            emulation_env_config=emulation_env_config, ip="10.0.0.1", logger=self.logger)
-        mock_connect_admin.assert_called_once_with(emulation_env_config=emulation_env_config, ip="10.0.0.1")
+            emulation_env_config=emulation_env_config,
+            ip=self.emulation_env_config.containers_config.containers[0].docker_gw_bridge_ip, logger=self.logger)
+        mock_connect_admin.assert_called_once_with(
+            emulation_env_config=emulation_env_config,
+            ip=self.emulation_env_config.containers_config.containers[0].docker_gw_bridge_ip)
         mock_execute_ssh_cmd.assert_called()
-        self.logger.info.assert_any_call("Starting Snort IDS manager on node 10.0.0.1")
+        self.logger.info.assert_any_call(
+            f"Starting Snort IDS manager on node "
+            f"{self.emulation_env_config.containers_config.containers[0].docker_gw_bridge_ip}")
 
     @patch("csle_common.controllers.snort_ids_controller.SnortIDSController.stop_snort_manager")
-    def test_stop_snort_managers(self, mock_stop_manager) -> None:
+    @patch("time.sleep", return_value=None)
+    def test_stop_snort_managers(self, mock_sleep, mock_stop_manager) -> None:
         """
         Test Utility function for stopping snort IDS managers
 
         :param mock_start_manager: mock_start_manager
+        :param mock_sleep: mock_sleep
         :return: None
         """
         SnortIDSController.stop_snort_managers(
-            emulation_env_config=self.emulation_env_config, physical_server_ip="192.168.1.1", logger=self.logger)
+            emulation_env_config=self.emulation_env_config,
+            physical_server_ip=self.emulation_env_config.containers_config.containers[0].physical_host_ip,
+            logger=self.logger)
         mock_stop_manager.assert_called()
 
     @patch("csle_common.util.emulation_util.EmulationUtil.connect_admin")
     @patch("csle_common.util.emulation_util.EmulationUtil.execute_ssh_cmd")
-    def test_stop_snort_manager(self, mock_execute_ssh_cmd, mock_connect_admin) -> None:
+    @patch("time.sleep", return_value=None)
+    def test_stop_snort_manager(self, mock_sleep, mock_execute_ssh_cmd, mock_connect_admin) -> None:
         """
         Test utility function for stopping the snort IDS manager on a specific IP
 
         :param mock_execute_ssh_cmd: mock_execute_ssh_cmd
         :param mock_connect_admin: mock_connect_admin
+        :param mock_sleep: mock_sleep
         :return: None
         """
         emulation_env_config = self.emulation_env_config
@@ -193,10 +236,15 @@ class TestSnortIdsControllerSuite:
         emulation_env_config.get_connection.return_value = mock_connection
         mock_execute_ssh_cmd.return_value = (b"", b"", 0)
         SnortIDSController.stop_snort_manager(
-            emulation_env_config=emulation_env_config, ip="10.0.0.1", logger=self.logger)
-        mock_connect_admin.assert_called_once_with(emulation_env_config=emulation_env_config, ip="10.0.0.1")
+            emulation_env_config=emulation_env_config,
+            ip=self.emulation_env_config.containers_config.containers[0].docker_gw_bridge_ip, logger=self.logger)
+        mock_connect_admin.assert_called_once_with(
+            emulation_env_config=emulation_env_config,
+            ip=self.emulation_env_config.containers_config.containers[0].docker_gw_bridge_ip)
         mock_execute_ssh_cmd.assert_called()
-        self.logger.info.assert_any_call("Stopping Snort IDS manager on node 10.0.0.1")
+        self.logger.info.assert_any_call(
+            f"Stopping Snort IDS manager on node "
+            f"{self.emulation_env_config.containers_config.containers[0].docker_gw_bridge_ip}")
 
     @patch("csle_common.controllers.snort_ids_controller.SnortIDSController.start_snort_idses_monitor_thread")
     def test_start_snort_idses_monitor_threads(self, mock_start_monitor_thread) -> None:
@@ -208,10 +256,17 @@ class TestSnortIdsControllerSuite:
         :return: None
         """
         SnortIDSController.start_snort_idses_monitor_threads(
-            emulation_env_config=self.emulation_env_config, physical_server_ip="192.168.1.1", logger=self.logger)
+            emulation_env_config=self.emulation_env_config,
+            physical_server_ip=self.emulation_env_config.containers_config.containers[0].physical_host_ip,
+            logger=self.logger)
         mock_start_monitor_thread.assert_called_once_with(
-            emulation_env_config=self.emulation_env_config, ip="10.0.0.1", logger=self.logger)
-        self.logger.info.assert_called_once_with("Starting Snort IDS monitor thread on IP: 10.0.0.1")
+            emulation_env_config=self.emulation_env_config,
+            ip=self.emulation_env_config.containers_config.containers[0].docker_gw_bridge_ip, logger=self.logger)
+        self.logger.info.assert_called_once_with(
+            f"Starting Snort IDS monitor thread on IP: "
+            f"{self.emulation_env_config.containers_config.containers[0].docker_gw_bridge_ip} "
+            f"({self.emulation_env_config.containers_config.containers[0].get_ips()[0]}, "
+            f"{self.emulation_env_config.containers_config.containers[0].get_full_name()})")
 
     @patch("csle_common.controllers.snort_ids_controller.SnortIDSController.start_snort_manager")
     @patch("csle_common.controllers.snort_ids_controller.SnortIDSController."
@@ -239,16 +294,23 @@ class TestSnortIdsControllerSuite:
         mock_channel = MagicMock()
         mock_insecure_channel.return_value.__enter__.return_value = mock_channel
         SnortIDSController.start_snort_idses_monitor_thread(
-            emulation_env_config=emulation_env_config, ip="10.0.0.1", logger=self.logger)
+            emulation_env_config=emulation_env_config,
+            ip=self.emulation_env_config.containers_config.containers[0].docker_gw_bridge_ip, logger=self.logger)
         mock_start_manager.assert_called_once_with(
-            emulation_env_config=emulation_env_config, ip="10.0.0.1", logger=self.logger)
-        mock_get_statuses.assert_called_once_with(port=50051, ip="10.0.0.1")
-        self.logger.info.assert_called_once_with("Snort IDS monitor thread is not running on 10.0.0.1, starting it.")
-        mock_insecure_channel.assert_called_once_with("10.0.0.1:50051", options=constants.GRPC_SERVERS.GRPC_OPTIONS)
+            emulation_env_config=emulation_env_config,
+            ip=self.emulation_env_config.containers_config.containers[0].docker_gw_bridge_ip, logger=self.logger)
+        mock_get_statuses.assert_called_once_with(
+            port=50051, ip=self.emulation_env_config.containers_config.containers[0].docker_gw_bridge_ip)
+        self.logger.info.assert_called_once_with(
+            f"Snort IDS monitor thread is not running on "
+            f"{self.emulation_env_config.containers_config.containers[0].docker_gw_bridge_ip}, starting it.")
+        mock_insecure_channel.assert_called_once_with(
+            f"{self.emulation_env_config.containers_config.containers[0].docker_gw_bridge_ip}:50051",
+            options=constants.GRPC_SERVERS.GRPC_OPTIONS)
         mock_start_monitor.assert_called()
 
     @patch("csle_common.controllers.snort_ids_controller.SnortIDSController.stop_snort_idses_monitor_thread")
-    def test_stop_snort_idses_monitor_threads(self, mock_stop_monitor_thread) -> None:
+    def test_stop_snort_idses_monitor_threadas(self, mock_stop_monitor_thread) -> None:
         """
         Test a method that sends a request to the SnortIDSManager on every container that runs
         an IDS to stop the monitor threads
@@ -257,9 +319,12 @@ class TestSnortIdsControllerSuite:
         :return: None
         """
         SnortIDSController.stop_snort_idses_monitor_threads(
-            emulation_env_config=self.emulation_env_config, physical_server_ip="192.168.1.1", logger=self.logger)
+            emulation_env_config=self.emulation_env_config,
+            physical_server_ip=self.emulation_env_config.containers_config.containers[0].physical_host_ip,
+            logger=self.logger)
         mock_stop_monitor_thread.assert_called_once_with(
-            emulation_env_config=self.emulation_env_config, ip="10.0.0.1", logger=self.logger)
+            emulation_env_config=self.emulation_env_config,
+            ip=self.emulation_env_config.containers_config.containers[0].docker_gw_bridge_ip, logger=self.logger)
 
     @patch("csle_common.controllers.snort_ids_controller.SnortIDSController.start_snort_manager")
     @patch("csle_collector.snort_ids_manager.query_snort_ids_manager.stop_snort_ids_monitor")
@@ -279,11 +344,17 @@ class TestSnortIdsControllerSuite:
         mock_channel = MagicMock()
         mock_insecure_channel.return_value.__enter__.return_value = mock_channel
         SnortIDSController.stop_snort_idses_monitor_thread(
-            emulation_env_config=emulation_env_config, ip="10.0.0.1", logger=self.logger)
+            emulation_env_config=emulation_env_config,
+            ip=self.emulation_env_config.containers_config.containers[0].docker_gw_bridge_ip, logger=self.logger)
         mock_start_manager.assert_called_once_with(
-            emulation_env_config=emulation_env_config, ip="10.0.0.1", logger=self.logger)
-        self.logger.info.assert_called_once_with("Stopping the Snort IDS monitor thread on 10.0.0.1.")
-        mock_insecure_channel.assert_called_once_with("10.0.0.1:50051", options=constants.GRPC_SERVERS.GRPC_OPTIONS)
+            emulation_env_config=emulation_env_config,
+            ip=self.emulation_env_config.containers_config.containers[0].docker_gw_bridge_ip, logger=self.logger)
+        self.logger.info.assert_called_once_with(
+            "Stopping the Snort IDS monitor thread on "
+            f"{self.emulation_env_config.containers_config.containers[0].docker_gw_bridge_ip}.")
+        mock_insecure_channel.assert_called_once_with(
+            f"{self.emulation_env_config.containers_config.containers[0].docker_gw_bridge_ip}:50051",
+            options=constants.GRPC_SERVERS.GRPC_OPTIONS)
         mock_stop_monitor.assert_called()
 
     @patch("csle_common.controllers.snort_ids_controller.SnortIDSController.start_snort_managers")
@@ -305,11 +376,15 @@ class TestSnortIdsControllerSuite:
         mock_status = MagicMock()
         mock_get_statuses.return_value = mock_status
         statuses = SnortIDSController.get_snort_idses_monitor_threads_statuses(
-            emulation_env_config=emulation_env_config, physical_server_ip="192.168.1.1", logger=self.logger,
-            start_if_stopped=True)
-        mock_start_managers.assert_called_once_with(emulation_env_config=emulation_env_config,
-                                                    physical_server_ip="192.168.1.1", logger=self.logger)
-        mock_get_statuses.assert_called_once_with(port=50051, ip="10.0.0.1")
+            emulation_env_config=emulation_env_config,
+            physical_server_ip=self.emulation_env_config.containers_config.containers[0].physical_host_ip,
+            logger=self.logger, start_if_stopped=True)
+        mock_start_managers.assert_called_once_with(
+            emulation_env_config=emulation_env_config,
+            physical_server_ip=self.emulation_env_config.containers_config.containers[0].physical_host_ip,
+            logger=self.logger)
+        mock_get_statuses.assert_called_once_with(
+            port=50051, ip=self.emulation_env_config.containers_config.containers[0].docker_gw_bridge_ip)
         assert statuses == [mock_status]
 
     @patch("grpc.insecure_channel")
@@ -329,7 +404,7 @@ class TestSnortIdsControllerSuite:
         mock_channel = MagicMock()
         mock_insecure_channel.return_value.__enter__.return_value = mock_channel
         port = 50051
-        ip = "10.0.0.1"
+        ip = self.emulation_env_config.containers_config.containers[0].docker_gw_bridge_ip
         status = SnortIDSController.get_snort_idses_monitor_threads_statuses_by_ip_and_port(port=port, ip=ip)
         mock_insecure_channel.assert_called_once_with(f"{ip}:{port}", options=constants.GRPC_SERVERS.GRPC_OPTIONS)
         assert status == mock_status
@@ -339,7 +414,8 @@ class TestSnortIdsControllerSuite:
         Test a method that extracts the IPs of the snort IDS managers in a given emulation
         """
         ips = SnortIDSController.get_snort_ids_managers_ips(emulation_env_config=self.emulation_env_config)
-        expected_ips = ["10.0.0.1", "10.0.0.2"]
+        expected_ips = [self.emulation_env_config.containers_config.containers[0].docker_gw_bridge_ip,
+                        self.emulation_env_config.containers_config.containers[1].docker_gw_bridge_ip]
         assert ips == expected_ips
 
     def test_get_snort_idses_managers_ports(self) -> None:
@@ -369,7 +445,8 @@ class TestSnortIdsControllerSuite:
         :param mock_get_ips: mock_get_ips
         :return: None
         """
-        mock_get_ips.return_value = ["10.0.0.1", "10.0.0.2"]
+        mock_get_ips.return_value = [self.emulation_env_config.containers_config.containers[0].docker_gw_bridge_ip,
+                                     self.emulation_env_config.containers_config.containers[1].docker_gw_bridge_ip]
         mock_get_ports.return_value = [50051, 50052]
         mock_status = MagicMock()
         mock_get_statuses.side_effect = [mock_status, Exception("Test exception")]
@@ -380,10 +457,11 @@ class TestSnortIdsControllerSuite:
         emulation_env_config.snort_ids_manager_config.snort_ids_manager_port = 50051
         emulation_env_config.execution_id = "test_execution_id"
         emulation_env_config.name = "test_emulation_name"
-        active_ips = ["10.0.0.1"]
-        physical_server_ip = "192.168.1.1"
+        active_ips = [self.emulation_env_config.containers_config.containers[0].docker_gw_bridge_ip]
+        physical_server_ip = self.emulation_env_config.containers_config.containers[0].physical_server_ip
         SnortIDSController.get_snort_managers_info(emulation_env_config=emulation_env_config, active_ips=active_ips,
                                                    logger=self.logger, physical_server_ip=physical_server_ip)
         mock_get_ips.assert_called_once_with(emulation_env_config=emulation_env_config)
         mock_get_ports.assert_called_once_with(emulation_env_config=emulation_env_config)
-        mock_get_statuses.assert_any_call(port=50051, ip="10.0.0.1")
+        mock_get_statuses.assert_any_call(
+            port=50051, ip=self.emulation_env_config.containers_config.containers[0].docker_gw_bridge_ip)
