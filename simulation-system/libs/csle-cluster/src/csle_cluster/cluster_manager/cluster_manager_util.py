@@ -1,4 +1,4 @@
-from typing import Dict, Any, List, Tuple, Union
+from typing import Dict, Any, List, Union
 import logging
 from requests import get
 import csle_common.constants.constants as constants
@@ -862,7 +862,7 @@ class ClusterManagerUtil:
 
     @staticmethod
     def convert_host_status_to_host_manager_status_dto(
-            host_status_dto_and_ip: Tuple[csle_collector.host_manager.host_manager_pb2.HostStatusDTO, str]) -> \
+            host_status_dto: csle_collector.host_manager.host_manager_pb2.HostStatusDTO) -> \
             cluster_manager_pb2.HostManagerStatusDTO:
         """
         Converts a HostStatusDTO to a HostManagerStatusDTO
@@ -870,8 +870,6 @@ class ClusterManagerUtil:
         :param host_status_dto: the DTO to convert
         :return: the converted DTO
         """
-        host_status_dto = host_status_dto_and_ip[0]
-        ip = host_status_dto_and_ip[1]
         if host_status_dto is None:
             return ClusterManagerUtil.get_empty_host_manager_status_dto()
         return cluster_manager_pb2.HostManagerStatusDTO(
@@ -880,13 +878,13 @@ class ClusterManagerUtil:
             packetbeat_running=host_status_dto.packetbeat_running,
             metricbeat_running=host_status_dto.metricbeat_running,
             heartbeat_running=host_status_dto.heartbeat_running,
-            ip=ip
+            ip=host_status_dto.ip
         )
 
     @staticmethod
     def convert_host_status_to_host_manager_status_dto_reverse(
-            host_status_dto: Union[None, cluster_manager_pb2.HostManagerStatusDTO]) -> \
-            Tuple[csle_collector.host_manager.host_manager_pb2.HostStatusDTO, str]:
+            host_status_dto: Union[None, cluster_manager_pb2.HostManagerStatusDTO]) \
+            -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
         """
         Converts a HostManagerStatusDTO to a HostStatusDTO
 
@@ -896,12 +894,12 @@ class ClusterManagerUtil:
         if host_status_dto is None:
             return ClusterManagerUtil.convert_host_status_to_host_manager_status_dto_reverse(
                 ClusterManagerUtil.get_empty_host_manager_status_dto())
-        return (csle_collector.host_manager.host_manager_pb2.HostStatusDTO(
+        return csle_collector.host_manager.host_manager_pb2.HostStatusDTO(
             monitor_running=host_status_dto.monitor_running,
             filebeat_running=host_status_dto.filebeat_running,
             packetbeat_running=host_status_dto.packetbeat_running,
             metricbeat_running=host_status_dto.metricbeat_running,
-            heartbeat_running=host_status_dto.heartbeat_running), host_status_dto.ip)
+            heartbeat_running=host_status_dto.heartbeat_running)
 
     @staticmethod
     def convert_snort_info_dto(snort_ids_managers_info_dto: Union[None, SnortIdsManagersInfo]) -> \

@@ -1308,10 +1308,10 @@ class HostController:
             except Exception as e:
                 logger.info(f"Could not fetch Host manager status on IP:{ip}, error: {str(e)}, {repr(e)}")
             if status is not None:
-                host_managers_statuses.append((status, ip))
+                host_managers_statuses.append(status)
             else:
                 host_managers_statuses.append(
-                    (csle_collector.host_manager.host_manager_util.HostManagerUtil.host_monitor_dto_empty(), ip))
+                    csle_collector.host_manager.host_manager_util.HostManagerUtil.host_monitor_dto_empty())
             host_managers_running.append(running)
         execution_id = emulation_env_config.execution_id
         emulation_name = emulation_env_config.name

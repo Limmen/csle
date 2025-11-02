@@ -104,6 +104,7 @@ message HostStatusDTO {
   bool packetbeat_running = 3;
   bool metricbeat_running = 4;
   bool heartbeat_running = 5;
+  string ip = 6;
 }
 
 // Message that the client sends to extract the Host metrics from given timestamps

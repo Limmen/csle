@@ -294,11 +294,13 @@ class HostStatusDTO(google.protobuf.message.Message):
     PACKETBEAT_RUNNING_FIELD_NUMBER: builtins.int
     METRICBEAT_RUNNING_FIELD_NUMBER: builtins.int
     HEARTBEAT_RUNNING_FIELD_NUMBER: builtins.int
+    IP_FIELD_NUMBER: builtins.int
     monitor_running: builtins.bool
     filebeat_running: builtins.bool
     packetbeat_running: builtins.bool
     metricbeat_running: builtins.bool
     heartbeat_running: builtins.bool
+    ip: builtins.str
     def __init__(
         self,
         *,
@@ -307,8 +309,9 @@ class HostStatusDTO(google.protobuf.message.Message):
         packetbeat_running: builtins.bool = ...,
         metricbeat_running: builtins.bool = ...,
         heartbeat_running: builtins.bool = ...,
+        ip: builtins.str = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["filebeat_running", b"filebeat_running", "heartbeat_running", b"heartbeat_running", "metricbeat_running", b"metricbeat_running", "monitor_running", b"monitor_running", "packetbeat_running", b"packetbeat_running"]) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["filebeat_running", b"filebeat_running", "heartbeat_running", b"heartbeat_running", "ip", b"ip", "metricbeat_running", b"metricbeat_running", "monitor_running", b"monitor_running", "packetbeat_running", b"packetbeat_running"]) -> None: ...
 
 global___HostStatusDTO = HostStatusDTO
 

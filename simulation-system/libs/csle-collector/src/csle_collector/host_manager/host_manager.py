@@ -76,7 +76,8 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
                                                                           filebeat_running=filebeat_status,
                                                                           packetbeat_running=packetbeat_status,
                                                                           metricbeat_running=metricbeat_status,
-                                                                          heartbeat_running=heartbeat_status)
+                                                                          heartbeat_running=heartbeat_status,
+                                                                          ip=self.ip)
 
     def stopHostMonitor(self, request: csle_collector.host_manager.host_manager_pb2.StopHostMonitorMsg,
                         context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
@@ -99,7 +100,8 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
                                                                           filebeat_running=filebeat_running,
                                                                           packetbeat_running=packetbeat_status,
                                                                           metricbeat_running=metricbeat_status,
-                                                                          heartbeat_running=heartbeat_status)
+                                                                          heartbeat_running=heartbeat_status,
+                                                                          ip=self.ip)
 
     def startFilebeat(self, request: csle_collector.host_manager.host_manager_pb2.StartFilebeatMsg,
                       context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
@@ -121,7 +123,8 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
                                                                           filebeat_running=True,
                                                                           packetbeat_running=packetbeat_status,
                                                                           metricbeat_running=metricbeat_status,
-                                                                          heartbeat_running=heartbeat_status)
+                                                                          heartbeat_running=heartbeat_status,
+                                                                          ip=self.ip)
 
     def stopFilebeat(self, request: csle_collector.host_manager.host_manager_pb2.StopFilebeatMsg,
                      context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
@@ -143,7 +146,8 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
                                                                           filebeat_running=False,
                                                                           packetbeat_running=packetbeat_status,
                                                                           metricbeat_running=metricbeat_status,
-                                                                          heartbeat_running=heartbeat_status)
+                                                                          heartbeat_running=heartbeat_status,
+                                                                          ip=self.ip)
 
     def configFilebeat(self, request: csle_collector.host_manager.host_manager_pb2.ConfigFilebeatMsg,
                        context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
@@ -177,7 +181,8 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
                                                                           filebeat_running=filebeat_running,
                                                                           packetbeat_running=packetbeat_status,
                                                                           metricbeat_running=metricbeat_status,
-                                                                          heartbeat_running=heartbeat_status)
+                                                                          heartbeat_running=heartbeat_status,
+                                                                          ip=self.ip)
 
     def startMetricbeat(self, request: csle_collector.host_manager.host_manager_pb2.StartMetricbeatMsg,
                         context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
@@ -199,7 +204,8 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
                                                                           filebeat_running=filebeat_status,
                                                                           packetbeat_running=packetbeat_status,
                                                                           metricbeat_running=True,
-                                                                          heartbeat_running=heartbeat_status)
+                                                                          heartbeat_running=heartbeat_status,
+                                                                          ip=self.ip)
 
     def stopMetricbeat(self, request: csle_collector.host_manager.host_manager_pb2.StopMetricbeatMsg,
                        context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
@@ -221,7 +227,8 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
                                                                           filebeat_running=filebeat_status,
                                                                           packetbeat_running=packetbeat_status,
                                                                           metricbeat_running=False,
-                                                                          heartbeat_running=heartbeat_status)
+                                                                          heartbeat_running=heartbeat_status,
+                                                                          ip=self.ip)
 
     def configMetricbeat(self, request: csle_collector.host_manager.host_manager_pb2.ConfigMetricbeatMsg,
                          context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
@@ -254,7 +261,8 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
                                                                           filebeat_running=filebeat_running,
                                                                           packetbeat_running=packetbeat_status,
                                                                           metricbeat_running=metricbeat_status,
-                                                                          heartbeat_running=heartbeat_status)
+                                                                          heartbeat_running=heartbeat_status,
+                                                                          ip=self.ip)
 
     def startPacketbeat(self, request: csle_collector.host_manager.host_manager_pb2.StartPacketbeatMsg,
                         context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
@@ -276,7 +284,8 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
                                                                           filebeat_running=filebeat_status,
                                                                           packetbeat_running=True,
                                                                           metricbeat_running=metricbeat_status,
-                                                                          heartbeat_running=heartbeat_status)
+                                                                          heartbeat_running=heartbeat_status,
+                                                                          ip=self.ip)
 
     def stopPacketbeat(self, request: csle_collector.host_manager.host_manager_pb2.StopPacketbeatMsg,
                        context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
@@ -298,7 +307,8 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
                                                                           filebeat_running=filebeat_status,
                                                                           packetbeat_running=False,
                                                                           metricbeat_running=metricbeat_status,
-                                                                          heartbeat_running=heartbeat_status)
+                                                                          heartbeat_running=heartbeat_status,
+                                                                          ip=self.ip)
 
     def configPacketbeat(self, request: csle_collector.host_manager.host_manager_pb2.ConfigPacketbeatMsg,
                          context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
@@ -327,7 +337,8 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
                                                                           filebeat_running=filebeat_running,
                                                                           packetbeat_running=packetbeat_status,
                                                                           metricbeat_running=metricbeat_status,
-                                                                          heartbeat_running=heartbeat_status)
+                                                                          heartbeat_running=heartbeat_status,
+                                                                          ip=self.ip)
 
     def getHostStatus(self, request: csle_collector.host_manager.host_manager_pb2.GetHostStatusMsg,
                       context: grpc.ServicerContext) \
@@ -348,7 +359,8 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
                                                                           filebeat_running=filebeat_running,
                                                                           packetbeat_running=packetbeat_status,
                                                                           metricbeat_running=metricbeat_status,
-                                                                          heartbeat_running=heartbeat_status)
+                                                                          heartbeat_running=heartbeat_status,
+                                                                          ip=self.ip)
 
     def startHeartbeat(self, request: csle_collector.host_manager.host_manager_pb2.StartHeartbeatMsg,
                        context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
@@ -370,7 +382,8 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
                                                                           filebeat_running=filebeat_status,
                                                                           packetbeat_running=packetbeat_status,
                                                                           metricbeat_running=metricbeat_status,
-                                                                          heartbeat_running=True)
+                                                                          heartbeat_running=True,
+                                                                          ip=self.ip)
 
     def stopHeartbeat(self, request: csle_collector.host_manager.host_manager_pb2.StopHeartbeatMsg,
                       context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
@@ -392,7 +405,8 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
                                                                           filebeat_running=filebeat_status,
                                                                           packetbeat_running=packetbeat_status,
                                                                           metricbeat_running=metricbeat_status,
-                                                                          heartbeat_running=False)
+                                                                          heartbeat_running=False,
+                                                                          ip=self.ip)
 
     def configHeartbeat(self, request: csle_collector.host_manager.host_manager_pb2.ConfigHeartbeatMsg,
                         context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
@@ -421,7 +435,8 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
                                                                           filebeat_running=filebeat_running,
                                                                           packetbeat_running=packetbeat_status,
                                                                           metricbeat_running=metricbeat_status,
-                                                                          heartbeat_running=heartbeat_status)
+                                                                          heartbeat_running=heartbeat_status,
+                                                                          ip=self.ip)
 
     def startSpark(self, request: csle_collector.host_manager.host_manager_pb2.StartSparkMsg,
                    context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
@@ -444,7 +459,8 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
                                                                           filebeat_running=filebeat_status,
                                                                           packetbeat_running=packetbeat_status,
                                                                           metricbeat_running=metricbeat_status,
-                                                                          heartbeat_running=heartbeat_status)
+                                                                          heartbeat_running=heartbeat_status,
+                                                                          ip=self.ip)
 
     def stopSpark(self, request: csle_collector.host_manager.host_manager_pb2.StopSparkMsg,
                   context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
@@ -467,7 +483,8 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
                                                                           filebeat_running=filebeat_status,
                                                                           packetbeat_running=packetbeat_status,
                                                                           metricbeat_running=metricbeat_status,
-                                                                          heartbeat_running=heartbeat_status)
+                                                                          heartbeat_running=heartbeat_status,
+                                                                          ip=self.ip)
 
     def _is_monitor_running(self) -> bool:
         """
