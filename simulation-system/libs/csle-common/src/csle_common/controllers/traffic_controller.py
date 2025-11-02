@@ -152,7 +152,7 @@ class TrafficController:
                 f"Starting client manager on container "
                 f"{emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip} "
                 f"({emulation_env_config.traffic_config.client_population_config.ip})"
-                f"since it was not running. "
+                f" since it was not running. "
                 f"Output of :{cmd}, was: {str(o)}")
 
             # Stop old background job if running
@@ -170,7 +170,7 @@ class TrafficController:
             )
             o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(
                 ip=emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip))
-            time.sleep(5)
+            time.sleep(10)
             return True
         return False
 
@@ -243,7 +243,7 @@ class TrafficController:
             f"Starting client producer on container:"
             f" {emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip} "
             f"({emulation_env_config.traffic_config.client_population_config.ip})")
-
+        time.sleep(5)
         client_manager_started = (
             TrafficController.start_client_manager(emulation_env_config=emulation_env_config, logger=logger))
 
@@ -256,6 +256,7 @@ class TrafficController:
             ip=emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip,
             port=emulation_env_config.traffic_config.client_population_config.client_manager_port,
             logger=logger)
+        time.sleep(5)
         if not client_dto.producer_active:
             # Open a gRPC session
             with grpc.insecure_channel(
@@ -632,7 +633,7 @@ class TrafficController:
         traffic_managers_statuses = []
         traffic_managers_running = []
         for node_traffic_config in emulation_env_config.traffic_config.node_traffic_configs:
-            logger.info(f"Getting traffic information from node: {node_traffic_config.ip} ({node_traffic_config.ip})")
+            logger.info(f"Getting traffic information from node: {node_traffic_config.ip}")
             if node_traffic_config.docker_gw_bridge_ip not in active_ips or not EmulationUtil.physical_ip_match(
                     emulation_env_config=emulation_env_config, ip=node_traffic_config.docker_gw_bridge_ip,
                     physical_host_ip=physical_host_ip):

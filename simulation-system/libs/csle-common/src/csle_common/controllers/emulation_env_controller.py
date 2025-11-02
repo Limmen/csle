@@ -765,41 +765,49 @@ class EmulationEnvController:
             active_ips.append(node.ip)
         emulation_name = execution.emulation_name
         execution_id = execution.ip_first_octet
-        logger.info("Getting the Snort IDS Managers info")
+        logger.info(f"Getting the Snort IDS Managers info for emulation: {emulation_name}, "
+                    f"execution id: {execution_id}")
         snort_ids_managers_info = \
             SnortIDSController.get_snort_managers_info(emulation_env_config=execution.emulation_env_config,
                                                        active_ips=active_ips, logger=logger,
                                                        physical_server_ip=physical_server_ip)
-        logger.info("Getting the OSSEC IDS Managers info")
+        logger.info(f"Getting the OSSEC IDS Managers info for emulation: {emulation_name}, "
+                    f"execution id: {execution_id}")
         ossec_ids_managers_info = \
             OSSECIDSController.get_ossec_managers_info(emulation_env_config=execution.emulation_env_config,
                                                        active_ips=active_ips, logger=logger,
                                                        physical_host_ip=physical_server_ip)
-        logger.info("Getting the Kafka Managers info")
+        logger.info(f"Getting the Kafka Managers info for emulation: {emulation_name}, "
+                    f"execution id: {execution_id}")
         kafka_managers_info = \
             KafkaController.get_kafka_managers_info(emulation_env_config=execution.emulation_env_config,
                                                     active_ips=active_ips, logger=logger,
                                                     physical_host_ip=physical_server_ip)
-        logger.info("Getting the Host Managers info")
+        logger.info(f"Getting the Host Managers info for emulation: {emulation_name}, "
+                    f"execution id: {execution_id}")
         host_managers_info = \
             HostController.get_host_managers_info(emulation_env_config=execution.emulation_env_config,
                                                   active_ips=active_ips, logger=logger,
                                                   physical_host_ip=physical_server_ip)
-        logger.info("Getting the Client Managers info")
+        logger.info(f"Getting the Client Managers info for emulation: {emulation_name}, "
+                    f"execution id: {execution_id}")
         client_managers_info = \
             TrafficController.get_client_managers_info(emulation_env_config=execution.emulation_env_config,
                                                        active_ips=active_ips, logger=logger)
-        logger.info("Getting the Traffic Managers info")
+        logger.info(f"Getting the Traffic Managers info for emulation: {emulation_name}, "
+                    f"execution id: {execution_id}")
         traffic_managers_info = \
             TrafficController.get_traffic_managers_info(emulation_env_config=execution.emulation_env_config,
                                                         active_ips=active_ips, logger=logger,
                                                         physical_host_ip=physical_server_ip)
-        logger.info("Getting the Docker Stats Managers info")
+        logger.info(f"Getting the Docker Stats Managers info for emulation: {emulation_name}, "
+                    f"execution id: {execution_id}")
         docker_stats_managers_info = \
             ContainerController.get_docker_stats_managers_info(emulation_env_config=execution.emulation_env_config,
                                                                active_ips=active_ips, logger=logger,
                                                                physical_host_ip=physical_server_ip)
-        logger.info("Getting the Elk Managers info")
+        logger.info(f"Getting the Elk Managers info for emulation: {emulation_name}, "
+                    f"execution id: {execution_id}")
         elk_managers_info = \
             ELKController.get_elk_managers_info(emulation_env_config=execution.emulation_env_config,
                                                 active_ips=active_ips, logger=logger,
