@@ -34,7 +34,8 @@ class SnortIDSController:
                 continue
             for ids_image in constants.CONTAINER_IMAGES.SNORT_IDS_IMAGES:
                 if ids_image in c.name:
-                    logger.info(f"Starting the Snort IDS on IP: {c.docker_gw_bridge_ip}")
+                    logger.info(f"Starting the Snort IDS on IP: {c.docker_gw_bridge_ip} "
+                                f"({c.get_ips()[0]}, {c.get_full_name()})")
                     SnortIDSController.start_snort_ids(emulation_env_config=emulation_env_config,
                                                        ip=c.docker_gw_bridge_ip, logger=logger)
 
@@ -223,7 +224,8 @@ class SnortIDSController:
                 continue
             for ids_image in constants.CONTAINER_IMAGES.SNORT_IDS_IMAGES:
                 if ids_image in c.name:
-                    logger.info(f"Starting Snort IDS monitor thread on IP: {c.docker_gw_bridge_ip}")
+                    logger.info(f"Starting Snort IDS monitor thread on IP: {c.docker_gw_bridge_ip} "
+                                f"({c.get_ips()[0]}, {c.get_full_name()})")
                     SnortIDSController.start_snort_idses_monitor_thread(emulation_env_config=emulation_env_config,
                                                                         ip=c.docker_gw_bridge_ip, logger=logger)
 

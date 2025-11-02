@@ -26,7 +26,7 @@ class FlagsController:
                                         ip=flags_conf.docker_gw_bridge_ip)
 
             for flag in flags_conf.flags:
-                logger.info(f"Creating flag:{flag.name} on {flags_conf.docker_gw_bridge_ip}")
+                logger.info(f"Creating flag:{flag.name} on {flags_conf.docker_gw_bridge_ip} ({flags_conf.ip})")
                 cmd = constants.COMMANDS.SUDO_RM_RF + " {}".format(flag.path)
                 EmulationUtil.execute_ssh_cmd(cmd=cmd,
                                               conn=emulation_env_config.get_connection(

@@ -29,16 +29,18 @@ class OVSController:
             for ovs_image in constants.CONTAINER_IMAGES.OVS_IMAGES:
                 if ovs_image in c.name:
                     logger.info(f"Creating OVS bridge and ports "
-                                f"on container: {c.get_full_name()}")
+                                f"on container: {c.get_full_name()} with IP {c.docker_gw_bridge_ip} ({c.get_ips()[0]})")
                     container_name = c.get_full_name()
                     bridge_name = constants.OVS.DEFAULT_BRIDGE_NAME
                     cmd = f"{constants.COMMANDS.DOCKER_EXEC_COMMAND} {container_name} {constants.OVS.OVS_VSCTL} " \
                           f"{constants.OVS.ADD_BR} {bridge_name}"
-                    logger.info(f"Running cmd: {cmd} on container: {c.get_full_name()}")
+                    logger.info(f"Running cmd: {cmd} on container: {c.get_full_name()} "
+                                f"with IP {c.docker_gw_bridge_ip} ({c.get_ips()[0]})")
                     subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
                     time.sleep(0.2)
                     cmd = f"{constants.COMMANDS.DOCKER_EXEC_COMMAND} {container_name} ifconfig {bridge_name} up"
-                    logger.info(f"Running cmd: {cmd} on container: {c.get_full_name()}")
+                    logger.info(f"Running cmd: {cmd} on container: {c.get_full_name()} "
+                                f"with IP {c.docker_gw_bridge_ip} ({c.get_ips()[0]})")
                     subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
                     time.sleep(0.2)
                     idx = 0
@@ -46,11 +48,13 @@ class OVSController:
                         ip, net = ip_net
                         cmd = f"{constants.COMMANDS.DOCKER_EXEC_COMMAND} {container_name} {constants.OVS.OVS_VSCTL} " \
                               f"{constants.OVS.ADD_PORT} {bridge_name} {net.interface}"
-                        logger.info(f"Running cmd: {cmd} on container: {c.get_full_name()}")
+                        logger.info(f"Running cmd: {cmd} on container: {c.get_full_name()} "
+                                    f"with IP {c.docker_gw_bridge_ip} ({c.get_ips()[0]})")
                         subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
                         time.sleep(0.2)
                         cmd = f"{constants.COMMANDS.DOCKER_EXEC_COMMAND} {container_name} ifconfig {net.interface} 0"
-                        logger.info(f"Running cmd: {cmd} on container: {c.get_full_name()}")
+                        logger.info(f"Running cmd: {cmd} on container: {c.get_full_name()} "
+                                    f"with IP {c.docker_gw_bridge_ip} ({c.get_ips()[0]})")
                         subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
                         time.sleep(0.2)
                         if idx == 0:
@@ -59,7 +63,8 @@ class OVSController:
                             bridge_intf = f"{bridge_name}:{idx}"
                         cmd = f"{constants.COMMANDS.DOCKER_EXEC_COMMAND} {container_name} " \
                               f"ifconfig {bridge_intf} {ip} netmask {net.bitmask}"
-                        logger.info(f"Running cmd: {cmd} on container: {c.get_full_name()}")
+                        logger.info(f"Running cmd: {cmd} on container: {c.get_full_name()} "
+                                    f"with IP {c.docker_gw_bridge_ip} ({c.get_ips()[0]})")
                         subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
                         time.sleep(0.2)
                         idx += 1
@@ -81,7 +86,8 @@ class OVSController:
                             f"{physical_server_ip}")
                 continue
             logger.info(f"Configuring OVS bridge on container: {ovs_sw.container_name}, "
-                        f"physical host: {ovs_sw.physical_host_ip}, gw ip: {ovs_sw.docker_gw_bridge_ip}")
+                        f"physical host: {ovs_sw.physical_host_ip}, gw ip: {ovs_sw.docker_gw_bridge_ip} "
+                        f"container IP: {ovs_sw.ip}")
             EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ovs_sw.docker_gw_bridge_ip)
             bridge_name = constants.OVS.DEFAULT_BRIDGE_NAME
             cmd = f"{constants.COMMANDS.SUDO} {constants.OVS.OVS_VSCTL} set bridge {bridge_name} " \

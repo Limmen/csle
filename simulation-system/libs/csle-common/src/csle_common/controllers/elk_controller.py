@@ -130,7 +130,9 @@ class ELKController:
         :return: a ELKDTO with the status of the server
         """
         logger.info(
-            f"Stopping ELK stack on container: {emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
+            f"Stopping ELK stack on container: {emulation_env_config.elk_config.container.docker_gw_bridge_ip} "
+            f"({emulation_env_config.elk_config.container.get_ips()[0]}, "
+            f"{emulation_env_config.elk_config.container.get_full_name()})")
         ELKController.start_elk_manager(emulation_env_config=emulation_env_config, logger=logger)
 
         # Open a gRPC session
@@ -155,7 +157,9 @@ class ELKController:
         if emulation_env_config.elk_config.container.physical_host_ip != physical_server_ip:
             return
         logger.info(
-            f"Starting ELK stack on container: {emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
+            f"Starting ELK stack on container: {emulation_env_config.elk_config.container.docker_gw_bridge_ip} "
+            f"({emulation_env_config.elk_config.container.get_ips()[0]}, "
+            f"{emulation_env_config.elk_config.container.get_full_name()})")
         ELKController.start_elk_manager(emulation_env_config=emulation_env_config, logger=logger)
 
         # Open a gRPC session
@@ -178,7 +182,9 @@ class ELKController:
         :return: an ELKDTO with the status of the server
         """
         logger.info(
-            f"Starting elasticsearch on container: {emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
+            f"Starting elasticsearch on container: {emulation_env_config.elk_config.container.docker_gw_bridge_ip} "
+            f"({emulation_env_config.elk_config.container.get_ips()[0]}, "
+            f"{emulation_env_config.elk_config.container.get_full_name()})")
         ELKController.start_elk_manager(emulation_env_config=emulation_env_config, logger=logger)
 
         # Open a gRPC session
@@ -201,7 +207,9 @@ class ELKController:
         :return: an ELKDTO with the status of the server
         """
         logger.info(
-            f"Starting kibana on container: {emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
+            f"Starting kibana on container: {emulation_env_config.elk_config.container.docker_gw_bridge_ip} "
+            f"({emulation_env_config.elk_config.container.get_ips()[0]}, "
+            f"{emulation_env_config.elk_config.container.get_full_name()})")
         ELKController.start_elk_manager(emulation_env_config=emulation_env_config, logger=logger)
 
         # Open a gRPC session
@@ -224,7 +232,9 @@ class ELKController:
         :return: an ELKDTO with the status of the server
         """
         logger.info(
-            f"Starting logstash on container: {emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
+            f"Starting logstash on container: {emulation_env_config.elk_config.container.docker_gw_bridge_ip} "
+            f"({emulation_env_config.elk_config.container.get_ips()[0]}, "
+            f"{emulation_env_config.elk_config.container.get_full_name()})")
         ELKController.start_elk_manager(emulation_env_config=emulation_env_config, logger=logger)
 
         # Open a gRPC session
@@ -247,7 +257,9 @@ class ELKController:
         :return: an ELKDTO with the status of the server
         """
         logger.info(
-            f"Stopping elasticsearch on container: {emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
+            f"Stopping elasticsearch on container: {emulation_env_config.elk_config.container.docker_gw_bridge_ip} "
+            f"({emulation_env_config.elk_config.container.get_ips()[0]}, "
+            f"{emulation_env_config.elk_config.container.get_full_name()})")
         ELKController.start_elk_manager(emulation_env_config=emulation_env_config, logger=logger)
 
         # Open a gRPC session
@@ -270,7 +282,9 @@ class ELKController:
         :return: an ELKDTO with the status of the server
         """
         logger.info(
-            f"Stopping kibana on container: {emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
+            f"Stopping kibana on container: {emulation_env_config.elk_config.container.docker_gw_bridge_ip} "
+            f"({emulation_env_config.elk_config.container.get_ips()[0]}, "
+            f"{emulation_env_config.elk_config.container.get_full_name()})")
         ELKController.start_elk_manager(emulation_env_config=emulation_env_config, logger=logger)
 
         # Open a gRPC session
@@ -293,7 +307,9 @@ class ELKController:
         :return: an ELKDTO with the status of the server
         """
         logger.info(
-            f"Stopping logstash on container: {emulation_env_config.elk_config.container.docker_gw_bridge_ip}")
+            f"Stopping logstash on container: {emulation_env_config.elk_config.container.docker_gw_bridge_ip} "
+            f"({emulation_env_config.elk_config.container.get_ips()[0]}, "
+            f"{emulation_env_config.elk_config.container.get_full_name()})")
         ELKController.start_elk_manager(emulation_env_config=emulation_env_config, logger=logger)
 
         # Open a gRPC session

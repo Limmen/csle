@@ -46,7 +46,9 @@ class SDNControllerManager:
         if constants.COMMANDS.SEARCH_RYU_MANAGER not in str(o):
             logger.info(
                 f"Starting ryu manager on node: "
-                f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}")
+                f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip} "
+                f"({emulation_env_config.sdn_controller_config.container.get_ips()}, "
+                f"{emulation_env_config.sdn_controller_config.container.get_full_name()})")
 
             # Stop old background job if running
             cmd = (constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL +
@@ -88,7 +90,9 @@ class SDNControllerManager:
 
         logger.info(
             f"Stopping ryu manager on node: "
-            f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}")
+            f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip} "
+            f"({emulation_env_config.sdn_controller_config.container.get_ips()[0]}, "
+            f"{emulation_env_config.sdn_controller_config.container.get_full_name()})")
 
         # Stop background job
         cmd = (constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL +
@@ -148,7 +152,9 @@ class SDNControllerManager:
                              f"Emulation: {emulation_env_config.name}")
         logger.info(
             f"Stopping RYU SDN controller on container: "
-            f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}")
+            f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip} "
+            f"({emulation_env_config.sdn_controller_config.container.get_ips()[0]}, "
+            f"{emulation_env_config.sdn_controller_config.container.get_full_name()})")
         SDNControllerManager.start_ryu_manager(emulation_env_config=emulation_env_config, logger=logger)
 
         # Open a gRPC session
@@ -178,7 +184,9 @@ class SDNControllerManager:
             return
         logger.info(
             f"Starting Ryu SDN controller on container: "
-            f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}")
+            f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip} "
+            f"({emulation_env_config.sdn_controller_config.container.get_ips()[0]}, "
+            f"{emulation_env_config.sdn_controller_config.container.get_full_name()})")
         SDNControllerManager.start_ryu_manager(emulation_env_config=emulation_env_config, logger=logger)
 
         # Open a gRPC session
@@ -215,7 +223,9 @@ class SDNControllerManager:
             return
         logger.info(
             f"Starting the ryu monitor on container: "
-            f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}")
+            f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip} "
+            f"({emulation_env_config.sdn_controller_config.container.get_ips()[0]}, "
+            f"{emulation_env_config.sdn_controller_config.container.get_full_name()})")
         SDNControllerManager.start_ryu_manager(emulation_env_config=emulation_env_config, logger=logger)
 
         # Open a gRPC session
@@ -245,7 +255,9 @@ class SDNControllerManager:
                              f"Emulation: {emulation_env_config.name}")
         logger.info(
             f"Stopping Ryu monitor on container: "
-            f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}")
+            f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip} "
+            f"({emulation_env_config.sdn_controller_config.container.get_ips()[0]}, "
+            f"{emulation_env_config.sdn_controller_config.container.get_full_name()})")
         SDNControllerManager.start_ryu_manager(emulation_env_config=emulation_env_config, logger=logger)
 
         # Open a gRPC session

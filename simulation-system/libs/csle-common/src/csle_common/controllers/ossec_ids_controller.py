@@ -52,7 +52,8 @@ class OSSECIDSController:
                 continue
             for ids_image in constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES:
                 if ids_image in c.name:
-                    logger.info(f"Starting the OSSEC IDS on ip: {c.docker_gw_bridge_ip}")
+                    logger.info(f"Starting the OSSEC IDS on ip: {c.docker_gw_bridge_ip} ({c.get_ips()[0]}, "
+                                f"{c.get_full_name()})")
                     OSSECIDSController.start_ossec_ids(emulation_env_config=emulation_env_config,
                                                        ip=c.docker_gw_bridge_ip)
 
@@ -215,7 +216,8 @@ class OSSECIDSController:
                 continue
             for ids_image in constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES:
                 if ids_image in c.name:
-                    logger.info(f"Starting OSSEC IDS monitor thread on IP: {c.docker_gw_bridge_ip}")
+                    logger.info(f"Starting OSSEC IDS monitor thread on IP: {c.docker_gw_bridge_ip} "
+                                f"({c.get_ips()[0]}, {c.get_full_name()})")
                     OSSECIDSController.start_ossec_ids_monitor_thread(emulation_env_config=emulation_env_config,
                                                                       ip=c.docker_gw_bridge_ip)
 

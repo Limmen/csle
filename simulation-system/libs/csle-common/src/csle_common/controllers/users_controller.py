@@ -23,7 +23,7 @@ class UsersController:
         for users_conf in emulation_env_config.users_config.users_configs:
             if users_conf.physical_host_ip != physical_server_ip:
                 continue
-            logger.info(f"Creating users on container: {users_conf.docker_gw_bridge_ip}")
+            logger.info(f"Creating users on container: {users_conf.docker_gw_bridge_ip} ({users_conf.ip})")
             EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=users_conf.docker_gw_bridge_ip)
 
             cmd = "ls /home"
