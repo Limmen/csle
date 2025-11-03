@@ -150,7 +150,7 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
 
     def get_observation_from_history(self, history: List[int]) -> List[Any]:
         """
-        Utiltiy function to get a defender observatin (belief) from a history
+        Utiltiy function to get a defender observation (belief) from a history
 
         :param history: the history to get the observation form
         :return: the observation
