@@ -7,7 +7,7 @@ permalink: /docs/contributing/
 
 To anyone interested in making CSLE better, there are many improvements that needs to be done. 
 A list of tasks is available at:
-<a href="https://github.com/Limmen/csle/issues">https://github.com/Limmen/csle/issues</a>. 
+<a href="https://github.com/Kim-Hammar/csle/issues">https://github.com/Kim-Hammar/csle/issues</a>. 
 Contributors are also welcome to report bugs and to request new features. 
 To report a bug or make a feature request, 
 use GitHub issues. 

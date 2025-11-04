@@ -60,7 +60,7 @@ to the file `.ssh/authorized_keys` on the other hosts.
 Next, clone the CSLE git repository on the user host by running the following command.
 
 ```bash
-git clone https://github.com/Limmen/csle
+git clone https://github.com/Kim-Hammar/csle
 ```
 
 <p class="captionFig">

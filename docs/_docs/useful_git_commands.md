@@ -61,7 +61,7 @@ Listing 188: Command for pushing the branch `mybranchname` to GitHub.
 </p>
 
 After pushing the changes you can go with your web browser to:
-<a href="https://github.com/Limmen/csle">https://github.com/Limmen/csle</a>
+<a href="https://github.com/Kim-Hammar/csle">https://github.com/Kim-Hammar/csle</a>
  and open a new pull request.
 
 When the pull request is merged into the master branch you can delete the local branch and pull the new changes from 

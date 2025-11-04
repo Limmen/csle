@@ -20,7 +20,7 @@ Follow the instructions in the <a href="./../installing">here</a>.
 Run the following command on your local machine and on one of the servers where CSLE is installed:
 
 ```bash
-git clone https://github.com/Limmen/csle
+git clone https://github.com/Kim-Hammar/csle
 ```
 <p class="captionFig">
 Listing 183: Command for cloning the source code of CSLE.

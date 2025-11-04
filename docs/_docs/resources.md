@@ -10,7 +10,7 @@ Resources for getting started with CSLE are described below.
 ### Documentation
 Apart from the web documentation (i.e., the documentation you are reading now), which is available at
 <a href="https://limmen.dev/csle/">https://limmen.dev/csle/</a>, there are official release documents, 
-which are available in PDF format for each release <a href="https://github.com/Limmen/csle/tree/master/releases">here</a>. 
+which are available in PDF format for each release <a href="https://github.com/Kim-Hammar/csle/tree/master/releases">here</a>. 
 Video demonstrations of earlier versions of CSLE are available on YouTube: 
 
 - <a href="https://www.youtube.com/watch?v=18P7MjPKNDg&t=1s">Demonstration of v0.0.1</a>
@@ -20,7 +20,7 @@ Video demonstrations of earlier versions of CSLE are available on YouTube:
 ### Source code, Binaries, and Docker Images
 
 The source code of CSLE is available on GitHub:
-<a href="https://github.com/Limmen/csle">https://github.com/Limmen/csle</a> and the Docker images are 
+<a href="https://github.com/Kim-Hammar/csle">https://github.com/Kim-Hammar/csle</a> and the Docker images are 
 available on DockerHub:
 <a href="https://hub.docker.com/u/kimham">https://hub.docker.com/u/kimham</a>. 
 Further, binaries of the Python libraries in CSLE are available on PyPi:

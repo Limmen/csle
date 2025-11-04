@@ -75,4 +75,4 @@ permalink: /docs/faq/
 
 **Q: How can I contact the maintainers of CSLE?**
 
-**A:** Contact us via the <a href="https://github.com/Limmen/csle/issues">GitHub issues page</a>
+**A:** Contact us via the <a href="https://github.com/Kim-Hammar/csle/issues">GitHub issues page</a>

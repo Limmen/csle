@@ -7,8 +7,8 @@ lang: en-US
 
 baseurl: "/csle" # the subpath of your site, e.g., /blog/
 url: limmen.dev/csle # the base hostname & protocol for your site
-git_address: https://github.com/Limmen/csle
-git_edit_address: https://github.com/Limmen/csle/blob/gh-pages
+git_address: https://github.com/Kim-Hammar/csle
+git_edit_address: https://github.com/Kim-Hammar/csle/blob/gh-pages
 
 # theme options from https://bootswatch.com/3/
 # comment out this to use default Bootstrap

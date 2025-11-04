@@ -16,7 +16,7 @@ To generate a new release of CSLE, the following steps must be performed:
 1. Publish new versions of the Python libraries to: <a href="https://pypi.org/">https://pypi.org/</a>.
 2. Publish new versions of the Docker containers to: <a href="https://hub.docker.com/">https://hub.docker.com/</a>.
 3. Publish a new version of the documentation to: <a href="http://limmen.dev/csle">http://limmen.dev/csle</a>.
-4. Make a GitHub release with all artifacts (<a href="https://github.com/Limmen/csle">https://github.com/Limmen/csle</a>).
+4. Make a GitHub release with all artifacts (<a href="https://github.com/Kim-Hammar/csle">https://github.com/Kim-Hammar/csle</a>).
 
 **Python releases.** To make a new Python release, do the following:
 
@@ -87,8 +87,8 @@ Listing 145: Command to generate release documentation.
    <p class="captionFig">
    Listing 150: Directory with emulation configurations.
    </p>
-6. Make a new release of `https://github.com/Limmen/exploit-CVE-2017-7494`:
-    - Clone the repo by runnign the command: `git clone https://github.com/Limmen/exploit-CVE-2017-7494`
+6. Make a new release of `https://github.com/Kim-Hammar/exploit-CVE-2017-7494`:
+    - Clone the repo by runnign the command: `git clone https://github.com/Kim-Hammar/exploit-CVE-2017-7494`
     - Update the version parameter in `exploit-CVE-2017-7494/Makefile`
     - Build: `cd exploit-CVE-2017-7494; make build`
     - Push: `cd exploit-CVE-2017-7494; make push`

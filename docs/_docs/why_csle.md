@@ -11,7 +11,7 @@ part of the response to this threat. A promising approach to achieve this automa
 *reinforcement learning*, which has proven effective in finding near-optimal solutions 
 to control problems in several domains 
 (e.g., robotics and industry automation), and is actively investigated as an approach 
-to automated security (see <a href="https://github.com/Limmen/awesome-rl-for-cybersecurity">survey</a>). 
+to automated security (see <a href="https://github.com/Kim-Hammar/awesome-rl-for-cybersecurity">survey</a>). 
 While encouraging results have been obtained in this line of research, key challenges remain. 
 Chief among them is narrowing the gap between the environment where the reinforcement learning agents 
 are evaluated and a scenario playing out in a real system. Most of the results obtained so far 
@@ -24,7 +24,7 @@ it narrows the gap between the evaluation environment and a real system,
 and by being open-source, it provides a foundation for further research to build on.
 
 Recently, efforts to build similar frameworks as CSLE has started (see
-<a href="https://github.com/Limmen/awesome-rl-for-cybersecurity">survey</a>). Most notably, there is
+<a href="https://github.com/Kim-Hammar/awesome-rl-for-cybersecurity">survey</a>). Most notably, there is
 <a href="https://github.com/microsoft/CyberBattleSim">CyberBattleSim</a> by Microsoft,
 <a href="https://github.com/cage-challenge/CybORG">CyBorg</a> by
 the Australian department of defence, <a href="https://github.com/dstl/YAWNING-TITAN">Yawning Titan</a> by

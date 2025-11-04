@@ -6,7 +6,7 @@ permalink: /docs/examples/
 ## Examples
 
 Examples of CSLE usages can be found  
-<a href="https://github.com/Limmen/csle/examples">here</a>.
+<a href="https://github.com/Kim-Hammar/csle/examples">here</a>.
 The folder in the above link includes examples of the four main
 usages of CSLE: (1) data collection; (2) system identification;
 (3) strategy training; and (4), strategy evaluation.
