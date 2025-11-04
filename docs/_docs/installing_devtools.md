@@ -89,7 +89,7 @@ Listing 129: Command to install `pytest` and `mock`.
 </p>
 
 Ruby and its bundler, which are used to generate the CSLE 
-<a href="https://limmen.dev/csle/">documentation page </a>, can be installed by running the commands:
+<a href="https://kim-hammar.github.io/csle//">documentation page </a>, can be installed by running the commands:
 
 ```bash
 sudo apt-get install ruby ruby-dev

@@ -369,7 +369,7 @@ pip install -r requirements_dev.txt
 ```
 ## API documentation
 
-The latest documentation is available at [https://limmen.dev/csle/docs](https://limmen.dev/csle/docs)
+The latest documentation is available at [https://kim-hammar.github.io/csle//docs](https://kim-hammar.github.io/csle//docs)
 
 ## Static code analysis
 

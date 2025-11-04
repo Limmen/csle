@@ -1,6 +1,6 @@
 # Heuristic-Search Value Iteration for One-Sided Partially Observed Stochastic Game
 
-This directory contains example scripts for computing Nash equilibria using HSVI for the stopping game from [https://limmen.dev/assets/papers/icml_ml4cyber_Hammar_Stadler_final_24_june_2022.pdf](https://limmen.dev/assets/papers/icml_ml4cyber_Hammar_Stadler_final_24_june_2022.pdf)
+This directory contains example scripts for computing Nash equilibria using HSVI for the stopping game from [https://kim-hammar.com/assets/papers/icml_ml4cyber_Hammar_Stadler_final_24_june_2022.pdf](https://kim-hammar.com/assets/papers/icml_ml4cyber_Hammar_Stadler_final_24_june_2022.pdf)
 
 ## Commands
 

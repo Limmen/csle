@@ -49,7 +49,7 @@ test = [
 ]
 
 [project.urls]
-"Homepage" = "https://limmen.dev/csle"
+"Homepage" = "https://kim-hammar.github.io/csle/"
 "Source" = "https://github.com/Kim-Hammar/csle"
 
 [build-system]

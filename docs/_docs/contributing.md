@@ -13,7 +13,7 @@ To report a bug or make a feature request,
 use GitHub issues. 
 To submit a patch or a new feature, use GitHub pull requests. 
 Before you open a pull request, make sure that your code changes makes sense. 
-In particular, read the <a href="limmen.dev/csle/docs/developer-guide">developer guide</a>
+In particular, read the <a href="kim-hammar.github.io/csle//docs/developer-guide">developer guide</a>
 and make sure that your code changes follow the guidelines stated there.
 
 #### Getting Help

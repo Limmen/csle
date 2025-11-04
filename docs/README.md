@@ -2,7 +2,7 @@
 
 This directory contains the code of the documentation page for CSLE. It is built on top on Jekyll.
 
-The live documentation page is available [here](https://limmen.dev/csle).
+The live documentation page is available [here](https://kim-hammar.github.io/csle/).
 
 <p align="center">
 <img src="img/docs_screen.png" width="60%", height="60%">

@@ -1,6 +1,6 @@
 # Value Iteration for MDP
 
-This directory contains example scripts for optimizing attacker policies using Value Iteration for the MDP from [https://limmen.dev/assets/papers/icml_ml4cyber_Hammar_Stadler_final_24_june_2022.pdf](https://limmen.dev/assets/papers/icml_ml4cyber_Hammar_Stadler_final_24_june_2022.pdf).
+This directory contains example scripts for optimizing attacker policies using Value Iteration for the MDP from [https://kim-hammar.com/assets/papers/icml_ml4cyber_Hammar_Stadler_final_24_june_2022.pdf](https://kim-hammar.com/assets/papers/icml_ml4cyber_Hammar_Stadler_final_24_june_2022.pdf).
 
 ## Commands
 

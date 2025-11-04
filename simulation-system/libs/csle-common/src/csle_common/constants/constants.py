@@ -1211,7 +1211,7 @@ class TRAFFIC_COMMANDS:
             "timeout 5 psql -h {} -p 5432 > /dev/null 2>&1"],
         f"{CONTAINER_IMAGES.SSH_2}": [
             "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
-            "timeout 5 nslookup limmen.dev {} > /dev/null 2>&1"],
+            "timeout 5 nslookup kim-hammar.com {} > /dev/null 2>&1"],
         f"{CONTAINER_IMAGES.SSH_3}": [
             "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
             "timeout 10 /irc_login_test.sh {} > /dev/null 2>&1"

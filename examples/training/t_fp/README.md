@@ -4,7 +4,7 @@ This directory contains example scripts for approximating Nash equilibria using 
 
 ## Contents 
 
-- Stopping game: [./stopping_game](stopping_game): this directory contains example scripts for optimizing Nash equilibria for the stopping game from [https://limmen.dev/assets/papers/icml_ml4cyber_Hammar_Stadler_final_24_june_2022.pdf](https://limmen.dev/assets/papers/icml_ml4cyber_Hammar_Stadler_final_24_june_2022.pdf)
+- Stopping game: [./stopping_game](stopping_game): this directory contains example scripts for optimizing Nash equilibria for the stopping game from [https://kim-hammar.com/assets/papers/icml_ml4cyber_Hammar_Stadler_final_24_june_2022.pdf](https://kim-hammar.com/assets/papers/icml_ml4cyber_Hammar_Stadler_final_24_june_2022.pdf)
 
 ## Author & Maintainer
 

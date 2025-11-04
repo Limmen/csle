@@ -86,7 +86,7 @@ This section contains instructions for generating API documentation using `sphin
 
 ### Latest Documentation
 
-The latest documentation is available at [https://limmen.dev/csle/docs/csle-cluster](https://limmen.dev/csle/docs/csle-cluster)
+The latest documentation is available at [https://kim-hammar.github.io/csle//docs/csle-cluster](https://kim-hammar.github.io/csle//docs/csle-cluster)
 
 ### Generate API Documentation
 
@@ -100,7 +100,7 @@ cd docs
 sphinx-apidoc -f -o source/ ../src/csle_cluster/
 make html
 ```
-To update the official documentation at [https://limmen.dev/csle](https://limmen.dev/csle), copy the generated HTML files to the documentation folder:
+To update the official documentation at [https://kim-hammar.github.io/csle/](https://kim-hammar.github.io/csle/), copy the generated HTML files to the documentation folder:
 ```bash
 cp -r build/html ../../../../docs/_docs/csle-cluster
 ```

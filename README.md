@@ -9,7 +9,7 @@
         <img src="https://img.shields.io/badge/version-0.9.0-blue" /></a>
     <a href="https://img.shields.io/badge/Maintained%3F-yes-green.svg">
         <img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" /></a>
-    <a href="https://limmen.dev/csle">
+    <a href="https://kim-hammar.github.io/csle/">
         <img src="https://img.shields.io/website-up-down-green-red/http/shields.io.svg" /></a> 
      <a href="https://ieeexplore.ieee.org/document/9779345">
         <img src="https://zenodo.org/badge/doi/10.1109/TNSM.2022.3176781.svg" /></a>
@@ -18,7 +18,7 @@
     <a href="https://arxiv.org/abs/2309.03292">
         <img src="https://img.shields.io/badge/arxiv-2309.03292-silver" alt="Paper">
     </a> 
-    <a href="https://github.com/limmen/csle">
+    <a href="https://github.com/kim-hammar/csle">
      <img src="https://img.shields.io/badge/-github-teal?logo=github" alt="github">
     </a>
     <a href="https://hub.docker.com/r/kimham/csle_cve_2010_0426_base/">
@@ -84,7 +84,7 @@ access to components of emulations.
 
 ## 🎓 Documentation
 
-Documentation, installation instructions, and usage examples are available [here](https://limmen.dev/csle/). A PDF
+Documentation, installation instructions, and usage examples are available [here](https://kim-hammar.github.io/csle//). A PDF
 version of the documentation is available [here](./releases/).
 A video walkthrough of the installation process is available [here](https://www.youtube.com/watch?v=l_g3sRJwwhc).
 
@@ -143,7 +143,7 @@ A dataset of 6400 intrusion traces can be found [here](https://zenodo.org/record
 <table>
   <tbody>
     <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://limmen.dev"><img src="https://github.com/Kim-Hammar.png" width="100px;" alt="Kim Hammar"/><br /><sub><b>Kim Hammar</b></sub></a><br /><kimham@kth.se></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://kim-hammar.com"><img src="https://github.com/Kim-Hammar.png" width="100px;" alt="Kim Hammar"/><br /><sub><b>Kim Hammar</b></sub></a><br /><kimham@kth.se></td>
     </tr>
   </tbody>
 </table>
@@ -151,7 +151,7 @@ A dataset of 6400 intrusion traces can be found [here](https://zenodo.org/record
 ## 🧑‍🤝‍🧑 Contribute
 
 Contributions are very welcome. Please use GitHub issues and pull requests. See
-the [documentation](https://limmen.dev/csle/) for further instructions.
+the [documentation](https://kim-hammar.github.io/csle//) for further instructions.
 
 ### List of Contributors :star2:
 
@@ -160,7 +160,7 @@ Thanks go to these people!
 <table>
   <tbody>
     <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://limmen.dev"><img src="https://github.com/Kim-Hammar.png" width="100px;" alt="Kim Hammar"/><br /><sub><b>Kim Hammar</b></sub></a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://kim-hammar.com"><img src="https://github.com/Kim-Hammar.png" width="100px;" alt="Kim Hammar"/><br /><sub><b>Kim Hammar</b></sub></a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://www.kth.se/profile/stadler"><img src="https://www.kth.se/files/avatar/stadler.jpeg" width="100px;" alt="Rolf Stadler"/><br /><sub><b>Rolf Stadler</b></sub></a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://www.kth.se/profile/pontusj"><img src="https://www.kth.se/files/avatar/pontusj.jpeg" width="100px;" alt="Pontus Johnson"/><br /><sub><b>Pontus Johnson</b></sub></a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/FredericoNesti"><img src="https://github.com/FredericoNesti.png" width="100px;" alt="Antonio Frederico Nesti Lopes"/><br /><sub><b>Antonio Frederico Nesti Lopes</b></sub></a></td>

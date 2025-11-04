@@ -15,7 +15,7 @@ To generate a new release of CSLE, the following steps must be performed:
 
 1. Publish new versions of the Python libraries to: <a href="https://pypi.org/">https://pypi.org/</a>.
 2. Publish new versions of the Docker containers to: <a href="https://hub.docker.com/">https://hub.docker.com/</a>.
-3. Publish a new version of the documentation to: <a href="http://limmen.dev/csle">http://limmen.dev/csle</a>.
+3. Publish a new version of the documentation to: <a href="http://kim-hammar.github.io/csle/">http://kim-hammar.github.io/csle/</a>.
 4. Make a GitHub release with all artifacts (<a href="https://github.com/Kim-Hammar/csle">https://github.com/Kim-Hammar/csle</a>).
 
 **Python releases.** To make a new Python release, do the following:

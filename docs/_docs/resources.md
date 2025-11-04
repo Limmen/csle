@@ -9,7 +9,7 @@ Resources for getting started with CSLE are described below.
 
 ### Documentation
 Apart from the web documentation (i.e., the documentation you are reading now), which is available at
-<a href="https://limmen.dev/csle/">https://limmen.dev/csle/</a>, there are official release documents, 
+<a href="https://kim-hammar.github.io/csle//">https://kim-hammar.github.io/csle//</a>, there are official release documents, 
 which are available in PDF format for each release <a href="https://github.com/Kim-Hammar/csle/tree/master/releases">here</a>. 
 Video demonstrations of earlier versions of CSLE are available on YouTube: 
 

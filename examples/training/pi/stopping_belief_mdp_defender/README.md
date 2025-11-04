@@ -1,7 +1,7 @@
 # Policy Iteration for MDP
 
 This directory contains example scripts for optimizing 
-defender policies using Policy Iteration for the Belief MDP based on the POMDP from [https://limmen.dev/assets/papers/icml_ml4cyber_Hammar_Stadler_final_24_june_2022.pdf](https://limmen.dev/assets/papers/icml_ml4cyber_Hammar_Stadler_final_24_june_2022.pdf).
+defender policies using Policy Iteration for the Belief MDP based on the POMDP from [https://kim-hammar.com/assets/papers/icml_ml4cyber_Hammar_Stadler_final_24_june_2022.pdf](https://kim-hammar.com/assets/papers/icml_ml4cyber_Hammar_Stadler_final_24_june_2022.pdf).
 
 ## Commands
 

@@ -170,7 +170,7 @@ The following publications are based on CSLE:
 ##### **An Online Framework for Adapting Security Policies in Dynamic IT Environments**
 
 **Conference**: the 18th International Conference on Network and Service Management (CNSM).
-[Proceedings.](https://ieeexplore.ieee.org/document/9964838), [Preprint.](https://limmen.dev/assets/papers/CNSM22_preprint_8_sep_Hammar_Stadler.pdf)
+[Proceedings.](https://ieeexplore.ieee.org/document/9964838), [Preprint.](https://kim-hammar.com/assets/papers/CNSM22_preprint_8_sep_Hammar_Stadler.pdf)
 
 **Bibtex**:
 ```bash
@@ -186,7 +186,7 @@ The following publications are based on CSLE:
 ```
 
 ##### **Learning Security Strategies through Game Play and Optimal Stopping**
-**Workshop:**  International Conference on Machine Learning (ICML) Ml4Cyber Workshop 2022. [PDF.](https://limmen.dev/assets/papers/icml_ml4cyber_Hammar_Stadler_final_24_june_2022.pdf)
+**Workshop:**  International Conference on Machine Learning (ICML) Ml4Cyber Workshop 2022. [PDF.](https://kim-hammar.com/assets/papers/icml_ml4cyber_Hammar_Stadler_final_24_june_2022.pdf)
 
 **Bibtex**:
 ```bash

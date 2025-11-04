@@ -2,7 +2,7 @@
 
 An OpenAI gym reinforcement learning environment that represents the optimal stopping game described in 
 [Intrusion Prevention Through Optimal Stopping](https://ieeexplore.ieee.org/document/9779345) and
-[Learning Security Strategies through Game Play and Optimal Stopping](https://limmen.dev/assets/papers/icml_ml4cyber_Hammar_Stadler_final_24_june_2022.pdf)
+[Learning Security Strategies through Game Play and Optimal Stopping](https://kim-hammar.com/assets/papers/icml_ml4cyber_Hammar_Stadler_final_24_june_2022.pdf)
 
 [![PyPI version](https://badge.fury.io/py/gym-csle-stopping-game.svg)](https://badge.fury.io/py/gym-csle-stopping-game)
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/gym-csle-stopping-game)
@@ -74,7 +74,7 @@ This section contains instructions for generating API documentation using `sphin
 
 ### Latest Documentation
 
-The latest documentation is available at [https://limmen.dev/csle/docs/gym-csle-stopping-game](https://limmen.dev/csle/docs/gym-csle-stopping-game)
+The latest documentation is available at [https://kim-hammar.github.io/csle//docs/gym-csle-stopping-game](https://kim-hammar.github.io/csle//docs/gym-csle-stopping-game)
 
 ### Generate API Documentation
 
@@ -88,7 +88,7 @@ cd docs
 sphinx-apidoc -f -o source/ ../src/gym_csle_stopping_game/
 make html
 ```
-To update the official documentation at [https://limmen.dev/csle](https://limmen.dev/csle),
+To update the official documentation at [https://kim-hammar.github.io/csle/](https://kim-hammar.github.io/csle/),
 copy the generated HTML files to the documentation folder:
 ```bash
 cp -r build/html ../../../../docs/_docs/gym-csle-stopping-game

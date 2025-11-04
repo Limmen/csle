@@ -4,7 +4,7 @@ This directory contains example scripts for optimizing policies using Q-learning
 
 ## Contents 
 
-- Stopping MDP Attacker: [./stopping_mdp_attacker](stopping_mdp_attacker): this directory contains example scripts for optimizing attacker policies for the stopping MDP from [https://limmen.dev/assets/papers/icml_ml4cyber_Hammar_Stadler_final_24_june_2022.pdf](https://limmen.dev/assets/papers/icml_ml4cyber_Hammar_Stadler_final_24_june_2022.pdf).
+- Stopping MDP Attacker: [./stopping_mdp_attacker](stopping_mdp_attacker): this directory contains example scripts for optimizing attacker policies for the stopping MDP from [https://kim-hammar.com/assets/papers/icml_ml4cyber_Hammar_Stadler_final_24_june_2022.pdf](https://kim-hammar.com/assets/papers/icml_ml4cyber_Hammar_Stadler_final_24_june_2022.pdf).
 
 ## Author & Maintainer
 
