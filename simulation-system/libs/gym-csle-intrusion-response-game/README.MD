@@ -49,7 +49,7 @@ make install
 # force upgrade deps
 $ pip install -e gym-csle-intrusion-response-game --upgrade
 # git clone and install from source
-git clone https://github.com/Limmen/csle
+git clone https://github.com/Kim-Hammar/csle
 cd csle/simulation-system/libs/gym-csle-intrusion-response-game
 pip3 install -e .
 # Install development dependencies

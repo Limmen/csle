@@ -29,15 +29,15 @@ RUN /make_root_users.sh
 RUN service ssh start
 
 # NMAP vuln scan
-RUN git clone https://github.com/Limmen/vulscan scipag_vulscan &&\
+RUN git clone https://github.com/Kim-Hammar/vulscan scipag_vulscan &&\
     ln -s `pwd`/scipag_vulscan /usr/share/nmap/scripts/vulscan
 
 # NMAP nmap-vulners
-RUN git clone https://github.com/Limmen/nmap-vulners &&\
+RUN git clone https://github.com/Kim-Hammar/nmap-vulners &&\
     cp nmap-vulners/vulners.nse /usr/share/nmap/scripts/
 
 # SecLists
-RUN git clone https://github.com/Limmen/SecLists
+RUN git clone https://github.com/Kim-Hammar/SecLists
 
 # 1. Alias
 # 2. Setup root passwd

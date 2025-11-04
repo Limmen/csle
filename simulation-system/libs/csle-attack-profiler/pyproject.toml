@@ -51,7 +51,7 @@ test = [
 
 [project.urls]
 "Homepage" = "https://limmen.dev/csle"
-"Source" = "https://github.com/Limmen/csle"
+"Source" = "https://github.com/Kim-Hammar/csle"
 
 [build-system]
 requires = ["setuptools==75.7.0"]

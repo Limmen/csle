@@ -143,7 +143,7 @@ A dataset of 6400 intrusion traces can be found [here](https://zenodo.org/record
 <table>
   <tbody>
     <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://limmen.dev"><img src="https://github.com/Limmen.png" width="100px;" alt="Kim Hammar"/><br /><sub><b>Kim Hammar</b></sub></a><br /><kimham@kth.se></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://limmen.dev"><img src="https://github.com/Kim-Hammar.png" width="100px;" alt="Kim Hammar"/><br /><sub><b>Kim Hammar</b></sub></a><br /><kimham@kth.se></td>
     </tr>
   </tbody>
 </table>
@@ -160,7 +160,7 @@ Thanks go to these people!
 <table>
   <tbody>
     <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://limmen.dev"><img src="https://github.com/Limmen.png" width="100px;" alt="Kim Hammar"/><br /><sub><b>Kim Hammar</b></sub></a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://limmen.dev"><img src="https://github.com/Kim-Hammar.png" width="100px;" alt="Kim Hammar"/><br /><sub><b>Kim Hammar</b></sub></a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://www.kth.se/profile/stadler"><img src="https://www.kth.se/files/avatar/stadler.jpeg" width="100px;" alt="Rolf Stadler"/><br /><sub><b>Rolf Stadler</b></sub></a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://www.kth.se/profile/pontusj"><img src="https://www.kth.se/files/avatar/pontusj.jpeg" width="100px;" alt="Pontus Johnson"/><br /><sub><b>Pontus Johnson</b></sub></a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/FredericoNesti"><img src="https://github.com/FredericoNesti.png" width="100px;" alt="Antonio Frederico Nesti Lopes"/><br /><sub><b>Antonio Frederico Nesti Lopes</b></sub></a></td>
@@ -198,9 +198,9 @@ Thanks go to these people!
 
 ## See also
 
-- [gym-idsgame](https://github.com/Limmen/gym-idsgame)
-- [gym-optimal-intrusion-response](https://github.com/Limmen/gym-optimal-intrusion-response)
-- [awesome-rl-for-cybersecurity](https://github.com/Limmen/awesome-rl-for-cybersecurity)
+- [gym-idsgame](https://github.com/Kim-Hammar/gym-idsgame)
+- [gym-optimal-intrusion-response](https://github.com/Kim-Hammar/gym-optimal-intrusion-response)
+- [awesome-rl-for-cybersecurity](https://github.com/Kim-Hammar/awesome-rl-for-cybersecurity)
 
 ---
 <p align="center" style="align-items:center; display:inline-block">

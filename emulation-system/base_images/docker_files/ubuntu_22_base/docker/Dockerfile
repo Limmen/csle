@@ -36,7 +36,7 @@ RUN mkdir -p /var/ftp &&\
 ADD docker_files/common/vsftpd.conf /etc/vsftpd.conf
 
 # Pengine Server
-RUN git clone https://github.com/Limmen/erl_pengine
+RUN git clone https://github.com/Kim-Hammar/erl_pengine
 
 # Setup root SSH
 RUN mv /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
@@ -48,14 +48,14 @@ RUN mv /etc/sudoers /etc/sudoers.bak
 ADD docker_files/common/sudoers /etc/sudoers
 
 # SecLists
-RUN git clone https://github.com/Limmen/SecLists
+RUN git clone https://github.com/Kim-Hammar/SecLists
 
 # NMAP vuln scan
-RUN git clone https://github.com/Limmen/vulscan scipag_vulscan &&\
+RUN git clone https://github.com/Kim-Hammar/vulscan scipag_vulscan &&\
     ln -s `pwd`/scipag_vulscan /usr/share/nmap/scripts/vulscan
 
 # NMAP nmap-vulners
-RUN git clone https://github.com/Limmen/nmap-vulners &&\
+RUN git clone https://github.com/Kim-Hammar/nmap-vulners &&\
     cp nmap-vulners/vulners.nse /usr/share/nmap/scripts/ &&\
     nmap --script-updatedb
 
@@ -163,8 +163,8 @@ RUN mkdir /var/snort &&\
 ADD docker_files/common/snort.conf /etc/snort/snort.conf
 
 # Setup Pulledpork
-RUN git clone https://github.com/Limmen/pulledpork &&\
-    git clone https://github.com/Limmen/csle_snort_rules
+RUN git clone https://github.com/Kim-Hammar/pulledpork &&\
+    git clone https://github.com/Kim-Hammar/csle_snort_rules
 ADD docker_files/common/disablesid.conf /pulledpork/etc/disablesid.conf
 ADD docker_files/common/enablesid.conf /pulledpork/etc/enablesid.conf
 ADD docker_files/common/modifysid.conf /pulledpork/etc/modifysid.conf

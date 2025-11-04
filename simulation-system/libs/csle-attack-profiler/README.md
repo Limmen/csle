@@ -48,7 +48,7 @@ make install
 # force upgrade deps
 $ pip install -e csle-attack-profiler --upgrade
 # git clone and install from source
-git clone https://github.com/Limmen/csle
+git clone https://github.com/Kim-Hammar/csle
 cd csle/simulation-system/libs/csle-attack-profiler
 pip3 install -e .
 # Install development dependencies

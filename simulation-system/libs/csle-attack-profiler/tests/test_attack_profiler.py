@@ -340,7 +340,7 @@ class TestAttackProfilerSuite:
         """
         Test the get_attack_profile_sequence for the novice sequence. Expected pruning of techniques
         in the graph approach.
-        https://github.com/Limmen/csle/blob/d9fd28cf44a4ac0d9521368747d4b9c3fff37587/emulation-system/envs/050/level_9/config.py#L5035
+        https://github.com/Kim-Hammar/csle/blob/d9fd28cf44a4ac0d9521368747d4b9c3fff37587/emulation-system/envs/050/level_9/config.py#L5035
         
         """
         attacker_action1 = EmulationAttackerAction(
@@ -484,7 +484,7 @@ class TestAttackProfilerSuite:
         """
         Test the get_attack_profile_sequence for the experienced sequence.
         Expected pruning of techniques in the graph approach.
-        https://github.com/Limmen/csle/blob/d9fd28cf44a4ac0d9521368747d4b9c3fff37587/emulation-system/envs/050/level_9/config.py#L5035
+        https://github.com/Kim-Hammar/csle/blob/d9fd28cf44a4ac0d9521368747d4b9c3fff37587/emulation-system/envs/050/level_9/config.py#L5035
         """
 
         attacker_action1 = EmulationAttackerAction(
@@ -640,7 +640,7 @@ class TestAttackProfilerSuite:
         """
         Test the get_attack_profile_sequence for the experienced sequence.
         Expected pruning of techniques in the graph approach.
-        https://github.com/Limmen/csle/blob/d9fd28cf44a4ac0d9521368747d4b9c3fff37587/emulation-system/envs/050/level_9/config.py#L5035
+        https://github.com/Kim-Hammar/csle/blob/d9fd28cf44a4ac0d9521368747d4b9c3fff37587/emulation-system/envs/050/level_9/config.py#L5035
         """
 
         attacker_action1 = EmulationAttackerAction(

@@ -11,7 +11,7 @@ const Footer = () => (
       <footer className="footer">
           <div className="container">
               <p className="text-muted">Released under the Creative Commons Attribution-ShareAlike 4.0 International License
-                  <a href={"https://github.com/Limmen/csle"} className="githubLink">
+                  <a href={"https://github.com/Kim-Hammar/csle"} className="githubLink">
                       <i className="fa fa-github" aria-hidden="true"/>
                   </a>
               </p>

@@ -34,7 +34,7 @@ RUN mkdir -p /var/ftp &&\
 ADD docker_files/common/vsftpd.conf /etc/vsftpd.conf
 
 # Pengine Server
-RUN git clone https://github.com/Limmen/erl_pengine
+RUN git clone https://github.com/Kim-Hammar/erl_pengine
 
 # Setup root SSH
 RUN mv /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
@@ -46,14 +46,14 @@ RUN mv /etc/sudoers /etc/sudoers.bak
 ADD docker_files/common/sudoers /etc/sudoers
 
 # SecLists
-RUN git clone https://github.com/Limmen/SecLists
+RUN git clone https://github.com/Kim-Hammar/SecLists
 
 # NMAP vuln scan
-RUN git clone https://github.com/Limmen/vulscan scipag_vulscan &&\
+RUN git clone https://github.com/Kim-Hammar/vulscan scipag_vulscan &&\
     ln -s `pwd`/scipag_vulscan /usr/share/nmap/scripts/vulscan
 
 # NMAP nmap-vulners
-RUN git clone https://github.com/Limmen/nmap-vulners &&\
+RUN git clone https://github.com/Kim-Hammar/nmap-vulners &&\
     cp nmap-vulners/vulners.nse /usr/share/nmap/scripts/ &&\
     nmap --script-updatedb
 
