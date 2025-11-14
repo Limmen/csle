@@ -153,7 +153,7 @@ class TrafficController:
                 f"{emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip} "
                 f"({emulation_env_config.traffic_config.client_population_config.ip})"
                 f" since it was not running. "
-                f"Output of :{cmd}, was: {str(o)}")
+                f"Output of :{cmd}, was: {str(o)} {str(e)}")
 
             # Stop old background job if running
             cmd = (constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL +
@@ -243,15 +243,19 @@ class TrafficController:
             f"Starting client producer on container:"
             f" {emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip} "
             f"({emulation_env_config.traffic_config.client_population_config.ip})")
-        time.sleep(5)
         client_manager_started = (
             TrafficController.start_client_manager(emulation_env_config=emulation_env_config, logger=logger))
 
         if client_manager_started:
+            logger.info(
+                f"Client manager was not running on container:"
+                f" {emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip} "
+                f"({emulation_env_config.traffic_config.client_population_config.ip}), started it")
+            time.sleep(5)
             # If client manager was started we need to first start the client population
             TrafficController.start_client_population(emulation_env_config=emulation_env_config,
                                                       physical_server_ip=physical_server_ip, logger=logger)
-
+        time.sleep(5)
         client_dto = TrafficController.get_clients_dto_by_ip_and_port(
             ip=emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip,
             port=emulation_env_config.traffic_config.client_population_config.client_manager_port,
