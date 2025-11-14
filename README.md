@@ -25,7 +25,7 @@
         <img src="https://badgen.net/docker/pulls/kimham/csle_cve_2010_0426_base?icon=docker&label=pulls" 
         alt="Docker pulls">
     </a>
-    <a href="https://pypi.org/user/Kim-Hammar/">
+    <a href="https://pypi.org/user/Limmen/">
         <img src="https://img.shields.io/pypi/dm/csle-collector" alt="PyPi downloads">
     </a>
     <a href="https://codecov.io/gh/Kim-Hammar/csle" > 
